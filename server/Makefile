@@ -1,0 +1,2 @@
+prisma:
+	npx prisma

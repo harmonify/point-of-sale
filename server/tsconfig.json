@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "rootDir": "./",
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    // Disable this if you have problem with incremental compiling
+    // "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    // Not-strict
+    // "strictNullChecks": false,
+    // "noImplicitAny": false,
+    // "strictBindCallApply": false,
+    // "forceConsistentCasingInFileNames": false,
+    // "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@libs/*": ["src/libs/*"],
+      "@common/*": ["src/common/*"],
+      "@database/*": ["./database/*"],
+      "@modules/*": ["src/modules/*"],
+      "@mocks": ["./_mocks_"],
+      "@generated": ["./generated"]
+    }
+  },
+  "include": ["src/**/*", "test/**/*", ".eslintrc.js"],
+  "exclude": ["node_modules", "dist"],
+  "types": ["./src/common/@types/global.d.ts"]
+}
