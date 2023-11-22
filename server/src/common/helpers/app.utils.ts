@@ -4,20 +4,19 @@ import {
   SWAGGER_API_ENDPOINT,
   SWAGGER_DESCRIPTION,
   SWAGGER_TITLE,
-} from '@common/constant';
-import { swaggerOptions } from '@common/swagger/swagger.plugin';
+} from '@/common/constant';
+import { swaggerOptions } from '@/common/swagger/swagger.plugin';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { isArray } from 'helper-fns';
 import { getMiddleware } from 'swagger-stats';
 
 import type { INestApplication } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
+import { NestConfigService } from '@/libs/config/config.service';
 
 const logger = new Logger('App:Utils');
 
-export const AppUtils = {
-  gracefulShutdown(app: INestApplication, code: string): void {
+export class AppUtils {
+  static gracefulShutdown(app: INestApplication, code: string): void {
     setTimeout(() => process.exit(1), 5000);
     logger.verbose(`Signal received with code ${code} ⚡.`);
     logger.log('❗Closing http server with grace.');
@@ -33,20 +32,20 @@ export const AppUtils = {
           logger.error(`❌ Http server closed with error: ${error}`);
           process.exit(1);
         });
-  },
+  }
 
-  killAppWithGrace(app: INestApplication): void {
+  static killAppWithGrace(app: INestApplication): void {
     process.on('SIGINT', () => {
       AppUtils.gracefulShutdown(app, 'SIGINT');
     });
     process.on('SIGTERM', () => {
       AppUtils.gracefulShutdown(app, 'SIGTERM');
     });
-  },
+  }
 
-  setupSwagger(
+  static setupSwagger(
     app: INestApplication,
-    configService: ConfigService<Configs, true>,
+    configService: NestConfigService,
   ): void {
     try {
       const userName = configService.get('app.swaggerUser', { infer: true });
@@ -77,7 +76,7 @@ export const AppUtils = {
 
         for (const method of methods) {
           if (
-            isArray(method.security) &&
+            Array.isArray(method.security) &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             method.security.includes(IS_PUBLIC_KEY_META)
           )
@@ -108,5 +107,5 @@ export const AppUtils = {
     } catch (error) {
       logger.error('Failed to setup swagger', error);
     }
-  },
-};
+  }
+}

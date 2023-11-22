@@ -7,9 +7,9 @@ import { JwtPayload } from './dtos';
 import {
   DisabledUserException,
   InvalidCredentialsException,
-} from '@common/http/exceptions';
-import { ErrorType } from '@common/enums';
-import { BaseRepository } from '@libs/crud';
+} from '@/libs/http/exceptions';
+import { ErrorType } from '@/common/enums';
+import { BaseRepository } from '@/libs/crud';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: BaseRepository<UserEntity>,
-    private readonly configService: ConfigService<Configs, true>,
+    private readonly configService: ConfigService<IConfig, true>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

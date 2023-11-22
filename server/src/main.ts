@@ -1,8 +1,7 @@
-import { AppUtils, HelperService } from '@common/helpers';
-import { RequestSanitizerInterceptor } from '@common/interceptors';
-import { RequestIdMiddleware } from '@common/middlewares';
+import { AppModule } from '@/app.module';
+import { AppUtils } from '@/common/helpers';
+import { NestConfigService } from '@/libs/config/config.service';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as bodyParser from 'body-parser';
@@ -10,10 +9,6 @@ import { useContainer } from 'class-validator';
 import compression from 'compression';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
-
-import { AppModule } from './app.module';
-import { EntityNotFoundErrorFilter } from './common/filters';
-import { HttpExceptionFilter, HttpResponseInterceptor } from './common/http';
 
 import type { NestExpressApplication } from '@nestjs/platform-express';
 declare const module: {
@@ -32,20 +27,18 @@ async function bootstrap() {
       bufferLogs: true,
     },
   );
+
   const logger = app.get(Logger);
   app.useLogger(logger);
   app.flushLogs();
 
-  const configService = app.get(ConfigService<Configs, true>);
-
-  // await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
-  // await app.get(MikroORM).getSchemaGenerator().updateSchema();
+  const configService = app.get(NestConfigService);
 
   // =========================================================
   // configure swagger
   // =========================================================
 
-  if (!HelperService.isProd()) AppUtils.setupSwagger(app, configService);
+  if (!configService.isProd()) AppUtils.setupSwagger(app, configService);
 
   // ======================================================
   // security and middlewares
@@ -63,7 +56,6 @@ async function bootstrap() {
     maxAge: 3600,
     origin: configService.get('app.allowedOrigins', { infer: true }),
   });
-  app.use(RequestIdMiddleware);
 
   // =====================================================
   // configure global pipes, filters, interceptors
@@ -81,18 +73,8 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidUnknownValues: false,
-      enableDebugMessages: HelperService.isDev(),
+      enableDebugMessages: configService.isDev(),
     }),
-  );
-
-  app.useGlobalFilters(
-    new EntityNotFoundErrorFilter(),
-    new HttpExceptionFilter(),
-  );
-
-  app.useGlobalInterceptors(
-    new HttpResponseInterceptor(),
-    new RequestSanitizerInterceptor(),
   );
 
   const port = configService.get('app.port', 3000, { infer: true });
@@ -124,7 +106,7 @@ async function bootstrap() {
       .toString()}`,
   );
 
-  !HelperService.isProd() &&
+  !configService.isProd() &&
     logger.log(`📑 Swagger is running on: http://localhost:${port}/doc`);
   logger.log(`Server is up. +${Math.trunc(performance.now())}ms`);
 }

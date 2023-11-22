@@ -1,8 +1,8 @@
-import { HashService } from '@common/helpers';
+import { HashService } from '@/common/helpers';
 import { UserEntity } from '@database/entities/user.entity';
-import { BaseRepository } from '@libs/crud';
-import { translate } from '@libs/i18n';
-import { ChangePasswordRequestDto, UserResponseDto } from '@modules/users/dtos';
+import { BaseRepository } from '@/libs/crud';
+import { translate } from '@/libs/i18n';
+import { ChangePasswordRequestDto, UserResponseDto } from '@/modules/users/dtos';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom, map, zip } from 'rxjs';
@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: BaseRepository<UserEntity>,
-    private readonly configService: ConfigService<Configs, true>,
+    private readonly configService: ConfigService<IConfig, true>,
     private readonly tokenService: TokenService,
   ) {}
 

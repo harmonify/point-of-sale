@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity, RefreshTokenEntity } from '@database/entities';
-import { BaseRepository } from '@libs/crud';
+import { BaseRepository } from '@/libs/crud';
 
 @Injectable()
 export class RefreshTokenRepository extends BaseRepository<RefreshTokenEntity> {

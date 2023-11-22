@@ -19,7 +19,7 @@ import { RefreshTokenRepository } from './refresh-token.repository';
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService<Configs, true>) => ({
+      useFactory: (config: ConfigService<IConfig, true>) => ({
         isGlobal: true,
         secret: config.get('jwt.secret', { infer: true }),
         signOptions: {

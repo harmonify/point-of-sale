@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule, seconds } from '@nestjs/throttler';
+import { NestConfigModule, NestConfigService } from '@/libs/config';
 
 @Module({
   imports: [
     ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService<Configs, true>) => ({
+      imports: [NestConfigModule],
+      inject: [NestConfigService],
+      useFactory: (config: NestConfigService) => ({
         ttl: config.get('throttle.ttl', seconds(10), { infer: true }),
         limit: config.get('throttle.limit', seconds(12), { infer: true }),
         ignoreUserAgents: [/nestify/i],

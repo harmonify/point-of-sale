@@ -1,46 +1,43 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
+
 import {
   app,
   appConfigValidationSchema,
   jwt,
   jwtConfigValidationSchema,
-  mongoose,
-  mongooseConfigValidationSchema,
   throttle,
   throttleConfigValidationSchema,
-  whatsapp,
-  whatsappConfigValidationSchema,
 } from './configs';
+import { NestConfigService } from './config.service';
 
-import { HelperService } from '@common/helpers';
+const env = process.env.NODE_ENV;
+const isProd = env?.startsWith('prod');
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
-      load: [app, jwt, mongoose, throttle, whatsapp],
+      envFilePath: [`${process.cwd()}/.env.${env}`],
+      load: [app, jwt, throttle],
       cache: true,
       isGlobal: true,
       expandVariables: true,
       validationSchema: Joi.object({
         ...appConfigValidationSchema,
         ...jwtConfigValidationSchema,
-        ...mongooseConfigValidationSchema,
         ...throttleConfigValidationSchema,
-        ...whatsappConfigValidationSchema,
       }),
       validationOptions: {
         abortEarly: true,
-        cache: !HelperService.isProd(),
-        debug: !HelperService.isProd(),
-        stack: !HelperService.isProd(),
+        cache: !isProd,
+        debug: !isProd,
+        stack: !isProd,
       },
     }),
   ],
-  providers: [ConfigService],
-  exports: [ConfigService],
+  providers: [NestConfigService],
+  exports: [NestConfigService],
 })
 export class NestConfigModule {}

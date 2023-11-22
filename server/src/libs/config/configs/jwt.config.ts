@@ -1,14 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-/**
- * NOTE:
- * Expiry can be either number or string
- * A numeric value is interpreted as a seconds count
- * if number, parse to string
- *
- */
-
 export const jwtConfigValidationSchema = {
   JWT_SECRET: Joi.string().required().min(8),
   JWT_REFRESH_EXPIRY: Joi.number().required().min(1),

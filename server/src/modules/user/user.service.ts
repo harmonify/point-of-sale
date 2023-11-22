@@ -1,7 +1,7 @@
-import { HashService } from '@common/helpers';
-import { InvalidCurrentPasswordException } from '@common/http/exceptions';
+import { HashService } from '@/common/helpers';
+import { InvalidCurrentPasswordException } from '@/libs/http/exceptions';
 import { UserEntity } from '@database/entities';
-import { BaseRepository } from '@libs/crud/base.repository';
+import { BaseRepository } from '@/libs/crud/base.repository';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 

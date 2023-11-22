@@ -1,4 +1,4 @@
-import { InvalidTokenException } from '@common/http/exceptions';
+import { InvalidTokenException } from '@/libs/http/exceptions';
 import { UserEntity } from '@database/entities/user.entity';
 import {
   ExecutionContext,

@@ -1,6 +1,6 @@
-import { ApiGlobalResponse } from '@common/decorators';
+import { ApiGlobalResponse } from '@/common/decorators';
 import { UserEntity } from '@database/index';
-import { CurrentUser, SkipAuth, TOKEN_NAME } from '@modules/auth';
+import { CurrentUser, SkipAuth, TOKEN_NAME } from '@/modules/auth';
 import {
   Body,
   Controller,

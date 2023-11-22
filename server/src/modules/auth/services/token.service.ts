@@ -1,20 +1,20 @@
 import { UserEntity } from '@database/entities';
-import { BaseRepository } from '@libs/crud';
-import { translate } from '@libs/i18n';
-import { RefreshTokenRepository } from '@modules/auth/refresh-token.repository';
+import { BaseRepository } from '@/libs/crud';
+import { translate } from '@/libs/i18n';
+import { RefreshTokenRepository } from '@/modules/auth/refresh-token.repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import type { JwtSignOptions } from '@nestjs/jwt';
 import { RefreshTokenEntity } from '@database/entities';
-import type { JwtPayload } from '@modules/auth/dtos';
+import type { JwtPayload } from '@/modules/auth/dtos';
 import { TokenError, TokenType } from '../enums';
 import {
   AccessTokenExpiredException,
   InvalidTokenException,
   RefreshTokenExpiredException,
-} from '@common/http/exceptions';
+} from '@/libs/http/exceptions';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConfigService } from '@nestjs/config';
 
@@ -31,7 +31,7 @@ export class TokenService {
     @InjectRepository(RefreshTokenEntity)
     private readonly refreshTokenRepo: RefreshTokenRepository,
     private readonly jwt: JwtService,
-    private readonly configService: ConfigService<Configs, true>,
+    private readonly configService: ConfigService<IConfig, true>,
   ) {}
 
   /**
