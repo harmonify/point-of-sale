@@ -1,0 +1,261 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database.sqlite"
+}
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  name        String
+  description String?
+  address     String
+  mobile      String
+  email       String?
+  createdById Int
+  createdBy   User      @relation("customer_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById Int
+  updatedBy   User      @relation("customer_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order       Order[]
+
+  @@map("customer")
+}
+
+model Expense {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  deletedAt     DateTime?
+  description   String
+  amount        Float
+  spentAt       DateTime
+  expenseTypeId Int
+  expenseType   ExpenseType @relation(fields: [expenseTypeId], references: [id], onUpdate: NoAction)
+  createdById   Int
+  createdBy     User        @relation("expense_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById   Int
+  updatedBy     User        @relation("expense_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("expense")
+}
+
+model ExpenseType {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  description String
+  expense     Expense[]
+  createdById Int
+  createdBy   User      @relation("expenseType_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById Int
+  updatedBy   User      @relation("expenseType_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("expense_type")
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  userId      Int
+  identifier  String
+  title       String
+  description String?
+  url         String    @default("#")
+  source      String    @default("system")
+  dismissable Boolean   @default(true)
+}
+
+model Procurement {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  deletedAt    DateTime?
+  productId    Int
+  qty          Int
+  price        Float
+  payedAt      DateTime?
+  vendorId     Int?
+  vendor       Vendor?        @relation(fields: [vendorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product      Product        @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdBy    User           @relation("procurement_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdById  Int
+  updatedBy    User           @relation("procurement_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById  Int
+
+  @@map("procurement")
+}
+
+model Product {
+  id                Int             @id @default(autoincrement())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now())
+  deletedAt         DateTime?
+  name              String
+  description       String
+  costPrice         Float
+  sellingPrice      Float
+  productCategoryId Int
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onUpdate: NoAction)
+  createdById       Int
+  createdBy         User            @relation("product_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById       Int
+  updatedBy         User            @relation("product_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  procurement       Procurement[]   @relation()
+  order_product     OrderProduct[]  @relation()
+  ProductUnit       ProductUnit?    @relation(fields: [productUnitId], references: [id])
+  productUnitId     Int?
+
+  @@map("product")
+}
+
+model ProductCategory {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  description String
+  product     Product[]
+  createdById Int
+  createdBy   User      @relation("productCategory_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById Int
+  updatedBy   User      @relation("productCategory_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("product_category")
+}
+
+model ProductUnit {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  description String
+  product     Product[]
+  createdById Int
+  createdBy   User      @relation("productUnit_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById Int
+  updatedBy   User      @relation("productUnit_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("product_unit")
+}
+
+model Order {
+  id                  Int            @id @default(autoincrement())
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now())
+  deletedAt           DateTime?
+  discountOnItems     Float
+  discountOnTotal     Float
+  tax                 Float
+  taxPercentageString String?
+  billAmount          Float          @default(0)
+  netAmount           Float
+  amountPaid          Float
+  salesType           Int
+  transactionStatus   Int
+  comments            String?
+  isActive            Boolean
+  order_product       OrderProduct[]
+  customerId          Int
+  customer            Customer       @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  createdById         Int
+  createdBy           User           @relation("order_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById         Int
+  updatedBy           User           @relation("order_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("order")
+}
+
+model OrderId {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+  count       Int
+  createdById Int
+  createdBy   User      @relation("orderId_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById Int
+  updatedBy   User      @relation("orderId_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("order_id")
+}
+
+model OrderProduct {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  deletedAt    DateTime?
+  qty          Int
+  costPrice    Float
+  sellingPrice Float
+  discount     Float
+  price        Float
+  productId    Int
+  product      Product        @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order        Order          @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdById  Int
+  createdBy    User           @relation("orderProduct_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById  Int
+  updatedBy    User           @relation("orderProduct_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("order_product")
+}
+
+model User {
+  id                       Int               @id @default(autoincrement())
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @default(now())
+  deletedAt                DateTime?
+  name                     String
+  password                 String
+  createdCustomers         Customer[]        @relation("customer_createdBy_user")
+  updatedCustomers         Customer[]        @relation("customer_updatedBy_user")
+  createdExpenses          Expense[]         @relation("expense_createdBy_user")
+  updatedExpenses          Expense[]         @relation("expense_updatedBy_user")
+  createdExpenseTypes      ExpenseType[]     @relation("expenseType_createdBy_user")
+  updatedExpenseTypes      ExpenseType[]     @relation("expenseType_updatedBy_user")
+  createdProcurements      Procurement[]     @relation("procurement_createdBy_user")
+  updatedProcurements      Procurement[]     @relation("procurement_updatedBy_user")
+  createdProducts          Product[]         @relation("product_createdBy_user")
+  updatedProducts          Product[]         @relation("product_updatedBy_user")
+  createdProductCategories ProductCategory[] @relation("productCategory_createdBy_user")
+  updatedProductCategories ProductCategory[] @relation("productCategory_updatedBy_user")
+  createdProductUnits      ProductUnit[]     @relation("productUnit_createdBy_user")
+  updatedProductUnits      ProductUnit[]     @relation("productUnit_updatedBy_user")
+  createdOrders            Order[]           @relation("order_createdBy_user")
+  updatedOrders            Order[]           @relation("order_updatedBy_user")
+  createdOrderIds          OrderId[]         @relation("orderId_createdBy_user")
+  updatedOrderIds          OrderId[]         @relation("orderId_updatedBy_user")
+  createdOrderProducts     OrderProduct[]    @relation("orderProduct_createdBy_user")
+  updatedOrderProducts     OrderProduct[]    @relation("orderProduct_updatedBy_user")
+  createdVendors           Vendor[]          @relation("vendor_createdBy_user")
+  updatedVendors           Vendor[]          @relation("vendor_updatedBy_user")
+
+  @@map("user")
+}
+
+model Vendor {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  address     String
+  mobile      String
+  email       String
+  procurement Procurement[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
+  createdById Int
+  createdBy   User          @relation("vendor_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedById Int
+  updatedBy   User          @relation("vendor_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("vendor")
+}
