@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserResponseDto {
   @ApiProperty()
-  id: string;
+  id: string | number;
 
   @ApiProperty()
   username: string;
@@ -12,9 +12,6 @@ export class UserResponseDto {
 
   @ApiProperty()
   isActive: boolean;
-
-  @ApiProperty()
-  isBlocked: boolean;
 
   constructor(dto?: Partial<UserResponseDto>) {
     Object.assign(this, dto);

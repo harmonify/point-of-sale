@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlphanumeric,
   IsBoolean,
   IsNotEmpty,
   IsPhoneNumber,
@@ -8,13 +7,6 @@ import {
 } from 'class-validator';
 
 export class UpdateUserRequestDto {
-  @IsNotEmpty()
-  @IsAlphanumeric()
-  @ApiProperty({
-    example: 'jdoe',
-  })
-  username: string;
-
   @IsNotEmpty()
   @MaxLength(100)
   @ApiProperty({
@@ -40,10 +32,4 @@ export class UpdateUserRequestDto {
     example: true,
   })
   isActive?: boolean;
-
-  @IsBoolean()
-  @ApiProperty({
-    example: true,
-  })
-  isBlocked?: boolean;
 }

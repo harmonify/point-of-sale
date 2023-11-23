@@ -8,7 +8,6 @@ import { AuthController } from './auth.controller';
 import { JwtAuthGuard } from './guards';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthService, TokenService } from './services';
-import { RefreshTokenRepository } from './refresh-token.repository';
 
 @Global()
 @Module({
@@ -32,7 +31,6 @@ import { RefreshTokenRepository } from './refresh-token.repository';
   ],
   controllers: [AuthController],
   providers: [
-    RefreshTokenRepository,
     AuthService,
     JwtStrategy,
     TokenService,
@@ -41,13 +39,6 @@ import { RefreshTokenRepository } from './refresh-token.repository';
       useClass: JwtAuthGuard,
     },
   ],
-  exports: [
-    RefreshTokenRepository,
-    JwtStrategy,
-    PassportModule,
-    TokenService,
-    AuthService,
-    JwtModule,
-  ],
+  exports: [JwtStrategy, PassportModule, TokenService, AuthService, JwtModule],
 })
 export class AuthModule {}

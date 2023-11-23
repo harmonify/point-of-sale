@@ -1,91 +1,59 @@
-import { SalesService } from "../../services/SalesService";
-import {
-  JsonController,
-  Authorized,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete
-} from "routing-controllers";
-import { CurrentUser } from "../../decorators/CurrentUser";
-import { TransactionDetails } from "../../entity/TransactionDetails";
-import { CheckoutSale } from "../../dtos/sale";
+import { CurrentUser } from '@/modules/auth';
+import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { OrderProduct, User } from '@prisma/client';
 
-const INVALID_TRANSACTIONID = {
-  code: "INVALID_TRANSACTIONID",
-  message: "invalid transaction id is sent"
-};
+import { CheckoutSale } from '../../dtos/sale';
+import { SaleService } from './sale.service';
 
-@Controller("/sales")
-@Authorized()
-export class Sale {
-  constructor(private salesService: SalesService) {}
+@ApiTags('Sale')
+@Controller({ path: '/sale', version: '1' })
+export class SaleController {
+  constructor(private salesService: SaleService) {}
 
-  @Get("/initTransaction")
-  public initTransaction(@CurrentUser() userid: string): Promise<number> {
-    return this.salesService.initTransaction(userid);
+  @Post('/init')
+  public initTransaction(@CurrentUser() user: User): Promise<number> {
+    return this.salesService.initTransaction(userId);
   }
 
-  @Get("/openTransaction/:transactionId")
+  @Post('/:transactionId/open')
   public openTransaction(
-    @CurrentUser() userid: string,
-    @Param("transactionId") transactionId: number
-  ): Promise<any> {
-    if (!transactionId) {
-      throw INVALID_TRANSACTIONID;
-    }
-
-    return this.salesService.openTransaction(userid, transactionId);
+    @CurrentUser() user: User,
+    @Param('transactionId') transactionId: number,
+  ) {
+    return this.salesService.openTransaction(userId, transactionId);
   }
 
-  @Post("/:transactionId/updateCart")
-  public addToCart(
-    @Param("transactionId") transactionId: number,
-    @Body() transactionDetails: TransactionDetails,
-    @CurrentUser() userid: string
-  ): Promise<any> {
-    if (!transactionId) {
-      throw INVALID_TRANSACTIONID;
-    }
-
-    transactionDetails.id = transactionId;
-    return this.salesService.updateCart(transactionDetails, userid);
+  @Put('/:transactionId/cart')
+  public updateCart(
+    @Param('transactionId') transactionId: number,
+    @Body() orderProducts: OrderProduct[],
+    @CurrentUser() user: User,
+  ) {
+    return this.salesService.updateCart(userId, {
+      transactionId,
+      orderProducts,
+    });
   }
 
-  @Delete("/:transactionId/:productId")
+  @Post('/:transactionId/checkout')
+  public checkout(
+    @Param('transactionId') transactionId: number,
+    @CurrentUser() user: User,
+    @Body() saleDetails: CheckoutSale,
+  ) {
+    return this.salesService.checkout({
+      transactionId,
+      userId,
+      saleDetails,
+    });
+  }
+
+  @Delete('/:transactionId/:productId')
   public removeItemFromCart(
-    @Param("transactionId") transactionId: number,
-    @Param("productId") productId: string
+    @Param('transactionId') transactionId: number,
+    @Param('productId') productId: string,
   ) {
     return this.salesService.removeItemFromCart(transactionId, productId);
-  }
-
-  @Post("/:transactionId/checkoutCounterSale")
-  public checkoutCounterSale(
-    @Param("transactionId") transactionId: number,
-    @CurrentUser() userid: string,
-    @Body() saleDetails: CheckoutSale
-  ) {
-    if (!transactionId) {
-      throw INVALID_TRANSACTIONID;
-    }
-
-    saleDetails.transactionId = transactionId;
-    return this.salesService.checkoutSale(userid, saleDetails);
-  }
-
-  @Post("/:transactionId/checkoutCreditSale")
-  public checkoutCreditSale(
-    @Param("transactionId") transactionId: number,
-    @CurrentUser() userid: string,
-    @Body() saleDetails: CheckoutSale
-  ) {
-    if (!transactionId) {
-      throw INVALID_TRANSACTIONID;
-    }
-
-    saleDetails.transactionId = transactionId;
-    return this.salesService.checkoutSale(userid, saleDetails, true);
   }
 }

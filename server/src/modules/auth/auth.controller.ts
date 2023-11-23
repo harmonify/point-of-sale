@@ -1,10 +1,11 @@
-import { UserEntity } from '@database/entities';
+import { User } from '@prisma/client';
 import {
   Body,
   Controller,
   DefaultValuePipe,
   ParseBoolPipe,
   Post,
+  Put,
   Query,
   ValidationPipe,
 } from '@nestjs/common';
@@ -20,17 +21,14 @@ import { CurrentUser, SkipAuth } from '.';
 import {
   AuthRequestDto,
   AuthResponseDto,
+  ChangePasswordRequestDto,
   RefreshTokenRequestDto,
   RefreshTokenResponseDto,
 } from './dtos';
 import { AuthService, TokenService } from './services';
 
-@SkipAuth()
 @ApiTags('Auth')
-@Controller({
-  path: 'auth',
-  version: '1',
-})
+@Controller({ path: 'auth', version: '1' })
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -41,6 +39,7 @@ export class AuthController {
   @ApiOkResponse({ description: 'Successfully authenticated user' })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @ApiInternalServerErrorResponse({ description: 'Server error' })
+  @SkipAuth()
   @Post('/login')
   login(
     @Body(ValidationPipe) authCredentialsDto: AuthRequestDto,
@@ -48,11 +47,21 @@ export class AuthController {
     return this.authService.login(authCredentialsDto);
   }
 
+  @ApiOperation({ description: 'Change user password' })
+  @Put('/password')
+  changePassword(
+    @Body(ValidationPipe) changePassword: ChangePasswordRequestDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.authService.changePassword(changePassword, user);
+  }
+
   @ApiOperation({ description: 'Renew access in the application' })
   @ApiOkResponse({ description: 'token successfully renewed' })
   @ApiUnauthorizedResponse({ description: 'Refresh token invalid or expired' })
   @ApiInternalServerErrorResponse({ description: 'Server error' })
-  @Post('/token/refresh')
+  @SkipAuth()
+  @Post('/refresh-token')
   async getNewToken(
     @Body(ValidationPipe) refreshTokenDto: RefreshTokenRequestDto,
   ): Promise<RefreshTokenResponseDto> {
@@ -63,9 +72,10 @@ export class AuthController {
   }
 
   @ApiOperation({ description: 'Logout user' })
+  @SkipAuth()
   @Post('logout')
   async logout(
-    @CurrentUser() user: UserEntity,
+    @CurrentUser() user: User,
     @Query('from_all', new DefaultValuePipe(false), ParseBoolPipe)
     fromAll: boolean,
     @Body(ValidationPipe) refreshTokenDto: RefreshTokenRequestDto,

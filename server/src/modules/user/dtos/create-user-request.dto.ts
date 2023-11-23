@@ -1,24 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlphanumeric,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
   IsString,
+  IsStrongPassword,
   Length,
-  Matches,
   MaxLength,
 } from 'class-validator';
 
-const passwordRegex = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 export class CreateUserRequestDto {
-  @IsNotEmpty()
-  @IsAlphanumeric()
-  @ApiProperty({
-    example: 'jdoe',
-  })
-  username: string;
-
   @IsNotEmpty()
   @MaxLength(255)
   @ApiProperty({
@@ -43,7 +34,7 @@ export class CreateUserRequestDto {
   @IsNotEmpty()
   @IsString()
   @Length(8, 64)
-  @Matches(passwordRegex, { message: 'Password too weak' })
+  @IsStrongPassword({ minLength: 8 }, { message: 'Password too weak' })
   @ApiProperty({
     example: 'Hello123',
   })

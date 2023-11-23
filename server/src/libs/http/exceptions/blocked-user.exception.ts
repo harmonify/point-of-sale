@@ -1,7 +1,7 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { HttpErrorType } from '../enums';
 
-export class DisabledUserException extends UnauthorizedException {
+export class BlockedUserException extends ForbiddenException {
   constructor() {
     super({
       error: HttpErrorType.BLOCKED_USER,

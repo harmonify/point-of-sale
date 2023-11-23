@@ -1,5 +1,4 @@
 import { InvalidTokenException } from '@/libs/http/exceptions';
-import { UserEntity } from '@database/entities/user.entity';
 import {
   ExecutionContext,
   Injectable,
@@ -8,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from '@prisma/client';
 import { ExtractJwt } from 'passport-jwt';
 
 import { SKIP_AUTH } from '../constants';
@@ -59,7 +59,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   /**
    * Handle request and verify if exist an error or there's not user
    */
-  handleRequest<UserEntity>(error: Error, user: UserEntity) {
+  handleRequest<T = User>(error: Error, user: T) {
     if (error) {
       this.logger.error(error);
       throw error;

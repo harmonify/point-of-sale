@@ -11,17 +11,15 @@
         "options": {
           "introspectComments": true,
           "dtoFileNameSuffix": [
-            ".entity.ts",
-            ".dto.ts",
-            ".response.ts"
+            ".dto.ts"
           ]
         }
       }
     ],
     "assets": [
+      { "include": "i18n/**/*", "watchAssets": true },
       {
         "include": "resources/**/*",
-        "exclude": "resources/images/*",
         "watchAssets": true
       },
       {

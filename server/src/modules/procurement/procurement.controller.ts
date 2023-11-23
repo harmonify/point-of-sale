@@ -1,66 +1,83 @@
-import { Receiving } from "../../entity/Receiving";
+import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
+import { CurrentUser } from '@/modules/auth';
 import {
-  Get,
-  Post,
   Body,
-  JsonController,
-  Authorized,
-  QueryParam,
+  Controller,
+  Delete,
+  Get,
   Param,
+  Post,
   Put,
-  Delete
-} from "routing-controllers";
-import {
-  PaginationInfo,
-  IPaginationQueryParam
-} from "../../decorators/PaginationInfo";
-import { IFetchPageQuery } from "../../services/CrudServices";
-import { ProcurementServices } from "../../services/ProcurementServices";
-import { CurrentUser } from "../../decorators/CurrentUser";
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Procurement, User } from '@prisma/client';
 
-@Controller("/procurement")
-@Authorized()
+@ApiTags('Procurement')
+@Controller({ path: '/procurement', version: '1' })
 export class ProcurementController {
-  constructor(private procurementervices: ProcurementServices) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  @Get("/:id")
-  public async getReceivingById(@Param("id") id: string): Promise<any> {
-    const res = await this.procurementervices.fetchById(id);
-    return res || {};
+  @Get('/:id')
+  findOne(@Param('id') id: number) {
+    return this.prismaService.procurement.findUniqueOrThrow({
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
   @Get()
-  public async getProcurement(
-    @PaginationInfo() paginationInfo: IPaginationQueryParam,
-    @QueryParam("q") search?: string
-  ): Promise<Receiving[]> {
-    const query: IFetchPageQuery = {
-      search,
-      perPage: paginationInfo.perPage,
-      page: paginationInfo.pageNo
-    };
-    return await this.procurementervices.fetchPages(query);
+  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+    return this.prismaService.procurement.findMany({
+      select: {
+        ...PrismaService.DEFAULT_SELECT,
+        ...PrismaService.PROCUREMENT_DEFAULT_SELECT,
+        vendor: { select: PrismaService.VENDOR_DEFAULT_SELECT },
+        product: { select: PrismaService.PRODUCT_DEFAULT_SELECT },
+        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: {
+        ...PrismaService.DEFAULT_WHERE,
+        OR: paginationInfo.search
+          ? [
+              { vendor: { name: { contains: paginationInfo.search } } },
+              { product: { name: { contains: paginationInfo.search } } },
+            ]
+          : [],
+      },
+      orderBy: PrismaService.ORDER_BY_LATEST,
+    });
   }
 
   @Post()
-  public async createNewReceiving(
-    @Body() Receiving: Receiving,
-    @CurrentUser() userid: string
-  ): Promise<any> {
-    return await this.procurementervices.create(userid, Receiving);
+  create(@Body() procurement: Procurement, @CurrentUser() user: User) {
+    return this.prismaService.procurement.create({
+      data: {
+        ...procurement,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+    });
   }
 
-  @Put("/:id")
-  public async updateReceiving(
-    @Param("id") id: string,
-    @Body() data: Receiving,
-    @CurrentUser() userid: string
+  @Put('/:id')
+  update(
+    @Param('id') id: number,
+    @Body() data: Procurement,
+    @CurrentUser() user: User,
   ) {
-    return await this.procurementervices.updateById(userid, { id }, data);
+    return this.prismaService.procurement.update({
+      data: { ...data, updatedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
-  @Delete("/:id")
-  public async deleteReceiving(@Param("id") id: string): Promise<any> {
-    return await this.procurementervices.deleteById(id);
+  @Delete('/:id')
+  delete(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.prismaService.procurement.update({
+      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

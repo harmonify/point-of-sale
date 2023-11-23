@@ -1,4 +1,4 @@
-import { IResponseBody } from '@/common/http/interfaces';
+import { ResponseBodyDto } from '@/libs/http';
 import { HttpStatus } from '@nestjs/common';
 import { PrismaClientErrorCode } from '../enums';
 
@@ -43,4 +43,4 @@ export const prismaHttpClientErrorRecord = {
     statusCode: HttpStatus.BAD_REQUEST,
     message: 'The provided data is invalid',
   },
-} as Record<PrismaClientErrorCode, IResponseBody | undefined>;
+} as Record<PrismaClientErrorCode, ResponseBodyDto | undefined>;

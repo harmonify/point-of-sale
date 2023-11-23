@@ -1,70 +1,78 @@
-import { Vendor } from "../../entity/Vendor";
+import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
+import { CurrentUser } from '@/modules/auth';
 import {
-  Get,
-  Post,
   Body,
-  JsonController,
-  Authorized,
-  QueryParam,
+  Controller,
+  Delete,
+  Get,
   Param,
+  Post,
   Put,
-  Delete
-} from "routing-controllers";
-import {
-  PaginationInfo,
-  IPaginationQueryParam
-} from "../../decorators/PaginationInfo";
-import { CrudServices, IFetchPageQuery } from "../../services/CrudServices";
-import { CurrentUser } from "../../decorators/CurrentUser";
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Vendor, User } from '@prisma/client';
 
-@Controller("/vendors")
-@Authorized()
-export class VendorsController {
-  private crudServices: CrudServices<Vendor>;
+@ApiTags('Vendor')
+@Controller({ path: '/vendor', version: '1' })
+export class VendorController {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  constructor() {
-    this.crudServices = new CrudServices<Vendor>();
-    this.crudServices.setEntity(Vendor);
-  }
-
-  @Get("/:id")
-  public async getVendorById(@Param("id") id: string): Promise<any> {
-    const res = await this.crudServices.fetchById(id);
-    return res || {};
+  @Get('/:id')
+  findOne(@Param('id') id: number) {
+    return this.prismaService.vendor.findUniqueOrThrow({
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
   @Get()
-  public async getVendors(
-    @PaginationInfo() paginationInfo: IPaginationQueryParam,
-    @QueryParam("q") search?: string
-  ): Promise<Vendor[]> {
-    const query: IFetchPageQuery = {
-      search,
-      perPage: paginationInfo.perPage,
-      page: paginationInfo.pageNo
-    };
-    return await this.crudServices.fetchPages(query);
+  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+    return this.prismaService.vendor.findMany({
+      select: {
+        ...PrismaService.DEFAULT_SELECT,
+        ...PrismaService.VENDOR_DEFAULT_SELECT,
+        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: {
+        ...PrismaService.DEFAULT_WHERE,
+        OR: paginationInfo.search
+          ? [{ name: { contains: paginationInfo.search } }]
+          : [],
+      },
+      orderBy: PrismaService.ORDER_BY_LATEST,
+    });
   }
 
   @Post()
-  public async createNewVendor(
-    @Body() Vendor: Vendor,
-    @CurrentUser() userid: string
-  ): Promise<any> {
-    return await this.crudServices.create(userid, Vendor);
+  create(@Body() vendor: Vendor, @CurrentUser() user: User) {
+    return this.prismaService.vendor.create({
+      data: {
+        ...vendor,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+    });
   }
 
-  @Put("/:id")
-  public async updateVendor(
-    @Param("id") id: string,
+  @Put('/:id')
+  update(
+    @Param('id') id: number,
     @Body() data: Vendor,
-    @CurrentUser() userid: string
+    @CurrentUser() user: User,
   ) {
-    return await this.crudServices.updateById(userid, { id }, data);
+    return this.prismaService.vendor.update({
+      data: { ...data, updatedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
-  @Delete("/:id")
-  public async deleteVendor(@Param("id") id: string): Promise<any> {
-    return await this.crudServices.deleteById(id);
+  @Delete('/:id')
+  delete(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.prismaService.vendor.update({
+      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

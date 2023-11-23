@@ -1,2 +1,2 @@
-prisma:
-	npx prisma
+migrate:
+	npx prisma migrate dev

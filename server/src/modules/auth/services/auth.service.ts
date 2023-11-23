@@ -1,24 +1,21 @@
-import { HashService } from '@/common/helpers';
-import { UserEntity } from '@database/entities/user.entity';
-import { BaseRepository } from '@/libs/crud';
-import { translate } from '@/libs/i18n';
-import { ChangePasswordRequestDto, UserResponseDto } from '@/modules/users/dtos';
+import { HashUtil } from '@/common/utils';
+import { InvalidCurrentPasswordException } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
+import { ChangePasswordRequestDto, UserResponseDto } from '@/modules/user/dtos';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { User } from '@prisma/client';
 import { lastValueFrom, map, zip } from 'rxjs';
 
-import { UserMapper } from '../../user/user.mapper';
 import { AuthRequestDto, AuthResponseDto } from '../dtos';
 import { TokenService } from './token.service';
-import { InjectRepository } from '@mikro-orm/nestjs';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: BaseRepository<UserEntity>,
     private readonly configService: ConfigService<IConfig, true>,
     private readonly tokenService: TokenService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   /**
@@ -28,8 +25,10 @@ export class AuthService {
    * the user is logging in with a password or oauth
    */
   async login(loginDto: AuthRequestDto): Promise<AuthResponseDto> {
-    const user = await this.userRepository.findOne({
-      username: loginDto.username,
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        email: loginDto.email,
+      },
     });
 
     if (!user) {
@@ -40,15 +39,11 @@ export class AuthService {
       );
     }
 
-    if (user.isBlocked) {
+    if (!user.isActive) {
       throw new ForbiddenException(translate('exception.userBlocked'));
     }
 
-    if (!user.isActive) {
-      throw new ForbiddenException(translate('exception.inactiveUser'));
-    }
-
-    const userDto = await UserMapper.toDtoWithRelations(user);
+    const userDto = new UserResponseDto(user);
 
     return lastValueFrom(
       zip(
@@ -73,32 +68,39 @@ export class AuthService {
    */
   async changePassword(
     dto: ChangePasswordRequestDto,
-    user: UserEntity,
+    user: User,
   ): Promise<UserResponseDto> {
     const { newPassword, currentPassword } = dto;
 
-    const userDetails = await this.userRepository.findOneOrFail({
-      _id: user._id,
+    const userDetails = await this.prismaService.user.findUniqueOrThrow({
+      where: {
+        id: user.id,
+      },
     });
 
-    await HashService.compare(currentPassword, userDetails.password);
+    if (await HashUtil.compare(currentPassword, userDetails.password)) {
+      throw new InvalidCurrentPasswordException();
+    }
 
-    const result = this.userRepository.assign(userDetails, {
-      password: newPassword,
+    const newUserDetails = await this.prismaService.user.update({
+      data: {
+        password: newPassword,
+      },
+      where: {
+        id: user.id,
+      },
     });
 
-    this.userRepository.getEntityManager().persistAndFlush(result);
-
-    return UserMapper.toDto(result);
+    return new UserResponseDto(newUserDetails);
   }
 
   /**
    * It deletes all refresh tokens for a given user
    * @param user - User - The user object that you want to logout from.
    */
-  async logoutFromAll(user: UserEntity): Promise<UserResponseDto> {
+  async logoutFromAll(user: User): Promise<UserResponseDto> {
     await this.tokenService.deleteRefreshTokenForUser(user);
-    return UserMapper.toDto(user);
+    return new UserResponseDto(user);
   }
 
   /**
@@ -106,12 +108,9 @@ export class AuthService {
    * @param user - The user object that was returned from the login method.
    * @param refreshToken - The refresh token that was sent to the client.
    */
-  async logout(
-    user: UserEntity,
-    refreshToken: string,
-  ): Promise<UserResponseDto> {
+  async logout(user: User, refreshToken: string): Promise<UserResponseDto> {
     const payload = await this.tokenService.decodeRefreshToken(refreshToken);
     await this.tokenService.deleteRefreshToken(user, payload);
-    return UserMapper.toDto(user);
+    return new UserResponseDto(user);
   }
 }

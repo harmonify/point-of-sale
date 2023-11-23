@@ -5,7 +5,8 @@ export class InvalidCurrentPasswordException extends ForbiddenException {
   constructor() {
     super({
       error: HttpErrorType.INVALID_CURRENT_PASSWORD,
-      message: 'The current password is invalid',
+      message:
+        "The password you've provided didn't match with the current password.",
     });
   }
 }

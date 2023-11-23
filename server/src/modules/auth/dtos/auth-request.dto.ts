@@ -4,9 +4,9 @@ import { IsNotEmpty } from 'class-validator';
 export class AuthRequestDto {
   @IsNotEmpty()
   @ApiProperty({
-    example: 'jDoe',
+    example: 'john-doe@example.com',
   })
-  readonly username: string;
+  readonly email: string;
 
   @IsNotEmpty()
   @ApiProperty({

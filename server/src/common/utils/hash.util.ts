@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 
-export class HashService {
+export class HashUtil {
   private static SALT_ROUNDS = 10;
 
   /**
@@ -8,7 +8,7 @@ export class HashService {
    * @param str {string}
    * @returns Promise<string> Returns encrypted
    */
-  public static async encrypt(str: string): Promise<string> {
+  static async encrypt(str: string): Promise<string> {
     return await bcrypt.hash(str, this.SALT_ROUNDS);
   }
 
@@ -18,10 +18,7 @@ export class HashService {
    * @param encrypted {string}
    * @returns Promise<boolean> Returns Boolean if provided string and encrypted string are equal
    */
-  public static async compare(
-    plain: string,
-    encrypted: string,
-  ): Promise<boolean> {
+  static async compare(plain: string, encrypted: string): Promise<boolean> {
     return await bcrypt.compare(plain, encrypted);
   }
 }

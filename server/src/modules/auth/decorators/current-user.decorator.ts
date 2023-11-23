@@ -1,10 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-// import { UserEntity } from '@database/entities/user.entity';
+import { Request } from 'express';
+import { User } from '@prisma/client';
 
 export const CurrentUser = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
+    const request: Request = ctx.switchToHttp().getRequest();
     const user = request.user;
-    return data ? user?.[data] : user;
+    return data ? user?.[data as keyof User] : user;
   },
 );

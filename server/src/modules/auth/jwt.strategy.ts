@@ -1,22 +1,21 @@
-import { UserEntity } from '@database/entities/user.entity';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
-import { Injectable } from '@nestjs/common';
-import { JwtPayload } from './dtos';
 import {
-  DisabledUserException,
+  BlockedUserException,
+  InactiveUserException,
   InvalidCredentialsException,
 } from '@/libs/http/exceptions';
-import { ErrorType } from '@/common/enums';
-import { BaseRepository } from '@/libs/crud';
-import { InjectRepository } from '@mikro-orm/nestjs';
+import { PrismaService } from '@/libs/prisma';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PassportStrategy } from '@nestjs/passport';
+import { User } from '@prisma/client';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+
+import { JwtPayload } from './dtos';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: BaseRepository<UserEntity>,
+    private readonly prismaService: PrismaService,
     private readonly configService: ConfigService<IConfig, true>,
   ) {
     super({
@@ -26,16 +25,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ sub }: JwtPayload): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ id: sub });
+  async validate({ sub }: JwtPayload): Promise<User> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: sub },
+    });
     if (!user) {
       throw new InvalidCredentialsException();
     }
     if (!user.isActive) {
-      throw new DisabledUserException(ErrorType.InactiveUser);
-    }
-    if (user.isBlocked) {
-      throw new DisabledUserException(ErrorType.BlockedUser);
+      throw new InactiveUserException(user.blockReason);
     }
     return user;
   }

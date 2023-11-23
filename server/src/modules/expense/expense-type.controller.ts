@@ -1,75 +1,78 @@
-import { ExpenseType } from "../../entity/ExpenseType";
+import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
+import { CurrentUser } from '@/modules/auth';
 import {
-  Get,
-  Post,
   Body,
-  JsonController,
-  Authorized,
-  QueryParam,
+  Controller,
+  Delete,
+  Get,
   Param,
+  Post,
   Put,
-  Delete
-} from "routing-controllers";
-import {
-  PaginationInfo,
-  IPaginationQueryParam
-} from "../../decorators/PaginationInfo";
-import { CrudServices, IFetchPageQuery } from "../../services/CrudServices";
-import { CurrentUser } from "../../decorators/CurrentUser";
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { ExpenseType, User } from '@prisma/client';
 
-@Controller("/expenseTypes")
-@Authorized()
-export class EpenseTypesController {
-  private crudServices: CrudServices<ExpenseType>;
+@ApiTags('ExpenseType')
+@Controller({ path: '/expense-type', version: '1' })
+export class ExpenseTypeController {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  constructor() {
-    this.crudServices = new CrudServices<ExpenseType>();
-    this.crudServices.setEntity(ExpenseType);
-  }
-
-  @Get("/all/items")
-  public async getAllEpenseTypes(): Promise<ExpenseType[]> {
-    return await this.crudServices.fetchAll();
-  }
-
-  @Get("/:id")
-  public async getExpenseTypeById(@Param("id") id: string): Promise<any> {
-    const res = await this.crudServices.fetchById(id);
-    return res || {};
+  @Get('/:id')
+  findOne(@Param('id') id: number) {
+    return this.prismaService.expenseType.findUniqueOrThrow({
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
   @Get()
-  public async getEpenseTypes(
-    @PaginationInfo() paginationInfo: IPaginationQueryParam,
-    @QueryParam("q") search?: string
-  ): Promise<ExpenseType[]> {
-    const query: IFetchPageQuery = {
-      search,
-      perPage: paginationInfo.perPage,
-      page: paginationInfo.pageNo
-    };
-    return await this.crudServices.fetchPages(query);
+  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+    return this.prismaService.expenseType.findMany({
+      select: {
+        ...PrismaService.DEFAULT_SELECT,
+        description: true,
+        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: {
+        ...PrismaService.DEFAULT_WHERE,
+        OR: paginationInfo.search
+          ? [{ description: { contains: paginationInfo.search } }]
+          : [],
+      },
+      orderBy: PrismaService.ORDER_BY_LATEST,
+    });
   }
 
   @Post()
-  public async createNewExpenseType(
-    @Body() ExpenseType: ExpenseType,
-    @CurrentUser() userid: string
-  ): Promise<any> {
-    return await this.crudServices.create(userid, ExpenseType);
+  create(@Body() expenseType: ExpenseType, @CurrentUser() user: User) {
+    return this.prismaService.expenseType.create({
+      data: {
+        ...expenseType,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+    });
   }
 
-  @Put("/:id")
-  public async updateExpenseType(
-    @Param("id") id: string,
+  @Put('/:id')
+  update(
+    @Param('id') id: number,
     @Body() data: ExpenseType,
-    @CurrentUser() userid: string
+    @CurrentUser() user: User,
   ) {
-    return await this.crudServices.updateById(userid, { id }, data);
+    return this.prismaService.expenseType.update({
+      data: { ...data, updatedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
-  @Delete("/:id")
-  public async deleteExpenseType(@Param("id") id: string): Promise<any> {
-    return await this.crudServices.deleteById(id);
+  @Delete('/:id')
+  delete(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.prismaService.expenseType.update({
+      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

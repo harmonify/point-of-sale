@@ -1,6 +1,17 @@
 import { Config } from '@/libs/config';
+import { User as PrismaUser } from '@prisma/client';
 
 declare global {
+  namespace Express {
+    export interface User extends PrismaUser {}
+
+    export interface Request {
+      user?: PrismaUser;
+      realIp: string;
+      body: Record<string, any>;
+    }
+  }
+
   namespace NodeJS {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'test' | 'staging' | 'production';

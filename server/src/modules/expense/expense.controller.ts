@@ -1,70 +1,79 @@
-import { Expense } from "../../entity/Expense";
+import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
+import { CurrentUser } from '@/modules/auth';
 import {
-  Get,
-  Post,
   Body,
-  JsonController,
-  Authorized,
-  QueryParam,
+  Controller,
+  Delete,
+  Get,
   Param,
+  Post,
   Put,
-  Delete
-} from "routing-controllers";
-import {
-  PaginationInfo,
-  IPaginationQueryParam
-} from "../../decorators/PaginationInfo";
-import { CrudServices, IFetchPageQuery } from "../../services/CrudServices";
-import { CurrentUser } from "../../decorators/CurrentUser";
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Expense, User } from '@prisma/client';
 
-@Controller("/expenses")
-@Authorized()
-export class ExpensesController {
-  private crudServices: CrudServices<Expense>;
+@ApiTags('Expense')
+@Controller({ path: '/expense', version: '1' })
+export class ExpenseController {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  constructor() {
-    this.crudServices = new CrudServices<Expense>();
-    this.crudServices.setEntity(Expense);
-  }
-
-  @Get("/:id")
-  public async getExpenseById(@Param("id") id: string): Promise<any> {
-    const res = await this.crudServices.fetchById(id);
-    return res || {};
+  @Get('/:id')
+  findOne(@Param('id') id: number) {
+    return this.prismaService.expense.findUniqueOrThrow({
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
   @Get()
-  public async getExpenses(
-    @PaginationInfo() paginationInfo: IPaginationQueryParam,
-    @QueryParam("q") search?: string
-  ): Promise<Expense[]> {
-    const query: IFetchPageQuery = {
-      search,
-      perPage: paginationInfo.perPage,
-      page: paginationInfo.pageNo
-    };
-    return await this.crudServices.fetchPages(query);
+  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+    return this.prismaService.expense.findMany({
+      select: {
+        ...PrismaService.DEFAULT_SELECT,
+        description: true,
+        amount: true,
+        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: {
+        ...PrismaService.DEFAULT_WHERE,
+        OR: paginationInfo.search
+          ? [{ description: { contains: paginationInfo.search } }]
+          : [],
+      },
+      orderBy: PrismaService.ORDER_BY_LATEST,
+    });
   }
 
   @Post()
-  public async createNewExpense(
-    @Body() Expense: Expense,
-    @CurrentUser() userid: string
-  ): Promise<any> {
-    return await this.crudServices.create(userid, Expense);
+  create(@Body() expense: Expense, @CurrentUser() user: User) {
+    return this.prismaService.expense.create({
+      data: {
+        ...expense,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+    });
   }
 
-  @Put("/:id")
-  public async updateExpense(
-    @Param("id") id: string,
+  @Put('/:id')
+  update(
+    @Param('id') id: number,
     @Body() data: Expense,
-    @CurrentUser() userid: string
+    @CurrentUser() user: User,
   ) {
-    return await this.crudServices.updateById(userid, { id }, data);
+    return this.prismaService.expense.update({
+      data: { ...data, updatedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
-  @Delete("/:id")
-  public async deleteExpense(@Param("id") id: string): Promise<any> {
-    return await this.crudServices.deleteById(id);
+  @Delete('/:id')
+  delete(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.prismaService.expense.update({
+      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

@@ -1,5 +1,4 @@
-import { Permissions } from './permissions.decorator';
-import { CurrentUser } from './current-user.decorator';
-import { SkipAuth } from './skip-auth.decorator';
-
-export { Permissions, CurrentUser, SkipAuth };
+export * from './current-user.decorator';
+export * from './permissions.decorator';
+export * from './roles.decorator';
+export * from './skip-auth.decorator';

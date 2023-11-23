@@ -66,11 +66,15 @@ export class ResponseBodyDto<T = Record<string, any> | Array<any>> {
   @ApiProperty({ example: 1617826799860 })
   timestamp?: number;
 
+  @ApiProperty({ example: 'Ax23489cvd' })
+  requestId?: string;
+
   constructor(params: ResponseBodyDto<T>) {
     this.statusCode = params.statusCode;
     this.message = params.message;
     if (params.error) this.error = params.error;
     if (params.data) this.data = params.data;
     this.timestamp = params.timestamp ? params.timestamp : new Date().getTime();
+    if (params.requestId) this.requestId = params.requestId;
   }
 }

@@ -1,94 +1,96 @@
-import { ApiGlobalResponse } from '@/common/decorators';
-import { UserEntity } from '@database/index';
-import { CurrentUser, SkipAuth, TOKEN_NAME } from '@/modules/auth';
+import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
+import { CurrentUser } from '@/modules/auth';
 import {
+  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   Put,
-  ValidationPipe,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiConflictResponse,
-  ApiOperation,
-  ApiQuery,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 
-import {
-  ChangePasswordRequestDto,
-  CreateUserRequestDto,
-  UpdateUserRequestDto,
-  UserResponseDto,
-} from './dtos';
-import { UserService } from './user.service';
-
-@ApiTags('Users')
-@ApiBearerAuth(TOKEN_NAME)
-@Controller({
-  path: 'users',
-  version: '1',
-})
+@ApiTags('User')
+@Controller({ path: '/user', version: '1' })
 export class UserController {
-  constructor(private usersService: UserService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  @ApiOperation({ description: 'Get a paginated user list' })
-  @ApiQuery({
-    name: 'search',
-    type: 'string',
-    required: false,
-    example: 'admin',
-  })
-  @Get()
-  findAll() {
-    return this.usersService.findAll(null);
-  }
-
-  @ApiOperation({ description: 'Get user by id' })
-  @ApiGlobalResponse(UserResponseDto)
   @Get('/:id')
-  findOne(@Param('id') id: string): Promise<UserResponseDto> {
-    return this.usersService.findOne(id);
+  findOne(@Param('id') id: number) {
+    return this.prismaService.user.findUniqueOrThrow({
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
-  @ApiOperation({ description: 'Create new user' })
-  @ApiGlobalResponse(UserResponseDto)
-  @ApiConflictResponse({ description: 'User already exists' })
+  @Get()
+  async findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+    const users = await this.prismaService.user.findMany({
+      select: {
+        ...PrismaService.DEFAULT_SELECT,
+        ...PrismaService.USER_DEFAULT_SELECT,
+        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+        updatedBy: { select: PrismaService.USER_DEFAULT_SELECT },
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: {
+        ...PrismaService.DEFAULT_WHERE,
+        OR: paginationInfo.search
+          ? [
+              { name: { contains: paginationInfo.search } },
+              { email: { contains: paginationInfo.search } },
+              { phoneNumber: { contains: paginationInfo.search } },
+            ]
+          : [],
+      },
+      orderBy: PrismaService.ORDER_BY_LATEST,
+    });
+    return users.map((user) => ({
+      ...user,
+      createdBy: user.createdBy ? user.createdBy : { name: 'SYSTEM' },
+      updatedBy: user.createdBy ? user.createdBy : { name: 'SYSTEM' },
+    }));
+  }
+
   @Post()
-  create(
-    @Body(ValidationPipe) UserDto: CreateUserRequestDto,
-  ): Promise<UserResponseDto> {
-    return this.usersService.create(UserDto);
+  create(@Body() data: User, @CurrentUser() user: User) {
+    return this.prismaService.user.create({
+      data: {
+        ...data,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+    });
   }
 
-  @ApiOperation({ description: 'Update user by id' })
-  @ApiGlobalResponse(UserResponseDto)
-  @ApiConflictResponse({ description: 'User already exists' })
   @Put('/:id')
   update(
-    @Param('id') id: string,
-    @Body(ValidationPipe) UserDto: UpdateUserRequestDto,
-  ): Promise<UserResponseDto> {
-    return this.usersService.update(id, UserDto);
+    @Param('id') id: number,
+    @Body() data: User,
+    @CurrentUser() user: User,
+  ) {
+    return this.prismaService.user.update({
+      data: { ...data, updatedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 
-  @ApiOperation({ description: 'Change user password' })
-  @ApiGlobalResponse(UserResponseDto)
-  @Post('/change/password')
-  changePassword(
-    @Body(ValidationPipe) changePassword: ChangePasswordRequestDto,
-    @CurrentUser() user: Required<UserEntity>,
-  ): Promise<UserResponseDto> {
-    return this.usersService.changePassword(changePassword, user.id);
-  }
-
-  @ApiOperation({ description: 'Delete user by id' })
-  @ApiGlobalResponse(UserResponseDto)
   @Delete('/:id')
-  delete(@Param('id') id: string): Promise<UserResponseDto> {
-    return this.usersService.delete(id);
+  delete(@Param('id') id: number, @CurrentUser() user: User) {
+    if (id === user.id) {
+      throw new BadRequestException('Cannot delete own account.');
+    }
+    return this.prismaService.user.update({
+      data: {
+        ...PrismaService.DEFAULT_SOFT_DELETE_DATA,
+        blockReason: 'Blocked by admin.',
+        deletedById: user.id,
+      },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

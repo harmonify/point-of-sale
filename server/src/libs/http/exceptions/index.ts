@@ -1,23 +1,11 @@
-import { AccessTokenExpiredException } from './access-token-expired.exception';
-import { DisabledUserException } from './disabled-user.exception';
-import { ForeignKeyConflictException } from './foreign-key-conflict.exception';
-import { InvalidCredentialsException } from './invalid-credentials.exception';
-import { InvalidCurrentPasswordException } from './invalid-current-password.exception';
-import { InvalidTokenException } from './invalid-token.exception';
-import { PermissionExistsException } from './permission-exists.exception';
-import { RefreshTokenExpiredException } from './refresh-token-expired.exception';
-import { RoleExistsException } from './role-exists.exception';
-import { UserExistsException } from './user-exists.exception';
-
-export {
-  ForeignKeyConflictException,
-  PermissionExistsException,
-  RoleExistsException,
-  UserExistsException,
-  InvalidCurrentPasswordException,
-  InvalidCredentialsException,
-  DisabledUserException,
-  InvalidTokenException,
-  AccessTokenExpiredException,
-  RefreshTokenExpiredException,
-};
+export * from './access-token-expired.exception';
+export * from './blocked-user.exception';
+export * from './foreign-key-conflict.exception';
+export * from './inactive-user.exception';
+export * from './invalid-credentials.exception';
+export * from './invalid-current-password.exception';
+export * from './invalid-token.exception';
+export * from './permission-exists.exception';
+export * from './refresh-token-expired.exception';
+export * from './role-exists.exception';
+export * from './user-exists.exception';

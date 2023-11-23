@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
-import { APP_ENVIRONMENTS } from '@/common/constant';
+import { APP_ENVIRONMENTS } from '@/common/constants';
 
 // validation schema
 

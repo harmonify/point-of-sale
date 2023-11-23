@@ -4,7 +4,7 @@ import {
   SWAGGER_API_ENDPOINT,
   SWAGGER_DESCRIPTION,
   SWAGGER_TITLE,
-} from '@/common/constant';
+} from '@/common/constants';
 import { swaggerOptions } from '@/common/swagger/swagger.plugin';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -15,7 +15,7 @@ import { NestConfigService } from '@/libs/config/config.service';
 
 const logger = new Logger('App:Utils');
 
-export class AppUtils {
+export class AppUtil {
   static gracefulShutdown(app: INestApplication, code: string): void {
     setTimeout(() => process.exit(1), 5000);
     logger.verbose(`Signal received with code ${code} ⚡.`);
@@ -36,10 +36,10 @@ export class AppUtils {
 
   static killAppWithGrace(app: INestApplication): void {
     process.on('SIGINT', () => {
-      AppUtils.gracefulShutdown(app, 'SIGINT');
+      AppUtil.gracefulShutdown(app, 'SIGINT');
     });
     process.on('SIGTERM', () => {
-      AppUtils.gracefulShutdown(app, 'SIGTERM');
+      AppUtil.gracefulShutdown(app, 'SIGTERM');
     });
   }
 

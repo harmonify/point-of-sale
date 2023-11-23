@@ -1,76 +1,74 @@
-import { UserEntity } from '@database/entities';
-import { BaseRepository } from '@/libs/crud';
-import { translate } from '@/libs/i18n';
-import { RefreshTokenRepository } from '@/modules/auth/refresh-token.repository';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { TokenExpiredError } from 'jsonwebtoken';
-
-import type { JwtSignOptions } from '@nestjs/jwt';
-import { RefreshTokenEntity } from '@database/entities';
-import type { JwtPayload } from '@/modules/auth/dtos';
-import { TokenError, TokenType } from '../enums';
+import { APP_NAME } from '@/common/constants';
 import {
   AccessTokenExpiredException,
   InvalidTokenException,
   RefreshTokenExpiredException,
 } from '@/libs/http/exceptions';
-import { InjectRepository } from '@mikro-orm/nestjs';
+import { PrismaService } from '@/libs/prisma';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { TokenExpiredError } from 'jsonwebtoken';
+
+import { TokenError, TokenType } from '../enums';
+
+import type { JwtSignOptions } from '@nestjs/jwt';
+import type { JwtPayload } from '@/modules/auth/dtos';
+import { RefreshToken, User } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class TokenService {
   private readonly BASE_OPTIONS: JwtSignOptions = {
-    issuer: 'nestify',
-    audience: 'nestify',
+    issuer: APP_NAME,
+    audience: APP_NAME,
   };
 
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: BaseRepository<UserEntity>,
-    @InjectRepository(RefreshTokenEntity)
-    private readonly refreshTokenRepo: RefreshTokenRepository,
+    private readonly prismaService: PrismaService,
     private readonly jwt: JwtService,
     private readonly configService: ConfigService<IConfig, true>,
   ) {}
 
   /**
    * It takes a user object, and returns an observable of a string
-   * @param user - Omit<UserEntity, "password">
+   * @param user - Omit<User, "password">
    * @returns An Promise of a string.
    */
-  generateAccessToken(user: Omit<UserEntity, 'password'>): Promise<string> {
+  generateAccessToken(user: Omit<User, 'password'>): Promise<string> {
     const options: JwtSignOptions = {
       ...this.BASE_OPTIONS,
-      subject: String(user._id),
+      subject: String(user.id),
       expiresIn: this.configService.get('jwt.accessExpiry', {
         infer: true,
       }),
     };
 
-    return this.jwt.signAsync({ _id: user._id }, options);
+    return this.jwt.signAsync({ id: user.id }, options);
   }
 
   /**
    * It creates a refresh token in the database, then signs it with JWT
-   * @param user - UserEntity - The user object that we want to generate a token for.
+   * @param user - User - The user object that we want to generate a token for.
    * @returns A string
    */
-  async generateRefreshToken(user: UserEntity): Promise<string> {
+  async generateRefreshToken(user: User): Promise<string> {
     const expiresIn = this.configService.get('jwt.refreshExpiry', {
       infer: true,
     });
-
-    const token = await this.refreshTokenRepo.createRefreshToken(
-      user,
-      expiresIn,
-    );
+    const expiredAt = DateTime.now().plus({ seconds: expiresIn }).toJSDate();
+    const token = await this.prismaService.refreshToken.create({
+      data: {
+        userId: user.id,
+        expiredAt,
+      },
+    });
 
     const options: JwtSignOptions = {
       ...this.BASE_OPTIONS,
       expiresIn,
-      subject: String(user._id),
-      jwtid: String(token._id),
+      subject: String(user.id),
+      jwtid: String(token.id),
     };
 
     return this.jwt.signAsync({}, options);
@@ -84,7 +82,7 @@ export class TokenService {
    */
   async resolveRefreshToken(
     encoded: string,
-  ): Promise<{ user: UserEntity; token: RefreshTokenEntity }> {
+  ): Promise<{ user: User; token: RefreshToken }> {
     const payload = await this.decodeRefreshToken(encoded);
     const token = await this.getStoredTokenFromRefreshTokenPayload(payload);
     if (!token) {
@@ -121,7 +119,7 @@ export class TokenService {
    */
   async createAccessTokenFromRefreshToken(
     refreshToken: string,
-  ): Promise<{ accessToken: string; user: UserEntity }> {
+  ): Promise<{ accessToken: string; user: User }> {
     const { user } = await this.resolveRefreshToken(refreshToken);
     const accessToken = await this.generateAccessToken(user);
     return { accessToken, user };
@@ -182,8 +180,13 @@ export class TokenService {
    * @param user - The user object that we want to delete the refresh token for.
    * @returns The user object.
    */
-  async deleteRefreshTokenForUser(user: UserEntity): Promise<UserEntity> {
-    await this.refreshTokenRepo.deleteTokensForUser(user);
+  async deleteRefreshTokenForUser(user: User): Promise<User> {
+    await this.prismaService.refreshToken.updateMany({
+      data: { isActive: false },
+      where: {
+        user,
+      },
+    });
     return user;
   }
 
@@ -193,10 +196,7 @@ export class TokenService {
    * @param payload - The payload of the refresh token.
    * @returns The user object
    */
-  async deleteRefreshToken(
-    user: UserEntity,
-    payload: JwtPayload,
-  ): Promise<UserEntity> {
+  async deleteRefreshToken(user: User, payload: JwtPayload): Promise<User> {
     const tokenId = payload.jti;
 
     if (!tokenId) {
@@ -207,7 +207,10 @@ export class TokenService {
       );
     }
 
-    await this.refreshTokenRepo.deleteToken(user, tokenId);
+    await this.prismaService.refreshToken.update({
+      data: { isActive: false },
+      where: { user, id: tokenId },
+    });
     return user;
   }
 
@@ -217,9 +220,7 @@ export class TokenService {
    * @param payload - IJwtPayload
    * @returns A user object
    */
-  getUserFromRefreshTokenPayload(
-    payload: JwtPayload,
-  ): Promise<UserEntity | null> {
+  getUserFromRefreshTokenPayload(payload: JwtPayload): Promise<User | null> {
     const subId = payload.sub;
 
     if (!subId) {
@@ -230,8 +231,10 @@ export class TokenService {
       );
     }
 
-    return this.userRepository.findOne({
-      id: subId,
+    return this.prismaService.user.findUnique({
+      where: {
+        id: subId,
+      },
     });
   }
 
@@ -243,7 +246,7 @@ export class TokenService {
    */
   getStoredTokenFromRefreshTokenPayload(
     payload: JwtPayload,
-  ): Promise<RefreshTokenEntity | null> {
+  ): Promise<RefreshToken | null> {
     const tokenId = payload.jti;
 
     if (!tokenId) {
@@ -254,6 +257,8 @@ export class TokenService {
       );
     }
 
-    return this.refreshTokenRepo.findTokenById(tokenId);
+    return this.prismaService.refreshToken.findUnique({
+      where: { id: payload.jti, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

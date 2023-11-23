@@ -1,5 +1,5 @@
 import { AppModule } from '@/app.module';
-import { AppUtils } from '@/common/helpers';
+import { AppUtil } from '@/common/utils';
 import { NestConfigService } from '@/libs/config/config.service';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -38,7 +38,7 @@ async function bootstrap() {
   // configure swagger
   // =========================================================
 
-  if (!configService.isProd()) AppUtils.setupSwagger(app, configService);
+  if (!configService.isProd()) AppUtil.setupSwagger(app, configService);
 
   // ======================================================
   // security and middlewares
@@ -85,7 +85,7 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
-  AppUtils.killAppWithGrace(app);
+  AppUtil.killAppWithGrace(app);
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

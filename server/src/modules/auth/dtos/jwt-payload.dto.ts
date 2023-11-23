@@ -1,8 +1,8 @@
-import { RefreshTokenEntity, UserEntity } from '@database/entities';
+import { RefreshToken, User } from '@prisma/client';
 
 export interface JwtPayload {
-  jti?: RefreshTokenEntity['id'];
-  sub: UserEntity['id'];
+  jti?: RefreshToken['id'];
+  sub: User['id'];
   iat: number;
   exp: number;
   aud: string;
