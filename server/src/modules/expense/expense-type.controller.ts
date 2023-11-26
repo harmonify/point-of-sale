@@ -13,8 +13,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { ExpenseType, User } from '@prisma/client';
 
-@ApiTags('ExpenseType')
-@Controller({ path: '/expense-type', version: '1' })
+@ApiTags('Expense Types')
+@Controller({ path: '/expense-types', version: '1' })
 export class ExpenseTypeController {
   constructor(private readonly prismaService: PrismaService) {}
 

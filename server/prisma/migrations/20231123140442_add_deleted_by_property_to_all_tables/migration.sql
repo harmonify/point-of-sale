@@ -88,7 +88,7 @@ CREATE TABLE "new_order_product" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" DATETIME,
-    "qty" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
     "costPrice" REAL NOT NULL,
     "sellingPrice" REAL NOT NULL,
     "discount" REAL NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE "new_order_product" (
     CONSTRAINT "order_product_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT "order_product_id_fkey" FOREIGN KEY ("id") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-INSERT INTO "new_order_product" ("costPrice", "createdAt", "createdById", "deletedAt", "discount", "id", "isActive", "price", "productId", "qty", "sellingPrice", "updatedAt", "updatedById") SELECT "costPrice", "createdAt", "createdById", "deletedAt", "discount", "id", "isActive", "price", "productId", "qty", "sellingPrice", "updatedAt", "updatedById" FROM "order_product";
+INSERT INTO "new_order_product" ("costPrice", "createdAt", "createdById", "deletedAt", "discount", "id", "isActive", "price", "productId", "quantity", "sellingPrice", "updatedAt", "updatedById") SELECT "costPrice", "createdAt", "createdById", "deletedAt", "discount", "id", "isActive", "price", "productId", "quantity", "sellingPrice", "updatedAt", "updatedById" FROM "order_product";
 DROP TABLE "order_product";
 ALTER TABLE "new_order_product" RENAME TO "order_product";
 CREATE TABLE "new_procurement" (
@@ -113,7 +113,7 @@ CREATE TABLE "new_procurement" (
     "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" DATETIME,
     "productId" INTEGER NOT NULL,
-    "qty" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
     "price" REAL NOT NULL,
     "payedAt" DATETIME,
     "vendorId" INTEGER,
@@ -126,7 +126,7 @@ CREATE TABLE "new_procurement" (
     CONSTRAINT "procurement_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "user" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT "procurement_id_fkey" FOREIGN KEY ("id") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-INSERT INTO "new_procurement" ("createdAt", "createdById", "deletedAt", "id", "isActive", "payedAt", "price", "productId", "qty", "updatedAt", "updatedById", "vendorId") SELECT "createdAt", "createdById", "deletedAt", "id", "isActive", "payedAt", "price", "productId", "qty", "updatedAt", "updatedById", "vendorId" FROM "procurement";
+INSERT INTO "new_procurement" ("createdAt", "createdById", "deletedAt", "id", "isActive", "payedAt", "price", "productId", "quantity", "updatedAt", "updatedById", "vendorId") SELECT "createdAt", "createdById", "deletedAt", "id", "isActive", "payedAt", "price", "productId", "quantity", "updatedAt", "updatedById", "vendorId" FROM "procurement";
 DROP TABLE "procurement";
 ALTER TABLE "new_procurement" RENAME TO "procurement";
 CREATE TABLE "new_order" (

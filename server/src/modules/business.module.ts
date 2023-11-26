@@ -6,7 +6,7 @@ import { ProcurementModule } from '@/modules/procurement';
 import { ProductModule } from '@/modules/product';
 import { SaleModule } from '@/modules/sale';
 import { UserModule } from '@/modules/user/user.module';
-import { VendorModule } from '@/modules/vendor';
+import { ProviderModule } from '@/modules/provider';
 import { Module } from '@nestjs/common';
 
 @Module({
@@ -15,7 +15,7 @@ import { Module } from '@nestjs/common';
     AuthModule,
     UserModule,
     CustomerModule,
-    VendorModule,
+    ProviderModule,
     ProductModule,
     ProcurementModule,
     ExpenseModule,

@@ -11,26 +11,26 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Vendor, User } from '@prisma/client';
+import { Provider, User } from '@prisma/client';
 
-@ApiTags('Vendor')
-@Controller({ path: '/vendor', version: '1' })
-export class VendorController {
+@ApiTags('Providers')
+@Controller({ path: '/providers', version: '1' })
+export class ProviderController {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Get('/:id')
   findOne(@Param('id') id: number) {
-    return this.prismaService.vendor.findUniqueOrThrow({
+    return this.prismaService.provider.findUniqueOrThrow({
       where: { id, ...PrismaService.DEFAULT_WHERE },
     });
   }
 
   @Get()
   findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
-    return this.prismaService.vendor.findMany({
+    return this.prismaService.provider.findMany({
       select: {
         ...PrismaService.DEFAULT_SELECT,
-        ...PrismaService.VENDOR_DEFAULT_SELECT,
+        ...PrismaService.PROVIDER_DEFAULT_SELECT,
         createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
       },
       skip: paginationInfo.skip,
@@ -46,10 +46,10 @@ export class VendorController {
   }
 
   @Post()
-  create(@Body() vendor: Vendor, @CurrentUser() user: User) {
-    return this.prismaService.vendor.create({
+  create(@Body() provider: Provider, @CurrentUser() user: User) {
+    return this.prismaService.provider.create({
       data: {
-        ...vendor,
+        ...provider,
         createdById: user.id,
         updatedById: user.id,
       },
@@ -59,10 +59,10 @@ export class VendorController {
   @Put('/:id')
   update(
     @Param('id') id: number,
-    @Body() data: Vendor,
+    @Body() data: Provider,
     @CurrentUser() user: User,
   ) {
-    return this.prismaService.vendor.update({
+    return this.prismaService.provider.update({
       data: { ...data, updatedById: user.id },
       where: { id, ...PrismaService.DEFAULT_WHERE },
     });
@@ -70,7 +70,7 @@ export class VendorController {
 
   @Delete('/:id')
   delete(@Param('id') id: number, @CurrentUser() user: User) {
-    return this.prismaService.vendor.update({
+    return this.prismaService.provider.update({
       data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
       where: { id, ...PrismaService.DEFAULT_WHERE },
     });

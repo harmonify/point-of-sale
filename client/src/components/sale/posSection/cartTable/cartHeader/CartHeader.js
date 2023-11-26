@@ -10,7 +10,7 @@ const CartHeader = ({ isCartEmpty, onDeleteAll }) => (
         Product
       </CustomTableCell>
       <CustomTableCell numeric>Price</CustomTableCell>
-      <CustomTableCell numeric>Qty</CustomTableCell>
+      <CustomTableCell numeric>quantity</CustomTableCell>
       <CustomTableCell numeric>Total</CustomTableCell>
       <CustomTableCell numeric style={{ width: 30, paddingRight: "5px" }}>
         {!isCartEmpty && <DeleteButton onDelete={onDeleteAll} />}

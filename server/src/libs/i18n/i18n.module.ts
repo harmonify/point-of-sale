@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import {
   AcceptLanguageResolver,
   CookieResolver,
@@ -8,7 +8,9 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
+import { CUSTOM_LANG_HEADER } from '@/libs/http';
 
+@Global()
 @Module({
   imports: [
     I18nModule.forRoot({
@@ -20,15 +22,18 @@ import {
       },
       logging: true,
       loaderOptions: {
-        path: path.join(`${process.cwd()}/src/resources/i18n/`),
+        path: path.join(process.cwd(), 'src', 'resources', 'i18n'),
         watch: true,
         includeSubfolders: true,
       },
       typesOutputPath: path.join(
-        `${process.cwd()}/src/i18n/interfaces/i18n-generated.interface.ts`,
+        process.cwd(),
+        'src',
+        'generated',
+        'i18n-generated.ts',
       ),
       resolvers: [
-        new HeaderResolver(['x-custom-lang']),
+        new HeaderResolver([CUSTOM_LANG_HEADER]),
         AcceptLanguageResolver,
         new CookieResolver(),
         { use: QueryResolver, options: ['lang', 'locale'] },

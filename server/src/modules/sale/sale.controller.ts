@@ -1,59 +1,100 @@
+import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import { PrismaService } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { OrderProduct, User } from '@prisma/client';
-
-import { CheckoutSale } from '../../dtos/sale';
+import { Sale, User } from '@prisma/client';
 import { SaleService } from './sale.service';
 
-@ApiTags('Sale')
-@Controller({ path: '/sale', version: '1' })
+@ApiTags('Sales')
+@Controller({ path: '/sales', version: '1' })
 export class SaleController {
-  constructor(private salesService: SaleService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly saleService: SaleService,
+  ) {}
 
-  @Post('/init')
-  public initTransaction(@CurrentUser() user: User): Promise<number> {
-    return this.salesService.initTransaction(userId);
-  }
+  // @Post('/checkout')
+  // public checkout(
+  //   @Param('saleId') saleId: number,
+  //   @CurrentUser() user: User,
+  //   @Body() checkoutDto: CheckoutDto,
+  // ) {
+  //   return this.saleService.checkout(user, {
+  //     saleId,
+  //     user,
+  //     checkoutDto,
+  //   });
+  // }
 
-  @Post('/:transactionId/open')
-  public openTransaction(
-    @CurrentUser() user: User,
-    @Param('transactionId') transactionId: number,
-  ) {
-    return this.salesService.openTransaction(userId, transactionId);
-  }
-
-  @Put('/:transactionId/cart')
-  public updateCart(
-    @Param('transactionId') transactionId: number,
-    @Body() orderProducts: OrderProduct[],
-    @CurrentUser() user: User,
-  ) {
-    return this.salesService.updateCart(userId, {
-      transactionId,
-      orderProducts,
+  @Get('/:id')
+  findOne(@Param('id') id: number) {
+    return this.prismaService.sale.findUniqueOrThrow({
+      where: { id, ...PrismaService.DEFAULT_WHERE },
     });
   }
 
-  @Post('/:transactionId/checkout')
-  public checkout(
-    @Param('transactionId') transactionId: number,
-    @CurrentUser() user: User,
-    @Body() saleDetails: CheckoutSale,
-  ) {
-    return this.salesService.checkout({
-      transactionId,
-      userId,
-      saleDetails,
+  @Get()
+  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+    return this.prismaService.sale.findMany({
+      select: {
+        ...PrismaService.DEFAULT_SELECT,
+        ...PrismaService.SALE_DEFAULT_SELECT,
+        customer: { select: PrismaService.CUSTOMER_DEFAULT_SELECT },
+        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: {
+        ...PrismaService.DEFAULT_WHERE,
+        OR: paginationInfo.search
+          ? [
+              { comments: { contains: paginationInfo.search } },
+              { customer: { name: { contains: paginationInfo.search } } },
+              { createdBy: { name: { contains: paginationInfo.search } } },
+            ]
+          : [],
+      },
+      orderBy: PrismaService.ORDER_BY_LATEST,
     });
   }
 
-  @Delete('/:transactionId/:productId')
-  public removeItemFromCart(
-    @Param('transactionId') transactionId: number,
-    @Param('productId') productId: string,
+  @Post()
+  create(@Body() sale: Sale, @CurrentUser() user: User) {
+    return this.prismaService.sale.create({
+      data: {
+        ...sale,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+    });
+  }
+
+  @Put('/:id')
+  update(
+    @Param('id') id: number,
+    @Body() data: Sale,
+    @CurrentUser() user: User,
   ) {
-    return this.salesService.removeItemFromCart(transactionId, productId);
+    return this.prismaService.sale.update({
+      data: { ...data, updatedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
+  }
+
+  @Delete('/:id')
+  delete(@Param('id') id: number, @CurrentUser() user: User) {
+    return this.prismaService.sale.update({
+      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
+      where: { id, ...PrismaService.DEFAULT_WHERE },
+    });
   }
 }

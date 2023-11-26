@@ -1,7 +1,8 @@
-import { Module, RequestMethod } from '@nestjs/common';
+import { Global, Module, RequestMethod } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { stdTimeFunctions } from 'pino';
 import { LoggerService } from './logger.service';
+import { APP_NAME } from '@/common/constants';
 
 // Fields to redact from logs
 const redactFields = [
@@ -16,13 +17,14 @@ const basePinoOptions = {
   redact: redactFields,
 };
 
+@Global()
 @Module({
   imports: [
     LoggerModule.forRoot({
       pinoHttp: {
         /** NOTE: `timestamp` option append its string output to the JSON log output which may cause the logs to be invalid JSON. This may mess with the transports, such as `pino-pretty` or `pino/file`  */
         timestamp: stdTimeFunctions.isoTime,
-        name: 'whatsappx',
+        name: APP_NAME,
         customProps: (_request, _response) => ({
           context: 'HTTP',
         }),
@@ -76,4 +78,4 @@ const basePinoOptions = {
   providers: [LoggerService],
   exports: [LoggerModule, LoggerService],
 })
-export class NestPinoModule {}
+export class NestLoggerModule {}

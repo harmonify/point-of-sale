@@ -35,10 +35,11 @@ export class PrismaService
   > = {
     ...PrismaService.DEFAULT_SELECT,
     name: true,
-    phoneNumber: true,
-    email: true,
-    description: true,
     address: true,
+    description: true,
+    email: true,
+    gender: true,
+    phoneNumber: true,
   };
 
   // Procurement
@@ -47,9 +48,22 @@ export class PrismaService
     BASE_FIELDS
   > = {
     ...PrismaService.DEFAULT_SELECT,
-    price: true,
-    qty: true,
+    deliveredAt: true,
+    deliveryStatus: true,
+    invoiceDate: true,
+    invoiceNumber: true,
+    name: true,
     payedAt: true,
+    paymentStatus: true,
+  };
+
+  static readonly PROCUREMENT_PRODUCT_DEFAULT_SELECT: Omit<
+    Prisma.ProcurementProductSelectScalar,
+    BASE_FIELDS
+  > = {
+    ...PrismaService.DEFAULT_SELECT,
+    price: true,
+    quantity: true,
   };
 
   // Product
@@ -60,8 +74,8 @@ export class PrismaService
     ...PrismaService.DEFAULT_SELECT,
     name: true,
     description: true,
-    costPrice: true,
-    sellingPrice: true,
+    barcode: true,
+    barcodeType: true,
   };
 
   // Product Category
@@ -74,6 +88,45 @@ export class PrismaService
     description: true,
   };
 
+  // Product Unit
+  static readonly PRODUCT_UNIT_DEFAULT_SELECT: Omit<
+    Prisma.ProductUnitSelectScalar,
+    BASE_FIELDS
+  > = {
+    ...PrismaService.DEFAULT_SELECT,
+    name: true,
+    description: true,
+    sellingPrice: true,
+    wholesalePrice: true,
+  };
+
+  static readonly SALE_DEFAULT_SELECT: Omit<
+    Prisma.SaleSelectScalar,
+    BASE_FIELDS
+  > = {
+    amountPaid: true,
+    billAmount: true,
+    comments: true,
+    discountOnItems: true,
+    discountOnTotal: true,
+    netAmount: true,
+    tax: true,
+    taxPercentageString: true,
+  };
+
+  // Provider
+  static readonly PROVIDER_DEFAULT_SELECT: Omit<
+    Prisma.ProviderSelectScalar,
+    BASE_FIELDS
+  > = {
+    ...PrismaService.DEFAULT_SELECT,
+    name: true,
+    email: true,
+    phoneNumber: true,
+    description: true,
+    address: true,
+  };
+
   // User
   static readonly USER_DEFAULT_SELECT: Omit<
     Prisma.UserSelectScalar,
@@ -83,19 +136,7 @@ export class PrismaService
     name: true,
     email: true,
     phoneNumber: true,
-  };
-
-  // Vendor
-  static readonly VENDOR_DEFAULT_SELECT: Omit<
-    Prisma.VendorSelectScalar,
-    BASE_FIELDS
-  > = {
-    ...PrismaService.DEFAULT_SELECT,
-    name: true,
-    email: true,
-    phoneNumber: true,
-    description: true,
-    address: true,
+    blockReason: true,
   };
 
   async onModuleInit() {

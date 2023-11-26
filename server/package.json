@@ -24,7 +24,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "execute": "ts-node src/scripts/index.ts"
   },
   "husky": {
     "hooks": {
@@ -56,6 +57,11 @@
       "^.+\\.(t|j)s$": "ts-jest"
     }
   },
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  },
   "dependencies": {
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.2.x",
@@ -75,10 +81,12 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
+    "currency.js": "^2.0.4",
     "helmet": "^7.0.0",
     "isomorphic-dompurify": "^1.9.0",
     "joi": "^17.10.1",
     "luxon": "^3.4.4",
+    "minimist": "^1.2.8",
     "nestjs-i18n": "^10.3.7",
     "nestjs-pino": "^3.4.0",
     "passport": "0.6.0",
@@ -89,7 +97,8 @@
     "reflect-metadata": "0.1.13",
     "request-ip": "^3.3.0",
     "rimraf": "5.0.5",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "swagger-stats": "^0.99.7"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.2.1",
@@ -104,6 +113,7 @@
     "@types/lodash": "^4.14.198",
     "@types/luxon": "^3.3.4",
     "@types/mime-types": "^2.1.2",
+    "@types/minimist": "^1.2.5",
     "@types/multer": "^1.4.7",
     "@types/node": "^20.9.3",
     "@types/passport": "^1.0.12",
@@ -139,7 +149,7 @@
     "ts-jest": "29.1.1",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.1",
-    "tsconfig-paths": "4.2.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.2",
     "webpack": "^5.88.2",
     "webpack-node-externals": "^3.0.0"

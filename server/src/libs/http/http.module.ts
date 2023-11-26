@@ -7,10 +7,17 @@ import {
   HttpResponseInterceptor,
 } from './interceptors';
 import { RealIpMiddleware, RequestIdMiddleware } from './middlewares';
+import { NestThrottlerModule } from './throttle.module';
+
+const modules = [
+  // NestHttpClientModule,
+  // NestServeStaticModule,
+  NestThrottlerModule,
+];
 
 @Global()
 @Module({
-  imports: [],
+  imports: modules,
   providers: [
     {
       provide: APP_FILTER,
@@ -25,6 +32,7 @@ import { RealIpMiddleware, RequestIdMiddleware } from './middlewares';
       useClass: HttpResponseInterceptor,
     },
   ],
+  exports: modules,
 })
 export class NestHttpModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

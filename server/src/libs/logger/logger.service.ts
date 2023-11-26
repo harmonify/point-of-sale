@@ -1,8 +1,5 @@
-import {
-  Injectable,
-  Logger,
-  LoggerService as ILoggerService,
-} from '@nestjs/common';
+import { Injectable, LoggerService as ILoggerService } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 import _ from 'lodash';
 
 interface ILoggingParams {

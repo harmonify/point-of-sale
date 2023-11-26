@@ -13,8 +13,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Product, User } from '@prisma/client';
 
-@ApiTags('Product')
-@Controller({ path: '/product', version: '1' })
+@ApiTags('Products')
+@Controller({ path: '/products', version: '1' })
 export class ProductController {
   constructor(private readonly prismaService: PrismaService) {}
 
@@ -31,6 +31,10 @@ export class ProductController {
       select: {
         ...PrismaService.DEFAULT_SELECT,
         ...PrismaService.PRODUCT_DEFAULT_SELECT,
+        productCategory: {
+          select: PrismaService.PRODUCT_CATEGORY_DEFAULT_SELECT,
+        },
+        productUnits: { select: PrismaService.PRODUCT_UNIT_DEFAULT_SELECT },
         createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
       },
       skip: paginationInfo.skip,

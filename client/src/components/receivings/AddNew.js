@@ -27,7 +27,7 @@ class AddNew extends Component {
   initialData = {
     productId: "pen",
     vendorId: "mrlabs",
-    qty: "1",
+    quantity: "1",
     price: "100",
     paid: "100",
     date: new Date()
@@ -130,7 +130,7 @@ class AddNew extends Component {
     try {
       this.state.data.price = Number(this.state.data.price);
       this.state.data.paid = Number(this.state.data.paid);
-      this.state.data.qty = Number(this.state.data.qty);
+      this.state.data.quantity = Number(this.state.data.quantity);
 
       if (this.state.isEdit === false) {
         await this.createNew(this.state.data);
@@ -264,10 +264,10 @@ class AddNew extends Component {
           />
 
           <NumberTextField
-            error={!!errors.qty}
-            name="qty"
-            value={data.qty}
-            label="Qty"
+            error={!!errors.quantity}
+            name="quantity"
+            value={data.quantity}
+            label="quantity"
             onChange={this.onChange}
           />
 

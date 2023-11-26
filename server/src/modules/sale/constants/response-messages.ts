@@ -43,9 +43,3 @@ export const INVALID_CUSTOMER: IMessage = {
   code: 'INVALID_CUSTOMER',
   message: 'Invalid customer details has been passed.',
 };
-
-export const BALANCE_MISMATCH: IMessage = {
-  code: 'BALANCE_MISMATCH',
-  message:
-    "Ther is a balance mismatch happened. So couldn't finish this sale. Contact admin.",
-};

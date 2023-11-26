@@ -23,7 +23,7 @@ class CartTable extends Component {
   initialCartItem = {
     id: "",
     name: "",
-    qty: "",
+    quantity: "",
     price: "",
     discount: ""
   };
@@ -41,18 +41,18 @@ class CartTable extends Component {
 
     Object.assign(clone, itemToEdit);
 
-    let { qty, discount } = clone;
+    let { quantity, discount } = clone;
 
     if (e.target.name === "discount") {
       discount = e.target.value;
     } else {
-      qty = e.target.value;
+      quantity = e.target.value;
     }
 
     const sellingPrice = currency(clone.price).subtract(discount);
-    const totalPrice = currency(sellingPrice).multiply(qty);
+    const totalPrice = currency(sellingPrice).multiply(quantity);
 
-    clone.qty = qty === "" ? "" : Number(qty);
+    clone.quantity = quantity === "" ? "" : Number(quantity);
     clone.discount = discount === "" ? "" : discount;
 
     clone.sellingPrice = sellingPrice.toString();

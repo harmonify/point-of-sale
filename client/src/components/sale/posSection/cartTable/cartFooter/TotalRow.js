@@ -2,10 +2,10 @@ import React from "react";
 import FooterTableCell from "./FooterTableCell";
 import FooterTableRow from "./FooterTableRow";
 
-const TotalRow = ({ totalQtyText, totalPrice }) => (
+const TotalRow = ({ totalquantityText, totalPrice }) => (
   <FooterTableRow style={{ paddingTop: "20px" }}>
     <FooterTableCell numeric>Total Items</FooterTableCell>
-    <FooterTableCell numeric>{totalQtyText}</FooterTableCell>
+    <FooterTableCell numeric>{totalquantityText}</FooterTableCell>
     <FooterTableCell numeric />
     <FooterTableCell style={{ paddingLeft: "15px" }}>
       Total{" "}

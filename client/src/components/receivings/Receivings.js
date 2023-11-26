@@ -32,7 +32,7 @@ class Receivings extends Component {
     "Order Id",
     "Product",
     "Vendor",
-    "Qty",
+    "quantity",
     "Price",
     "Paid",
     "Date"

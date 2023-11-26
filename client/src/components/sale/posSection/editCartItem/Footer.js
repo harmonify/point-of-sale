@@ -11,7 +11,7 @@ const Footer = ({ item, classes }) => (
   <div className={classes.root}>
     <FooterPriceLabel
       price={currency(item.price)
-        .multiply(item.qty)
+        .multiply(item.quantity)
         .toString()}
       title="Net Price"
     />
@@ -19,7 +19,7 @@ const Footer = ({ item, classes }) => (
     <br />
     <FooterPriceLabel
       price={currency(item.discount)
-        .multiply(item.qty)
+        .multiply(item.quantity)
         .toString()}
       title="Total Discount"
     />

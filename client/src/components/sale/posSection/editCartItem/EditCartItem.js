@@ -31,11 +31,11 @@ class EditCartItem extends Component {
       return;
     }
 
-    if (item.qty === 0) {
+    if (item.quantity === 0) {
       this.setState({
         errors: {
           ...this.state.errors,
-          qty: "Qty should be greater than 0."
+          quantity: "quantity should be greater than 0."
         }
       });
       return;
@@ -76,12 +76,12 @@ class EditCartItem extends Component {
 
         <div style={{ display: "flex" }}>
           <NumberTextField
-            error={!!errors.qty}
-            name="qty"
-            value={item.qty}
-            label="Qty"
+            error={!!errors.quantity}
+            name="quantity"
+            value={item.quantity}
+            label="quantity"
             onChange={this.onChange}
-            helperText={errors.qty}
+            helperText={errors.quantity}
           />
 
           <NumberTextField

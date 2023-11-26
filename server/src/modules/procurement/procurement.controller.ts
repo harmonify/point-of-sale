@@ -13,8 +13,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Procurement, User } from '@prisma/client';
 
-@ApiTags('Procurement')
-@Controller({ path: '/procurement', version: '1' })
+@ApiTags('Procurements')
+@Controller({ path: '/procurements', version: '1' })
 export class ProcurementController {
   constructor(private readonly prismaService: PrismaService) {}
 
@@ -31,8 +31,10 @@ export class ProcurementController {
       select: {
         ...PrismaService.DEFAULT_SELECT,
         ...PrismaService.PROCUREMENT_DEFAULT_SELECT,
-        vendor: { select: PrismaService.VENDOR_DEFAULT_SELECT },
-        product: { select: PrismaService.PRODUCT_DEFAULT_SELECT },
+        provider: { select: PrismaService.PROVIDER_DEFAULT_SELECT },
+        procurementProducts: {
+          select: PrismaService.PROCUREMENT_PRODUCT_DEFAULT_SELECT,
+        },
         createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
       },
       skip: paginationInfo.skip,
@@ -41,8 +43,14 @@ export class ProcurementController {
         ...PrismaService.DEFAULT_WHERE,
         OR: paginationInfo.search
           ? [
-              { vendor: { name: { contains: paginationInfo.search } } },
-              { product: { name: { contains: paginationInfo.search } } },
+              { provider: { name: { contains: paginationInfo.search } } },
+              {
+                procurementProducts: {
+                  some: {
+                    product: { name: { contains: paginationInfo.search } },
+                  },
+                },
+              },
             ]
           : [],
       },

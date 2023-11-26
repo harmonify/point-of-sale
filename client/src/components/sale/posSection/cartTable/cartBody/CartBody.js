@@ -18,7 +18,7 @@ const CartBody = ({ cartArray, onDeleteCartItem, onProductItemSelect }) => {
             <LightButton text={n.name} onClick={() => onProductItemSelect(n)} />
           </CustomTableCell>
           <CustomTableCell numeric>{n.sellingPrice}</CustomTableCell>
-          <CustomTableCell numeric>{n.qty}</CustomTableCell>
+          <CustomTableCell numeric>{n.quantity}</CustomTableCell>
           <CustomTableCell numeric>{n.totalPrice}</CustomTableCell>
           <CustomTableCell numeric style={{ width: 30, paddingRight: "5px" }}>
             <DeleteButton onDelete={() => onDeleteCartItem(n)} />

@@ -48,12 +48,12 @@ const getTotalSelector = createSelector(
   cart => {
     const keys = Object.keys(cart);
     const total = {
-      qty: 0,
+      quantity: 0,
       price: 0
     };
 
     for (let i = 0; i < keys.length; i++) {
-      total.qty += cart[keys[i]].qty;
+      total.quantity += cart[keys[i]].quantity;
       total.price += cart[keys[i]].totalPrice;
     }
 

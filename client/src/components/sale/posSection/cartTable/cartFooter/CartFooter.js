@@ -14,14 +14,14 @@ class CartFooter extends Component {
       return null;
     }
 
-    const totalQtyText = `${summary.noOfItems} (${summary.noOfInividualItems})`;
+    const totalquantityText = `${summary.noOfItems} (${summary.noOfInividualItems})`;
     const totalPrice = summary.total;
     const { netTotal } = summary;
 
     return (
       <Table style={{ marginTop: "50px" }}>
         <TableBody>
-          <TotalRow totalQtyText={totalQtyText} totalPrice={totalPrice} />
+          <TotalRow totalquantityText={totalquantityText} totalPrice={totalPrice} />
           <TaxDiscountRow cartArray={cartArray} summary={summary} />
           <TotalBillRow netTotal={netTotal} />
         </TableBody>

@@ -42,16 +42,16 @@ const setCartItem = (state, item) => {
   const newItem = state.items[item.id];
   newItem.id = item.id;
   newItem.name = item.name;
-  newItem.qty = item.qty;
+  newItem.quantity = item.quantity;
   newItem.price = currency(item.price).value;
   newItem.discount = currency(item.discount).value;
-  newItem.discountTotal = currency(item.discount).multiply(item.qty).value;
+  newItem.discountTotal = currency(item.discount).multiply(item.quantity).value;
 
   // This will be the price shown in the cart gridview.
   newItem.sellingPrice = currency(item.price).subtract(newItem.discount).value;
 
   // This is the total price on each item in cart gridview.
-  newItem.totalPrice = currency(newItem.sellingPrice).multiply(item.qty).value;
+  newItem.totalPrice = currency(newItem.sellingPrice).multiply(item.quantity).value;
 };
 
 const updateCartItem = (oldState, item) => {
@@ -64,7 +64,7 @@ const updateCartItem = (oldState, item) => {
   const newItem = state.items[item.id];
 
   summary.noOfInividualItems =
-    summary.noOfInividualItems + newItem.qty - oldItem.qty;
+    summary.noOfInividualItems + newItem.quantity - oldItem.quantity;
 
   summary.discountOnItems = currency(summary.discountOnItems)
     .add(newItem.discountTotal)
@@ -101,7 +101,7 @@ const addItemToCart = (oldState, item) => {
   const { summary } = state;
 
   summary.noOfItems++;
-  summary.noOfInividualItems += newItem.qty;
+  summary.noOfInividualItems += newItem.quantity;
 
   summary.discountOnItems = currency(summary.discountOnItems).add(
     newItem.discountTotal
@@ -138,7 +138,7 @@ const removeItemFromCart = (oldState, item) => {
   const { summary } = state;
 
   summary.noOfItems--;
-  summary.noOfInividualItems -= item.qty;
+  summary.noOfInividualItems -= item.quantity;
   summary.discountOnItems = currency(summary.discountOnItems).subtract(
     item.discountTotal
   ).value;
@@ -169,11 +169,11 @@ const updateDiscountOnItems = (oldState, discount) => {
     const tmp = items[keys[idx]];
 
     tmp.discount = currency(discount).value;
-    tmp.discountTotal = currency(discount).multiply(tmp.qty).value;
+    tmp.discountTotal = currency(discount).multiply(tmp.quantity).value;
 
     tmp.sellingPrice = currency(tmp.price).subtract(tmp.discount).value;
 
-    tmp.totalPrice = currency(tmp.sellingPrice).multiply(tmp.qty).value;
+    tmp.totalPrice = currency(tmp.sellingPrice).multiply(tmp.quantity).value;
   }
 
   const { summary } = state;

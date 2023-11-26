@@ -4,8 +4,14 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:../database.sqlite"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NOT_DEFINED
 }
 
 model Customer {
@@ -14,18 +20,19 @@ model Customer {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
   deletedAt   DateTime?
+  createdById Int
+  updatedById Int
+  deletedById Int?
   name        String
-  description String?
-  address     String
+  gender      Gender?   @default(NOT_DEFINED)
   phoneNumber String
   email       String?
-  createdById Int
-  createdBy   User      @relation("customer_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int
-  updatedBy   User      @relation("customer_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedById Int?
-  deletedBy   User?     @relation("customer_deletedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  orders      Order[]
+  description String?
+  address     String?
+  createdBy   User      @relation(name: "customer_createdBy_user", map: "customer_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy   User      @relation(name: "customer_updatedBy_user", map: "customer_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy   User?     @relation(name: "customer_deletedBy_user", map: "customer_deletedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sales       Sale[]
 
   @@map("customer")
 }
@@ -35,36 +42,36 @@ model Expense {
   isActive      Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now())
+  createdById   Int
+  updatedById   Int
+  deletedById   Int?
   deletedAt     DateTime?
   description   String
   amount        Float
   spentAt       DateTime
   expenseTypeId Int
   expenseType   ExpenseType @relation(fields: [expenseTypeId], references: [id], onUpdate: NoAction)
-  createdById   Int
-  createdBy     User        @relation("expense_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById   Int
-  updatedBy     User        @relation("expense_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedById   Int?
-  deletedBy     User?       @relation("expense_deletedBy_user", fields: [id], references: [id])
+  createdBy     User        @relation(name: "expense_createdBy_user", map: "expense_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy     User        @relation(name: "expense_updatedBy_user", map: "expense_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy     User?       @relation(name: "expense_deletedBy_user", map: "expense_deletedBy_user_fk", fields: [id], references: [id])
 
   @@map("expense")
 }
 
 model ExpenseType {
   id          Int       @id @default(autoincrement())
+  createdById Int
+  updatedById Int
+  deletedById Int?
   isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
   deletedAt   DateTime?
   description String
-  expenses    Expense[]
-  createdById Int
-  createdBy   User      @relation("expenseType_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int
-  updatedBy   User      @relation("expenseType_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy   User?     @relation("expenseType_deletedBy_user", fields: [id], references: [id])
-  deletedById Int?
+  expenses    Expense[] @relation()
+  createdBy   User      @relation(name: "expenseType_createdBy_user", map: "expenseType_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy   User      @relation(name: "expenseType_updatedBy_user", map: "expenseType_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy   User?     @relation(name: "expenseType_deletedBy_user", map: "expenseType_deletedBy_user_fk", fields: [id], references: [id])
 
   @@map("expense_type")
 }
@@ -77,58 +84,95 @@ model Notification {
   deletedAt   DateTime?
   userId      Int
   identifier  String
-  title       String
+  name        String
   description String?
   url         String    @default("#")
   source      String    @default("system")
   dismissable Boolean   @default(true)
 }
 
+enum ProcurementDeliveryStatus {
+  PENDING
+  DELIVERED
+}
+
+enum ProcurementPaymentStatus {
+  PAID
+  UNPAID
+}
+
 model Procurement {
-  id          Int       @id @default(autoincrement())
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  deletedAt   DateTime?
-  productId   Int
-  qty         Int
-  price       Float
-  payedAt     DateTime?
-  vendorId    Int?
-  vendor      Vendor?   @relation(fields: [vendorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  product     Product   @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdBy   User      @relation("procurement_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int
-  updatedBy   User      @relation("procurement_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int
-  deletedBy   User?     @relation("procurement_deletedBy_user", fields: [id], references: [id])
-  deletedById Int?
+  id                  Int                       @id @default(autoincrement())
+  isActive            Boolean                   @default(true)
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @default(now())
+  deletedAt           DateTime?
+  createdById         Int
+  updatedById         Int
+  deletedById         Int?
+  providerId          Int
+  name                String
+  invoiceNumber       String?
+  invoiceDate         DateTime?
+  deliveryStatus      ProcurementDeliveryStatus
+  deliveredAt         DateTime?
+  paymentStatus       ProcurementPaymentStatus
+  payedAt             DateTime?
+  createdBy           User                      @relation(name: "procurement_createdBy_user", map: "procurement_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy           User                      @relation(name: "procurement_updatedBy_user", map: "procurement_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy           User?                     @relation(name: "procurement_deletedBy_user", map: "procurement_deletedBy_user_fk", fields: [id], references: [id])
+  provider            Provider                  @relation(fields: [providerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  procurementProducts ProcurementProduct[]      @relation()
 
   @@map("procurement")
 }
 
+model ProcurementProduct {
+  id            Int         @id @default(autoincrement())
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  deletedAt     DateTime?
+  productId     Int
+  procurementId Int
+  price         Float
+  quantity      Int
+  product       Product     @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  procurement   Procurement @relation(fields: [procurementId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum BarcodeType {
+  EAN_8
+  EAN_13
+  CODABAR
+  CODE_128
+  CODE_39
+  CODE_11
+  UPC_A
+  UPC_C
+}
+
 model Product {
-  id                Int             @id @default(autoincrement())
-  isActive          Boolean         @default(true)
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @default(now())
-  deletedAt         DateTime?
-  name              String
-  description       String
-  costPrice         Float
-  sellingPrice      Float
-  productCategoryId Int
-  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onUpdate: NoAction)
-  createdById       Int
-  createdBy         User            @relation("product_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById       Int
-  updatedBy         User            @relation("product_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  procurements      Procurement[]   @relation()
-  orderedProducts   OrderProduct[]  @relation()
-  ProductUnit       ProductUnit?    @relation(fields: [productUnitId], references: [id])
-  productUnitId     Int?
-  deletedBy         User?           @relation("product_deletedBy_user", fields: [id], references: [id])
-  deletedById       Int?
+  id                  Int                  @id @default(autoincrement())
+  isActive            Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now())
+  deletedAt           DateTime?
+  createdById         Int
+  updatedById         Int
+  deletedById         Int?
+  productCategoryId   Int
+  name                String
+  description         String?
+  barcode             String?
+  barcodeType         BarcodeType
+  createdBy           User                 @relation(name: "product_createdBy_user", map: "product_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy           User                 @relation(name: "product_updatedBy_user", map: "product_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy           User?                @relation(name: "product_deletedBy_user", map: "product_deletedBy_user_fk", fields: [id], references: [id])
+  productCategory     ProductCategory      @relation(fields: [productCategoryId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  productUnits        ProductUnit[]        @relation()
+  procurementProducts ProcurementProduct[] @relation()
+  saledProducts       SaleProduct[]        @relation()
 
   @@map("product")
 }
@@ -139,106 +183,111 @@ model ProductCategory {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
   deletedAt   DateTime?
-  name        String
-  description String
-  products    Product[]
   createdById Int
-  createdBy   User      @relation("productCategory_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   updatedById Int
-  updatedBy   User      @relation("productCategory_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy   User?     @relation("productCategory_deletedBy_user", fields: [id], references: [id])
   deletedById Int?
+  name        String
+  description String?
+  createdBy   User      @relation(name: "productCategory_createdBy_user", map: "productCategory_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy   User      @relation(name: "productCategory_updatedBy_user", map: "productCategory_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy   User?     @relation(name: "productCategory_deletedBy_user", map: "productCategory_deletedBy_user_fk", fields: [id], references: [id])
+  products    Product[]
 
   @@map("product_category")
 }
 
 model ProductUnit {
-  id          Int       @id @default(autoincrement())
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  deletedAt   DateTime?
-  name        String
-  description String
-  products    Product[]
-  createdById Int
-  createdBy   User      @relation("productUnit_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int
-  updatedBy   User      @relation("productUnit_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy   User?     @relation("productUnit_deletedBy_user", fields: [id], references: [id])
-  deletedById Int?
+  id             Int       @id @default(autoincrement())
+  isActive       Boolean   @default(true)
+  createdById    Int
+  updatedById    Int
+  deletedById    Int?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+  deletedAt      DateTime?
+  productId      Int
+  name           String
+  description    String?
+  // TODO: mediaId Int?
+  wholesalePrice Float
+  sellingPrice   Float
+  createdBy      User      @relation(name: "productUnit_createdBy_user", map: "productUnit_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy      User      @relation(name: "productUnit_updatedBy_user", map: "productUnit_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedBy      User?     @relation(name: "productUnit_deletedBy_user", map: "productUnit_deletedBy_user_fk", fields: [id], references: [id])
+  product        Product   @relation(fields: [productId], references: [id])
 
   @@map("product_unit")
 }
 
-model Order {
-  id                  Int            @id @default(autoincrement())
-  isActive            Boolean        @default(true)
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @default(now())
+model Provider {
+  id           Int           @id @default(autoincrement())
+  isActive     Boolean       @default(true)
+  name         String
+  description  String?
+  createdById  Int
+  updatedById  Int
+  deletedBy    User?         @relation(name: "provider_deletedBy_user", map: "provider_deletedBy_user_fk", fields: [id], references: [id])
+  address      String
+  phoneNumber  String
+  email        String
+  procurements Procurement[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  createdBy    User          @relation(name: "provider_createdBy_user", map: "provider_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy    User          @relation(name: "provider_updatedBy_user", map: "provider_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deletedById  Int?
+
+  @@map("provider")
+}
+
+model Sale {
+  id                  Int           @id @default(autoincrement())
+  isActive            Boolean       @default(true)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @default(now())
   deletedAt           DateTime?
   discountOnItems     Float
   discountOnTotal     Float
   tax                 Float
   taxPercentageString String?
-  billAmount          Float          @default(0)
+  billAmount          Float         @default(0)
+  createdById         Int
+  updatedById         Int
+  deletedBy           User?         @relation(name: "sale_deletedBy_user", map: "sale_deletedBy_user_fk", fields: [id], references: [id])
   netAmount           Float
   amountPaid          Float
-  salesType           Int
-  transactionStatus   Int
   comments            String?
-  orderProducts       OrderProduct[]
-  customerId          Int
-  customer            Customer       @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  createdById         Int
-  createdBy           User           @relation("order_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById         Int
-  updatedBy           User           @relation("order_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy           User?          @relation("order_deletedBy_user", fields: [id], references: [id])
+  saleProducts        SaleProduct[]
+  customerId          Int?
+  customer            Customer?     @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  createdBy           User          @relation(name: "sale_createdBy_user", map: "sale_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy           User          @relation(name: "sale_updatedBy_user", map: "sale_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   deletedById         Int?
 
-  @@map("order")
+  @@map("sale")
 }
 
-model OrderId {
-  id          Int       @id @default(autoincrement())
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  deletedAt   DateTime?
-  count       Int
-  createdById Int
-  createdBy   User      @relation("orderId_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int
-  updatedBy   User      @relation("orderId_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy   User?     @relation("orderId_deletedBy_user", fields: [id], references: [id])
-  deletedById Int?
-
-  @@map("order_id")
-}
-
-model OrderProduct {
+model SaleProduct {
   id           Int       @id @default(autoincrement())
   isActive     Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now())
   deletedAt    DateTime?
-  qty          Int
+  quantity     Int
+  createdById  Int
+  updatedById  Int
+  deletedBy    User?     @relation(name: "saleProduct_deletedBy_user", map: "saleProduct_deletedBy_user_fk", fields: [id], references: [id])
   costPrice    Float
   sellingPrice Float
   discount     Float
-  price        Float
   productId    Int
   product      Product   @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  order        Order     @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById  Int
-  createdBy    User      @relation("orderProduct_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById  Int
-  updatedBy    User      @relation("orderProduct_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy    User?     @relation("orderProduct_deletedBy_user", fields: [id], references: [id])
+  sale         Sale      @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdBy    User      @relation(name: "saleProduct_createdBy_user", map: "saleProduct_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy    User      @relation(name: "saleProduct_updatedBy_user", map: "saleProduct_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   deletedById  Int?
 
-  @@map("order_product")
+  @@map("sale_product")
 }
 
 model RefreshToken {
@@ -260,75 +309,51 @@ model User {
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @default(now())
   deletedAt                DateTime?
+  createdById              Int?
+  createdUsers             User[]            @relation(name: "user_createdBy_user")
+  updatedBy                User?             @relation(name: "user_updatedBy_user", map: "user_updatedBy_user_fk", fields: [updatedById], references: [id])
   name                     String
   password                 String
   email                    String
   phoneNumber              String
   blockReason              String?
   refreshTokens            RefreshToken[]    @relation()
-  createdById              Int?
-  createdBy                User?             @relation("user_createdBy_user", fields: [createdById], references: [id])
-  createdUsers             User[]            @relation("user_createdBy_user")
+  createdBy                User?             @relation(name: "user_createdBy_user", map: "user_createdBy_user_fk", fields: [createdById], references: [id])
   updatedById              Int?
-  updatedBy                User?             @relation("user_updatedBy_user", fields: [updatedById], references: [id])
-  updatedUsers             User[]            @relation("user_updatedBy_user")
+  updatedUsers             User[]            @relation(name: "user_updatedBy_user")
   deletedById              Int?
-  deletedBy                User?             @relation("user_deletedBy_user", fields: [deletedById], references: [id])
-  deletedUsers             User[]            @relation("user_deletedBy_user")
-  createdCustomers         Customer[]        @relation("customer_createdBy_user")
-  updatedCustomers         Customer[]        @relation("customer_updatedBy_user")
-  deletedCustomers         Customer[]        @relation("customer_deletedBy_user")
-  createdExpenses          Expense[]         @relation("expense_createdBy_user")
-  updatedExpenses          Expense[]         @relation("expense_updatedBy_user")
-  deletedExpenses          Expense[]         @relation("expense_deletedBy_user")
-  createdExpenseTypes      ExpenseType[]     @relation("expenseType_createdBy_user")
-  updatedExpenseTypes      ExpenseType[]     @relation("expenseType_updatedBy_user")
-  deletedExpenseTypes      ExpenseType[]     @relation("expenseType_deletedBy_user")
-  createdProcurements      Procurement[]     @relation("procurement_createdBy_user")
-  updatedProcurements      Procurement[]     @relation("procurement_updatedBy_user")
-  deletedProcurements      Procurement[]     @relation("procurement_deletedBy_user")
-  createdProducts          Product[]         @relation("product_createdBy_user")
-  updatedProducts          Product[]         @relation("product_updatedBy_user")
-  deletedProducts          Product[]         @relation("product_deletedBy_user")
-  createdProductCategories ProductCategory[] @relation("productCategory_createdBy_user")
-  updatedProductCategories ProductCategory[] @relation("productCategory_updatedBy_user")
-  deletedProductCategories ProductCategory[] @relation("productCategory_deletedBy_user")
-  createdProductUnits      ProductUnit[]     @relation("productUnit_createdBy_user")
-  updatedProductUnits      ProductUnit[]     @relation("productUnit_updatedBy_user")
-  deletedProductUnits      ProductUnit[]     @relation("productUnit_deletedBy_user")
-  createdOrders            Order[]           @relation("order_createdBy_user")
-  updatedOrders            Order[]           @relation("order_updatedBy_user")
-  deletedOrders            Order[]           @relation("order_deletedBy_user")
-  createdOrderIds          OrderId[]         @relation("orderId_createdBy_user")
-  updatedOrderIds          OrderId[]         @relation("orderId_updatedBy_user")
-  deletedOrderIds          OrderId[]         @relation("orderId_deletedBy_user")
-  createdOrderProducts     OrderProduct[]    @relation("orderProduct_createdBy_user")
-  updatedOrderProducts     OrderProduct[]    @relation("orderProduct_updatedBy_user")
-  deletedOrderProducts     OrderProduct[]    @relation("orderProduct_deletedBy_user")
-  createdVendors           Vendor[]          @relation("vendor_createdBy_user")
-  updatedVendors           Vendor[]          @relation("vendor_updatedBy_user")
-  deletedVendors           Vendor[]          @relation("vendor_deletedBy_user")
+  deletedBy                User?             @relation(name: "user_deletedBy_user", map: "user_deletedBy_user_fk", fields: [deletedById], references: [id])
+  deletedUsers             User[]            @relation(name: "user_deletedBy_user")
+  createdCustomers         Customer[]        @relation(name: "customer_createdBy_user")
+  updatedCustomers         Customer[]        @relation(name: "customer_updatedBy_user")
+  deletedCustomers         Customer[]        @relation(name: "customer_deletedBy_user")
+  createdExpenses          Expense[]         @relation(name: "expense_createdBy_user")
+  updatedExpenses          Expense[]         @relation(name: "expense_updatedBy_user")
+  deletedExpenses          Expense[]         @relation(name: "expense_deletedBy_user")
+  createdExpenseTypes      ExpenseType[]     @relation(name: "expenseType_createdBy_user")
+  updatedExpenseTypes      ExpenseType[]     @relation(name: "expenseType_updatedBy_user")
+  deletedExpenseTypes      ExpenseType[]     @relation(name: "expenseType_deletedBy_user")
+  createdProcurements      Procurement[]     @relation(name: "procurement_createdBy_user")
+  updatedProcurements      Procurement[]     @relation(name: "procurement_updatedBy_user")
+  deletedProcurements      Procurement[]     @relation(name: "procurement_deletedBy_user")
+  createdProducts          Product[]         @relation(name: "product_createdBy_user")
+  updatedProducts          Product[]         @relation(name: "product_updatedBy_user")
+  deletedProducts          Product[]         @relation(name: "product_deletedBy_user")
+  createdProductCategories ProductCategory[] @relation(name: "productCategory_createdBy_user")
+  updatedProductCategories ProductCategory[] @relation(name: "productCategory_updatedBy_user")
+  deletedProductCategories ProductCategory[] @relation(name: "productCategory_deletedBy_user")
+  createdProductUnits      ProductUnit[]     @relation(name: "productUnit_createdBy_user")
+  updatedProductUnits      ProductUnit[]     @relation(name: "productUnit_updatedBy_user")
+  deletedProductUnits      ProductUnit[]     @relation(name: "productUnit_deletedBy_user")
+  createdSales             Sale[]            @relation(name: "sale_createdBy_user")
+  updatedSales             Sale[]            @relation(name: "sale_updatedBy_user")
+  deletedSales             Sale[]            @relation(name: "sale_deletedBy_user")
+  createdSaleProducts      SaleProduct[]     @relation(name: "saleProduct_createdBy_user")
+  updatedSaleProducts      SaleProduct[]     @relation(name: "saleProduct_updatedBy_user")
+  deletedSaleProducts      SaleProduct[]     @relation(name: "saleProduct_deletedBy_user")
+  createdProviders         Provider[]        @relation(name: "provider_createdBy_user")
+  updatedProviders         Provider[]        @relation(name: "provider_updatedBy_user")
+  deletedProviders         Provider[]        @relation(name: "provider_deletedBy_user")
 
   @@map("user")
-}
-
-model Vendor {
-  id           Int           @id @default(autoincrement())
-  isActive     Boolean       @default(true)
-  name         String
-  description  String?
-  address      String
-  phoneNumber  String
-  email        String
-  procurements Procurement[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @default(now())
-  createdById  Int
-  createdBy    User          @relation("vendor_createdBy_user", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById  Int
-  updatedBy    User          @relation("vendor_updatedBy_user", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deletedBy    User?         @relation("vendor_deletedBy_user", fields: [id], references: [id])
-  deletedById  Int?
-
-  @@map("vendor")
 }

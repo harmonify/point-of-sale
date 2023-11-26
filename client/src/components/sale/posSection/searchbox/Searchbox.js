@@ -68,7 +68,7 @@ class SearchBox extends Component {
   constructCartObjForUpdate = obj => {
     const clone = {};
     Object.assign(clone, obj);
-    clone.qty += 1;
+    clone.quantity += 1;
     return clone;
   };
 
@@ -76,7 +76,7 @@ class SearchBox extends Component {
     const clone = {};
     Object.assign(clone, obj);
 
-    clone.qty = 1;
+    clone.quantity = 1;
     clone.price = clone.price;
     clone.discount = 0;
     clone.sellingPrice = clone.price;

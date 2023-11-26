@@ -1,7 +1,8 @@
 import { HashUtil } from '@/common/utils';
 import { InvalidCurrentPasswordException } from '@/libs/http';
 import { PrismaService } from '@/libs/prisma';
-import { ChangePasswordRequestDto, UserResponseDto } from '@/modules/user/dtos';
+import { ChangePasswordRequestDto } from '@/modules/auth/dtos';
+import { UserResponseDto } from '@/modules/user/dtos';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User } from '@prisma/client';
@@ -9,6 +10,7 @@ import { lastValueFrom, map, zip } from 'rxjs';
 
 import { AuthRequestDto, AuthResponseDto } from '../dtos';
 import { TokenService } from './token.service';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,7 @@ export class AuthService {
     private readonly configService: ConfigService<IConfig, true>,
     private readonly tokenService: TokenService,
     private readonly prismaService: PrismaService,
+    private readonly i18nService: I18nService,
   ) {}
 
   /**
@@ -33,14 +36,16 @@ export class AuthService {
 
     if (!user) {
       throw new ForbiddenException(
-        translate('exception.itemDoesNotExist', {
+        this.i18nService.translate('exception.itemDoesNotExist', {
           args: { item: 'Account' },
         }),
       );
     }
 
     if (!user.isActive) {
-      throw new ForbiddenException(translate('exception.userBlocked'));
+      throw new ForbiddenException(
+        this.i18nService.translate('exception.userBlocked'),
+      );
     }
 
     const userDto = new UserResponseDto(user);

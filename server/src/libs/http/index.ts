@@ -6,4 +6,7 @@ export * from './exceptions';
 export * from './filters';
 export * from './interceptors';
 export * from './middlewares';
+export * from './http-client.module';
 export * from './http.module';
+export * from './serve-static.module';
+export * from './throttle.module';

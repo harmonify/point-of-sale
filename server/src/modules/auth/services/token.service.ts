@@ -8,15 +8,15 @@ import { PrismaService } from '@/libs/prisma';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshToken, User } from '@prisma/client';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { DateTime } from 'luxon';
+import { I18nService } from 'nestjs-i18n';
 
 import { TokenError, TokenType } from '../enums';
 
 import type { JwtSignOptions } from '@nestjs/jwt';
 import type { JwtPayload } from '@/modules/auth/dtos';
-import { RefreshToken, User } from '@prisma/client';
-import { DateTime } from 'luxon';
-
 @Injectable()
 export class TokenService {
   private readonly BASE_OPTIONS: JwtSignOptions = {
@@ -28,6 +28,7 @@ export class TokenService {
     private readonly prismaService: PrismaService,
     private readonly jwt: JwtService,
     private readonly configService: ConfigService<IConfig, true>,
+    private readonly i18nService: I18nService,
   ) {}
 
   /**
@@ -87,14 +88,14 @@ export class TokenService {
     const token = await this.getStoredTokenFromRefreshTokenPayload(payload);
     if (!token) {
       throw new UnauthorizedException(
-        translate('exception.refreshToken', {
+        this.i18nService.translate('exception.refreshToken', {
           args: { error: 'not found' },
         }),
       );
     }
     if (!token.isActive) {
       throw new UnauthorizedException(
-        translate('exception.refreshToken', {
+        this.i18nService.translate('exception.refreshToken', {
           args: { error: 'revoked' },
         }),
       );
@@ -103,7 +104,7 @@ export class TokenService {
     const user = await this.getUserFromRefreshTokenPayload(payload);
     if (!user) {
       throw new UnauthorizedException(
-        translate('exception.refreshToken', {
+        this.i18nService.translate('exception.refreshToken', {
           args: { error: 'malformed' },
         }),
       );
@@ -137,12 +138,12 @@ export class TokenService {
     } catch (error) {
       throw error instanceof TokenExpiredError
         ? new UnauthorizedException(
-            translate('exception.refreshToken', {
+            this.i18nService.translate('exception.refreshToken', {
               args: { error: 'expired' },
             }),
           )
         : new UnauthorizedException(
-            translate('exception.refreshToken', {
+            this.i18nService.translate('exception.refreshToken', {
               args: { error: 'malformed' },
             }),
           );
@@ -201,7 +202,7 @@ export class TokenService {
 
     if (!tokenId) {
       throw new UnauthorizedException(
-        translate('exception.refreshToken', {
+        this.i18nService.translate('exception.refreshToken', {
           args: { error: 'malformed' },
         }),
       );
@@ -225,7 +226,7 @@ export class TokenService {
 
     if (!subId) {
       throw new UnauthorizedException(
-        translate('exception.refreshToken', {
+        this.i18nService.translate('exception.refreshToken', {
           args: { error: 'malformed' },
         }),
       );
@@ -251,7 +252,7 @@ export class TokenService {
 
     if (!tokenId) {
       throw new UnauthorizedException(
-        translate('exception.refreshToken', {
+        this.i18nService.translate('exception.refreshToken', {
           args: { error: 'malformed' },
         }),
       );
