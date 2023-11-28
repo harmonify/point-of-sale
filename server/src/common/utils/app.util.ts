@@ -8,7 +8,7 @@ import {
 import { swaggerOptions } from '@/common/swagger/swagger.plugin';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { getMiddleware } from 'swagger-stats';
+// import { getMiddleware } from 'swagger-stats';
 
 import type { INestApplication } from '@nestjs/common';
 import { NestConfigService } from '@/libs/config/config.service';
@@ -84,21 +84,21 @@ export class AppUtil {
         }
       }
 
-      app.use(
-        getMiddleware({
-          swaggerSpec: document,
-          authentication: true,
-          hostname: appName,
-          uriPath: '/stats',
-          onAuthenticate: (
-            _request: any,
-            username: string,
-            password: string,
-          ) => {
-            return username === userName && password === passWord;
-          },
-        }),
-      );
+      // app.use(
+      //   getMiddleware({
+      //     swaggerSpec: document,
+      //     authentication: true,
+      //     hostname: appName,
+      //     uriPath: '/stats',
+      //     onAuthenticate: (
+      //       _request: any,
+      //       username: string,
+      //       password: string,
+      //     ) => {
+      //       return username === userName && password === passWord;
+      //     },
+      //   }),
+      // );
 
       SwaggerModule.setup(SWAGGER_API_ENDPOINT, app, document, {
         explorer: true,

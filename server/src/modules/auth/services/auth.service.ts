@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { User } from '@prisma/client';
 import { lastValueFrom, map, zip } from 'rxjs';
 
-import { AuthRequestDto, AuthResponseDto } from '../dtos';
+import { LoginRequestDto, LoginResponseDto } from '../dtos';
 import { TokenService } from './token.service';
 import { I18nService } from 'nestjs-i18n';
 
@@ -27,7 +27,7 @@ export class AuthService {
    * @param isPasswordLogin - boolean - This is a boolean value that tells the function whether
    * the user is logging in with a password or oauth
    */
-  async login(loginDto: AuthRequestDto): Promise<AuthResponseDto> {
+  async login(loginDto: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.prismaService.user.findFirst({
       where: {
         email: loginDto.email,

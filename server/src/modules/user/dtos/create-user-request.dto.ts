@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Prisma, User } from '@prisma/client';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -9,7 +11,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CreateUserRequestDto {
+export class CreateUserRequestDto implements Prisma.UserCreateInput {
   @IsNotEmpty()
   @MaxLength(255)
   @ApiProperty({
@@ -17,19 +19,19 @@ export class CreateUserRequestDto {
   })
   name: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @MaxLength(255)
   @ApiProperty({
     example: 'john@example.com',
   })
-  email?: string;
+  email: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsPhoneNumber()
   @ApiProperty({
     example: '6289502376888',
   })
-  phoneNumber?: string;
+  phoneNumber: string;
 
   @IsNotEmpty()
   @IsString()
@@ -39,4 +41,11 @@ export class CreateUserRequestDto {
     example: 'Hello123',
   })
   password: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({
+    example: true,
+  })
+  isActive?: boolean;
 }

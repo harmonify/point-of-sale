@@ -1,22 +1,31 @@
+import '@total-typescript/ts-reset';
+
 import { AppModule } from '@/app.module';
 import { AppUtil } from '@/common/utils';
 import { NestConfigService } from '@/libs/config/config.service';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+  Logger as BaseLogger,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
 import compression from 'compression';
 import helmet from 'helmet';
-import { Logger } from 'nestjs-pino';
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 declare const module: {
   hot: {
     accept: () => void;
     dispose: (argument0: () => Promise<void>) => void;
   };
 };
+
+const logger = new BaseLogger('Bootstrap');
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -28,8 +37,8 @@ async function bootstrap() {
     },
   );
 
-  const logger = app.get(Logger);
-  app.useLogger(logger);
+  const pinoLogger = app.get(Logger);
+  app.useLogger(pinoLogger);
   app.flushLogs();
 
   const configService = app.get(NestConfigService);
@@ -77,6 +86,12 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({ detailedErrors: false }),
+  );
+
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+
   const port = configService.get('app.port', 3000, { infer: true });
 
   // =========================================================
@@ -111,4 +126,6 @@ async function bootstrap() {
   logger.log(`Server is up. +${Math.trunc(performance.now())}ms`);
 }
 
-bootstrap();
+bootstrap().catch((error) => {
+  logger.error(error);
+});

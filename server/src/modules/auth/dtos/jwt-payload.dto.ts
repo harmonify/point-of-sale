@@ -1,8 +1,6 @@
-import { RefreshToken, User } from '@prisma/client';
-
 export interface JwtPayload {
-  jti?: RefreshToken['id'];
-  sub: User['id'];
+  jti: string; // refresh token id
+  sub: string; // user id
   iat: number;
   exp: number;
   aud: string;

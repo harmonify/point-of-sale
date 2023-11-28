@@ -1,5 +1,9 @@
-import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
-import { PrismaService } from '@/libs/prisma';
+import {
+  IResponseBody,
+  PaginationInfo,
+  RequestPaginationInfoDto,
+} from '@/libs/http';
+import { PrismaService, BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
   Body,
@@ -12,6 +16,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Customer, User } from '@prisma/client';
+import { CustomerQuery } from './customer.query';
+import { UserQuery } from '../user/user.query';
 
 @ApiTags('Customers')
 @Controller({ path: '/customers', version: '1' })
@@ -19,66 +25,84 @@ export class CustomerController {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Get('/:id')
-  findOne(@Param('id') id: number) {
-    return this.prismaService.customer.findUniqueOrThrow({
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+  async findOne(@Param('id') id: number): Promise<IResponseBody> {
+    const customer = await this.prismaService.customer.findUniqueOrThrow({
+      select: BaseQuery.Field.default(),
+      where: { ...BaseQuery.Filter.available(), id },
     });
+    return {
+      data: customer,
+    };
   }
 
   @Get()
-  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
-    return this.prismaService.customer.findMany({
+  async findAll(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody> {
+    let whereQuery = BaseQuery.Filter.available();
+    if (paginationInfo.search) {
+      whereQuery = {
+        ...whereQuery,
+        ...CustomerQuery.Filter.search(paginationInfo.search),
+      };
+    }
+
+    const customers = await this.prismaService.customer.findMany({
       select: {
-        ...PrismaService.DEFAULT_SELECT,
-        name: true,
-        phoneNumber: true,
-        email: true,
-        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
+        ...BaseQuery.Field.default(),
+        ...CustomerQuery.Field.default(),
+        createdBy: { select: UserQuery.Field.default() },
       },
       skip: paginationInfo.skip,
       take: paginationInfo.take,
-      where: {
-        ...PrismaService.DEFAULT_WHERE,
-        OR: paginationInfo.search
-          ? [
-              { name: { contains: paginationInfo.search } },
-              { email: { contains: paginationInfo.search } },
-              { phoneNumber: { contains: paginationInfo.search } },
-            ]
-          : [],
-      },
-      orderBy: PrismaService.ORDER_BY_LATEST,
+      where: whereQuery,
+      orderBy: BaseQuery.OrderBy.latest(),
     });
+    return {
+      data: customers,
+    };
   }
 
   @Post()
-  create(@Body() customer: Customer, @CurrentUser() user: User) {
-    return this.prismaService.customer.create({
+  async create(
+    @Body() customer: Customer,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody> {
+    const newCustomer = await this.prismaService.customer.create({
       data: {
         ...customer,
         createdById: user.id,
         updatedById: user.id,
       },
     });
+    return {
+      data: newCustomer,
+    };
   }
 
   @Put('/:id')
-  update(
+  async update(
     @Param('id') id: number,
     @Body() data: Customer,
     @CurrentUser() user: User,
-  ) {
-    return this.prismaService.customer.update({
+  ): Promise<IResponseBody> {
+    const updatedCustomer = await this.prismaService.customer.update({
       data: { ...data, updatedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+      where: { id },
     });
+    return {
+      data: updatedCustomer,
+    };
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: number, @CurrentUser() user: User) {
-    return this.prismaService.customer.update({
-      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+  async delete(
+    @Param('id') id: number,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody> {
+    await this.prismaService.customer.update({
+      data: BaseQuery.getSoftDeleteData(user.id),
+      where: { id },
     });
   }
 }

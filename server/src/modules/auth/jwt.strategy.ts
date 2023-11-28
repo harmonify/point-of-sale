@@ -1,5 +1,4 @@
 import {
-  BlockedUserException,
   InactiveUserException,
   InvalidCredentialsException,
 } from '@/libs/http/exceptions';
@@ -11,6 +10,7 @@ import { User } from '@prisma/client';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { JwtPayload } from './dtos';
+import { StringUtil } from '@/common/utils';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -26,8 +26,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ sub }: JwtPayload): Promise<User> {
+    let subId;
+    try {
+      subId = StringUtil.toNumber({ value: sub, throwIfFailed: true });
+    } catch (error) {
+      throw new InvalidCredentialsException();
+    }
     const user = await this.prismaService.user.findUnique({
-      where: { id: sub },
+      where: { id: subId },
     });
     if (!user) {
       throw new InvalidCredentialsException();

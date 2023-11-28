@@ -1,2 +1,2 @@
 export * from './metadata.contants';
-export * from './string.constants';
+export * from './app.constants';

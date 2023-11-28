@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { httpMessage } from '../constants/http-message.constant';
 
 /*
  * -----
@@ -50,7 +51,27 @@ import { ApiProperty } from '@nestjs/swagger';
  * -----
  */
 
-export class ResponseBodyDto<T = Record<string, any> | Array<any>> {
+export type IResponseBodyData =
+  | Record<string, any>
+  | Array<any>
+  | null
+  | undefined
+  | void;
+
+export type IResponseBody<T = IResponseBodyData> =
+  | {
+      statusCode?: HttpStatus;
+      message?: string | string[];
+      error?: string | string[];
+      data?: T;
+      timestamp?: number;
+      requestId?: string;
+    }
+  | null
+  | undefined
+  | void;
+
+export class ResponseBodyDto<T = IResponseBodyData> {
   @ApiProperty({ type: [HttpStatus] })
   statusCode: HttpStatus;
 
@@ -61,20 +82,40 @@ export class ResponseBodyDto<T = Record<string, any> | Array<any>> {
   error?: string | string[];
 
   @ApiProperty()
-  data?: T;
+  data: T;
 
   @ApiProperty({ example: 1617826799860 })
-  timestamp?: number;
+  timestamp: number;
 
   @ApiProperty({ example: 'Ax23489cvd' })
   requestId?: string;
 
-  constructor(params: ResponseBodyDto<T>) {
-    this.statusCode = params.statusCode;
-    this.message = params.message;
-    if (params.error) this.error = params.error;
-    if (params.data) this.data = params.data;
-    this.timestamp = params.timestamp ? params.timestamp : new Date().getTime();
-    if (params.requestId) this.requestId = params.requestId;
+  constructor(params: IResponseBody<T> = {}) {
+    this.statusCode =
+      params && params.statusCode
+        ? params.statusCode
+        : params && params.error
+          ? HttpStatus.INTERNAL_SERVER_ERROR
+          : HttpStatus.OK;
+
+    if (params) {
+      if (params.message) this.message = params.message;
+
+      if (params.timestamp) this.timestamp = params.timestamp;
+
+      if (params.error) this.error = params.error;
+
+      if (params.data) this.data = params.data;
+
+      if (params.requestId) this.requestId = params.requestId;
+    }
+
+    if (!this.message) {
+      this.message = httpMessage[this.statusCode];
+    }
+
+    if (!this.timestamp) {
+      this.timestamp = new Date().getTime();
+    }
   }
 }

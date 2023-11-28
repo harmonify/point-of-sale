@@ -1,0 +1,17 @@
+.vscode/
+dist/
+logs/
+node_modules/
+.dockerignore
+.editorconfig
+.env
+.env.*
+.eslintrc.js
+.gitignore
+.nvmrc
+.prettierrc
+docker-compose.yml
+Dockerfile
+Makefile
+nest-cli.json
+npm-debug.log

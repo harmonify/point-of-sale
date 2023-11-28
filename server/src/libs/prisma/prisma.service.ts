@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { DateTime } from 'luxon';
 
 import type { Prisma } from '@prisma/client';
-
 type BASE_FIELDS = 'id' | 'isActive' | 'createdAt' | 'updatedAt' | 'deletedAt';
 
 @Injectable()

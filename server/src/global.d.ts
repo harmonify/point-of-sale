@@ -1,3 +1,5 @@
+import 'jest-expect-message';
+import 'jest-extended';
 import { Config } from '@/libs/config';
 import { User as PrismaUser } from '@prisma/client';
 

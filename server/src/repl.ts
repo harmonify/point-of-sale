@@ -26,6 +26,10 @@ async function bootstrap() {
   );
 }
 
-(async () => await bootstrap())().catch((error) => {
-  logger.error(error);
-});
+bootstrap()
+  .then(() => {
+    logger.log('Repl session started');
+  })
+  .catch((error) => {
+    logger.error(error);
+  });

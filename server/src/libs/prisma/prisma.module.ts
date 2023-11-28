@@ -1,13 +1,38 @@
 import { Global, Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
+import {
+  PrismaClientExceptionFilter,
+  PrismaModule,
+  loggingMiddleware,
+} from 'nestjs-prisma';
+
 import {
   PrismaHttpClientErrorFilter,
   PrismaHttpServerErrorFilter,
 } from './filters';
+import { PrismaService } from './prisma.service';
+import { NestConfigModule, NestConfigService } from '@/libs/config';
 
 @Global()
 @Module({
+  imports: [
+    PrismaModule.forRootAsync({
+      isGlobal: true,
+      imports: [NestConfigModule],
+      inject: [NestConfigService],
+      useFactory: (configService: NestConfigService) => ({
+        explicitConnect: true,
+        middlewares: [loggingMiddleware()],
+        prismaOptions: {
+          log: ['query', 'info', 'warn', 'error'],
+          errorFormat:
+            configService.isTest() || configService.isDev()
+              ? 'pretty'
+              : 'colorless',
+        },
+      }),
+    }),
+  ],
   providers: [
     PrismaService,
     {
@@ -21,4 +46,4 @@ import {
   ],
   exports: [PrismaService],
 })
-export class PrismaModule {}
+export class NestPrismaModule {}

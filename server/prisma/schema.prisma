@@ -25,7 +25,7 @@ model Customer {
   deletedById Int?
   name        String
   gender      Gender?   @default(NOT_DEFINED)
-  phoneNumber String
+  phoneNumber String?
   email       String?
   description String?
   address     String?

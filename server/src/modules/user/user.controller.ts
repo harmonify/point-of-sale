@@ -1,4 +1,8 @@
-import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
+import {
+  IResponseBody,
+  PaginationInfo,
+  RequestPaginationInfoDto,
+} from '@/libs/http';
 import { PrismaService } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
@@ -13,6 +17,11 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import {
+  CreateUserRequestDto,
+  UpdateUserRequestDto,
+  UserResponseDto,
+} from './dtos';
 
 @ApiTags('Users')
 @Controller({ path: '/users', version: '1' })
@@ -20,14 +29,19 @@ export class UserController {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Get('/:id')
-  findOne(@Param('id') id: number) {
-    return this.prismaService.user.findUniqueOrThrow({
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<IResponseBody<UserResponseDto>> {
+    const user = await this.prismaService.user.findUniqueOrThrow({
       where: { id, ...PrismaService.DEFAULT_WHERE },
     });
+    return { data: user };
   }
 
   @Get()
-  async findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
+  async findAll(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody<UserResponseDto[]>> {
     const users = await this.prismaService.user.findMany({
       select: {
         ...PrismaService.DEFAULT_SELECT,
@@ -49,42 +63,49 @@ export class UserController {
       },
       orderBy: PrismaService.ORDER_BY_LATEST,
     });
-    return users.map((user) => ({
-      ...user,
-      createdBy: user.createdBy ? user.createdBy : { name: 'SYSTEM' },
-      updatedBy: user.createdBy ? user.createdBy : { name: 'SYSTEM' },
-    }));
+
+    return {
+      data: users,
+    };
   }
 
   @Post()
-  create(@Body() data: User, @CurrentUser() user: User) {
-    return this.prismaService.user.create({
+  async create(
+    @Body() data: CreateUserRequestDto,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody<UserResponseDto>> {
+    const newUser = await this.prismaService.user.create({
       data: {
         ...data,
         createdById: user.id,
         updatedById: user.id,
       },
     });
+    return { data: newUser };
   }
 
   @Put('/:id')
-  update(
+  async update(
     @Param('id') id: number,
-    @Body() data: User,
+    @Body() data: UpdateUserRequestDto,
     @CurrentUser() user: User,
-  ) {
-    return this.prismaService.user.update({
+  ): Promise<IResponseBody<UserResponseDto>> {
+    const updatedUser = await this.prismaService.user.update({
       data: { ...data, updatedById: user.id },
       where: { id, ...PrismaService.DEFAULT_WHERE },
     });
+    return { data: updatedUser };
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: number, @CurrentUser() user: User) {
+  async delete(
+    @Param('id') id: number,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody> {
     if (id === user.id) {
       throw new BadRequestException('Cannot delete own account.');
     }
-    return this.prismaService.user.update({
+    await this.prismaService.user.update({
       data: {
         ...PrismaService.DEFAULT_SOFT_DELETE_DATA,
         blockReason: 'Blocked by admin.',
@@ -92,5 +113,6 @@ export class UserController {
       },
       where: { id, ...PrismaService.DEFAULT_WHERE },
     });
+    return;
   }
 }

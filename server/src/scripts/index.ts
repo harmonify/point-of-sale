@@ -1,3 +1,6 @@
+import '@total-typescript/ts-reset';
+import 'tsconfig-paths/register';
+
 import { INestApplicationContext, Logger, Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import minimist from 'minimist';

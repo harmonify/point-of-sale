@@ -11,22 +11,6 @@
   "engines": {
     "node": ">=v18.17.1"
   },
-  "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "execute": "ts-node src/scripts/index.ts"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run format && npm run lint"
@@ -37,30 +21,38 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "jest": {
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testEnvironment": "node",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    }
-  },
   "ts-node": {
     "require": [
       "tsconfig-paths/register"
     ]
+  },
+  "jest": {},
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "NEST_DEBUG=true nest start --debug --watch",
+    "start:hmr": "nest build --watch --webpack --webpackPath webpack-hmr.js",
+    "start:prod": "node dist/src/main",
+    "start:repl": "NODE_ENV=dev nest start --watch --entryFile repl",
+    "test": "jest --config test/jest.config.js --runInBand --verbose",
+    "test:watch": "jest --config test/jest.config.js --watch",
+    "test:cov": "jest --config test/jest.config.js --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config test/jest.config.js --runInBand",
+    "test:e2e": "jest --config test/jest-e2e.config.js",
+    "execute": "ts-node ./src/scripts/index.ts",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:dev:create": "npx prisma migrate dev --create-only",
+    "migrate:deploy": "npx prisma migrate deploy",
+    "prisma:generate": "npx prisma generate",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "npx prisma db seed"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.0",
@@ -77,10 +69,12 @@
     "@nestjs/throttler": "^5.0.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^5.6.0",
+    "@total-typescript/ts-reset": "^0.5.1",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
+    "csprng": "^0.1.2",
     "currency.js": "^2.0.4",
     "helmet": "^7.0.0",
     "isomorphic-dompurify": "^1.9.0",
@@ -89,6 +83,7 @@
     "minimist": "^1.2.8",
     "nestjs-i18n": "^10.3.7",
     "nestjs-pino": "^3.4.0",
+    "nestjs-prisma": "^0.22.0",
     "passport": "0.6.0",
     "passport-jwt": "4.0.1",
     "pino": "^8.16.2",
@@ -104,6 +99,9 @@
     "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^10.0.3",
     "@nestjs/testing": "^10.2.10",
+    "@side/jest-runtime": "^1.1.0",
+    "@swc/core": "^1.3.99",
+    "@swc/jest": "^0.2.29",
     "@types/bcryptjs": "^2.4.3",
     "@types/compression": "^1.7.3",
     "@types/csprng": "^0.1.2",
@@ -127,25 +125,28 @@
     "@typescript-eslint/parser": "6.12.0",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "8.54.0",
+    "eslint": "^8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-define-config": "^1.23.0",
     "eslint-import-resolver-typescript": "^3.6.0",
     "eslint-plugin-deprecation": "^1.5.0",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-jest-extended": "^2.0.0",
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-unicorn": "^48.0.1",
     "eslint_d": "^12.2.1",
     "husky": "^8.0.3",
     "jest": "29.7.0",
+    "jest-expect-message": "^1.1.3",
+    "jest-extended": "^4.0.2",
     "lint-staged": "^14.0.1",
     "prettier": "3.1.0",
     "prisma": "5.6.0",
     "run-script-webpack-plugin": "^0.2.0",
     "sample-env": "^1.0.10",
     "source-map-support": "^0.5.21",
-    "supertest": "6.3.3",
+    "supertest": "^6.3.3",
     "ts-jest": "29.1.1",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.1",

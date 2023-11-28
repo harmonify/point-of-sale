@@ -8,12 +8,12 @@ export const prismaHttpClientErrorRecord = {
     message: 'The provided value is too long',
   },
   [PrismaClientErrorCode.P2002]: {
-    statusCode: HttpStatus.BAD_REQUEST,
+    statusCode: HttpStatus.CONFLICT,
     message: 'The record is already exist',
   },
   [PrismaClientErrorCode.P2005]: {
     statusCode: HttpStatus.BAD_REQUEST,
-    message: 'The provided data is invalid',
+    message: 'The provided data type is invalid',
   },
   [PrismaClientErrorCode.P2006]: {
     statusCode: HttpStatus.BAD_REQUEST,
@@ -41,6 +41,10 @@ export const prismaHttpClientErrorRecord = {
   },
   [PrismaClientErrorCode.P2020]: {
     statusCode: HttpStatus.BAD_REQUEST,
+    message: 'The provided data is out of range',
+  },
+  [PrismaClientErrorCode.P2025]: {
+    statusCode: HttpStatus.NOT_FOUND,
     message: 'The provided data is invalid',
   },
 } as Record<PrismaClientErrorCode, ResponseBodyDto | undefined>;

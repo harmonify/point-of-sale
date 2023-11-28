@@ -1,25 +1,18 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
-import { NestConfigService } from './libs/config';
-import { SkipAuth } from './modules/auth';
-import { ResponseBodyDto } from './libs/http';
+import { NestConfigService } from '@/libs/config';
+import { IResponseBody } from '@/libs/http';
+import { SkipAuth } from '@/modules/auth';
+import { Controller, Get, HttpStatus, VERSION_NEUTRAL } from '@nestjs/common';
 
 @SkipAuth()
-@Controller()
+@Controller({ version: VERSION_NEUTRAL })
 export class AppController {
   constructor(private readonly configService: NestConfigService) {}
 
   @Get()
-  getHello(): ResponseBodyDto {
+  getHello(): IResponseBody {
     return {
-      statusCode: HttpStatus.ACCEPTED,
+      statusCode: HttpStatus.OK,
       message: 'Hello World!',
-      data: this.configService.isDev()
-        ? {
-            cpuUsage: process.cpuUsage(),
-            memoryUsage: process.memoryUsage(),
-            resourceUsage: process.resourceUsage(),
-          }
-        : undefined,
     };
   }
 }

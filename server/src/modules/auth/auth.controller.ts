@@ -1,14 +1,5 @@
-import { User } from '@prisma/client';
-import {
-  Body,
-  Controller,
-  DefaultValuePipe,
-  ParseBoolPipe,
-  Post,
-  Put,
-  Query,
-  ValidationPipe,
-} from '@nestjs/common';
+import { IResponseBody } from '@/libs/http';
+import { Body, Controller, HttpStatus, Post, Put } from '@nestjs/common';
 import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -16,12 +7,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 
-import { CurrentUser, SkipAuth } from '.';
+import { CurrentUser, SkipAuth } from './decorators';
 import {
-  AuthRequestDto,
-  AuthResponseDto,
   ChangePasswordRequestDto,
+  LoginRequestDto,
+  LoginResponseDto,
+  LogoutRequestDto,
   RefreshTokenRequestDto,
   RefreshTokenResponseDto,
 } from './dtos';
@@ -40,20 +33,23 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @ApiInternalServerErrorResponse({ description: 'Server error' })
   @SkipAuth()
-  @Post('/login')
-  login(
-    @Body(ValidationPipe) authCredentialsDto: AuthRequestDto,
-  ): Promise<AuthResponseDto> {
-    return this.authService.login(authCredentialsDto);
+  @Post('login')
+  async login(
+    @Body() authCredentialsDto: LoginRequestDto,
+  ): Promise<IResponseBody<LoginResponseDto>> {
+    return {
+      statusCode: HttpStatus.OK,
+      data: await this.authService.login(authCredentialsDto),
+    };
   }
 
   @ApiOperation({ description: 'Change user password' })
-  @Put('/password')
-  changePassword(
-    @Body(ValidationPipe) changePassword: ChangePasswordRequestDto,
+  @Put('password')
+  async changePassword(
+    @Body() changePassword: ChangePasswordRequestDto,
     @CurrentUser() user: User,
-  ) {
-    return this.authService.changePassword(changePassword, user);
+  ): Promise<IResponseBody> {
+    await this.authService.changePassword(changePassword, user);
   }
 
   @ApiOperation({ description: 'Renew access in the application' })
@@ -61,14 +57,20 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Refresh token invalid or expired' })
   @ApiInternalServerErrorResponse({ description: 'Server error' })
   @SkipAuth()
-  @Post('/refresh-token')
+  @Post('refresh-token')
   async getNewToken(
-    @Body(ValidationPipe) refreshTokenDto: RefreshTokenRequestDto,
-  ): Promise<RefreshTokenResponseDto> {
+    @Body() refreshTokenDto: RefreshTokenRequestDto,
+  ): Promise<IResponseBody<RefreshTokenResponseDto>> {
     const { refreshToken } = refreshTokenDto;
-    const { accessToken } =
+    const { accessToken, user } =
       await this.tokenService.createAccessTokenFromRefreshToken(refreshToken);
-    return { accessToken };
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        accessToken,
+        user,
+      },
+    };
   }
 
   @ApiOperation({ description: 'Logout user' })
@@ -76,14 +78,12 @@ export class AuthController {
   @Post('logout')
   async logout(
     @CurrentUser() user: User,
-    @Query('from_all', new DefaultValuePipe(false), ParseBoolPipe)
-    fromAll: boolean,
-    @Body(ValidationPipe) refreshTokenDto: RefreshTokenRequestDto,
-  ): Promise<boolean> {
-    const result = fromAll
-      ? await this.authService.logoutFromAll(user)
-      : await this.authService.logout(user, refreshTokenDto.refreshToken);
-
-    return !!result;
+    @Body() { fromAll, refreshToken }: LogoutRequestDto,
+  ): Promise<IResponseBody> {
+    if (fromAll) {
+      await this.authService.logoutFromAll(user);
+    } else {
+      await this.authService.logout(user, refreshToken);
+    }
   }
 }

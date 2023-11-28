@@ -12,6 +12,10 @@ export class HashUtil {
     return await bcrypt.hash(str, this.SALT_ROUNDS);
   }
 
+  static encryptSync(str: string): string {
+    return bcrypt.hashSync(str, this.SALT_ROUNDS);
+  }
+
   /**
    * Compares encrypted and provided string
    * @param plain {string}

@@ -16,7 +16,8 @@ import { I18nService } from 'nestjs-i18n';
 import { TokenError, TokenType } from '../enums';
 
 import type { JwtSignOptions } from '@nestjs/jwt';
-import type { JwtPayload } from '@/modules/auth/dtos';
+import type { JwtPayload, RefreshTokenResponseDto } from '@/modules/auth/dtos';
+import { StringUtil } from '@/common/utils';
 @Injectable()
 export class TokenService {
   private readonly BASE_OPTIONS: JwtSignOptions = {
@@ -120,7 +121,7 @@ export class TokenService {
    */
   async createAccessTokenFromRefreshToken(
     refreshToken: string,
-  ): Promise<{ accessToken: string; user: User }> {
+  ): Promise<RefreshTokenResponseDto> {
     const { user } = await this.resolveRefreshToken(refreshToken);
     const accessToken = await this.generateAccessToken(user);
     return { accessToken, user };
@@ -222,21 +223,23 @@ export class TokenService {
    * @returns A user object
    */
   getUserFromRefreshTokenPayload(payload: JwtPayload): Promise<User | null> {
-    const subId = payload.sub;
-
-    if (!subId) {
+    try {
+      const subId = StringUtil.toNumber({
+        value: payload.sub,
+        throwIfFailed: true,
+      });
+      return this.prismaService.user.findUnique({
+        where: {
+          id: subId,
+        },
+      });
+    } catch (error) {
       throw new UnauthorizedException(
         this.i18nService.translate('exception.refreshToken', {
           args: { error: 'malformed' },
         }),
       );
     }
-
-    return this.prismaService.user.findUnique({
-      where: {
-        id: subId,
-      },
-    });
   }
 
   /**
