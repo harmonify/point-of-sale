@@ -31,8 +31,15 @@ describe('Auth (e2e)', () => {
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
+              expect(body.statusCode).toBeDefined();
+              expect(body.message).toBeDefined();
+              expect(body.error).toBeUndefined();
+              expect(body.requestId).toBeDefined();
+              expect(body.timestamp).toBeDefined();
+              expect(body.data).toBeDefined();
               expect(body.data.accessToken).toBeDefined();
               expect(body.data.accessToken).toBeString();
+              expect(accessToken).not.toBe(body.data.accessToken);
               expect(body.data.refreshToken).toBeDefined();
               expect(body.data.refreshToken).toBeString();
               expectUser.bind(this)(body.data.user);
@@ -43,7 +50,7 @@ describe('Auth (e2e)', () => {
 
     describe('PUT /v1/auth/password', () => {
       describe('200', () => {
-        it('Should return the user information', () => {
+        it('Should return a response', () => {
           return request(appUrl)
             .put('/v1/auth/password')
             .auth(accessToken, { type: 'bearer' })
@@ -59,6 +66,12 @@ describe('Auth (e2e)', () => {
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
+              expect(body.statusCode).toBeDefined();
+              expect(body.message).toBeDefined();
+              expect(body.error).toBeUndefined();
+              expect(body.requestId).toBeDefined();
+              expect(body.timestamp).toBeDefined();
+              expect(body.data).toBeUndefined();
             });
         });
       });
@@ -80,16 +93,78 @@ describe('Auth (e2e)', () => {
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
+              expect(body.statusCode).toBeDefined();
+              expect(body.message).toBeDefined();
+              expect(body.error).toBeUndefined();
+              expect(body.requestId).toBeDefined();
+              expect(body.timestamp).toBeDefined();
+              expect(body.data).toBeDefined();
               expect(body.data.accessToken).toBeDefined();
               expect(body.data.accessToken).toBeString();
+              expect(accessToken).not.toBe(body.data.accessToken);
               expectUser.bind(this)(body.data.user);
             });
         });
       });
     });
 
-    describe('PUT /v1/auth/password', () => {});
+    describe('POST /v1/auth/logout', () => {
+      describe('Logout from specific session', () => {
+        describe('200', () => {
+          it('Should return a response', () => {
+            return request(appUrl)
+              .post('/v1/auth/logout')
+              .auth(accessToken, { type: 'bearer' })
+              .send({
+                fromAll: false,
+                refreshToken: refreshToken,
+              })
+              .then((res) => {
+                const statusCode = res.statusCode;
+                const body: ResponseBodyDto<RefreshTokenResponseDto> = res.body;
+                expect(
+                  statusCode,
+                  `expected statusCode to be 200. ${JSON.stringify(body)}`,
+                ).toBe(200);
+                expect(body).toBeDefined();
+                expect(body.statusCode).toBeDefined();
+                expect(body.message).toBeDefined();
+                expect(body.error).toBeUndefined();
+                expect(body.requestId).toBeDefined();
+                expect(body.timestamp).toBeDefined();
+                expect(body.data).toBeUndefined();
+              });
+          });
+        });
+      });
 
-    describe('POST /v1/auth/logout', () => {});
+      describe('Logout from all sessions', () => {
+        describe('200', () => {
+          it('Should return a response', () => {
+            return request(appUrl)
+              .post('/v1/auth/logout')
+              .auth(accessToken, { type: 'bearer' })
+              .send({
+                fromAll: true,
+              })
+              .then((res) => {
+                const statusCode = res.statusCode;
+                const body: ResponseBodyDto<RefreshTokenResponseDto> = res.body;
+                expect(
+                  statusCode,
+                  `expected statusCode to be 200. ${JSON.stringify(body)}`,
+                ).toBe(200);
+                expect(body).toBeDefined();
+                expect(body.statusCode).toBeDefined();
+                expect(body.message).toBeDefined();
+                expect(body.error).toBeUndefined();
+                expect(body.requestId).toBeDefined();
+                expect(body.timestamp).toBeDefined();
+                expect(body.data).toBeUndefined();
+              });
+          });
+        });
+      });
+    });
   });
 });

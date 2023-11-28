@@ -5,10 +5,11 @@ import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios
 import { appUrl, testUser } from '@test/fixtures';
 import { catchError, lastValueFrom, map, throwError } from 'rxjs';
 
+const httpService = new HttpService();
+
 export function getToken(): Promise<LoginResponseDto> {
-  const service = new HttpService();
   return lastValueFrom(
-    service
+    httpService
       .post(`${appUrl}/v1/auth/login`, {
         email: testUser.email,
         password: testUser.password,

@@ -74,7 +74,6 @@ export class AuthController {
   }
 
   @ApiOperation({ description: 'Logout user' })
-  @SkipAuth()
   @Post('logout')
   async logout(
     @CurrentUser() user: User,
@@ -85,5 +84,8 @@ export class AuthController {
     } else {
       await this.authService.logout(user, refreshToken);
     }
+    return {
+      statusCode: HttpStatus.OK,
+    };
   }
 }

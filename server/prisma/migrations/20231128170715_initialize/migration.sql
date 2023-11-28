@@ -15,6 +15,8 @@ CREATE TABLE `customer` (
     `description` VARCHAR(191) NULL,
     `address` VARCHAR(191) NULL,
 
+    UNIQUE INDEX `customer_phoneNumber_key`(`phoneNumber`),
+    UNIQUE INDEX `customer_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -28,10 +30,11 @@ CREATE TABLE `expense` (
     `updatedById` INTEGER NOT NULL,
     `deletedById` INTEGER NULL,
     `deletedAt` DATETIME(3) NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NULL,
+    `description` VARCHAR(191) NULL,
     `amount` DOUBLE NOT NULL,
     `spentAt` DATETIME(3) NOT NULL,
-    `expenseTypeId` INTEGER NOT NULL,
+    `expenseTypeId` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -46,20 +49,20 @@ CREATE TABLE `expense_type` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `expense_type_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Notification` (
+CREATE TABLE `notification` (
     `id` VARCHAR(191) NOT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
     `userId` INTEGER NOT NULL,
-    `identifier` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `url` VARCHAR(191) NOT NULL DEFAULT '#',
@@ -81,6 +84,7 @@ CREATE TABLE `procurement` (
     `deletedById` INTEGER NULL,
     `providerId` INTEGER NOT NULL,
     `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
     `invoiceNumber` VARCHAR(191) NULL,
     `invoiceDate` DATETIME(3) NULL,
     `deliveryStatus` ENUM('PENDING', 'DELIVERED') NOT NULL,
@@ -92,12 +96,15 @@ CREATE TABLE `procurement` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `ProcurementProduct` (
+CREATE TABLE `procurement_product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
+    `createdById` INTEGER NOT NULL,
+    `updatedById` INTEGER NOT NULL,
+    `deletedById` INTEGER NULL,
     `productId` INTEGER NOT NULL,
     `procurementId` INTEGER NOT NULL,
     `price` DOUBLE NOT NULL,
@@ -116,7 +123,7 @@ CREATE TABLE `product` (
     `createdById` INTEGER NOT NULL,
     `updatedById` INTEGER NOT NULL,
     `deletedById` INTEGER NULL,
-    `productCategoryId` INTEGER NOT NULL,
+    `productCategoryId` INTEGER NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `barcode` VARCHAR(191) NULL,
@@ -138,6 +145,7 @@ CREATE TABLE `product_category` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
 
+    UNIQUE INDEX `product_category_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -157,6 +165,7 @@ CREATE TABLE `product_unit` (
     `wholesalePrice` DOUBLE NOT NULL,
     `sellingPrice` DOUBLE NOT NULL,
 
+    UNIQUE INDEX `product_unit_productId_name_key`(`productId`, `name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -164,17 +173,20 @@ CREATE TABLE `product_unit` (
 CREATE TABLE `provider` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
-    `name` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deletedAt` DATETIME(3) NULL,
     `createdById` INTEGER NOT NULL,
     `updatedById` INTEGER NOT NULL,
+    `deletedById` INTEGER NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
     `address` VARCHAR(191) NOT NULL,
     `phoneNumber` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `deletedById` INTEGER NULL,
 
+    UNIQUE INDEX `provider_phoneNumber_key`(`phoneNumber`),
+    UNIQUE INDEX `provider_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -185,18 +197,16 @@ CREATE TABLE `sale` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
-    `discountOnItems` DOUBLE NOT NULL,
-    `discountOnTotal` DOUBLE NOT NULL,
-    `tax` DOUBLE NOT NULL,
-    `taxPercentageString` VARCHAR(191) NULL,
-    `billAmount` DOUBLE NOT NULL DEFAULT 0,
     `createdById` INTEGER NOT NULL,
     `updatedById` INTEGER NOT NULL,
+    `deletedById` INTEGER NULL,
+    `customerId` INTEGER NULL,
+    `description` VARCHAR(191) NULL,
+    `discountOnItems` DOUBLE NOT NULL,
+    `discountOnTotal` DOUBLE NOT NULL,
+    `billAmount` DOUBLE NOT NULL DEFAULT 0,
     `netAmount` DOUBLE NOT NULL,
     `amountPaid` DOUBLE NOT NULL,
-    `comments` VARCHAR(191) NULL,
-    `customerId` INTEGER NULL,
-    `deletedById` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -208,14 +218,15 @@ CREATE TABLE `sale_product` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
-    `quantity` INTEGER NOT NULL,
     `createdById` INTEGER NOT NULL,
     `updatedById` INTEGER NOT NULL,
+    `deletedById` INTEGER NULL,
+    `saleId` INTEGER NOT NULL,
+    `productId` INTEGER NOT NULL,
+    `quantity` INTEGER NOT NULL,
     `costPrice` DOUBLE NOT NULL,
     `sellingPrice` DOUBLE NOT NULL,
     `discount` DOUBLE NOT NULL,
-    `productId` INTEGER NOT NULL,
-    `deletedById` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -224,11 +235,11 @@ CREATE TABLE `sale_product` (
 CREATE TABLE `refresh_token` (
     `id` VARCHAR(191) NOT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
-    `expiredAt` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
     `userId` INTEGER NOT NULL,
+    `expiredAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -241,13 +252,13 @@ CREATE TABLE `user` (
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deletedAt` DATETIME(3) NULL,
     `createdById` INTEGER NULL,
+    `updatedById` INTEGER NULL,
+    `deletedById` INTEGER NULL,
     `name` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `phoneNumber` VARCHAR(191) NOT NULL,
     `blockReason` VARCHAR(191) NULL,
-    `updatedById` INTEGER NULL,
-    `deletedById` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -259,10 +270,10 @@ ALTER TABLE `customer` ADD CONSTRAINT `customer_createdBy_user_fk` FOREIGN KEY (
 ALTER TABLE `customer` ADD CONSTRAINT `customer_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `customer` ADD CONSTRAINT `customer_deletedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `customer` ADD CONSTRAINT `customer_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `expense` ADD CONSTRAINT `expense_expenseTypeId_fkey` FOREIGN KEY (`expenseTypeId`) REFERENCES `expense_type`(`id`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+ALTER TABLE `expense` ADD CONSTRAINT `expense_expenseTypeId_fkey` FOREIGN KEY (`expenseTypeId`) REFERENCES `expense_type`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- AddForeignKey
 ALTER TABLE `expense` ADD CONSTRAINT `expense_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -271,7 +282,7 @@ ALTER TABLE `expense` ADD CONSTRAINT `expense_createdBy_user_fk` FOREIGN KEY (`c
 ALTER TABLE `expense` ADD CONSTRAINT `expense_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `expense` ADD CONSTRAINT `expense_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `expense` ADD CONSTRAINT `expense_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `expense_type` ADD CONSTRAINT `expenseType_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -280,7 +291,10 @@ ALTER TABLE `expense_type` ADD CONSTRAINT `expenseType_createdBy_user_fk` FOREIG
 ALTER TABLE `expense_type` ADD CONSTRAINT `expenseType_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `expense_type` ADD CONSTRAINT `expenseType_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `expense_type` ADD CONSTRAINT `expenseType_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `notification` ADD CONSTRAINT `notification_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `procurement` ADD CONSTRAINT `procurement_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -289,16 +303,25 @@ ALTER TABLE `procurement` ADD CONSTRAINT `procurement_createdBy_user_fk` FOREIGN
 ALTER TABLE `procurement` ADD CONSTRAINT `procurement_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `procurement` ADD CONSTRAINT `procurement_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `procurement` ADD CONSTRAINT `procurement_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `procurement` ADD CONSTRAINT `procurement_providerId_fkey` FOREIGN KEY (`providerId`) REFERENCES `provider`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `procurement` ADD CONSTRAINT `procurement_providerId_fkey` FOREIGN KEY (`providerId`) REFERENCES `provider`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE `ProcurementProduct` ADD CONSTRAINT `ProcurementProduct_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `procurement_product` ADD CONSTRAINT `procurement_product_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE `ProcurementProduct` ADD CONSTRAINT `ProcurementProduct_procurementId_fkey` FOREIGN KEY (`procurementId`) REFERENCES `procurement`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `procurement_product` ADD CONSTRAINT `procurement_product_procurementId_fkey` FOREIGN KEY (`procurementId`) REFERENCES `procurement`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `procurement_product` ADD CONSTRAINT `procurement_product_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `procurement_product` ADD CONSTRAINT `procurement_product_updatedById_fkey` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `procurement_product` ADD CONSTRAINT `procurement_product_deletedById_fkey` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `product` ADD CONSTRAINT `product_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -307,10 +330,10 @@ ALTER TABLE `product` ADD CONSTRAINT `product_createdBy_user_fk` FOREIGN KEY (`c
 ALTER TABLE `product` ADD CONSTRAINT `product_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product` ADD CONSTRAINT `product_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product` ADD CONSTRAINT `product_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product` ADD CONSTRAINT `product_productCategoryId_fkey` FOREIGN KEY (`productCategoryId`) REFERENCES `product_category`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `product` ADD CONSTRAINT `product_productCategoryId_fkey` FOREIGN KEY (`productCategoryId`) REFERENCES `product_category`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- AddForeignKey
 ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -319,7 +342,7 @@ ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_createdBy_user_fk
 ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `product_unit` ADD CONSTRAINT `productUnit_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -328,13 +351,10 @@ ALTER TABLE `product_unit` ADD CONSTRAINT `productUnit_createdBy_user_fk` FOREIG
 ALTER TABLE `product_unit` ADD CONSTRAINT `productUnit_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product_unit` ADD CONSTRAINT `productUnit_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_unit` ADD CONSTRAINT `productUnit_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `product_unit` ADD CONSTRAINT `product_unit_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `provider` ADD CONSTRAINT `provider_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `provider` ADD CONSTRAINT `provider_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -343,7 +363,7 @@ ALTER TABLE `provider` ADD CONSTRAINT `provider_createdBy_user_fk` FOREIGN KEY (
 ALTER TABLE `provider` ADD CONSTRAINT `provider_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `sale` ADD CONSTRAINT `sale_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `provider` ADD CONSTRAINT `provider_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `sale` ADD CONSTRAINT `sale_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `customer`(`id`) ON DELETE RESTRICT ON UPDATE NO ACTION;
@@ -355,13 +375,13 @@ ALTER TABLE `sale` ADD CONSTRAINT `sale_createdBy_user_fk` FOREIGN KEY (`created
 ALTER TABLE `sale` ADD CONSTRAINT `sale_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `sale_product` ADD CONSTRAINT `saleProduct_deletedBy_user_fk` FOREIGN KEY (`id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `sale` ADD CONSTRAINT `sale_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `sale_product` ADD CONSTRAINT `sale_product_saleId_fkey` FOREIGN KEY (`saleId`) REFERENCES `sale`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `sale_product` ADD CONSTRAINT `sale_product_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `product`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `sale_product` ADD CONSTRAINT `sale_product_id_fkey` FOREIGN KEY (`id`) REFERENCES `sale`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `sale_product` ADD CONSTRAINT `saleProduct_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -370,13 +390,16 @@ ALTER TABLE `sale_product` ADD CONSTRAINT `saleProduct_createdBy_user_fk` FOREIG
 ALTER TABLE `sale_product` ADD CONSTRAINT `saleProduct_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `refresh_token` ADD CONSTRAINT `refresh_token_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `sale_product` ADD CONSTRAINT `saleProduct_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `user` ADD CONSTRAINT `user_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `refresh_token` ADD CONSTRAINT `refresh_token_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `user` ADD CONSTRAINT `user_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `user` ADD CONSTRAINT `user_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `user` ADD CONSTRAINT `user_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `user` ADD CONSTRAINT `user_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `user_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

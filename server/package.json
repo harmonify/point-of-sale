@@ -26,9 +26,8 @@
       "tsconfig-paths/register"
     ]
   },
-  "jest": {},
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seeders/main.ts"
   },
   "scripts": {
     "prebuild": "rimraf dist",
@@ -42,10 +41,10 @@
     "start:prod": "node dist/src/main",
     "start:repl": "NODE_ENV=dev nest start --watch --entryFile repl",
     "test": "jest --config test/jest.config.js --runInBand --verbose",
-    "test:watch": "jest --config test/jest.config.js --watch",
+    "test:watch": "jest --config test/jest.config.js --watch --verbose",
     "test:cov": "jest --config test/jest.config.js --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config test/jest.config.js --runInBand",
-    "test:e2e": "jest --config test/jest-e2e.config.js",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config test/jest.config.js --runInBand --verbose",
+    "test:e2e": "jest --config test/jest-e2e.config.js --verbose",
     "execute": "ts-node ./src/scripts/index.ts",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:dev:create": "npx prisma migrate dev --create-only",

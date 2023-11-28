@@ -1,15 +1,36 @@
+import 'tsconfig-paths/register';
 import { HashUtil } from '@/common/utils';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import csprng from 'csprng';
 import { DateTime } from 'luxon';
+
+export const adminUser: User = {
+  id: 1,
+  email: 'admin@example.com',
+  name: 'Admin User',
+  phoneNumber: '12345678901',
+  blockReason: null,
+  password: HashUtil.encryptSync(
+    process.env.DEFAULT_USER_PASSWORD || csprng(160, 36),
+  ),
+  isActive: true,
+  createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
+  updatedAt: DateTime.now().toJSDate(),
+  deletedAt: null,
+  createdById: null,
+  updatedById: null,
+  deletedById: null,
+};
 
 export const testUser: User = {
   id: 2,
   email: 'test@example.com',
   name: 'Test User',
-  phoneNumber: '1234567890',
+  phoneNumber: '12345678902',
   blockReason: null,
-  password: HashUtil.encryptSync(process.env.TEST_PASSWORD || csprng(160, 36)),
+  password: HashUtil.encryptSync(
+    process.env.DEFAULT_USER_PASSWORD || csprng(160, 36),
+  ),
   isActive: true,
   createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
   updatedAt: DateTime.now().toJSDate(),

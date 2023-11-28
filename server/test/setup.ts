@@ -31,7 +31,7 @@ module.exports = async (globalConfig: any, projectConfig: any) => {
     },
   });
 
-  await prismaService.$disconnect();
+  prismaService.$disconnect();
 
   // @ts-ignore
   globalThis._app = app;

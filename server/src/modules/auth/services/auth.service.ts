@@ -1,5 +1,8 @@
 import { HashUtil } from '@/common/utils';
-import { InvalidCurrentPasswordException } from '@/libs/http';
+import {
+  InvalidCredentialsException,
+  InvalidCurrentPasswordException,
+} from '@/libs/http';
 import { PrismaService } from '@/libs/prisma';
 import { ChangePasswordRequestDto } from '@/modules/auth/dtos';
 import { UserResponseDto } from '@/modules/user/dtos';
@@ -40,6 +43,10 @@ export class AuthService {
           args: { item: 'Account' },
         }),
       );
+    }
+
+    if (!(await HashUtil.compare(loginDto.password, user.password))) {
+      throw new InvalidCredentialsException();
     }
 
     if (!user.isActive) {
