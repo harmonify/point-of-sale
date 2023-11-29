@@ -11,7 +11,13 @@ export class ChangePasswordRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsStrongPassword()
+  @IsStrongPassword({
+    minLength: 8,
+    minNumbers: 1,
+    minUppercase: 1,
+    minLowercase: 1,
+    minSymbols: 0,
+  })
   @ApiProperty({
     example: 'Hello123',
   })

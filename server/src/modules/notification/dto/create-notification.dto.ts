@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 export class CreateNotificationRequestDto
-  implements Prisma.NotificationCreateInput
+  implements Partial<Prisma.NotificationCreateInput>
 {
   deletedAt?: Date;
   userId: number;

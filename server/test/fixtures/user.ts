@@ -10,9 +10,7 @@ export const adminUser: User = {
   name: 'Admin User',
   phoneNumber: '12345678901',
   blockReason: null,
-  password: HashUtil.encryptSync(
-    process.env.DEFAULT_USER_PASSWORD || csprng(160, 36),
-  ),
+  password: process.env.DEFAULT_USER_PASSWORD || 'Qwerty12345678',
   isActive: true,
   createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
   updatedAt: DateTime.now().toJSDate(),
@@ -22,15 +20,13 @@ export const adminUser: User = {
   deletedById: null,
 };
 
-export const testUser: User = {
+export const testUser: User = Object.freeze({
   id: 2,
   email: 'test@example.com',
   name: 'Test User',
   phoneNumber: '12345678902',
   blockReason: null,
-  password: HashUtil.encryptSync(
-    process.env.DEFAULT_USER_PASSWORD || csprng(160, 36),
-  ),
+  password: process.env.DEFAULT_USER_PASSWORD || 'Qwerty12345678',
   isActive: true,
   createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
   updatedAt: DateTime.now().toJSDate(),
@@ -38,4 +34,4 @@ export const testUser: User = {
   createdById: null,
   updatedById: null,
   deletedById: null,
-};
+});

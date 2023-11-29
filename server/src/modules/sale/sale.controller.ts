@@ -57,7 +57,7 @@ export class SaleController {
         ...PrismaService.DEFAULT_WHERE,
         OR: paginationInfo.search
           ? [
-              { comments: { contains: paginationInfo.search } },
+              { description: { contains: paginationInfo.search } },
               { customer: { name: { contains: paginationInfo.search } } },
               { createdBy: { name: { contains: paginationInfo.search } } },
             ]

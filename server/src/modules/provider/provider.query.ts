@@ -3,22 +3,21 @@ import { Prisma } from '@prisma/client';
 
 import type { IPrismaBaseFields } from '@/libs/prisma';
 
-const customerQueryField = {
+const providerQueryField = {
   default: () => ({
     ...BaseQuery.Field.default(),
     name: true,
     address: true,
     description: true,
     email: true,
-    gender: true,
     phoneNumber: true,
   }),
 } satisfies Record<
   string,
-  () => Omit<Prisma.CustomerSelectScalar, keyof IPrismaBaseFields>
+  () => Omit<Prisma.ProviderSelectScalar, keyof IPrismaBaseFields>
 >;
 
-const customerQueryFilter = {
+const providerQueryFilter = {
   search: (term: string) => ({
     OR: [
       { name: { contains: term } },
@@ -28,10 +27,10 @@ const customerQueryFilter = {
   }),
 } satisfies Record<
   string,
-  (...args: any) => Prisma.CustomerWhereInput | Prisma.CustomerWhereInput[]
+  (...args: any) => Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
 >;
 
-export class CustomerQuery {
-  static readonly Field = customerQueryField;
-  static readonly Filter = customerQueryFilter;
+export class ProviderQuery {
+  static readonly Field = providerQueryField;
+  static readonly Filter = providerQueryFilter;
 }

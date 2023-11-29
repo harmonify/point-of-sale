@@ -31,7 +31,7 @@ export class PrismaHttpClientErrorFilter implements ExceptionFilter {
     if (error) {
       return response.status(error.statusCode).json({
         statusCode: error.statusCode,
-        message: error.message,
+        message: `${error.message || exception.message}`,
       });
     } else {
       this.logger.error(exception, exception.stack);

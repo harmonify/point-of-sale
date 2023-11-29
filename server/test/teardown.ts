@@ -1,11 +1,9 @@
 import 'tsconfig-paths/register';
-import { INestApplication } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
+
+import { TestUtil } from './utils/test.util';
 
 module.exports = async (globalConfig: any, projectConfig: any) => {
   // @ts-ignore
-  const app = globalThis._app as INestApplication;
-  if (!app) return;
-  app.get(PrismaService).$disconnect();
-  app.close();
+  const testUtil = globalThis._testUtil as TestUtil;
+  await testUtil.teardown();
 };

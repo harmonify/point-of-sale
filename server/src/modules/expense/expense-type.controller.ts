@@ -30,7 +30,7 @@ export class ExpenseTypeController {
     return this.prismaService.expenseType.findMany({
       select: {
         ...PrismaService.DEFAULT_SELECT,
-        description: true,
+        name: true,
         createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
       },
       skip: paginationInfo.skip,
@@ -38,7 +38,7 @@ export class ExpenseTypeController {
       where: {
         ...PrismaService.DEFAULT_WHERE,
         OR: paginationInfo.search
-          ? [{ description: { contains: paginationInfo.search } }]
+          ? [{ name: { contains: paginationInfo.search } }]
           : [],
       },
       orderBy: PrismaService.ORDER_BY_LATEST,

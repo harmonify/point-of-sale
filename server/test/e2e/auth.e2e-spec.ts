@@ -1,24 +1,48 @@
+import { ResponseBodyDto } from '@/libs/http';
+import { LoginResponseDto, RefreshTokenResponseDto } from '@/modules/auth/dtos';
 import request from 'supertest';
 
-import { appUrl, testUser } from './fixtures';
-import { LoginResponseDto, RefreshTokenResponseDto } from '@/modules/auth/dtos';
-import { expectUser } from './matchers/user';
-import { ResponseBodyDto } from '@/libs/http';
-import { getToken } from './utils/get-token.util';
+import { appUrl, testUser } from '@test/fixtures';
+import {
+  buildResponseBodySchema,
+  responseBodyJSONSchema,
+  userJSONSchema,
+} from '@test/schemas';
+import { TestUtil } from '@test/utils';
 
 describe('Auth (e2e)', () => {
+  let testUtil: TestUtil;
   let accessToken: string;
   let refreshToken: string;
 
   beforeAll(async () => {
-    const response = await getToken();
-    accessToken = response.accessToken;
-    refreshToken = response.refreshToken;
+    testUtil = new TestUtil();
+    await testUtil.setup();
+    const authToken = await testUtil.getAuthToken();
+    accessToken = authToken.accessToken;
+    refreshToken = authToken.refreshToken;
+  });
+
+  afterAll(async () => {
+    await testUtil.teardown();
   });
 
   describe('v1', () => {
     describe('POST /v1/auth/login', () => {
       describe('200', () => {
+        const loginResponseSchema = buildResponseBodySchema({
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+            },
+            refreshToken: {
+              type: 'string',
+            },
+            user: userJSONSchema,
+          },
+        });
+
         it('Should return the user information, access token, and refresh token', () => {
           return request(appUrl)
             .post('/v1/auth/login')
@@ -31,18 +55,7 @@ describe('Auth (e2e)', () => {
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
-              expect(body.statusCode).toBeDefined();
-              expect(body.message).toBeDefined();
-              expect(body.error).toBeUndefined();
-              expect(body.requestId).toBeDefined();
-              expect(body.timestamp).toBeDefined();
-              expect(body.data).toBeDefined();
-              expect(body.data.accessToken).toBeDefined();
-              expect(body.data.accessToken).toBeString();
-              expect(accessToken).not.toBe(body.data.accessToken);
-              expect(body.data.refreshToken).toBeDefined();
-              expect(body.data.refreshToken).toBeString();
-              expectUser.bind(this)(body.data.user);
+              expect(body).toMatchSchema(loginResponseSchema);
             });
         });
       });
@@ -66,12 +79,7 @@ describe('Auth (e2e)', () => {
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
-              expect(body.statusCode).toBeDefined();
-              expect(body.message).toBeDefined();
-              expect(body.error).toBeUndefined();
-              expect(body.requestId).toBeDefined();
-              expect(body.timestamp).toBeDefined();
-              expect(body.data).toBeUndefined();
+              expect(body).toMatchSchema(responseBodyJSONSchema);
             });
         });
       });
@@ -79,6 +87,16 @@ describe('Auth (e2e)', () => {
 
     describe('POST /v1/auth/refresh-token', () => {
       describe('200', () => {
+        const refreshTokenResponseSchema = buildResponseBodySchema({
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+            },
+            user: userJSONSchema,
+          },
+        });
+
         it('Should return the user information and access token', () => {
           return request(appUrl)
             .post('/v1/auth/refresh-token')
@@ -93,16 +111,7 @@ describe('Auth (e2e)', () => {
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
-              expect(body.statusCode).toBeDefined();
-              expect(body.message).toBeDefined();
-              expect(body.error).toBeUndefined();
-              expect(body.requestId).toBeDefined();
-              expect(body.timestamp).toBeDefined();
-              expect(body.data).toBeDefined();
-              expect(body.data.accessToken).toBeDefined();
-              expect(body.data.accessToken).toBeString();
-              expect(accessToken).not.toBe(body.data.accessToken);
-              expectUser.bind(this)(body.data.user);
+              expect(body).toMatchSchema(refreshTokenResponseSchema);
             });
         });
       });
@@ -127,12 +136,7 @@ describe('Auth (e2e)', () => {
                   `expected statusCode to be 200. ${JSON.stringify(body)}`,
                 ).toBe(200);
                 expect(body).toBeDefined();
-                expect(body.statusCode).toBeDefined();
-                expect(body.message).toBeDefined();
-                expect(body.error).toBeUndefined();
-                expect(body.requestId).toBeDefined();
-                expect(body.timestamp).toBeDefined();
-                expect(body.data).toBeUndefined();
+                expect(body).toMatchSchema(responseBodyJSONSchema);
               });
           });
         });
@@ -155,12 +159,7 @@ describe('Auth (e2e)', () => {
                   `expected statusCode to be 200. ${JSON.stringify(body)}`,
                 ).toBe(200);
                 expect(body).toBeDefined();
-                expect(body.statusCode).toBeDefined();
-                expect(body.message).toBeDefined();
-                expect(body.error).toBeUndefined();
-                expect(body.requestId).toBeDefined();
-                expect(body.timestamp).toBeDefined();
-                expect(body.data).toBeUndefined();
+                expect(body).toMatchSchema(responseBodyJSONSchema);
               });
           });
         });

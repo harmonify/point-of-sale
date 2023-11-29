@@ -14,6 +14,7 @@ const baseQueryField = {
 const baseQueryFilter = {
   available: () => ({ deletedAt: null }),
   isActive: () => ({ isActive: true, deletedAt: null }),
+  byId: (id: number) => ({ id }),
 } satisfies Record<string, (...args: any) => Prisma.UserWhereInput>;
 
 const baseQueryOrderBy = {

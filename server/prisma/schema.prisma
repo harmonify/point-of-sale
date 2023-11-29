@@ -265,11 +265,10 @@ model Sale {
   deletedById     Int?
   customerId      Int?
   description     String?
-  discountOnItems Float
   discountOnTotal Float
+  taxOnTotal      Float
   billAmount      Float         @default(0)
   netAmount       Float
-  amountPaid      Float
   saleProducts    SaleProduct[] @relation()
   customer        Customer?     @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   createdBy       User          @relation(name: "sale_createdBy_user", map: "sale_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -294,6 +293,7 @@ model SaleProduct {
   costPrice    Float
   sellingPrice Float
   discount     Float
+  tax          Float
   sale         Sale      @relation(fields: [saleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   product      Product   @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdBy    User      @relation(name: "saleProduct_createdBy_user", map: "saleProduct_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)

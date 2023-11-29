@@ -90,7 +90,7 @@ export class AuthService {
       },
     });
 
-    if (await HashUtil.compare(currentPassword, userDetails.password)) {
+    if (!(await HashUtil.compare(currentPassword, userDetails.password))) {
       throw new InvalidCurrentPasswordException();
     }
 

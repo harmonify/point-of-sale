@@ -1,28 +1,29 @@
 import * as bcrypt from 'bcryptjs';
 
 export class HashUtil {
-  private static SALT_ROUNDS = 10;
+  private static SALT_ROUNDS = process.env.SALT_ROUNDS || 11;
 
   /**
-   * Encrypts plain string
-   * @param str {string}
-   * @returns Promise<string> Returns encrypted
+   * Hash plain string
+   * @returns Returns hashed
    */
-  static async encrypt(str: string): Promise<string> {
+  static async hash(str: string): Promise<string> {
     return await bcrypt.hash(str, this.SALT_ROUNDS);
   }
 
-  static encryptSync(str: string): string {
+  /**
+   * Hash plain string synchronously
+   * @returns Returns hashed
+   */
+  static hashSync(str: string): string {
     return bcrypt.hashSync(str, this.SALT_ROUNDS);
   }
 
   /**
-   * Compares encrypted and provided string
-   * @param plain {string}
-   * @param encrypted {string}
-   * @returns Promise<boolean> Returns Boolean if provided string and encrypted string are equal
+   * Compares hashed and provided string
+   * @returns Returns true if the provided string and hashed string are equal
    */
-  static async compare(plain: string, encrypted: string): Promise<boolean> {
-    return await bcrypt.compare(plain, encrypted);
+  static async compare(plain: string, hashed: string): Promise<boolean> {
+    return await bcrypt.compare(plain, hashed);
   }
 }

@@ -1,6 +1,7 @@
 import 'tsconfig-paths/register';
 import { PrismaClient, User } from '@prisma/client';
 import { adminUser, testUser } from '@test/fixtures';
+import { HashUtil } from '@/common/utils';
 
 const prisma = new PrismaClient({
   log: ['error', 'info', 'query', 'warn'],
@@ -14,8 +15,7 @@ async function main() {
     const user = await prisma.user.upsert({
       create: userData,
       update: {
-        password: userData.password,
-        // updatedAt: userData.updatedAt,
+        password: await HashUtil.hash(userData.password),
       },
       where: {
         id: userData.id,

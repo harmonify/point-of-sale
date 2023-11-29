@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { Gender, Customer } from '@prisma/client';
 
-export class UserResponseDto implements Partial<User> {
+export class CustomerResponseDto implements Partial<Customer> {
   @ApiProperty()
   id: number;
 
@@ -20,16 +20,18 @@ export class UserResponseDto implements Partial<User> {
   @ApiProperty()
   name: string;
 
-  @ApiProperty()
-  email: string;
+  @ApiProperty({ enum: Gender })
+  gender: Gender | null;
 
   @ApiProperty()
-  phoneNumber: string;
+  phoneNumber?: string | null;
 
   @ApiProperty()
-  blockReason?: string | null;
+  email?: string | null;
 
-  constructor(dto?: Partial<UserResponseDto>) {
-    Object.assign(this, dto);
-  }
+  @ApiProperty()
+  description?: string | null;
+
+  @ApiProperty()
+  address?: string | null;
 }

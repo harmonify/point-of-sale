@@ -36,7 +36,13 @@ export class CreateUserRequestDto implements Prisma.UserCreateInput {
   @IsNotEmpty()
   @IsString()
   @Length(8, 64)
-  @IsStrongPassword({ minLength: 8 }, { message: 'Password too weak' })
+  @IsStrongPassword({
+    minLength: 8,
+    minNumbers: 1,
+    minUppercase: 1,
+    minLowercase: 1,
+    minSymbols: 0,
+  })
   @ApiProperty({
     example: 'Hello123',
   })

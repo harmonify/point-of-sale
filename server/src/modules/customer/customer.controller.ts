@@ -3,7 +3,7 @@ import {
   PaginationInfo,
   RequestPaginationInfoDto,
 } from '@/libs/http';
-import { PrismaService, BaseQuery } from '@/libs/prisma';
+import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
   Body,
@@ -15,59 +15,27 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Customer, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
 import { CustomerQuery } from './customer.query';
-import { UserQuery } from '../user/user.query';
+import {
+  CreateCustomerRequestDto,
+  CustomerResponseDto,
+  UpdateCustomerRequestDto,
+} from './dtos';
 
 @ApiTags('Customers')
 @Controller({ path: '/customers', version: '1' })
 export class CustomerController {
   constructor(private readonly prismaService: PrismaService) {}
 
-  @Get('/:id')
-  async findOne(@Param('id') id: number): Promise<IResponseBody> {
-    const customer = await this.prismaService.customer.findUniqueOrThrow({
-      select: BaseQuery.Field.default(),
-      where: { ...BaseQuery.Filter.available(), id },
-    });
-    return {
-      data: customer,
-    };
-  }
-
-  @Get()
-  async findAll(
-    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody> {
-    let whereQuery = BaseQuery.Filter.available();
-    if (paginationInfo.search) {
-      whereQuery = {
-        ...whereQuery,
-        ...CustomerQuery.Filter.search(paginationInfo.search),
-      };
-    }
-
-    const customers = await this.prismaService.customer.findMany({
-      select: {
-        ...BaseQuery.Field.default(),
-        ...CustomerQuery.Field.default(),
-        createdBy: { select: UserQuery.Field.default() },
-      },
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: whereQuery,
-      orderBy: BaseQuery.OrderBy.latest(),
-    });
-    return {
-      data: customers,
-    };
-  }
-
   @Post()
   async create(
-    @Body() customer: Customer,
+    @Body() customer: CreateCustomerRequestDto,
     @CurrentUser() user: User,
-  ): Promise<IResponseBody> {
+  ): Promise<IResponseBody<CustomerResponseDto>> {
+    console.log(customer);
     const newCustomer = await this.prismaService.customer.create({
       data: {
         ...customer,
@@ -80,15 +48,54 @@ export class CustomerController {
     };
   }
 
+  @Get()
+  async findAll(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody<CustomerResponseDto[]>> {
+    const customers = await this.prismaService.customer.findMany({
+      select: CustomerQuery.Field.default(),
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              CustomerQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
+      orderBy: BaseQuery.OrderBy.latest(),
+    });
+    return {
+      data: customers,
+    };
+  }
+
+  @Get('/:id')
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<IResponseBody<CustomerResponseDto>> {
+    const customer = await this.prismaService.customer.findUniqueOrThrow({
+      select: CustomerQuery.Field.default(),
+      where: {
+        id,
+        AND: [BaseQuery.Filter.available()],
+      },
+    });
+    return {
+      data: customer,
+    };
+  }
+
   @Put('/:id')
   async update(
     @Param('id') id: number,
-    @Body() data: Customer,
+    @Body() data: UpdateCustomerRequestDto,
     @CurrentUser() user: User,
-  ): Promise<IResponseBody> {
+  ): Promise<IResponseBody<CustomerResponseDto>> {
     const updatedCustomer = await this.prismaService.customer.update({
       data: { ...data, updatedById: user.id },
-      where: { id },
+      where: BaseQuery.Filter.byId(id),
     });
     return {
       data: updatedCustomer,
@@ -102,7 +109,7 @@ export class CustomerController {
   ): Promise<IResponseBody> {
     await this.prismaService.customer.update({
       data: BaseQuery.getSoftDeleteData(user.id),
-      where: { id },
+      where: BaseQuery.Filter.byId(id),
     });
   }
 }

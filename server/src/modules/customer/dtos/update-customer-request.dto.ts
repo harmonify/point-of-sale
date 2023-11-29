@@ -2,24 +2,22 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Gender, Prisma } from '@prisma/client';
 import {
   IsBoolean,
+  IsDateString,
   IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
 
-export class CreateCustomerRequestDto
-  implements Omit<Prisma.CustomerCreateInput, 'createdBy' | 'updatedBy'>
-{
+export class UpdateCustomerRequestDto implements Prisma.CustomerUpdateInput {
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
   isActive?: boolean | undefined;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsString()
@@ -29,7 +27,7 @@ export class CreateCustomerRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  phoneNumber: string;
+  phoneNumber?: string;
 
   @IsOptional()
   @IsString()
@@ -46,4 +44,9 @@ export class CreateCustomerRequestDto
   @IsString()
   @ApiProperty()
   address?: string;
+
+  @IsOptional()
+  @IsDateString()
+  @ApiProperty()
+  deletedAt?: Date;
 }

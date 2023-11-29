@@ -103,14 +103,11 @@ export class PrismaService
     Prisma.SaleSelectScalar,
     BASE_FIELDS
   > = {
-    amountPaid: true,
     billAmount: true,
-    comments: true,
-    discountOnItems: true,
+    description: true,
     discountOnTotal: true,
+    taxOnTotal: true,
     netAmount: true,
-    tax: true,
-    taxPercentageString: true,
   };
 
   // Provider
