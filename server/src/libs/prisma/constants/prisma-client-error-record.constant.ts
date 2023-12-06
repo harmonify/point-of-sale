@@ -9,6 +9,7 @@ export const prismaHttpClientErrorRecord = {
   },
   [PrismaClientErrorCode.P2002]: {
     statusCode: HttpStatus.CONFLICT,
+    message: 'Record already exists',
   },
   [PrismaClientErrorCode.P2005]: {
     statusCode: HttpStatus.BAD_REQUEST,
@@ -32,6 +33,7 @@ export const prismaHttpClientErrorRecord = {
   },
   [PrismaClientErrorCode.P2015]: {
     statusCode: HttpStatus.NOT_FOUND,
+    message: 'Record not found',
   },
   [PrismaClientErrorCode.P2019]: {
     statusCode: HttpStatus.BAD_REQUEST,
@@ -43,5 +45,6 @@ export const prismaHttpClientErrorRecord = {
   },
   [PrismaClientErrorCode.P2025]: {
     statusCode: HttpStatus.NOT_FOUND,
+    message: 'Record not found',
   },
 } as Record<PrismaClientErrorCode, ResponseBodyDto | undefined>;

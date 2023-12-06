@@ -35,7 +35,6 @@ export class CustomerController {
     @Body() customer: CreateCustomerRequestDto,
     @CurrentUser() user: User,
   ): Promise<IResponseBody<CustomerResponseDto>> {
-    console.log(customer);
     const newCustomer = await this.prismaService.customer.create({
       data: {
         ...customer,

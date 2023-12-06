@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
 import {
   PrismaClientExceptionFilter,
@@ -22,7 +22,12 @@ import { NestConfigModule, NestConfigService } from '@/libs/config';
       inject: [NestConfigService],
       useFactory: (configService: NestConfigService) => ({
         explicitConnect: true,
-        middlewares: [loggingMiddleware()],
+        middlewares: [
+          loggingMiddleware({
+            logLevel: configService.isProd() ? 'log' : 'debug',
+            logger: new Logger('PrismaORM'),
+          }),
+        ],
         prismaOptions: {
           log: ['query', 'info', 'warn', 'error'],
           errorFormat:
