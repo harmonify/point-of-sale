@@ -18,7 +18,7 @@ import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
-declare const module: {
+declare const module: NodeModule & {
   hot: {
     accept: () => void;
     dispose: (argument0: () => Promise<void>) => void;
@@ -27,7 +27,7 @@ declare const module: {
 
 const logger = new BaseLogger('Bootstrap');
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(),
@@ -124,8 +124,12 @@ async function bootstrap() {
   !configService.isProd() &&
     logger.log(`📑 Swagger is running on: http://localhost:${port}/doc`);
   logger.log(`Server is up. +${Math.trunc(performance.now())}ms`);
+
+  return app;
 }
 
-bootstrap().catch((error) => {
-  logger.error(error);
-});
+if (require.main === module) {
+  bootstrap().catch((error) => {
+    logger.error(error);
+  });
+}

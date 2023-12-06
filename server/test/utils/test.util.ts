@@ -4,7 +4,7 @@ import { TokenService } from '@/modules/auth';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Customer, Provider, User } from '@prisma/client';
-import { customer, provider, testUser } from '@test/fixtures';
+import { adminUser, customer, provider, testUser } from '@test/fixtures';
 import { PrismaService } from 'nestjs-prisma';
 
 export class TestUtil {
@@ -42,6 +42,7 @@ export class TestUtil {
   }
 
   async seed() {
+    await this.seedUser(adminUser);
     await this.seedUser(testUser);
     await this.seedCustomer(customer);
     await this.seedProvider(provider);
