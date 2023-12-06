@@ -3,8 +3,14 @@ import { HashUtil } from '@/common/utils';
 import { TokenService } from '@/modules/auth';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Customer, Provider, User } from '@prisma/client';
-import { adminUser, customer, provider, testUser } from '@test/fixtures';
+import { Customer, ProductCategory, Provider, User } from '@prisma/client';
+import {
+  adminUser,
+  customer,
+  productCategory,
+  provider,
+  testUser,
+} from '@test/fixtures';
 import { PrismaService } from 'nestjs-prisma';
 
 export class TestUtil {
@@ -46,6 +52,7 @@ export class TestUtil {
     await this.seedUser(testUser);
     await this.seedCustomer(customer);
     await this.seedProvider(provider);
+    await this.seedProductCategory(productCategory);
   }
 
   async seedUser(user: User) {
@@ -78,6 +85,16 @@ export class TestUtil {
       update: provider,
       where: {
         id: provider.id,
+      },
+    });
+  }
+
+  async seedProductCategory(productCategory: ProductCategory) {
+    return this.prismaService.productCategory.upsert({
+      create: productCategory,
+      update: productCategory,
+      where: {
+        id: productCategory.id,
       },
     });
   }
