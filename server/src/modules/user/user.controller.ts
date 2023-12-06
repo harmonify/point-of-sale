@@ -3,7 +3,7 @@ import {
   PaginationInfo,
   RequestPaginationInfoDto,
 } from '@/libs/http';
-import { PrismaService } from '@/libs/prisma';
+import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
   BadRequestException,
@@ -17,10 +17,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
+import { UserQuery } from './user.query';
 import {
   CreateUserRequestDto,
-  UpdateUserRequestDto,
   UserResponseDto,
+  UpdateUserRequestDto,
 } from './dtos';
 
 @ApiTags('Users')
@@ -28,14 +31,21 @@ import {
 export class UserController {
   constructor(private readonly prismaService: PrismaService) {}
 
-  @Get('/:id')
-  async findOne(
-    @Param('id') id: number,
+  @Post()
+  async create(
+    @Body() newUserDto: CreateUserRequestDto,
+    @CurrentUser() user: User,
   ): Promise<IResponseBody<UserResponseDto>> {
-    const user = await this.prismaService.user.findUniqueOrThrow({
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+    const newUser = await this.prismaService.user.create({
+      data: {
+        ...newUserDto,
+        createdById: user.id,
+        updatedById: user.id,
+      },
     });
-    return { data: user };
+    return {
+      data: newUser,
+    };
   }
 
   @Get()
@@ -43,45 +53,38 @@ export class UserController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<UserResponseDto[]>> {
     const users = await this.prismaService.user.findMany({
-      select: {
-        ...PrismaService.DEFAULT_SELECT,
-        ...PrismaService.USER_DEFAULT_SELECT,
-        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
-        updatedBy: { select: PrismaService.USER_DEFAULT_SELECT },
-      },
+      select: UserQuery.Field.default(),
       skip: paginationInfo.skip,
       take: paginationInfo.take,
-      where: {
-        ...PrismaService.DEFAULT_WHERE,
-        OR: paginationInfo.search
-          ? [
-              { name: { contains: paginationInfo.search } },
-              { email: { contains: paginationInfo.search } },
-              { phoneNumber: { contains: paginationInfo.search } },
-            ]
-          : [],
-      },
-      orderBy: PrismaService.ORDER_BY_LATEST,
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              UserQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
+      orderBy: BaseQuery.OrderBy.latest(),
     });
-
     return {
       data: users,
     };
   }
 
-  @Post()
-  async create(
-    @Body() data: CreateUserRequestDto,
-    @CurrentUser() user: User,
+  @Get('/:id')
+  async findOne(
+    @Param('id') id: number,
   ): Promise<IResponseBody<UserResponseDto>> {
-    const newUser = await this.prismaService.user.create({
-      data: {
-        ...data,
-        createdById: user.id,
-        updatedById: user.id,
+    const user = await this.prismaService.user.findUniqueOrThrow({
+      select: UserQuery.Field.default(),
+      where: {
+        id,
+        AND: [BaseQuery.Filter.available()],
       },
     });
-    return { data: newUser };
+    return {
+      data: user,
+    };
   }
 
   @Put('/:id')
@@ -92,9 +95,11 @@ export class UserController {
   ): Promise<IResponseBody<UserResponseDto>> {
     const updatedUser = await this.prismaService.user.update({
       data: { ...data, updatedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+      where: BaseQuery.Filter.byId(id),
     });
-    return { data: updatedUser };
+    return {
+      data: updatedUser,
+    };
   }
 
   @Delete('/:id')
@@ -103,16 +108,11 @@ export class UserController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
     if (id === user.id) {
-      throw new BadRequestException('Cannot delete own account.');
+      throw new BadRequestException('Cannot delete own account');
     }
     await this.prismaService.user.update({
-      data: {
-        ...PrismaService.DEFAULT_SOFT_DELETE_DATA,
-        blockReason: 'Blocked by admin.',
-        deletedById: user.id,
-      },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+      data: BaseQuery.getSoftDeleteData(user.id),
+      where: BaseQuery.Filter.byId(id),
     });
-    return;
   }
 }

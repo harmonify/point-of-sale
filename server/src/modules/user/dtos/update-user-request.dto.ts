@@ -35,7 +35,6 @@ export class UpdateUserRequestDto implements Prisma.UserUpdateInput {
 
   @IsOptional()
   @IsString()
-  @IsPhoneNumber()
   @ApiProperty({
     example: '6289502376888',
   })

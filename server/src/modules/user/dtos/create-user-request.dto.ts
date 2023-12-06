@@ -27,7 +27,7 @@ export class CreateUserRequestDto implements Prisma.UserCreateInput {
   email: string;
 
   @IsNotEmpty()
-  @IsPhoneNumber()
+  @IsString()
   @ApiProperty({
     example: '6289502376888',
   })

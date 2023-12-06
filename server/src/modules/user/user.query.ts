@@ -1,14 +1,14 @@
 import { Prisma } from '@prisma/client';
 import { IPrismaBaseFields } from '@/libs/prisma';
+import { BaseQuery } from '@/libs/prisma';
 
 const userQueryField = {
   default: () => ({
+    ...BaseQuery.Field.default(),
     name: true,
-    address: true,
-    description: true,
     email: true,
-    gender: true,
     phoneNumber: true,
+    blockReason: true,
   }),
 } satisfies Record<
   string,
