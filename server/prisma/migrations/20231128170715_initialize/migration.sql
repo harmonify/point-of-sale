@@ -123,7 +123,7 @@ CREATE TABLE `product` (
     `createdById` INTEGER NOT NULL,
     `updatedById` INTEGER NOT NULL,
     `deletedById` INTEGER NULL,
-    `productCategoryId` INTEGER NULL,
+    `categoryId` INTEGER NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `barcode` VARCHAR(191) NULL,
@@ -133,7 +133,7 @@ CREATE TABLE `product` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `product_category` (
+CREATE TABLE `category` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -145,7 +145,7 @@ CREATE TABLE `product_category` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `product_category_name_key`(`name`),
+    UNIQUE INDEX `category_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -333,16 +333,16 @@ ALTER TABLE `product` ADD CONSTRAINT `product_updatedBy_user_fk` FOREIGN KEY (`u
 ALTER TABLE `product` ADD CONSTRAINT `product_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product` ADD CONSTRAINT `product_productCategoryId_fkey` FOREIGN KEY (`productCategoryId`) REFERENCES `product_category`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+ALTER TABLE `product` ADD CONSTRAINT `categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- AddForeignKey
-ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `category` ADD CONSTRAINT `category_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `category` ADD CONSTRAINT `category_updatedBy_user_fk` FOREIGN KEY (`updatedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `product_category` ADD CONSTRAINT `productCategory_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `category` ADD CONSTRAINT `category_deletedBy_user_fk` FOREIGN KEY (`deletedById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `product_unit` ADD CONSTRAINT `productUnit_createdBy_user_fk` FOREIGN KEY (`createdById`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

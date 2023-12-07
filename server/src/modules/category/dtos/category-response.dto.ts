@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ProductCategory } from '@prisma/client';
+import { Category } from '@prisma/client';
 
-export class ProductCategoryResponseDto implements Partial<ProductCategory> {
+export class CategoryResponseDto implements Partial<Category> {
   @ApiProperty()
   id: number;
 

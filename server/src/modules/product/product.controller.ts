@@ -1,5 +1,9 @@
-import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
-import { PrismaService } from '@/libs/prisma';
+import {
+  IResponseBody,
+  PaginationInfo,
+  RequestPaginationInfoDto,
+} from '@/libs/http';
+import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
   Body,
@@ -11,72 +15,119 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Product, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
+import {
+  CreateProductRequestDto,
+  ProductResponseDto,
+  UpdateProductRequestDto,
+} from './dtos';
+import { ProductQuery } from './product.query';
+import { CategoryQuery } from '../category';
+import { UserQuery } from '../user';
+import { ProductUnitQuery } from './product-unit.query';
 
 @ApiTags('Products')
 @Controller({ path: '/products', version: '1' })
 export class ProductController {
   constructor(private readonly prismaService: PrismaService) {}
 
-  @Get('/:id')
-  findOne(@Param('id') id: number) {
-    return this.prismaService.product.findUniqueOrThrow({
-      where: { id, ...PrismaService.DEFAULT_WHERE },
-    });
-  }
-
-  @Get()
-  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
-    return this.prismaService.product.findMany({
-      select: {
-        ...PrismaService.DEFAULT_SELECT,
-        ...PrismaService.PRODUCT_DEFAULT_SELECT,
-        productCategory: {
-          select: PrismaService.PRODUCT_CATEGORY_DEFAULT_SELECT,
-        },
-        productUnits: { select: PrismaService.PRODUCT_UNIT_DEFAULT_SELECT },
-        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
-      },
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: {
-        ...PrismaService.DEFAULT_WHERE,
-        OR: paginationInfo.search
-          ? [{ name: { contains: paginationInfo.search } }]
-          : [],
-      },
-      orderBy: PrismaService.ORDER_BY_LATEST,
-    });
-  }
-
   @Post()
-  create(@Body() product: Product, @CurrentUser() user: User) {
-    return this.prismaService.product.create({
+  async create(
+    @Body() product: CreateProductRequestDto,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody<ProductResponseDto>> {
+    const newProduct = await this.prismaService.product.create({
       data: {
         ...product,
         createdById: user.id,
         updatedById: user.id,
       },
+      include: {
+        category: { select: CategoryQuery.Field.default() },
+        productUnits: { select: ProductUnitQuery.Field.default() },
+        createdBy: { select: UserQuery.Field.default() },
+      },
     });
+    return {
+      data: newProduct,
+    };
+  }
+
+  @Get()
+  async findAll(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody<ProductResponseDto[]>> {
+    const products = await this.prismaService.product.findMany({
+      select: {
+        ...ProductQuery.Field.default(),
+        ...ProductQuery.Field.defaultRelations(),
+      },
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              ProductQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
+      orderBy: BaseQuery.OrderBy.latest(),
+    });
+    return {
+      data: products,
+    };
+  }
+
+  @Get('/:id')
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<IResponseBody<ProductResponseDto>> {
+    const product = await this.prismaService.product.findUniqueOrThrow({
+      select: {
+        ...ProductQuery.Field.default(),
+        ...ProductQuery.Field.defaultRelations(),
+      },
+      where: {
+        ...BaseQuery.Filter.available(),
+        id,
+      },
+    });
+    return {
+      data: product,
+    };
   }
 
   @Put('/:id')
-  update(
+  async update(
     @Param('id') id: number,
-    @Body() data: Product,
+    @Body() data: UpdateProductRequestDto,
     @CurrentUser() user: User,
-  ) {
-    return this.prismaService.product.update({
+  ): Promise<IResponseBody<ProductResponseDto>> {
+    const updatedProduct = await this.prismaService.product.update({
       data: { ...data, updatedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+      include: {
+        category: { select: CategoryQuery.Field.default() },
+        productUnits: { select: ProductUnitQuery.Field.default() },
+        createdBy: { select: UserQuery.Field.default() },
+      },
+      where: BaseQuery.Filter.byId(id),
     });
+    return {
+      data: updatedProduct,
+    };
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: number, @CurrentUser() user: User) {
-    return this.prismaService.product.update({
-      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+  async delete(
+    @Param('id') id: number,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody> {
+    await this.prismaService.product.update({
+      data: BaseQuery.getSoftDeleteData(user.id),
+      where: BaseQuery.Filter.byId(id),
     });
   }
 }

@@ -6,14 +6,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   Customer,
   Notification,
-  ProductCategory,
+  Category,
   Provider,
   User,
 } from '@prisma/client';
 import {
   adminUser,
   customer,
-  productCategory,
+  category,
   provider,
   testUser,
 } from '@test/fixtures';
@@ -59,7 +59,7 @@ export class TestUtil {
     await this.seedUser(testUser);
     await this.seedCustomer(customer);
     await this.seedProvider(provider);
-    await this.seedProductCategory(productCategory);
+    await this.seedCategory(category);
     await this.seedNotification(notification);
   }
 
@@ -97,12 +97,12 @@ export class TestUtil {
     });
   }
 
-  seedProductCategory(productCategory: ProductCategory) {
-    return this.prismaService.productCategory.upsert({
-      create: productCategory,
-      update: productCategory,
+  seedCategory(category: Category) {
+    return this.prismaService.category.upsert({
+      create: category,
+      update: category,
       where: {
-        id: productCategory.id,
+        id: category.id,
       },
     });
   }

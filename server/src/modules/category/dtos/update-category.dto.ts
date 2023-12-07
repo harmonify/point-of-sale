@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
-export class UpdateProductCategoryRequestDto
-  implements Omit<Prisma.ProductCategoryUpdateInput, 'createdBy' | 'updatedBy'>
+export class UpdateCategoryRequestDto
+  implements Omit<Prisma.CategoryUpdateInput, 'createdBy' | 'updatedBy'>
 {
   @IsOptional()
   @IsBoolean()

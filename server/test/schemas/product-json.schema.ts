@@ -1,5 +1,5 @@
-export const productCategoryJSONSchema = {
-  title: 'ProductCategory Schema V1',
+export const productJSONSchema = {
+  title: 'Product Schema V1',
   type: 'object',
   required: ['id', 'isActive', 'createdAt', 'updatedAt', 'name', 'description'],
   properties: {

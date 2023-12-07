@@ -79,7 +79,7 @@ export class PrismaService
 
   // Product Category
   static readonly PRODUCT_CATEGORY_DEFAULT_SELECT: Omit<
-    Prisma.ProductCategorySelectScalar,
+    Prisma.CategorySelectScalar,
     BASE_FIELDS
   > = {
     ...PrismaService.DEFAULT_SELECT,

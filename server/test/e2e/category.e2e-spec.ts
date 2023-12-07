@@ -1,27 +1,26 @@
 import { ResponseBodyDto } from '@/libs/http';
-import { ProductCategoryResponseDto } from '@/modules/product-category';
+import { CategoryResponseDto } from '@/modules/category';
 import { Gender } from '@prisma/client';
-import { appUrl, mockProductCategory, productCategory } from '@test/fixtures';
+import { appUrl, mockCategory, category } from '@test/fixtures';
 import {
   buildResponseBodySchema,
-  productCategoryJSONSchema,
+  categoryJSONSchema,
   responseBodyJSONSchema,
 } from '@test/schemas';
 import { TestUtil } from '@test/utils';
 import request from 'supertest';
 
-describe('ProductCategory (e2e)', () => {
+describe('Category (e2e)', () => {
   let testUtil: TestUtil;
   let accessToken: string;
 
-  const productCategoryListResponseJSONSchema = buildResponseBodySchema({
+  const categoryListResponseJSONSchema = buildResponseBodySchema({
     type: 'array',
-    items: productCategoryJSONSchema,
+    items: categoryJSONSchema,
   });
 
-  const productCategoryResponseJSONSchema = buildResponseBodySchema(
-    productCategoryJSONSchema,
-  );
+  const categoryResponseJSONSchema =
+    buildResponseBodySchema(categoryJSONSchema);
 
   beforeAll(async () => {
     testUtil = new TestUtil();
@@ -35,113 +34,108 @@ describe('ProductCategory (e2e)', () => {
   });
 
   describe('v1', () => {
-    describe('POST /v1/product-categories', () => {
+    describe('POST /v1/categories', () => {
       describe('201', () => {
         it('Should return the product category information', () => {
           return request(appUrl)
-            .post('/v1/product-categories')
+            .post('/v1/categories')
             .auth(accessToken, { type: 'bearer' })
-            .send(mockProductCategory)
+            .send(mockCategory)
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProductCategoryResponseDto> =
-                res.body;
+              const body: ResponseBodyDto<CategoryResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 201. ${JSON.stringify(body)}`,
               ).toBe(201);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(productCategoryResponseJSONSchema);
+              expect(body).toMatchSchema(categoryResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('GET /v1/product-categories', () => {
+    describe('GET /v1/categories', () => {
       describe('200', () => {
         it('Should return list of product category information', () => {
           return request(appUrl)
-            .get('/v1/product-categories')
+            .get('/v1/categories')
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProductCategoryResponseDto> =
-                res.body;
+              const body: ResponseBodyDto<CategoryResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(productCategoryListResponseJSONSchema);
+              expect(body).toMatchSchema(categoryListResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('GET /v1/product-categories/:id', () => {
+    describe('GET /v1/categories/:id', () => {
       describe('200', () => {
         it('Should return product category information', () => {
           return request(appUrl)
-            .get(`/v1/product-categories/1`)
+            .get(`/v1/categories/1`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProductCategoryResponseDto> =
-                res.body;
+              const body: ResponseBodyDto<CategoryResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(productCategoryResponseJSONSchema);
+              expect(body).toMatchSchema(categoryResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('PUT /v1/product-categories/:id', () => {
+    describe('PUT /v1/categories/:id', () => {
       describe('200', () => {
         it('Should return product category information', () => {
           return request(appUrl)
-            .put(`/v1/product-categories/${productCategory.id}`)
+            .put(`/v1/categories/${category.id}`)
             .auth(accessToken, { type: 'bearer' })
             .send({
               isActive: false,
-              name: 'ProductCategory 2',
+              name: 'Category 2',
               gender: Gender.NOT_DEFINED,
               phoneNumber: '1234558',
-              description: 'updated productCategory',
+              description: 'updated category',
               address: 'Mars',
             })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProductCategoryResponseDto> =
-                res.body;
+              const body: ResponseBodyDto<CategoryResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(productCategoryResponseJSONSchema);
+              expect(body).toMatchSchema(categoryResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('DELETE /v1/product-categories/:id', () => {
+    describe('DELETE /v1/categories/:id', () => {
       describe('200', () => {
         it('Should return a response', () => {
           return request(appUrl)
-            .delete(`/v1/product-categories/${productCategory.id}`)
+            .delete(`/v1/categories/${category.id}`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProductCategoryResponseDto> =
-                res.body;
+              const body: ResponseBodyDto<CategoryResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,

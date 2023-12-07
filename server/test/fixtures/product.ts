@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
-import { Prisma, ProductCategory } from '@prisma/client';
+import { Prisma, Product } from '@prisma/client';
 import { DateTime } from 'luxon';
 
 import { testUser } from './user';
 
-export const productCategory: ProductCategory = {
+export const product: Product = {
   id: 1,
   isActive: true,
   name: faker.lorem.words() + ' ' + DateTime.now().toUnixInteger(),
-  description: 'What a productCategory',
+  description: 'What a product',
   createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
   updatedAt: DateTime.now().toJSDate(),
   deletedAt: null,
@@ -17,11 +17,11 @@ export const productCategory: ProductCategory = {
   deletedById: null,
 };
 
-export const mockProductCategory: Partial<ProductCategory> = {
+export const mockProduct: Partial<Product> = {
   id: 2,
   isActive: true,
   name: faker.lorem.words() + ' ' + DateTime.now().toUnixInteger(),
-  description: 'What a productCategory',
+  description: 'What a product',
   createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
   updatedAt: DateTime.now().toJSDate(),
   deletedAt: null,
