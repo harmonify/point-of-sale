@@ -1,7 +1,5 @@
 import { ResponseBodyDto } from '@/libs/http';
 import { ProviderResponseDto } from '@/modules/provider/dtos';
-import request from 'supertest';
-
 import { appUrl, provider } from '@test/fixtures';
 import {
   buildResponseBodySchema,
@@ -9,6 +7,7 @@ import {
   responseBodyJSONSchema,
 } from '@test/schemas';
 import { TestUtil } from '@test/utils';
+import request from 'supertest';
 
 describe('Provider (e2e)', () => {
   let testUtil: TestUtil;

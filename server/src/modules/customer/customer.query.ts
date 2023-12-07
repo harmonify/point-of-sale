@@ -1,35 +1,29 @@
 import { BaseQuery } from '@/libs/prisma';
 import { Prisma } from '@prisma/client';
 
-import type { IPrismaBaseFields } from '@/libs/prisma';
-
 const customerQueryField = {
-  default: () => ({
-    ...BaseQuery.Field.default(),
-    name: true,
-    address: true,
-    description: true,
-    email: true,
-    gender: true,
-    phoneNumber: true,
-  }),
-} satisfies Record<
-  string,
-  () => Omit<Prisma.CustomerSelectScalar, keyof IPrismaBaseFields>
->;
+  default: () =>
+    ({
+      ...BaseQuery.Field.default(),
+      name: true,
+      address: true,
+      description: true,
+      email: true,
+      gender: true,
+      phoneNumber: true,
+    }) satisfies Prisma.CustomerSelectScalar,
+} satisfies Record<string, () => Prisma.CustomerSelectScalar>;
 
 const customerQueryFilter = {
-  search: (term: string) => ({
-    OR: [
-      { name: { contains: term } },
-      { email: { contains: term } },
-      { phoneNumber: { contains: term } },
-    ],
-  }),
-} satisfies Record<
-  string,
-  (...args: any) => Prisma.CustomerWhereInput | Prisma.CustomerWhereInput[]
->;
+  search: (term: string) =>
+    ({
+      OR: [
+        { name: { contains: term } },
+        { email: { contains: term } },
+        { phoneNumber: { contains: term } },
+      ],
+    }) satisfies Prisma.CustomerWhereInput,
+} satisfies Record<string, (...args: any[]) => Prisma.CustomerWhereInput>;
 
 export class CustomerQuery {
   static readonly Field = customerQueryField;

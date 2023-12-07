@@ -14,6 +14,8 @@ test:
 	NODE_ENV=test npm run test
 test_e2e:
 	NODE_ENV=test npm run test:e2e
+e2e:
+	APP=true NODE_ENV=test npm run test:e2e
 build:
 	npm run build
 prod: build

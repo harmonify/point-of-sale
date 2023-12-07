@@ -1,15 +1,14 @@
 import { ResponseBodyDto } from '@/libs/http';
 import { UserResponseDto } from '@/modules/user/dtos/user-response.dto';
 import { Gender } from '@prisma/client';
-import request from 'supertest';
-
 import { appUrl, mockUser, testUser } from '@test/fixtures';
 import {
   buildResponseBodySchema,
-  userJSONSchema,
   responseBodyJSONSchema,
+  userJSONSchema,
 } from '@test/schemas';
 import { TestUtil } from '@test/utils';
+import request from 'supertest';
 
 describe('User (e2e)', () => {
   let testUtil: TestUtil;

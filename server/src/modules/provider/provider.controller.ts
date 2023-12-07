@@ -77,8 +77,8 @@ export class ProviderController {
     const provider = await this.prismaService.provider.findUniqueOrThrow({
       select: ProviderQuery.Field.default(),
       where: {
+        ...BaseQuery.Filter.available(),
         id,
-        AND: [BaseQuery.Filter.available()],
       },
     });
     return {

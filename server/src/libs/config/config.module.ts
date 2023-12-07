@@ -19,7 +19,7 @@ const isProd = env?.startsWith('prod');
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`${process.cwd()}/.env.${env}`],
+      envFilePath: [NestConfigService.getEnvFilePath()],
       load: [app, jwt, throttle],
       cache: true,
       isGlobal: true,

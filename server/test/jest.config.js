@@ -12,7 +12,7 @@ module.exports = {
   testRegex: '.*\\..*spec\\.ts$',
   globalSetup: '<rootDir>/test/setup.ts',
   globalTeardown: '<rootDir>/test/teardown.ts',
-  setupFilesAfterEnv: ["<rootDir>/test/setupBeforeEachTestFile.ts"],
+  setupFilesAfterEnv: ['<rootDir>/test/setupBeforeEachTestFile.ts'],
   transform: {
     '^.+\\.(t|j)s$': '@swc/jest',
   },

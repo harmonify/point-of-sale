@@ -1,28 +1,23 @@
 import { BaseQuery } from '@/libs/prisma';
 import { Prisma } from '@prisma/client';
 
-import type { IPrismaBaseFields } from '@/libs/prisma';
-
 const productCategoryQueryField = {
-  default: () => ({
-    ...BaseQuery.Field.default(),
-    name: true,
-    description: true,
-  }),
-} satisfies Record<
-  string,
-  () => Omit<Prisma.ProductCategorySelectScalar, keyof IPrismaBaseFields>
->;
+  default: () =>
+    ({
+      ...BaseQuery.Field.default(),
+      name: true,
+      description: true,
+    }) satisfies Prisma.ProductCategorySelectScalar,
+} satisfies Record<string, () => Prisma.ProductCategorySelectScalar>;
 
 const productCategoryQueryFilter = {
-  search: (term: string) => ({
-    OR: [{ name: { contains: term } }, { description: { contains: term } }],
-  }),
+  search: (term: string) =>
+    ({
+      OR: [{ name: { contains: term } }, { description: { contains: term } }],
+    }) satisfies Prisma.ProductCategoryWhereInput,
 } satisfies Record<
   string,
-  (
-    ...args: any
-  ) => Prisma.ProductCategoryWhereInput | Prisma.ProductCategoryWhereInput[]
+  (...args: any[]) => Prisma.ProductCategoryWhereInput
 >;
 
 export class ProductCategoryQuery {

@@ -1,7 +1,5 @@
 import { ResponseBodyDto } from '@/libs/http';
 import { LoginResponseDto, RefreshTokenResponseDto } from '@/modules/auth/dtos';
-import request from 'supertest';
-
 import { appUrl, testUser } from '@test/fixtures';
 import {
   buildResponseBodySchema,
@@ -9,6 +7,7 @@ import {
   userJSONSchema,
 } from '@test/schemas';
 import { TestUtil } from '@test/utils';
+import request from 'supertest';
 
 describe('Auth (e2e)', () => {
   let testUtil: TestUtil;

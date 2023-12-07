@@ -73,7 +73,6 @@ export class ProductCategoryController {
   }
 
   @Get('/:id')
-  @SkipAuth()
   async findOne(
     @Param('id') id: number,
   ): Promise<IResponseBody<ProductCategoryResponseDto>> {
@@ -81,8 +80,8 @@ export class ProductCategoryController {
       await this.prismaService.productCategory.findUniqueOrThrow({
         select: ProductCategoryQuery.Field.default(),
         where: {
+          ...BaseQuery.Filter.available(),
           id,
-          AND: [BaseQuery.Filter.available()],
         },
       });
     return {

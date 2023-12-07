@@ -77,8 +77,8 @@ export class CustomerController {
     const customer = await this.prismaService.customer.findUniqueOrThrow({
       select: CustomerQuery.Field.default(),
       where: {
+        ...BaseQuery.Filter.available(),
         id,
-        AND: [BaseQuery.Filter.available()],
       },
     });
     return {

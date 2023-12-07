@@ -2,19 +2,21 @@ import type { Prisma } from '@prisma/client';
 import { DateTime } from 'luxon';
 
 const baseQueryField = {
-  default: () => ({
-    id: true,
-    isActive: true,
-    createdAt: true,
-    updatedAt: true,
-    deletedAt: true,
-  }),
+  default: () =>
+    ({
+      id: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    }) satisfies Prisma.UserSelectScalar,
 } satisfies Record<string, () => Prisma.UserSelectScalar>;
 
 const baseQueryFilter = {
-  available: () => ({ deletedAt: null }),
-  isActive: () => ({ isActive: true, deletedAt: null }),
-  byId: (id: number) => ({ id }),
+  available: () => ({ deletedAt: null }) satisfies Prisma.UserWhereInput,
+  isActive: () =>
+    ({ isActive: true, deletedAt: null }) satisfies Prisma.UserWhereInput,
+  byId: (id: number) => ({ id }) satisfies Prisma.UserWhereInput,
 } satisfies Record<string, (...args: any) => Prisma.UserWhereInput>;
 
 const baseQueryOrderBy = {

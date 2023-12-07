@@ -29,6 +29,7 @@ import { NestConfigModule, NestConfigService } from '@/libs/config';
           }),
         ],
         prismaOptions: {
+          datasourceUrl: process.env.DATABASE_URL,
           log: ['query', 'info', 'warn', 'error'],
           errorFormat:
             configService.isTest() || configService.isDev()

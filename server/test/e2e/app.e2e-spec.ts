@@ -1,7 +1,7 @@
-import request from 'supertest';
-import { appUrl } from '@test/fixtures';
 import { ResponseBodyDto } from '@/libs/http';
+import { appUrl } from '@test/fixtures';
 import { responseBodyJSONSchema } from '@test/schemas';
+import request from 'supertest';
 
 describe('App (e2e)', () => {
   it('GET /', () => {

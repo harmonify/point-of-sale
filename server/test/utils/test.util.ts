@@ -3,7 +3,13 @@ import { HashUtil } from '@/common/utils';
 import { TokenService } from '@/modules/auth';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Customer, ProductCategory, Provider, User } from '@prisma/client';
+import {
+  Customer,
+  Notification,
+  ProductCategory,
+  Provider,
+  User,
+} from '@prisma/client';
 import {
   adminUser,
   customer,
@@ -11,6 +17,7 @@ import {
   provider,
   testUser,
 } from '@test/fixtures';
+import { notification } from '@test/fixtures/notification';
 import { PrismaService } from 'nestjs-prisma';
 
 export class TestUtil {
@@ -53,6 +60,7 @@ export class TestUtil {
     await this.seedCustomer(customer);
     await this.seedProvider(provider);
     await this.seedProductCategory(productCategory);
+    await this.seedNotification(notification);
   }
 
   async seedUser(user: User) {
@@ -69,7 +77,7 @@ export class TestUtil {
     });
   }
 
-  async seedCustomer(customer: Customer) {
+  seedCustomer(customer: Customer) {
     return this.prismaService.customer.upsert({
       create: customer,
       update: customer,
@@ -79,7 +87,7 @@ export class TestUtil {
     });
   }
 
-  async seedProvider(provider: Provider) {
+  seedProvider(provider: Provider) {
     return this.prismaService.provider.upsert({
       create: provider,
       update: provider,
@@ -89,12 +97,22 @@ export class TestUtil {
     });
   }
 
-  async seedProductCategory(productCategory: ProductCategory) {
+  seedProductCategory(productCategory: ProductCategory) {
     return this.prismaService.productCategory.upsert({
       create: productCategory,
       update: productCategory,
       where: {
         id: productCategory.id,
+      },
+    });
+  }
+
+  seedNotification(notification: Notification) {
+    return this.prismaService.notification.upsert({
+      create: notification,
+      update: notification,
+      where: {
+        id: notification.id,
       },
     });
   }

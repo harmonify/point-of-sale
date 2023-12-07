@@ -9,12 +9,14 @@ import { ProviderModule } from '@/modules/provider';
 import { SaleModule } from '@/modules/sale';
 import { UserModule } from '@/modules/user/user.module';
 import { Module } from '@nestjs/common';
+import { NotificationModule } from './notification';
 
 @Module({
   imports: [
     SharedModule,
     AuthModule,
     UserModule,
+    NotificationModule,
     CustomerModule,
     ProviderModule,
     ProductCategoryModule,

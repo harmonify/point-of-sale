@@ -1,8 +1,6 @@
 import { ResponseBodyDto } from '@/libs/http';
 import { ProductCategoryResponseDto } from '@/modules/product-category';
 import { Gender } from '@prisma/client';
-import request from 'supertest';
-
 import { appUrl, mockProductCategory, productCategory } from '@test/fixtures';
 import {
   buildResponseBodySchema,
@@ -10,6 +8,7 @@ import {
   responseBodyJSONSchema,
 } from '@test/schemas';
 import { TestUtil } from '@test/utils';
+import request from 'supertest';
 
 describe('ProductCategory (e2e)', () => {
   let testUtil: TestUtil;

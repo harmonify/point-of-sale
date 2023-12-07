@@ -78,8 +78,8 @@ export class UserController {
     const user = await this.prismaService.user.findUniqueOrThrow({
       select: UserQuery.Field.default(),
       where: {
+        ...BaseQuery.Filter.available(),
         id,
-        AND: [BaseQuery.Filter.available()],
       },
     });
     return {
