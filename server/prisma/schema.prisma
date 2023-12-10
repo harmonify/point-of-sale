@@ -42,9 +42,9 @@ model CashFlow {
   createdById   Int
   updatedById   Int
   deletedById   Int?
-  expenseId     Int?              @unique // to link to a manually created expense.
-  procurementId Int?              @unique // to link to a procurement.
-  saleId        Int?              @unique // to link an income to a sale. 
+  expenseId     Int? // to link to a manually created expense.
+  procurementId Int? // to link to a procurement.
+  saleId        Int? // to link an income to a sale. 
   name          String
   operation     CashFlowOperation
   amount        Float
@@ -117,7 +117,7 @@ model ExpenseCategory {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @default(now()) @updatedAt
   deletedAt   DateTime?
-  name        String // // @unique()
+  name        String // @unique()
   description String?
   operation   CashFlowOperation @default(DEBIT)
   account     String
