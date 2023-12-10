@@ -1,5 +1,9 @@
-import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
-import { PrismaService } from '@/libs/prisma';
+import {
+  IResponseBody,
+  PaginationInfo,
+  RequestPaginationInfoDto,
+} from '@/libs/http';
+import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
   Body,
@@ -11,90 +15,131 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Sale, User } from '@prisma/client';
-import { SaleService } from './sale.service';
+import { User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
+import { SaleQuery } from './sale.query';
+import {
+  CreateSaleRequestDto,
+  SaleResponseDto,
+  UpdateSaleRequestDto,
+} from './dtos';
 
 @ApiTags('Sales')
 @Controller({ path: '/sales', version: '1' })
 export class SaleController {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly saleService: SaleService,
-  ) {}
-
-  // @Post('/checkout')
-  // public checkout(
-  //   @Param('saleId') saleId: number,
-  //   @CurrentUser() user: User,
-  //   @Body() checkoutDto: CheckoutDto,
-  // ) {
-  //   return this.saleService.checkout(user, {
-  //     saleId,
-  //     user,
-  //     checkoutDto,
-  //   });
-  // }
-
-  @Get('/:id')
-  findOne(@Param('id') id: number) {
-    return this.prismaService.sale.findUniqueOrThrow({
-      where: { id, ...PrismaService.DEFAULT_WHERE },
-    });
-  }
-
-  @Get()
-  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
-    return this.prismaService.sale.findMany({
-      select: {
-        ...PrismaService.DEFAULT_SELECT,
-        ...PrismaService.SALE_DEFAULT_SELECT,
-        customer: { select: PrismaService.CUSTOMER_DEFAULT_SELECT },
-        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
-      },
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: {
-        ...PrismaService.DEFAULT_WHERE,
-        OR: paginationInfo.search
-          ? [
-              { description: { contains: paginationInfo.search } },
-              { customer: { name: { contains: paginationInfo.search } } },
-              { createdBy: { name: { contains: paginationInfo.search } } },
-            ]
-          : [],
-      },
-      orderBy: PrismaService.ORDER_BY_LATEST,
-    });
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   @Post()
-  create(@Body() sale: Sale, @CurrentUser() user: User) {
-    return this.prismaService.sale.create({
+  async create(
+    @Body() sale: CreateSaleRequestDto,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody<SaleResponseDto>> {
+    const newSale = await this.prismaService.sale.create({
       data: {
         ...sale,
         createdById: user.id,
         updatedById: user.id,
+        saleProducts: {
+          createMany: {
+            data: sale.saleProducts.map((sp) => ({
+              ...sp,
+              createdById: user.id,
+              updatedById: user.id,
+            })),
+          },
+        },
+      },
+      include: {
+        customer: true,
+        createdBy: true,
+        saleProducts: true,
       },
     });
+    return {
+      data: newSale,
+    };
+  }
+
+  @Get()
+  async findAll(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody<SaleResponseDto[]>> {
+    const sales = await this.prismaService.sale.findMany({
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              SaleQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
+      orderBy: BaseQuery.OrderBy.latest(),
+      include: {
+        customer: true,
+        createdBy: true,
+        saleProducts: true,
+      },
+    });
+    return {
+      data: sales,
+    };
+  }
+
+  @Get('/:id')
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<IResponseBody<SaleResponseDto>> {
+    const sale = await this.prismaService.sale.findFirstOrThrow({
+      where: {
+        ...BaseQuery.Filter.available(),
+        id,
+      },
+      include: {
+        customer: true,
+        createdBy: true,
+        saleProducts: true,
+      },
+    });
+    return {
+      data: sale,
+    };
   }
 
   @Put('/:id')
-  update(
+  async update(
     @Param('id') id: number,
-    @Body() data: Sale,
+    @Body() data: CreateSaleRequestDto,
     @CurrentUser() user: User,
-  ) {
-    return this.prismaService.sale.update({
-      data: { ...data, updatedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+  ): Promise<IResponseBody<SaleResponseDto>> {
+    const updatedSale = await this.prismaService.sale.update({
+      data: {
+        ...data,
+        updatedById: user.id,
+        saleProducts: BaseQuery.nestedUpsertMany(data.saleProducts, user.id),
+      },
+      where: BaseQuery.Filter.byId(id),
+      include: {
+        customer: true,
+        createdBy: true,
+        saleProducts: true,
+      },
     });
+    return {
+      data: updatedSale,
+    };
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: number, @CurrentUser() user: User) {
-    return this.prismaService.sale.update({
-      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+  async delete(
+    @Param('id') id: number,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody> {
+    await this.prismaService.sale.update({
+      data: BaseQuery.softDelete(user.id),
+      where: BaseQuery.Filter.byId(id),
     });
   }
 }

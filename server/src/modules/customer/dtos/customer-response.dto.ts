@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Gender, Customer } from '@prisma/client';
+import { Customer, Gender } from '@prisma/client';
 
-export class CustomerResponseDto implements Partial<Customer> {
+export class CustomerResponseDto implements Customer {
   @ApiProperty()
   id: number;
 
@@ -15,7 +15,16 @@ export class CustomerResponseDto implements Partial<Customer> {
   updatedAt: Date;
 
   @ApiProperty()
-  deletedAt?: Date | null;
+  deletedAt: Date | null;
+
+  @ApiProperty()
+  createdById: number;
+
+  @ApiProperty()
+  updatedById: number;
+
+  @ApiProperty()
+  deletedById: number | null;
 
   @ApiProperty()
   name: string;
@@ -24,14 +33,14 @@ export class CustomerResponseDto implements Partial<Customer> {
   gender: Gender | null;
 
   @ApiProperty()
-  phoneNumber?: string | null;
+  phoneNumber: string | null;
 
   @ApiProperty()
-  email?: string | null;
+  email: string | null;
 
   @ApiProperty()
-  description?: string | null;
+  description: string | null;
 
   @ApiProperty()
-  address?: string | null;
+  address: string | null;
 }

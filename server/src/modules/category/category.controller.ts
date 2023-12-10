@@ -52,7 +52,6 @@ export class CategoryController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<CategoryResponseDto[]>> {
     const productCategories = await this.prismaService.category.findMany({
-      select: CategoryQuery.Field.default(),
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where: paginationInfo.search
@@ -74,8 +73,7 @@ export class CategoryController {
   async findOne(
     @Param('id') id: number,
   ): Promise<IResponseBody<CategoryResponseDto>> {
-    const category = await this.prismaService.category.findUniqueOrThrow({
-      select: CategoryQuery.Field.default(),
+    const category = await this.prismaService.category.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -107,7 +105,7 @@ export class CategoryController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
     await this.prismaService.category.update({
-      data: BaseQuery.getSoftDeleteData(user.id),
+      data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
     });
   }

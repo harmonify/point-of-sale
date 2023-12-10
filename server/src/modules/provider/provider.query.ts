@@ -1,17 +1,7 @@
-import { BaseQuery } from '@/libs/prisma';
 import { Prisma } from '@prisma/client';
 
-const providerQueryField: Record<string, () => Prisma.ProviderSelectScalar> = {
-  default: () =>
-    ({
-      ...BaseQuery.Field.default(),
-      name: true,
-      address: true,
-      description: true,
-      email: true,
-      phoneNumber: true,
-    }) satisfies Prisma.ProviderSelectScalar,
-} satisfies Record<string, () => Prisma.ProviderSelectScalar>;
+const providerQueryField: Record<string, () => Prisma.ProviderSelectScalar> =
+  {} satisfies Record<string, () => Prisma.ProviderSelectScalar>;
 
 const providerQueryFilter = {
   search: (term: string) =>

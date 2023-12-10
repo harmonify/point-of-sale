@@ -1,7 +1,15 @@
 export const providerJSONSchema = {
   title: 'Customer Schema V1',
   type: 'object',
-  required: ['id', 'isActive', 'createdAt', 'updatedAt', 'name'],
+  required: [
+    'id',
+    'isActive',
+    'createdAt',
+    'updatedAt',
+    'createdById',
+    'updatedById',
+    'name',
+  ],
   properties: {
     id: {
       type: 'number',
@@ -17,6 +25,16 @@ export const providerJSONSchema = {
     },
     deletedAt: {
       type: 'string',
+      nullable: true,
+    },
+    createdById: {
+      type: 'number',
+    },
+    updatedById: {
+      type: 'number',
+    },
+    deletedById: {
+      type: 'number',
       nullable: true,
     },
     name: {

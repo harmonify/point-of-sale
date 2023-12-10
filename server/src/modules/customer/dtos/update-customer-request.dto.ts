@@ -12,7 +12,7 @@ export class UpdateCustomerRequestDto implements Prisma.CustomerUpdateInput {
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  isActive?: boolean | undefined;
+  isActive?: boolean;
 
   @IsOptional()
   @IsString()

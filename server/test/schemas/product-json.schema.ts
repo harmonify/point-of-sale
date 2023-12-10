@@ -1,7 +1,19 @@
+import { productUnitJSONSchema } from './product-unit-json.schema';
+
 export const productJSONSchema = {
   title: 'Product Schema V1',
   type: 'object',
-  required: ['id', 'isActive', 'createdAt', 'updatedAt', 'name', 'description'],
+  required: [
+    'id',
+    'isActive',
+    'createdAt',
+    'updatedAt',
+    'createdById',
+    'updatedById',
+    'name',
+    'categoryId',
+    'productUnits',
+  ],
   properties: {
     id: {
       type: 'number',
@@ -19,12 +31,37 @@ export const productJSONSchema = {
       type: 'string',
       nullable: true,
     },
+    createdById: {
+      type: 'number',
+    },
+    updatedById: {
+      type: 'number',
+    },
+    deletedById: {
+      type: 'number',
+      nullable: true,
+    },
     name: {
       type: 'string',
     },
     description: {
       type: 'string',
       nullable: true,
+    },
+    barcode: {
+      type: 'string',
+      nullable: true,
+    },
+    barcodeType: {
+      type: 'string',
+      nullable: true,
+    },
+    categoryId: {
+      type: 'number',
+    },
+    productUnits: {
+      type: 'array',
+      items: productUnitJSONSchema,
     },
   },
 };

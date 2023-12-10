@@ -30,7 +30,6 @@ export class NotificationService {
     }
 
     return this.prismaService.notification.findMany({
-      select: NotificationQuery.Field.default(),
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where,
@@ -39,8 +38,7 @@ export class NotificationService {
   }
 
   findOneAdmin(notificationId: Notification['id']) {
-    return this.prismaService.notification.findUniqueOrThrow({
-      select: NotificationQuery.Field.default(),
+    return this.prismaService.notification.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id: notificationId,
@@ -49,8 +47,7 @@ export class NotificationService {
   }
 
   findOne(notificationId: Notification['id'], userId: User['id']) {
-    return this.prismaService.notification.findUniqueOrThrow({
-      select: NotificationQuery.Field.default(),
+    return this.prismaService.notification.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id: notificationId,

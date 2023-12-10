@@ -1,17 +1,12 @@
+import { NestConfigModule, NestConfigService } from '@/libs/config';
 import { Global, Logger, Module } from '@nestjs/common';
-import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
-import {
-  PrismaClientExceptionFilter,
-  PrismaModule,
-  loggingMiddleware,
-} from 'nestjs-prisma';
+import { APP_FILTER } from '@nestjs/core';
+import { loggingMiddleware, PrismaModule } from 'nestjs-prisma';
 
 import {
   PrismaHttpClientErrorFilter,
   PrismaHttpServerErrorFilter,
 } from './filters';
-import { PrismaService } from './prisma.service';
-import { NestConfigModule, NestConfigService } from '@/libs/config';
 
 @Global()
 @Module({
@@ -24,13 +19,21 @@ import { NestConfigModule, NestConfigService } from '@/libs/config';
         explicitConnect: true,
         middlewares: [
           loggingMiddleware({
-            logLevel: configService.isProd() ? 'log' : 'debug',
+            logLevel: configService.isProd()
+              ? 'log'
+              : configService.isDev() || configService.isStaging()
+                ? 'debug'
+                : 'warn',
             logger: new Logger('PrismaORM'),
           }),
         ],
         prismaOptions: {
           datasourceUrl: process.env.DATABASE_URL,
-          log: ['query', 'info', 'warn', 'error'],
+          log: configService.isProd()
+            ? ['info', 'warn', 'error']
+            : configService.isDev() || configService.isStaging()
+              ? ['query', 'info', 'warn', 'error']
+              : ['warn', 'error'],
           errorFormat:
             configService.isTest() || configService.isDev()
               ? 'pretty'
@@ -40,7 +43,6 @@ import { NestConfigModule, NestConfigService } from '@/libs/config';
     }),
   ],
   providers: [
-    PrismaService,
     {
       provide: APP_FILTER,
       useClass: PrismaHttpClientErrorFilter,
@@ -50,6 +52,5 @@ import { NestConfigModule, NestConfigService } from '@/libs/config';
       useClass: PrismaHttpServerErrorFilter,
     },
   ],
-  exports: [PrismaService],
 })
 export class NestPrismaModule {}

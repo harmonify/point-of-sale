@@ -5,7 +5,11 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'jest-extended'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'jest-extended',
+    'prisma-soft-delete',
+  ],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -25,7 +29,9 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-var-requires': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',
-    "jest-extended/prefer-to-be-true": "warn",
-    "jest-extended/prefer-to-be-false": "error"
+    'jest-extended/prefer-to-be-true': 'warn',
+    'jest-extended/prefer-to-be-false': 'error',
+    'prisma-soft-delete/use-deleted-null': 'error',
+    // 'prisma-soft-delete/use-find-first': 'error',
   },
 };

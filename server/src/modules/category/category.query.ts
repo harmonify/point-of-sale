@@ -1,14 +1,10 @@
 import { BaseQuery } from '@/libs/prisma';
 import { Prisma } from '@prisma/client';
 
-const categoryQueryField = {
-  default: () =>
-    ({
-      ...BaseQuery.Field.default(),
-      name: true,
-      description: true,
-    }) satisfies Prisma.CategorySelectScalar,
-} satisfies Record<string, () => Prisma.CategorySelectScalar>;
+const categoryQueryField = {} satisfies Record<
+  string,
+  () => Prisma.CategorySelectScalar
+>;
 
 const categoryQueryFilter = {
   search: (term: string) =>

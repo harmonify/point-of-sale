@@ -1,15 +1,17 @@
 import { SharedModule } from '@/libs';
-import { AuthModule } from '@/modules/auth/auth.module';
+import { AuthModule } from '@/modules/auth';
+import { CategoryModule } from '@/modules/category';
 import { CustomerModule } from '@/modules/customer';
 import { ExpenseModule } from '@/modules/expense';
+import { ExpenseCategoryModule } from '@/modules/expense-category';
+import { NotificationModule } from '@/modules/notification';
 import { ProcurementModule } from '@/modules/procurement';
 import { ProductModule } from '@/modules/product';
-import { CategoryModule } from '@/modules/category';
 import { ProviderModule } from '@/modules/provider';
 import { SaleModule } from '@/modules/sale';
-import { UserModule } from '@/modules/user/user.module';
+import { UnitModule } from '@/modules/unit';
+import { UserModule } from '@/modules/user';
 import { Module } from '@nestjs/common';
-import { NotificationModule } from './notification';
 
 @Module({
   imports: [
@@ -20,9 +22,11 @@ import { NotificationModule } from './notification';
     CustomerModule,
     ProviderModule,
     CategoryModule,
+    UnitModule,
     ProductModule,
-    ProcurementModule,
+    ExpenseCategoryModule,
     ExpenseModule,
+    ProcurementModule,
     SaleModule,
   ],
 })

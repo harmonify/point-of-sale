@@ -1,7 +1,6 @@
 import { ResponseBodyDto } from '@/libs/http';
 import { CategoryResponseDto } from '@/modules/category';
-import { Gender } from '@prisma/client';
-import { appUrl, mockCategory, category } from '@test/fixtures';
+import { appUrl, category, mockCreateCategory } from '@test/fixtures';
 import {
   buildResponseBodySchema,
   categoryJSONSchema,
@@ -36,11 +35,11 @@ describe('Category (e2e)', () => {
   describe('v1', () => {
     describe('POST /v1/categories', () => {
       describe('201', () => {
-        it('Should return the product category information', () => {
+        it('Should return the category information', () => {
           return request(appUrl)
             .post('/v1/categories')
             .auth(accessToken, { type: 'bearer' })
-            .send(mockCategory)
+            .send(mockCreateCategory)
             .then((res) => {
               const statusCode = res.statusCode;
               const body: ResponseBodyDto<CategoryResponseDto> = res.body;
@@ -58,7 +57,7 @@ describe('Category (e2e)', () => {
 
     describe('GET /v1/categories', () => {
       describe('200', () => {
-        it('Should return list of product category information', () => {
+        it('Should return list of category information', () => {
           return request(appUrl)
             .get('/v1/categories')
             .auth(accessToken, { type: 'bearer' })
@@ -71,7 +70,12 @@ describe('Category (e2e)', () => {
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(categoryListResponseJSONSchema);
+              expect(
+                body,
+                `expected body to match the category JSON schema. ${JSON.stringify(
+                  body,
+                )}`,
+              ).toMatchSchema(categoryListResponseJSONSchema);
             });
         });
       });
@@ -79,9 +83,9 @@ describe('Category (e2e)', () => {
 
     describe('GET /v1/categories/:id', () => {
       describe('200', () => {
-        it('Should return product category information', () => {
+        it('Should return category information', () => {
           return request(appUrl)
-            .get(`/v1/categories/1`)
+            .get(`/v1/categories/${category.id}`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
@@ -100,18 +104,11 @@ describe('Category (e2e)', () => {
 
     describe('PUT /v1/categories/:id', () => {
       describe('200', () => {
-        it('Should return product category information', () => {
+        it('Should return category information', () => {
           return request(appUrl)
             .put(`/v1/categories/${category.id}`)
             .auth(accessToken, { type: 'bearer' })
-            .send({
-              isActive: false,
-              name: 'Category 2',
-              gender: Gender.NOT_DEFINED,
-              phoneNumber: '1234558',
-              description: 'updated category',
-              address: 'Mars',
-            })
+            .send(category)
             .then((res) => {
               const statusCode = res.statusCode;
               const body: ResponseBodyDto<CategoryResponseDto> = res.body;

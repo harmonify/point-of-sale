@@ -1,16 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { BaseQuery } from '@/libs/prisma';
 
-const userQueryField = {
-  default: () =>
-    ({
-      ...BaseQuery.Field.default(),
-      name: true,
-      email: true,
-      phoneNumber: true,
-      blockReason: true,
-    }) satisfies Prisma.UserSelectScalar,
-} satisfies Record<string, () => Prisma.UserSelectScalar>;
+const userQueryField = {} satisfies Record<
+  string,
+  () => Prisma.UserSelectScalar
+>;
 
 const userQueryFilter = {
   search: (term: string) =>

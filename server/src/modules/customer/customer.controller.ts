@@ -52,7 +52,6 @@ export class CustomerController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<CustomerResponseDto[]>> {
     const customers = await this.prismaService.customer.findMany({
-      select: CustomerQuery.Field.default(),
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where: paginationInfo.search
@@ -74,8 +73,7 @@ export class CustomerController {
   async findOne(
     @Param('id') id: number,
   ): Promise<IResponseBody<CustomerResponseDto>> {
-    const customer = await this.prismaService.customer.findUniqueOrThrow({
-      select: CustomerQuery.Field.default(),
+    const customer = await this.prismaService.customer.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -107,7 +105,7 @@ export class CustomerController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
     await this.prismaService.customer.update({
-      data: BaseQuery.getSoftDeleteData(user.id),
+      data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
     });
   }

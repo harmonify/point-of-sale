@@ -4,7 +4,7 @@ import { UserResponseDto } from '@/modules/user';
 import { CategoryResponseDto } from '@/modules/category';
 import { ProductUnitResponseDto } from './product-unit-response.dto';
 
-class ProductDto implements Partial<Product> {
+class ProductDto implements Product {
   @ApiProperty()
   id: number;
 
@@ -21,6 +21,18 @@ class ProductDto implements Partial<Product> {
   deletedAt: Date | null;
 
   @ApiProperty()
+  createdById: number;
+
+  @ApiProperty()
+  updatedById: number;
+
+  @ApiProperty()
+  deletedById: number | null;
+
+  @ApiProperty()
+  categoryId: number;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
@@ -35,7 +47,7 @@ class ProductDto implements Partial<Product> {
 
 export class ProductResponseDto extends ProductDto {
   @ApiProperty()
-  category?: CategoryResponseDto;
+  category: CategoryResponseDto | null;
 
   @ApiProperty()
   productUnits: ProductUnitResponseDto[];

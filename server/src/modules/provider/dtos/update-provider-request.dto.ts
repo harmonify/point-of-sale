@@ -12,7 +12,7 @@ export class UpdateProviderRequestDto implements Prisma.ProviderUpdateInput {
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  isActive?: boolean | undefined;
+  isActive?: boolean;
 
   @IsOptional()
   @IsString()

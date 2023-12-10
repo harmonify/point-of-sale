@@ -1,7 +1,7 @@
 import currency from 'currency.js';
 import * as responseMessages from './constants/response-messages';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/libs/prisma';
+import { PrismaService } from 'nestjs-prisma';
 import { DateTime } from 'luxon';
 import { Sale, SaleProduct, Prisma, User } from '@prisma/client';
 
@@ -37,25 +37,5 @@ export class SaleService {
     //   transactionHeader.salesType = saleDetails.saleType;
     // });
     return responseMessages.SALE_COMPLETED_SUCCESS;
-  }
-
-  private buildNewSale(params: { id: number; user: User }): Sale {
-    const now = new Date();
-    return {
-      id: params.id,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-      createdById: params.user.id,
-      updatedById: params.user.id,
-      customerId: null,
-      description: null,
-      billAmount: 0,
-      discountOnTotal: 0,
-      taxOnTotal: 0,
-      netAmount: 0,
-      deletedAt: null,
-      deletedById: null,
-    };
   }
 }

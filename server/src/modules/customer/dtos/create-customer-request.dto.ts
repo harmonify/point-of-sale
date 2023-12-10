@@ -14,7 +14,7 @@ export class CreateCustomerRequestDto
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  isActive?: boolean | undefined;
+  isActive?: boolean;
 
   @IsNotEmpty()
   @IsString()

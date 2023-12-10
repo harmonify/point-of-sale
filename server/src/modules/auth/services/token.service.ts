@@ -1,10 +1,10 @@
 import { APP_NAME } from '@/common/constants';
+import { StringUtil } from '@/common/utils';
 import {
   AccessTokenExpiredException,
   InvalidTokenException,
   RefreshTokenExpiredException,
 } from '@/libs/http/exceptions';
-import { PrismaService } from '@/libs/prisma';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -12,12 +12,14 @@ import { RefreshToken, User } from '@prisma/client';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { DateTime } from 'luxon';
 import { I18nService } from 'nestjs-i18n';
+import { PrismaService } from 'nestjs-prisma';
+import { BaseQuery } from '@/libs/prisma';
 
 import { TokenError, TokenType } from '../enums';
 
 import type { JwtSignOptions } from '@nestjs/jwt';
 import type { JwtPayload, RefreshTokenResponseDto } from '@/modules/auth/dtos';
-import { StringUtil } from '@/common/utils';
+
 @Injectable()
 export class TokenService {
   private readonly BASE_OPTIONS: JwtSignOptions = {
@@ -228,9 +230,10 @@ export class TokenService {
         value: payload.sub,
         throwIfFailed: true,
       });
-      return this.prismaService.user.findUnique({
+      return this.prismaService.user.findFirst({
         where: {
           id: subId,
+          ...BaseQuery.Filter.isActive(),
         },
       });
     } catch (error) {
@@ -261,8 +264,8 @@ export class TokenService {
       );
     }
 
-    return this.prismaService.refreshToken.findUnique({
-      where: { id: payload.jti, ...PrismaService.DEFAULT_WHERE },
+    return this.prismaService.refreshToken.findFirst({
+      where: { id: payload.jti, ...BaseQuery.Filter.isActive() },
     });
   }
 }

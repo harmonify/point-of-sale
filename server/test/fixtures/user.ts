@@ -1,7 +1,5 @@
 import 'tsconfig-paths/register';
-import { HashUtil } from '@/common/utils';
-import { Prisma, User } from '@prisma/client';
-import csprng from 'csprng';
+import { User } from '@prisma/client';
 import { DateTime } from 'luxon';
 
 /** Admin user. Must not be deleted. */

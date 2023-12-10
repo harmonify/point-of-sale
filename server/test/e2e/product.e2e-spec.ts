@@ -1,7 +1,7 @@
 import { ResponseBodyDto } from '@/libs/http';
 import { ProductResponseDto } from '@/modules/product';
 import { Gender } from '@prisma/client';
-import { appUrl, mockProduct, product } from '@test/fixtures';
+import { appUrl, createProductDto, product } from '@test/fixtures';
 import {
   buildResponseBodySchema,
   productJSONSchema,
@@ -33,13 +33,13 @@ describe('Product (e2e)', () => {
   });
 
   describe('v1', () => {
-    describe('POST /v1/categories', () => {
+    describe('POST /v1/products', () => {
       describe('201', () => {
-        it('Should return the product category information', () => {
+        it('Should return the product information', () => {
           return request(appUrl)
-            .post('/v1/categories')
+            .post('/v1/products')
             .auth(accessToken, { type: 'bearer' })
-            .send(mockProduct)
+            .send(createProductDto)
             .then((res) => {
               const statusCode = res.statusCode;
               const body: ResponseBodyDto<ProductResponseDto> = res.body;
@@ -55,11 +55,11 @@ describe('Product (e2e)', () => {
       });
     });
 
-    describe('GET /v1/categories', () => {
+    describe('GET /v1/products', () => {
       describe('200', () => {
-        it('Should return list of product category information', () => {
+        it('Should return list of product information', () => {
           return request(appUrl)
-            .get('/v1/categories')
+            .get('/v1/products')
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
@@ -76,11 +76,11 @@ describe('Product (e2e)', () => {
       });
     });
 
-    describe('GET /v1/categories/:id', () => {
+    describe('GET /v1/products/:id', () => {
       describe('200', () => {
-        it('Should return product category information', () => {
+        it('Should return product information', () => {
           return request(appUrl)
-            .get(`/v1/categories/1`)
+            .get(`/v1/products/${product.id}`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
@@ -97,20 +97,13 @@ describe('Product (e2e)', () => {
       });
     });
 
-    describe('PUT /v1/categories/:id', () => {
+    describe('PUT /v1/products/:id', () => {
       describe('200', () => {
-        it('Should return product category information', () => {
+        it('Should return product information', () => {
           return request(appUrl)
-            .put(`/v1/categories/${product.id}`)
+            .put(`/v1/products/${product.id}`)
             .auth(accessToken, { type: 'bearer' })
-            .send({
-              isActive: false,
-              name: 'Product 2',
-              gender: Gender.NOT_DEFINED,
-              phoneNumber: '1234558',
-              description: 'updated product',
-              address: 'Mars',
-            })
+            .send(createProductDto)
             .then((res) => {
               const statusCode = res.statusCode;
               const body: ResponseBodyDto<ProductResponseDto> = res.body;
@@ -126,11 +119,11 @@ describe('Product (e2e)', () => {
       });
     });
 
-    describe('DELETE /v1/categories/:id', () => {
+    describe('DELETE /v1/products/:id', () => {
       describe('200', () => {
         it('Should return a response', () => {
           return request(appUrl)
-            .delete(`/v1/categories/${product.id}`)
+            .delete(`/v1/products/${product.id}`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;

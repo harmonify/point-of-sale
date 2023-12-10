@@ -1,3 +1,4 @@
+import { CreateCategoryRequestDto } from '@/modules/category';
 import { faker } from '@faker-js/faker';
 import { Category } from '@prisma/client';
 import { DateTime } from 'luxon';
@@ -17,12 +18,8 @@ export const category: Category = {
   deletedById: null,
 };
 
-export const mockCategory: Partial<Category> = {
-  id: 2,
+export const mockCreateCategory: CreateCategoryRequestDto = {
   isActive: true,
   name: faker.lorem.words() + ' ' + DateTime.now().toUnixInteger(),
   description: 'What a category',
-  createdAt: DateTime.fromObject({ year: 2023 }).toJSDate(),
-  updatedAt: DateTime.now().toJSDate(),
-  deletedAt: null,
 };

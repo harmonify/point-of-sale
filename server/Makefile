@@ -26,7 +26,9 @@ orm_sync:
 	npx prisma migrate dev
 orm_seed:
 	npx prisma seed
-generate_orm_types:
+orm_generate:
 	npx prisma generate
+generate_orm_types:
+	make orm_generate
 generate_i18n_types:
 	NODE_ENV=development npm run execute generate-i18n-types

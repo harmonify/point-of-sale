@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { DateTime } from 'luxon';
+import { IPrismaBaseFields } from './interfaces';
 
 const baseQueryField = {
   default: () =>
@@ -33,7 +34,20 @@ export class BaseQuery {
 
   static readonly OrderBy = baseQueryOrderBy;
 
-  static getSoftDeleteData(deletedById?: number) {
-    return { deletedAt: DateTime.now().toJSDate(), deletedById };
+  static nestedUpsertMany<T extends Record<any, any>>(
+    data: T[],
+    userId: number,
+  ) {
+    return {
+      upsert: data.map((d) => ({
+        create: { ...d, createdById: userId, updatedById: userId },
+        update: { ...d, updatedById: userId },
+        where: { id: d.id },
+      })),
+    };
+  }
+
+  static softDelete(userId?: number) {
+    return { deletedAt: DateTime.now().toJSDate(), deletedById: userId };
   }
 }

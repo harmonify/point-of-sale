@@ -53,7 +53,6 @@ export class UserController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<UserResponseDto[]>> {
     const users = await this.prismaService.user.findMany({
-      select: UserQuery.Field.default(),
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where: paginationInfo.search
@@ -75,8 +74,7 @@ export class UserController {
   async findOne(
     @Param('id') id: number,
   ): Promise<IResponseBody<UserResponseDto>> {
-    const user = await this.prismaService.user.findUniqueOrThrow({
-      select: UserQuery.Field.default(),
+    const user = await this.prismaService.user.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -111,7 +109,7 @@ export class UserController {
       throw new BadRequestException('Cannot delete own account');
     }
     await this.prismaService.user.update({
-      data: BaseQuery.getSoftDeleteData(user.id),
+      data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
     });
   }

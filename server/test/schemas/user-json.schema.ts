@@ -26,6 +26,18 @@ export const userJSONSchema = {
       type: 'string',
       nullable: true,
     },
+    createdById: {
+      type: 'number',
+      nullable: true,
+    },
+    updatedById: {
+      type: 'number',
+      nullable: true,
+    },
+    deletedById: {
+      type: 'number',
+      nullable: true,
+    },
     name: {
       type: 'string',
     },

@@ -2,7 +2,7 @@ import {
   InactiveUserException,
   InvalidCredentialsException,
 } from '@/libs/http/exceptions';
-import { PrismaService } from '@/libs/prisma';
+import { PrismaService } from 'nestjs-prisma';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -32,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } catch (error) {
       throw new InvalidCredentialsException();
     }
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findFirst({
       where: { id: subId },
     });
     if (!user) {

@@ -3,17 +3,18 @@ import {
   InvalidCredentialsException,
   InvalidCurrentPasswordException,
 } from '@/libs/http';
-import { PrismaService } from '@/libs/prisma';
+import { BaseQuery } from '@/libs/prisma';
 import { ChangePasswordRequestDto } from '@/modules/auth/dtos';
 import { UserResponseDto } from '@/modules/user/dtos';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User } from '@prisma/client';
+import { I18nService } from 'nestjs-i18n';
+import { PrismaService } from 'nestjs-prisma';
 import { lastValueFrom, map, zip } from 'rxjs';
 
 import { LoginRequestDto, LoginResponseDto } from '../dtos';
 import { TokenService } from './token.service';
-import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,7 @@ export class AuthService {
     const user = await this.prismaService.user.findFirst({
       where: {
         email: loginDto.email,
+        ...BaseQuery.Filter.isActive(),
       },
     });
 
@@ -84,9 +86,10 @@ export class AuthService {
   ): Promise<UserResponseDto> {
     const { newPassword, currentPassword } = dto;
 
-    const userDetails = await this.prismaService.user.findUniqueOrThrow({
+    const userDetails = await this.prismaService.user.findFirstOrThrow({
       where: {
         id: user.id,
+        ...BaseQuery.Filter.isActive(),
       },
     });
 

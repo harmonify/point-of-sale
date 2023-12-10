@@ -1,17 +1,9 @@
-import { BaseQuery } from '@/libs/prisma';
 import { Prisma } from '@prisma/client';
 
-const notificationQueryField = {
-  default: () =>
-    ({
-      ...BaseQuery.Field.default(),
-      name: true,
-      description: true,
-      url: true,
-      source: true,
-      dismissable: true,
-    }) satisfies Prisma.NotificationSelectScalar,
-} satisfies Record<string, () => Prisma.NotificationSelectScalar>;
+const notificationQueryField = {} satisfies Record<
+  string,
+  () => Prisma.NotificationSelectScalar
+>;
 
 const notificationQueryFilter = {
   search: (term: string) =>

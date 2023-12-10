@@ -52,7 +52,6 @@ export class ProviderController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<ProviderResponseDto[]>> {
     const providers = await this.prismaService.provider.findMany({
-      select: ProviderQuery.Field.default(),
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where: paginationInfo.search
@@ -74,8 +73,7 @@ export class ProviderController {
   async findOne(
     @Param('id') id: number,
   ): Promise<IResponseBody<ProviderResponseDto>> {
-    const provider = await this.prismaService.provider.findUniqueOrThrow({
-      select: ProviderQuery.Field.default(),
+    const provider = await this.prismaService.provider.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -107,7 +105,7 @@ export class ProviderController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
     await this.prismaService.provider.update({
-      data: BaseQuery.getSoftDeleteData(user.id),
+      data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
     });
   }

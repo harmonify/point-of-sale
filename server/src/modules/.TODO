@@ -1,0 +1,14 @@
+# Modules
+
+- [x] auth
+- [x] category
+- [x] customer
+- [x] expense (SKIPPED FOR NOW)
+- [x] expense category (SKIPPED FOR NOW)
+- [x] notification
+- [x] procurement
+- [x] product
+- [x] provider
+- [] sale
+- [x] unit
+- [x] user

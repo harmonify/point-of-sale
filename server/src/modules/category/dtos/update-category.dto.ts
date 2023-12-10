@@ -8,7 +8,7 @@ export class UpdateCategoryRequestDto
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  isActive?: boolean | undefined;
+  isActive?: boolean;
 
   @IsOptional()
   @IsString()

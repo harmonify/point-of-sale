@@ -4,16 +4,26 @@ import { TokenService } from '@/modules/auth';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
+  Category,
   Customer,
   Notification,
-  Category,
+  Procurement,
+  Product,
+  ProductUnit,
   Provider,
+  Unit,
   User,
 } from '@prisma/client';
 import {
   adminUser,
-  customer,
   category,
+  customer,
+  dozenUnit,
+  pieceUnit,
+  procurement,
+  product,
+  productDozenUnit,
+  productPieceUnit,
   provider,
   testUser,
 } from '@test/fixtures';
@@ -61,6 +71,12 @@ export class TestUtil {
     await this.seedProvider(provider);
     await this.seedCategory(category);
     await this.seedNotification(notification);
+    await this.seedUnit(pieceUnit);
+    await this.seedUnit(dozenUnit);
+    await this.seedProduct(product);
+    await this.seedProductUnit(productPieceUnit);
+    await this.seedProductUnit(productDozenUnit);
+    await this.seedProcurement(procurement);
   }
 
   async seedUser(user: User) {
@@ -113,6 +129,46 @@ export class TestUtil {
       update: notification,
       where: {
         id: notification.id,
+      },
+    });
+  }
+
+  seedUnit(unit: Unit) {
+    return this.prismaService.unit.upsert({
+      create: unit,
+      update: unit,
+      where: {
+        id: unit.id,
+      },
+    });
+  }
+
+  seedProduct(product: Product) {
+    return this.prismaService.product.upsert({
+      create: product,
+      update: product,
+      where: {
+        id: product.id,
+      },
+    });
+  }
+
+  seedProductUnit(productUnit: ProductUnit) {
+    return this.prismaService.productUnit.upsert({
+      create: productUnit,
+      update: productUnit,
+      where: {
+        id: productUnit.id,
+      },
+    });
+  }
+
+  seedProcurement(procurement: Procurement) {
+    return this.prismaService.procurement.upsert({
+      create: procurement,
+      update: procurement,
+      where: {
+        id: procurement.id,
       },
     });
   }

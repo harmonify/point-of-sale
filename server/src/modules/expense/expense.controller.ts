@@ -1,5 +1,9 @@
-import { PaginationInfo, RequestPaginationInfoDto } from '@/libs/http';
-import { PrismaService } from '@/libs/prisma';
+import {
+  IResponseBody,
+  PaginationInfo,
+  RequestPaginationInfoDto,
+} from '@/libs/http';
+import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
   Body,
@@ -11,69 +15,98 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Expense, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
+import { ExpenseQuery } from './expense.query';
+import {
+  CreateExpenseRequestDto,
+  ExpenseResponseDto,
+  UpdateExpenseRequestDto,
+} from './dtos';
 
 @ApiTags('Expenses')
 @Controller({ path: '/expenses', version: '1' })
 export class ExpenseController {
   constructor(private readonly prismaService: PrismaService) {}
 
-  @Get('/:id')
-  findOne(@Param('id') id: number) {
-    return this.prismaService.expense.findUniqueOrThrow({
-      where: { id, ...PrismaService.DEFAULT_WHERE },
-    });
-  }
-
-  @Get()
-  findAll(@PaginationInfo() paginationInfo: RequestPaginationInfoDto) {
-    return this.prismaService.expense.findMany({
-      select: {
-        ...PrismaService.DEFAULT_SELECT,
-        description: true,
-        amount: true,
-        createdBy: { select: PrismaService.USER_DEFAULT_SELECT },
-      },
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: {
-        ...PrismaService.DEFAULT_WHERE,
-        OR: paginationInfo.search
-          ? [{ description: { contains: paginationInfo.search } }]
-          : [],
-      },
-      orderBy: PrismaService.ORDER_BY_LATEST,
-    });
-  }
-
   @Post()
-  create(@Body() expense: Expense, @CurrentUser() user: User) {
-    return this.prismaService.expense.create({
+  async create(
+    @Body() expense: CreateExpenseRequestDto,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody<ExpenseResponseDto>> {
+    const newExpense = await this.prismaService.expense.create({
       data: {
         ...expense,
         createdById: user.id,
         updatedById: user.id,
       },
     });
+    return {
+      data: newExpense,
+    };
+  }
+
+  @Get()
+  async findAll(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody<ExpenseResponseDto[]>> {
+    const expenses = await this.prismaService.expense.findMany({
+      skip: paginationInfo.skip,
+      take: paginationInfo.take,
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              ExpenseQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
+      orderBy: BaseQuery.OrderBy.latest(),
+    });
+    return {
+      data: expenses,
+    };
+  }
+
+  @Get('/:id')
+  async findOne(
+    @Param('id') id: number,
+  ): Promise<IResponseBody<ExpenseResponseDto>> {
+    const expense = await this.prismaService.expense.findFirstOrThrow({
+      where: {
+        ...BaseQuery.Filter.available(),
+        id,
+      },
+    });
+    return {
+      data: expense,
+    };
   }
 
   @Put('/:id')
-  update(
+  async update(
     @Param('id') id: number,
-    @Body() data: Expense,
+    @Body() data: UpdateExpenseRequestDto,
     @CurrentUser() user: User,
-  ) {
-    return this.prismaService.expense.update({
+  ): Promise<IResponseBody<ExpenseResponseDto>> {
+    const updatedExpense = await this.prismaService.expense.update({
       data: { ...data, updatedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+      where: BaseQuery.Filter.byId(id),
     });
+    return {
+      data: updatedExpense,
+    };
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: number, @CurrentUser() user: User) {
-    return this.prismaService.expense.update({
-      data: { ...PrismaService.DEFAULT_SOFT_DELETE_DATA, deletedById: user.id },
-      where: { id, ...PrismaService.DEFAULT_WHERE },
+  async delete(
+    @Param('id') id: number,
+    @CurrentUser() user: User,
+  ): Promise<IResponseBody> {
+    await this.prismaService.expense.update({
+      data: BaseQuery.softDelete(user.id),
+      where: BaseQuery.Filter.byId(id),
     });
   }
 }

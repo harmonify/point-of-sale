@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductUnit } from '@prisma/client';
 
-export class ProductUnitResponseDto implements Partial<ProductUnit> {
+export class ProductUnitResponseDto implements ProductUnit {
   @ApiProperty()
   id: number;
 
@@ -18,10 +18,19 @@ export class ProductUnitResponseDto implements Partial<ProductUnit> {
   deletedAt: Date | null;
 
   @ApiProperty()
-  name: string;
+  createdById: number;
 
   @ApiProperty()
-  description: string | null;
+  updatedById: number;
+
+  @ApiProperty()
+  deletedById: number | null;
+
+  @ApiProperty()
+  productId: number;
+
+  @ApiProperty()
+  unitId: number;
 
   @ApiProperty()
   wholesalePrice: number;
@@ -30,5 +39,8 @@ export class ProductUnitResponseDto implements Partial<ProductUnit> {
   sellingPrice: number;
 
   @ApiProperty()
-  productId: number;
+  stockAlertEnabled: boolean | null;
+
+  @ApiProperty()
+  lowQuantity: number | null;
 }
