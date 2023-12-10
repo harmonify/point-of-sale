@@ -6,7 +6,7 @@ import {
   providerJSONSchema,
   responseBodyJSONSchema,
 } from '@test/schemas';
-import { TestUtil } from '@test/utils';
+import { TestUtil } from '@test/test.service';
 import request from 'supertest';
 
 describe('Provider (e2e)', () => {

@@ -11,6 +11,8 @@ import {
   Product,
   ProductUnit,
   Provider,
+  Sale,
+  SaleProduct,
   Unit,
   User,
 } from '@prisma/client';
@@ -25,6 +27,9 @@ import {
   productDozenUnit,
   productPieceUnit,
   provider,
+  sale,
+  saleDozenProduct,
+  salePieceProduct,
   testUser,
 } from '@test/fixtures';
 import { notification } from '@test/fixtures/notification';
@@ -77,6 +82,9 @@ export class TestUtil {
     await this.seedProductUnit(productPieceUnit);
     await this.seedProductUnit(productDozenUnit);
     await this.seedProcurement(procurement);
+    await this.seedSale(sale);
+    await this.seedSaleProduct(salePieceProduct);
+    await this.seedSaleProduct(saleDozenProduct);
   }
 
   async seedUser(user: User) {
@@ -169,6 +177,26 @@ export class TestUtil {
       update: procurement,
       where: {
         id: procurement.id,
+      },
+    });
+  }
+
+  seedSale(sale: Sale) {
+    return this.prismaService.sale.upsert({
+      create: sale,
+      update: sale,
+      where: {
+        id: sale.id,
+      },
+    });
+  }
+
+  seedSaleProduct(saleProduct: SaleProduct) {
+    return this.prismaService.saleProduct.upsert({
+      create: saleProduct,
+      update: saleProduct,
+      where: {
+        id: saleProduct.id,
       },
     });
   }

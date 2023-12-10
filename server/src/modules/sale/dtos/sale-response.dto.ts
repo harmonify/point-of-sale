@@ -4,6 +4,7 @@ import { Sale } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsInt,
   IsNumber,
   IsOptional,
@@ -20,6 +21,21 @@ export class SaleResponseDto extends BaseResponseDto implements Sale {
   @Min(1)
   @ApiProperty()
   customerId: number | null;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  name: string | null;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  note: string | null;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty()
+  isNoteVisible: boolean;
 
   @IsOptional()
   @IsString()

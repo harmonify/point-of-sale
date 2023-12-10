@@ -1,16 +1,17 @@
 import { SharedModule } from '@/libs';
-import { AuthModule } from '@/modules/auth';
-import { CategoryModule } from '@/modules/category';
-import { CustomerModule } from '@/modules/customer';
-import { ExpenseModule } from '@/modules/expense';
-import { ExpenseCategoryModule } from '@/modules/expense-category';
-import { NotificationModule } from '@/modules/notification';
-import { ProcurementModule } from '@/modules/procurement';
-import { ProductModule } from '@/modules/product';
-import { ProviderModule } from '@/modules/provider';
-import { SaleModule } from '@/modules/sale';
-import { UnitModule } from '@/modules/unit';
-import { UserModule } from '@/modules/user';
+import { AuthModule } from '@/modules/auth/auth.module';
+import { CashFlowModule } from '@/modules/cash-flow/cash-flow.module';
+import { CategoryModule } from '@/modules/category/category.module';
+import { CustomerModule } from '@/modules/customer/customer.module';
+import { ExpenseCategoryModule } from '@/modules/expense-category/expense-category.module';
+import { ExpenseModule } from '@/modules/expense/expense.module';
+import { NotificationModule } from '@/modules/notification/notification.module';
+import { ProcurementModule } from '@/modules/procurement/procurement.module';
+import { ProductModule } from '@/modules/product/product.module';
+import { ProviderModule } from '@/modules/provider/provider.module';
+import { SaleModule } from '@/modules/sale/sale.module';
+import { UnitModule } from '@/modules/unit/unit.module';
+import { UserModule } from '@/modules/user/user.module';
 import { Module } from '@nestjs/common';
 
 @Module({
@@ -24,6 +25,7 @@ import { Module } from '@nestjs/common';
     CategoryModule,
     UnitModule,
     ProductModule,
+    CashFlowModule,
     ExpenseCategoryModule,
     ExpenseModule,
     ProcurementModule,

@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register';
 
-import { TestUtil } from './utils/test.util';
+import { TestUtil } from './test.service';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 module.exports = async (globalConfig: any, projectConfig: any) => {

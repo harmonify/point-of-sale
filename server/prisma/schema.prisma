@@ -42,12 +42,12 @@ model CashFlow {
   createdById   Int
   updatedById   Int
   deletedById   Int?
-  expenseId     Int? // to link to a manually created expense.
-  procurementId Int? // to link to a procurement.
-  saleId        Int? // to link an income to a sale.
+  expenseId     Int?              @unique // to link to a manually created expense.
+  procurementId Int?              @unique // to link to a procurement.
+  saleId        Int?              @unique // to link an income to a sale. 
   name          String
   operation     CashFlowOperation
-  amount        Float             @default(0)
+  amount        Float
   createdBy     User              @relation(name: "cashFlow_createdBy_user", map: "cashFlow_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   updatedBy     User              @relation(name: "cashFlow_updatedBy_user", map: "cashFlow_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   deletedBy     User?             @relation(name: "cashFlow_deletedBy_user", map: "cashFlow_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
@@ -98,7 +98,7 @@ model Expense {
   createdBy         User            @relation(name: "expense_createdBy_user", map: "expense_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   updatedBy         User            @relation(name: "expense_updatedBy_user", map: "expense_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   deletedBy         User?           @relation(name: "expense_deletedBy_user", map: "expense_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  cashFlow          CashFlow[]
+  cashFlow          CashFlow[]      @relation()
 
   @@map("expense")
 }
@@ -299,7 +299,10 @@ model Sale {
   updatedById     Int
   deletedById     Int?
   customerId      Int?
+  name            String?
   description     String?
+  note            String?
+  isNoteVisible   Boolean       @default(false)
   discountOnTotal Float
   taxOnTotal      Float
   billAmount      Float         @default(0)
@@ -309,7 +312,7 @@ model Sale {
   createdBy       User          @relation(name: "sale_createdBy_user", map: "sale_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   updatedBy       User          @relation(name: "sale_updatedBy_user", map: "sale_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   deletedBy       User?         @relation(name: "sale_deletedBy_user", map: "sale_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  cashFlow        CashFlow[]
+  cashFlow        CashFlow[]    @relation()
 
   @@map("sale")
 }

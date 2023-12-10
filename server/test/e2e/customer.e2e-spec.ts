@@ -7,7 +7,7 @@ import {
   customerJSONSchema,
   responseBodyJSONSchema,
 } from '@test/schemas';
-import { TestUtil } from '@test/utils';
+import { TestUtil } from '@test/test.service';
 import request from 'supertest';
 
 describe('Customer (e2e)', () => {

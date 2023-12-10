@@ -7,5 +7,7 @@ export * from './product-unit-json.schema';
 export * from './category-json.schema';
 export * from './provider-json.schema';
 export * from './response-body-json.schema';
+export * from './sale-json.schema';
+export * from './sale-product-json.schema';
 export * from './unit-json.schema';
 export * from './user-json.schema';

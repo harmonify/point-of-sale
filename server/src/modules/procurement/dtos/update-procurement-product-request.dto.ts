@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { IsBoolean, IsDefined, IsInt, IsNumber, Min } from 'class-validator';
+import { IsDefined, IsInt, IsNumber, Min } from 'class-validator';
 
 export class UpdateProcurementProductRequestDto
   implements
@@ -19,11 +19,6 @@ export class UpdateProcurementProductRequestDto
   @IsNumber()
   @ApiProperty()
   id?: number;
-
-  @IsDefined()
-  @IsBoolean()
-  @ApiProperty()
-  isActive: boolean;
 
   @IsDefined()
   @IsNumber()

@@ -6,7 +6,7 @@ import {
   procurementJSONSchema,
   responseBodyJSONSchema,
 } from '@test/schemas';
-import { TestUtil } from '@test/utils';
+import { TestUtil } from '@test/test.service';
 import request from 'supertest';
 
 describe('Procurement (e2e)', () => {
@@ -51,6 +51,10 @@ describe('Procurement (e2e)', () => {
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
               expect(body).toMatchSchema(procurementResponseJSONSchema);
+            })
+            .catch((err) => {
+              console.error(err);
+              throw err;
             });
         });
       });

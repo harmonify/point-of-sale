@@ -6,7 +6,7 @@ import {
   notificationJSONSchema,
   responseBodyJSONSchema,
 } from '@test/schemas';
-import { TestUtil } from '@test/utils';
+import { TestUtil } from '@test/test.service';
 import request from 'supertest';
 
 describe('Notification (e2e)', () => {

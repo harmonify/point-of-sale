@@ -8,7 +8,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '../',
   testEnvironment: 'node',
-  testTimeout: 30000,
+  testTimeout: 10000,
   testRegex: '.*\\..*spec\\.ts$',
   globalSetup: '<rootDir>/test/setup.ts',
   globalTeardown: '<rootDir>/test/teardown.ts',

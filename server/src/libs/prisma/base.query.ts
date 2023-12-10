@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { DateTime } from 'luxon';
 import { IPrismaBaseFields } from './interfaces';
+import _ from 'lodash';
 
 const baseQueryField = {
   default: () =>
@@ -36,18 +37,40 @@ export class BaseQuery {
 
   static nestedUpsertMany<T extends Record<any, any>>(
     data: T[],
-    userId: number,
+    authorId: number,
   ) {
     return {
       upsert: data.map((d) => ({
-        create: { ...d, createdById: userId, updatedById: userId },
-        update: { ...d, updatedById: userId },
+        create: { ...d, createdById: authorId, updatedById: authorId },
+        update: { ...d, updatedById: authorId },
         where: { id: d.id },
       })),
     };
   }
 
-  static softDelete(userId?: number) {
-    return { deletedAt: DateTime.now().toJSDate(), deletedById: userId };
+  static softDelete(authorId?: number) {
+    return { deletedAt: DateTime.now().toJSDate(), deletedById: authorId };
+  }
+
+  static async partitionQuery<T>(
+    dto: T[],
+    queryFn: (subDto: T) => Promise<T>,
+  ): Promise<T[]> {
+    if (dto.length === 0) {
+      return [];
+    }
+
+    const clonedDto = _.clone(dto);
+    const BATCH_PER_QUERY = 10;
+    const result = [];
+    while (clonedDto.length > 0) {
+      result.push(
+        ...(await Promise.all(
+          clonedDto.splice(0, BATCH_PER_QUERY).map(queryFn),
+        )),
+      );
+    }
+
+    return result;
   }
 }

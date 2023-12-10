@@ -1,2 +1,3 @@
 export * from './dtos';
-export * from './product.module';
+export * from './product-unit.query';
+export * from './product.query';
