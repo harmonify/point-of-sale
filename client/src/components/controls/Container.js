@@ -1,16 +1,16 @@
-import React from "react";
-import { withStyles } from "material-ui/styles";
-import Title from "./Title";
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
+import Title from './Title';
 
 const styles = () => ({
   root: {
-    borderTop: "1px solid #3f50b5",
-    padding: "10px 5px 5px 5px",
-    position: "relative"
-  }
+    borderTop: '1px solid #3f50b5',
+    padding: '10px 5px 5px 5px',
+    position: 'relative',
+  },
 });
 
-const Container = props => (
+const Container = (props) => (
   <div className={props.classes.root}>
     <Title title={props.title} />
     <br />

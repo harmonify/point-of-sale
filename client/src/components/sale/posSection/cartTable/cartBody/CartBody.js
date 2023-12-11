@@ -1,9 +1,9 @@
-import React from "react";
-import { TableBody, TableRow } from "material-ui";
-import CustomTableCell from "../controls/CustomTableCell";
-import LightButton from "../controls/LightButton";
-import DeleteButton from "../controls/DeleteButton";
-import CartBodyNoItems from "./CartBodyNoItems";
+import React from 'react';
+import { TableBody, TableRow } from 'material-ui';
+import CustomTableCell from '../controls/CustomTableCell';
+import LightButton from '../controls/LightButton';
+import DeleteButton from '../controls/DeleteButton';
+import CartBodyNoItems from './CartBodyNoItems';
 
 const CartBody = ({ cartArray, onDeleteCartItem, onProductItemSelect }) => {
   if (cartArray.length === 0) {
@@ -12,7 +12,7 @@ const CartBody = ({ cartArray, onDeleteCartItem, onProductItemSelect }) => {
 
   return (
     <TableBody>
-      {cartArray.map(n => (
+      {cartArray.map((n) => (
         <TableRow key={n.id}>
           <CustomTableCell style={{ width: 150 }}>
             <LightButton text={n.name} onClick={() => onProductItemSelect(n)} />
@@ -20,7 +20,7 @@ const CartBody = ({ cartArray, onDeleteCartItem, onProductItemSelect }) => {
           <CustomTableCell numeric>{n.sellingPrice}</CustomTableCell>
           <CustomTableCell numeric>{n.quantity}</CustomTableCell>
           <CustomTableCell numeric>{n.totalPrice}</CustomTableCell>
-          <CustomTableCell numeric style={{ width: 30, paddingRight: "5px" }}>
+          <CustomTableCell numeric style={{ width: 30, paddingRight: '5px' }}>
             <DeleteButton onDelete={() => onDeleteCartItem(n)} />
           </CustomTableCell>
         </TableRow>

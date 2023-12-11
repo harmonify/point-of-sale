@@ -1,6 +1,6 @@
-import React from "react";
-import NumberFormat from "react-number-format";
-import PropTypes from "prop-types";
+import React from 'react';
+import NumberFormat from 'react-number-format';
+import PropTypes from 'prop-types';
 
 function NumberFormatCustom(props) {
   const { inputRef, onChange, name, ...other } = props;
@@ -9,12 +9,12 @@ function NumberFormatCustom(props) {
     <NumberFormat
       {...other}
       ref={inputRef}
-      onValueChange={values => {
+      onValueChange={(values) => {
         onChange({
           target: {
             value: values.value,
-            name
-          }
+            name,
+          },
         });
       }}
       thousandSeparator
@@ -25,7 +25,7 @@ function NumberFormatCustom(props) {
 
 NumberFormatCustom.propTypes = {
   inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 };
 
 export default NumberFormatCustom;

@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Table, TableBody } from "material-ui";
-import TotalRow from "./TotalRow";
-import TaxDiscountRow from "./TaxDiscountRow";
-import TotalBillRow from "./TotalBillRow";
+import React, { Component } from 'react';
+import { Table, TableBody } from 'material-ui';
+import TotalRow from './TotalRow';
+import TaxDiscountRow from './TaxDiscountRow';
+import TotalBillRow from './TotalBillRow';
 
 class CartFooter extends Component {
   state = {};
@@ -19,9 +19,12 @@ class CartFooter extends Component {
     const { netTotal } = summary;
 
     return (
-      <Table style={{ marginTop: "50px" }}>
+      <Table style={{ marginTop: '50px' }}>
         <TableBody>
-          <TotalRow totalquantityText={totalquantityText} totalPrice={totalPrice} />
+          <TotalRow
+            totalquantityText={totalquantityText}
+            totalPrice={totalPrice}
+          />
           <TaxDiscountRow cartArray={cartArray} summary={summary} />
           <TotalBillRow netTotal={netTotal} />
         </TableBody>

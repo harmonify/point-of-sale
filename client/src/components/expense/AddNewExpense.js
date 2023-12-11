@@ -1,35 +1,35 @@
-import React, { Component } from "react";
-import * as equal from "fast-deep-equal";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Container from "../controls/Container";
-import Form from "../controls/Form";
-import CustomTextField from "../controls/textfields/CustomTextField";
-import Dropdown from "../controls/dropdown/Dropdown";
-import CircularLoader from "../controls/loader/CircularLoader";
-import api from "../../api";
-import NumberTextField from "../controls/textfields/NumberTextField";
-import { isValueExists } from "../../utils";
-import Message from "../controls/Message";
-import Prompt from "../controls/dialog/Prompt";
-import CustomDatePicker from "../controls/pickers/CustomDatePicker";
+import React, { Component } from 'react';
+import * as equal from 'fast-deep-equal';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Container from '../controls/Container';
+import Form from '../controls/Form';
+import CustomTextField from '../controls/textfields/CustomTextField';
+import Dropdown from '../controls/dropdown/Dropdown';
+import CircularLoader from '../controls/loader/CircularLoader';
+import api from '../../api';
+import NumberTextField from '../controls/textfields/NumberTextField';
+import { isValueExists } from '../../utils';
+import Message from '../controls/Message';
+import Prompt from '../controls/dialog/Prompt';
+import CustomDatePicker from '../controls/pickers/CustomDatePicker';
 
 // eslint-disable-next-line
 const styles = theme => ({
   form: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   wrapper: {
-    position: "relative"
-  }
+    position: 'relative',
+  },
 });
 
 class AddNewExpense extends Component {
   initialData = {
-    expenseTypeId: "",
-    description: "",
-    amount: "",
-    spentAt: ""
+    expenseTypeId: '',
+    description: '',
+    amount: '',
+    spentAt: '',
   };
 
   state = {
@@ -39,7 +39,7 @@ class AddNewExpense extends Component {
     expenseTypeIds: [],
     showMessage: false,
     isEdit: false,
-    showMessageDialog: false
+    showMessageDialog: false,
   };
 
   async componentDidMount() {
@@ -49,9 +49,9 @@ class AddNewExpense extends Component {
       const stateToUpdate = {};
 
       const res = await api.expenseType.fetchAll();
-      const expenseTypeIds = res.data.map(d => ({
+      const expenseTypeIds = res.data.map((d) => ({
         value: d.id,
-        label: d.id
+        label: d.id,
       }));
 
       stateToUpdate.expenseTypeIds = expenseTypeIds;
@@ -72,19 +72,19 @@ class AddNewExpense extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value },
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
   };
 
-  onExpenseTypeDropdownChange = value => {
-    const expenseTypeId = value === null ? "" : value;
+  onExpenseTypeDropdownChange = (value) => {
+    const expenseTypeId = value === null ? '' : value;
 
     this.setState({
       data: { ...this.state.data, expenseTypeId },
-      errors: { ...this.state.errors, expenseTypeId: "" }
+      errors: { ...this.state.errors, expenseTypeId: '' },
     });
   };
 
@@ -99,7 +99,7 @@ class AddNewExpense extends Component {
     this.props.history.goBack();
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
     const errors = isValueExists(this.state.data);
@@ -122,20 +122,20 @@ class AddNewExpense extends Component {
     }
   };
 
-  createNew = async data => {
+  createNew = async (data) => {
     const res = await api.expense.createNew(data);
 
     if (res.status === 200) {
-      this.showMessage("Saved successfully");
+      this.showMessage('Saved successfully');
       this.clearForm();
     } else {
       throw new Error(
-        `Unable to create the record. The status code is ${res.status}`
+        `Unable to create the record. The status code is ${res.status}`,
       );
     }
   };
 
-  update = async data => {
+  update = async (data) => {
     const res = await api.expense.update(this.props.match.params.id, data);
 
     if (res.status === 200) {
@@ -148,7 +148,7 @@ class AddNewExpense extends Component {
   clearForm = (canShowMessageDialog = false) => {
     this.setState({
       data: this.initialData,
-      showMessageDialog: canShowMessageDialog
+      showMessageDialog: canShowMessageDialog,
     });
 
     if (this.idRef) {
@@ -159,25 +159,25 @@ class AddNewExpense extends Component {
   onMessageCloseClick = () => {
     this.setState({
       showMessage: false,
-      message: "",
-      isError: false
+      message: '',
+      isError: false,
     });
   };
 
-  showMessage = message => {
+  showMessage = (message) => {
     this.setState({
       showMessage: true,
       message,
-      isError: false
+      isError: false,
     });
   };
 
-  showError = error => {
+  showError = (error) => {
     this.setState({
       showMessage: true,
       message: error.message,
       isError: true,
-      isLoading: false
+      isLoading: false,
     });
   };
 
@@ -196,11 +196,11 @@ class AddNewExpense extends Component {
       isError,
       message,
       isEdit,
-      showMessageDialog
+      showMessageDialog,
     } = this.state;
 
     return (
-      <Container title={isEdit ? "Edit Expense" : "New Expense"}>
+      <Container title={isEdit ? 'Edit Expense' : 'New Expense'}>
         <Prompt
           message="The expense you entered was saved successfully."
           open={showMessageDialog}
@@ -222,7 +222,7 @@ class AddNewExpense extends Component {
           onCancel={this.onCancelClick}
         >
           <CustomTextField
-            inputRef={input => {
+            inputRef={(input) => {
               this.idRef = input;
             }}
             error={!!errors.description}
@@ -255,7 +255,7 @@ class AddNewExpense extends Component {
             name="spentAt"
             label="Spent At"
             value={data.spentAt}
-            showTodayButton={true}
+            showTodayButton
             handleDateChange={this.onChange}
           />
         </Form>

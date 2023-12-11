@@ -1,11 +1,11 @@
-import React from "react";
-import { TableRow } from "material-ui";
-import { withStyles } from "material-ui/styles";
+import React from 'react';
+import { TableRow } from 'material-ui';
+import { withStyles } from 'material-ui/styles';
 
-const styles = theme => ({
+const styles = (theme) => ({
   footerRow: {
-    backgroundColor: theme.palette.background.default
-  }
+    backgroundColor: theme.palette.background.default,
+  },
 });
 
 const FooterTableRow = ({ classes, children, ...rest }) => (

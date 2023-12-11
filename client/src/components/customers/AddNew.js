@@ -1,31 +1,31 @@
-import React, { Component } from "react";
-import * as equal from "fast-deep-equal";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Container from "../controls/Container";
-import Form from "../controls/Form";
-import { isValueExists, isValidEmail } from "../../utils";
-import CustomTextField from "../controls/textfields/CustomTextField";
-import api from "../../api";
-import Prompt from "../controls/dialog/Prompt";
-import CircularLoader from "../controls/loader/CircularLoader";
-import Message from "../controls/Message";
+import React, { Component } from 'react';
+import * as equal from 'fast-deep-equal';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Container from '../controls/Container';
+import Form from '../controls/Form';
+import { isValueExists, isValidEmail } from '../../utils';
+import CustomTextField from '../controls/textfields/CustomTextField';
+import api from '../../api';
+import Prompt from '../controls/dialog/Prompt';
+import CircularLoader from '../controls/loader/CircularLoader';
+import Message from '../controls/Message';
 
 // eslint-disable-next-line
 const styles = theme => ({
   form: {
-    marginLeft: 20
-  }
+    marginLeft: 20,
+  },
 });
 
 class AddNew extends Component {
   initialData = {
-    id: "",
-    name: "",
-    address: "",
-    mobile: "",
-    description: "",
-    email: ""
+    id: '',
+    name: '',
+    address: '',
+    mobile: '',
+    description: '',
+    email: '',
   };
 
   state = {
@@ -36,7 +36,7 @@ class AddNew extends Component {
     message: false,
     showMessage: false,
     isError: false,
-    isEdit: false
+    isEdit: false,
   };
 
   async componentDidMount() {
@@ -62,41 +62,41 @@ class AddNew extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value },
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
   };
 
-  onMobileInputChange = e => {
+  onMobileInputChange = (e) => {
     const mobile = e.target.value;
 
     this.setState({
-      errors: { ...this.state.errors, mobile: null }
+      errors: { ...this.state.errors, mobile: null },
     });
 
     if (mobile.toString().length > 10) {
       return;
     }
-    if (mobile.toString() === "") {
+    if (mobile.toString() === '') {
       this.setState({
         data: {
           ...this.state.data,
-          mobile: ""
-        }
+          mobile: '',
+        },
       });
     } else if (!isNaN(mobile)) {
       this.setState({
         data: {
           ...this.state.data,
-          mobile
-        }
+          mobile,
+        },
       });
     }
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
     const errors = this.validate();
@@ -117,20 +117,20 @@ class AddNew extends Component {
     }
   };
 
-  createNew = async data => {
+  createNew = async (data) => {
     const res = await api.customer.createNew(data);
 
     if (res.status === 200) {
-      this.showMessage("Saved successfully");
+      this.showMessage('Saved successfully');
       this.clearForm();
     } else {
       throw new Error(
-        `Unable to create the record. The status code is ${res.status}`
+        `Unable to create the record. The status code is ${res.status}`,
       );
     }
   };
 
-  update = async data => {
+  update = async (data) => {
     const res = await api.customer.update(this.props.match.params.id, data);
 
     if (res.status === 200) {
@@ -143,7 +143,7 @@ class AddNew extends Component {
   clearForm = (canShowMessageDialog = false) => {
     this.setState({
       data: this.initialData,
-      showMessageDialog: canShowMessageDialog
+      showMessageDialog: canShowMessageDialog,
     });
 
     if (this.idRef) {
@@ -154,25 +154,25 @@ class AddNew extends Component {
   onMessageCloseClick = () => {
     this.setState({
       showMessage: false,
-      message: "",
-      isError: false
+      message: '',
+      isError: false,
     });
   };
 
-  showMessage = message => {
+  showMessage = (message) => {
     this.setState({
       showMessage: true,
       message,
-      isError: false
+      isError: false,
     });
   };
 
-  showError = error => {
+  showError = (error) => {
     this.setState({
       showMessage: true,
       message: error.message,
       isError: true,
-      isLoading: false
+      isLoading: false,
     });
   };
 
@@ -187,14 +187,14 @@ class AddNew extends Component {
     if (this.state.data.mobile.length !== 10) {
       errors = {
         ...errors,
-        mobile: "Invalid mobile number."
+        mobile: 'Invalid mobile number.',
       };
     }
 
     if (!isValidEmail(this.state.data.email)) {
       errors = {
         ...errors,
-        email: "Invalid email id."
+        email: 'Invalid email id.',
       };
     }
 
@@ -221,11 +221,11 @@ class AddNew extends Component {
       message,
       showMessage,
       isError,
-      isEdit
+      isEdit,
     } = this.state;
 
     return (
-      <Container title={isEdit ? "Edit customer" : "New customer"}>
+      <Container title={isEdit ? 'Edit customer' : 'New customer'}>
         <Prompt
           message="The customer you entered was saved successfully."
           open={showMessageDialog}

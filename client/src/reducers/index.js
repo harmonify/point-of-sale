@@ -1,16 +1,16 @@
-import { combineReducers } from "redux";
-import { USER_LOGGED_OUT } from "../types";
+import { combineReducers } from 'redux';
+import { USER_LOGGED_OUT } from '../types';
 
-import auth from "./auth";
-import productType from "./productType";
-import cart from "./cart";
-import transaction from "./transaction";
+import auth from './auth';
+import productType from './productType';
+import cart from './cart';
+import transaction from './transaction';
 
 const appReducer = combineReducers({
   auth,
   productType,
   cart,
-  transaction
+  transaction,
 });
 
 const rootReducer = (state, action) => {

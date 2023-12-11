@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import { withStyles } from "material-ui/styles";
-import Paper from "material-ui/Paper";
-import List, { ListItem, ListItemText } from "material-ui/List";
-import CustomTextField from "../textfields/CustomTextField";
+import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
+import Paper from 'material-ui/Paper';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+import CustomTextField from '../textfields/CustomTextField';
 
 // eslint-disable-next-line
 const styles = theme => ({
   ddItem: {
-    position: "absolute"
-  }
+    position: 'absolute',
+  },
 });
 
 class AutoSuggestWithApiDatasource extends Component {
   state = {
-    hideSuggestions: true
+    hideSuggestions: true,
   };
 
   renderOptions = () => {
@@ -23,10 +23,10 @@ class AutoSuggestWithApiDatasource extends Component {
       return null;
     }
 
-    return datasource.map(data => (
+    return datasource.map((data) => (
       <ListItem button key={data.id} onClick={() => onSelected(data)}>
         <ListItemText>
-          <span style={{ fontSize: "0.95rem" }}>{data.name}</span>
+          <span style={{ fontSize: '0.95rem' }}>{data.name}</span>
         </ListItemText>
       </ListItem>
     ));
@@ -44,7 +44,7 @@ class AutoSuggestWithApiDatasource extends Component {
         <List component="nav">
           <ListItem>
             <ListItemText>
-              <span style={{ fontSize: "0.95rem" }}>No records available</span>
+              <span style={{ fontSize: '0.95rem' }}>No records available</span>
             </ListItemText>
           </ListItem>
         </List>
@@ -79,7 +79,7 @@ class AutoSuggestWithApiDatasource extends Component {
     this.setState({ hideSuggestions: false });
   };
 
-  wait = async () => new Promise(resolve => setTimeout(resolve, 0));
+  wait = async () => new Promise((resolve) => setTimeout(resolve, 0));
 
   onBlur = async () => {
     // Hack to make the selection of item to trigget the onSelect event before this
@@ -111,5 +111,5 @@ class AutoSuggestWithApiDatasource extends Component {
 }
 
 export default withStyles(styles, { withTheme: true })(
-  AutoSuggestWithApiDatasource
+  AutoSuggestWithApiDatasource,
 );

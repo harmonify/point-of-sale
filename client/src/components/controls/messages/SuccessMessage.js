@@ -1,28 +1,28 @@
-import React from "react";
-import { withStyles } from "material-ui/styles";
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
 
 const styles = () => ({
   root: {
-    margin: 10
+    margin: 10,
   },
   header: {
-    color: "#1a531b",
+    color: '#1a531b',
     paddingBottom: 10,
     fontSize: 15,
-    fontWeight: 600
+    fontWeight: 600,
   },
   message: {
     fontSize: 14,
     fontWeight: 400,
-    color: "#2c662d",
+    color: '#2c662d',
     padding: 10,
     borderRadius: 2,
-    backgroundColor: "#fcfff5",
-    boxShadow: "0 0 0 1px #a3c293 inset, 0 0 0 0 transparent"
-  }
+    backgroundColor: '#fcfff5',
+    boxShadow: '0 0 0 1px #a3c293 inset, 0 0 0 0 transparent',
+  },
 });
 
-const SuccessMessage = props => {
+const SuccessMessage = (props) => {
   const { classes, title, message } = props;
 
   return (

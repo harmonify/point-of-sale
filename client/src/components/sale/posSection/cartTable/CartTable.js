@@ -1,41 +1,41 @@
-import React, { Component } from "react";
-import currency from "currency.js";
-import { connect } from "react-redux";
-import { withStyles } from "material-ui/styles";
-import { Paper } from "material-ui";
-import Table from "material-ui/Table";
-import YesNo from "../../../controls/dialog/YesNo";
-import EditCartItem from "../editCartItem/EditCartItem";
-import CartHeader from "./cartHeader";
-import CartBody from "./cartBody";
-import CartFooter from "./cartFooter";
-import * as cartActions from "../../../../actions/cart";
-import { getCartItemsArraySelector } from "../../../../selectors";
+import React, { Component } from 'react';
+import currency from 'currency.js';
+import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
+import { Paper } from 'material-ui';
+import Table from 'material-ui/Table';
+import YesNo from '../../../controls/dialog/YesNo';
+import EditCartItem from '../editCartItem/EditCartItem';
+import CartHeader from './cartHeader';
+import CartBody from './cartBody';
+import CartFooter from './cartFooter';
+import * as cartActions from '../../../../actions/cart';
+import { getCartItemsArraySelector } from '../../../../selectors';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    width: "100%",
-    marginTop: theme.spacing.unit * 3
-  }
+    width: '100%',
+    marginTop: theme.spacing.unit * 3,
+  },
 });
 
 class CartTable extends Component {
   initialCartItem = {
-    id: "",
-    name: "",
-    quantity: "",
-    price: "",
-    discount: ""
+    id: '',
+    name: '',
+    quantity: '',
+    price: '',
+    discount: '',
   };
 
   state = {
     showConfirmDeleteDialog: false,
     showEditDialog: false,
-    itemToEdit: this.initialCartItem
+    itemToEdit: this.initialCartItem,
   };
 
   // onChange event for edit cart item form.
-  onChange = e => {
+  onChange = (e) => {
     const { itemToEdit } = this.state;
     const clone = {};
 
@@ -43,7 +43,7 @@ class CartTable extends Component {
 
     let { quantity, discount } = clone;
 
-    if (e.target.name === "discount") {
+    if (e.target.name === 'discount') {
       discount = e.target.value;
     } else {
       quantity = e.target.value;
@@ -52,8 +52,8 @@ class CartTable extends Component {
     const sellingPrice = currency(clone.price).subtract(discount);
     const totalPrice = currency(sellingPrice).multiply(quantity);
 
-    clone.quantity = quantity === "" ? "" : Number(quantity);
-    clone.discount = discount === "" ? "" : discount;
+    clone.quantity = quantity === '' ? '' : Number(quantity);
+    clone.discount = discount === '' ? '' : discount;
 
     clone.sellingPrice = sellingPrice.toString();
     clone.totalPrice = totalPrice.toString();
@@ -71,7 +71,7 @@ class CartTable extends Component {
     this.setState({ showConfirmDeleteDialog: true });
   };
 
-  onDeleteCartItemClick = row => {
+  onDeleteCartItemClick = (row) => {
     this.props.removeItemFromCart(row);
   };
 
@@ -80,7 +80,7 @@ class CartTable extends Component {
   };
 
   // Edit cart item dialog
-  onProductItemClick = itemToEdit => {
+  onProductItemClick = (itemToEdit) => {
     this.setState({ itemToEdit, showEditDialog: true });
   };
 
@@ -141,14 +141,14 @@ class CartTable extends Component {
 function mapStateToProps(state) {
   return {
     cartArray: getCartItemsArraySelector(state),
-    cartObj: state.cart
+    cartObj: state.cart,
   };
 }
 
 const mapDispatchToProps = {
   emptyCart: cartActions.emptyCart,
   removeItemFromCart: cartActions.removeItemFromCart,
-  updateCartItem: cartActions.updateCartItem
+  updateCartItem: cartActions.updateCartItem,
 };
 
 const component = withStyles(styles, { withTheme: true })(CartTable);

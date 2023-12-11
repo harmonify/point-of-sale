@@ -1,7 +1,7 @@
-import React from "react";
-import { ListItemIcon, ListItemText } from "material-ui/List";
+import React from 'react';
+import { ListItemIcon, ListItemText } from 'material-ui/List';
 
-export const CustomListItemIcon = props => {
+export const CustomListItemIcon = (props) => {
   const { children, ...rest } = props;
 
   return (
@@ -11,7 +11,7 @@ export const CustomListItemIcon = props => {
   );
 };
 
-export const CustomListItemText = props => {
+export const CustomListItemText = (props) => {
   const { children, ...rest } = props;
 
   return (

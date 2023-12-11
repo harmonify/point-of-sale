@@ -1,45 +1,45 @@
-import React, { Component } from "react";
-import currency from "currency.js";
-import { connect } from "react-redux";
-import { Switch, withStyles } from "material-ui";
-import FormDialog from "../../../../controls/dialog/FormDialog";
-import NumberTextField from "../../../../controls/textfields/NumberTextField";
+import React, { Component } from 'react';
+import currency from 'currency.js';
+import { connect } from 'react-redux';
+import { Switch, withStyles } from 'material-ui';
+import FormDialog from '../../../../controls/dialog/FormDialog';
+import NumberTextField from '../../../../controls/textfields/NumberTextField';
 import {
   updateDiscountOnItems,
-  updateDiscountOnTotal
-} from "../../../../../actions/cart";
+  updateDiscountOnTotal,
+} from '../../../../../actions/cart';
 
 const styles = () => ({
   switch: {
-    marginLeft: "-20px"
+    marginLeft: '-20px',
   },
   label: {
-    fontSize: "13px",
-    fontWeight: 400
-  }
+    fontSize: '13px',
+    fontWeight: 400,
+  },
 });
 
 class DiscountPopup extends Component {
   initialState = {
-    discount: "",
+    discount: '',
     checkedB: false,
-    error: "",
-    discountText: "Apply to order total"
+    error: '',
+    discountText: 'Apply to order total',
   };
 
   state = {
-    ...this.initialState
+    ...this.initialState,
   };
 
-  onDiscountChange = e => {
-    let discount = "";
+  onDiscountChange = (e) => {
+    let discount = '';
     const { value } = e.target;
 
-    if (value !== "") {
+    if (value !== '') {
       discount = e.target.value;
     }
 
-    this.setState({ discount, error: "" });
+    this.setState({ discount, error: '' });
   };
 
   onCancel = () => {
@@ -51,8 +51,8 @@ class DiscountPopup extends Component {
     const { checkedB } = this.state;
     const { discount } = this.state;
 
-    if (discount === "") {
-      this.setState({ error: "Enter value" });
+    if (discount === '') {
+      this.setState({ error: 'Enter value' });
       return;
     }
 
@@ -65,12 +65,12 @@ class DiscountPopup extends Component {
     }
   };
 
-  updateDiscountOnTotal = discount => {
+  updateDiscountOnTotal = (discount) => {
     const { summary } = this.props;
 
     if (currency(summary.total).value < discount) {
       this.setState({
-        error: "Discount entered is greater than the net total price."
+        error: 'Discount entered is greater than the net total price.',
       });
       return;
     }
@@ -80,14 +80,14 @@ class DiscountPopup extends Component {
     this.props.close();
   };
 
-  updateDiscountOnItems = discount => {
+  updateDiscountOnItems = (discount) => {
     const itemWithPriceLessThanDiscount = this.props.cartArray.filter(
-      i => currency(i.price).value < discount
+      (i) => currency(i.price).value < discount,
     );
 
     if (itemWithPriceLessThanDiscount.length > 0) {
       this.setState({
-        error: "Discount entered is greater cost price of item(s)"
+        error: 'Discount entered is greater cost price of item(s)',
       });
       return;
     }
@@ -101,9 +101,9 @@ class DiscountPopup extends Component {
     const checkedB = !this.state.checkedB;
 
     if (checkedB === true) {
-      this.setState({ discountText: "Apply to all items", checkedB });
+      this.setState({ discountText: 'Apply to all items', checkedB });
     } else {
-      this.setState({ discountText: "Apply to order total", checkedB });
+      this.setState({ discountText: 'Apply to order total', checkedB });
     }
   };
 
@@ -119,7 +119,7 @@ class DiscountPopup extends Component {
         title="Discount"
       >
         <NumberTextField
-          style={{ width: "250px" }}
+          style={{ width: '250px' }}
           error={!!error}
           name="discount"
           value={discount}
@@ -143,5 +143,5 @@ class DiscountPopup extends Component {
 }
 
 export default connect(null, { updateDiscountOnItems, updateDiscountOnTotal })(
-  withStyles(styles)(DiscountPopup)
+  withStyles(styles)(DiscountPopup),
 );

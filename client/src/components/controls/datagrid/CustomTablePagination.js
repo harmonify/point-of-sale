@@ -1,50 +1,50 @@
-import React from "react";
-import { withStyles } from "material-ui/styles";
-import Toolbar from "material-ui/Toolbar";
-import Typography from "material-ui/Typography";
-import { TableCell } from "material-ui/Table";
-import TablePaginationActions from "./TablePaginationActions";
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import { TableCell } from 'material-ui/Table';
+import TablePaginationActions from './TablePaginationActions';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
   root: {
     fontSize: theme.typography.pxToRem(12),
     // Increase the specificity to override TableCell.
-    "&:last-child": {
-      padding: 0
-    }
+    '&:last-child': {
+      padding: 0,
+    },
   },
   toolbar: {
     height: 56,
     minHeight: 56,
-    paddingRight: 2
+    paddingRight: 2,
   },
   spacer: {
-    flex: "1 1 100%"
+    flex: '1 1 100%',
   },
   caption: {
-    flexShrink: 0
+    flexShrink: 0,
   },
   input: {
-    fontSize: "inherit",
-    flexShrink: 0
+    fontSize: 'inherit',
+    flexShrink: 0,
   },
   selectRoot: {
     marginRight: theme.spacing.unit * 4,
     marginLeft: theme.spacing.unit,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   select: {
     paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 2
+    paddingRight: theme.spacing.unit * 2,
   },
   selectIcon: {
-    top: 1
+    top: 1,
   },
   actions: {
     flexShrink: 0,
     color: theme.palette.text.secondary,
-    marginLeft: theme.spacing.unit * 2.5
-  }
+    marginLeft: theme.spacing.unit * 2.5,
+  },
 });
 
 class CustomTablePagination extends React.Component {
@@ -57,12 +57,12 @@ class CustomTablePagination extends React.Component {
       labelDisplayedRows,
       page,
       rowsPerPage,
-      paginationActions
+      paginationActions,
     } = this.props;
 
     let colSpan;
 
-    if (Component === TableCell || Component === "td") {
+    if (Component === TableCell || Component === 'td') {
       colSpan = colSpanProp || 1000; // col-span over everything
     }
 
@@ -78,7 +78,7 @@ class CustomTablePagination extends React.Component {
               from: lblFromText,
               to: lblToText,
               count,
-              page
+              page,
             })}
           </Typography>
           <TablePaginationActions
@@ -96,7 +96,7 @@ class CustomTablePagination extends React.Component {
 CustomTablePagination.defaultProps = {
   component: TableCell,
   labelDisplayedRows: ({ from, to, count }) => `${from}-${to} of ${count}`,
-  labelRowsPerPage: "Rows per page:"
+  labelRowsPerPage: 'Rows per page:',
 };
 
 export default withStyles(styles)(CustomTablePagination);

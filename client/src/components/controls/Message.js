@@ -1,55 +1,55 @@
-import React, { Component, Fragment } from "react";
-import { withStyles } from "material-ui/styles";
-import Clear from "material-ui-icons/Clear";
-import classNames from "classnames";
+import React, { Component, Fragment } from 'react';
+import { withStyles } from 'material-ui/styles';
+import Clear from 'material-ui-icons/Clear';
+import classNames from 'classnames';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: 10,
-    [theme.breakpoints.up("xs")]: {
-      width: 250
+    [theme.breakpoints.up('xs')]: {
+      width: 250,
     },
-    [theme.breakpoints.up("sm")]: {
-      width: 300
+    [theme.breakpoints.up('sm')]: {
+      width: 300,
     },
-    [theme.breakpoints.up("md")]: {
-      width: 500
-    }
+    [theme.breakpoints.up('md')]: {
+      width: 500,
+    },
   },
   close: {
-    fontSize: "12px",
-    fontWeight: "bolder",
-    float: "right",
-    color: "#1f5420",
-    cursor: "pointer"
+    fontSize: '12px',
+    fontWeight: 'bolder',
+    float: 'right',
+    color: '#1f5420',
+    cursor: 'pointer',
   },
   header: {
-    color: "#1a531b",
+    color: '#1a531b',
     paddingBottom: 10,
     fontSize: 15,
-    fontWeight: 600
+    fontWeight: 600,
   },
   message: {
     fontSize: 14,
     fontWeight: 400,
-    color: "#2c662d",
+    color: '#2c662d',
     padding: 10,
     borderRadius: 2,
-    backgroundColor: "#fcfff5",
-    boxShadow: "0 0 0 1px #a3c293 inset, 0 0 0 0 transparent"
+    backgroundColor: '#fcfff5',
+    boxShadow: '0 0 0 1px #a3c293 inset, 0 0 0 0 transparent',
   },
   errorClose: {
-    color: "#e91e63f0"
+    color: '#e91e63f0',
   },
   error: {
-    border: "1px solid #e91e639c",
-    background: "#f4433612",
-    color: "#f44336d6",
-    boxShadow: "0 0 0 1px #fff3f2 inset, 0 0 0 0 transparent"
+    border: '1px solid #e91e639c',
+    background: '#f4433612',
+    color: '#f44336d6',
+    boxShadow: '0 0 0 1px #fff3f2 inset, 0 0 0 0 transparent',
   },
   errorHeader: {
-    color: "#f44336f5"
-  }
+    color: '#f44336f5',
+  },
 });
 
 class Message extends Component {
@@ -65,7 +65,7 @@ class Message extends Component {
       onCloseClick,
       isError,
       autoClose,
-      className
+      className,
     } = this.props;
 
     if (show === true && autoClose === true) {
@@ -84,7 +84,7 @@ class Message extends Component {
       errorClose = classNames(classes.close, classes.errorClose);
     }
 
-    let root = "";
+    let root = '';
 
     if (className) {
       root = classNames(classes.root, className);
@@ -94,7 +94,7 @@ class Message extends Component {
     }
 
     return (
-      <Fragment>
+      <>
         {show === true && (
           <div className={root} style={style}>
             <div className={messageContainerClass}>
@@ -106,7 +106,7 @@ class Message extends Component {
             </div>
           </div>
         )}
-      </Fragment>
+      </>
     );
   }
 }

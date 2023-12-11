@@ -1,21 +1,21 @@
-import React from "react";
-import currency from "currency.js";
-import { Paper } from "material-ui";
-import { withStyles } from "material-ui/styles";
-import Form from "../../../controls/Form";
-import CustomLabel from "./CustomLabel";
-import NumberTextField from "../../../controls/textfields/NumberTextField";
+import React from 'react';
+import currency from 'currency.js';
+import { Paper } from 'material-ui';
+import { withStyles } from 'material-ui/styles';
+import Form from '../../../controls/Form';
+import CustomLabel from './CustomLabel';
+import NumberTextField from '../../../controls/textfields/NumberTextField';
 
-const styles = theme => ({
+const styles = (theme) => ({
   textField: {
-    width: "470px",
-    [theme.breakpoints.up("md")]: {
-      width: "470px"
-    }
-  }
+    width: '470px',
+    [theme.breakpoints.up('md')]: {
+      width: '470px',
+    },
+  },
 });
 
-const NormalSaleForm = props => {
+const NormalSaleForm = (props) => {
   const {
     errors,
     data,
@@ -24,7 +24,7 @@ const NormalSaleForm = props => {
     classes,
     onChange,
     onSubmit,
-    onCancel
+    onCancel,
   } = props;
   const { summary } = cart;
 
@@ -35,13 +35,13 @@ const NormalSaleForm = props => {
   return (
     <Paper>
       <Form
-        style={{ marginLeft: "0px", padding: "15px" }}
+        style={{ marginLeft: '0px', padding: '15px' }}
         id="customer"
         onSubmit={onSubmit}
         onCancel={onCancel}
       >
         <CustomLabel
-          labelStyle={{ color: "red" }}
+          labelStyle={{ color: 'red' }}
           title="Transaction Id"
           text={transactionId}
           helperText="Please note this id incase of any error while saving."

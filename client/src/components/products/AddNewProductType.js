@@ -1,27 +1,27 @@
-import React, { Component } from "react";
-import * as equal from "fast-deep-equal";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Container from "../controls/Container";
-import Form from "../controls/Form";
-import CustomTextField from "../controls/textfields/CustomTextField";
-import { isValueExists } from "../../utils";
-import api from "../../api";
-import Message from "../controls/Message";
-import Prompt from "../controls/dialog/Prompt";
-import CircularLoader from "../controls/loader/CircularLoader";
+import React, { Component } from 'react';
+import * as equal from 'fast-deep-equal';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Container from '../controls/Container';
+import Form from '../controls/Form';
+import CustomTextField from '../controls/textfields/CustomTextField';
+import { isValueExists } from '../../utils';
+import api from '../../api';
+import Message from '../controls/Message';
+import Prompt from '../controls/dialog/Prompt';
+import CircularLoader from '../controls/loader/CircularLoader';
 
 // eslint-disable-next-line
 const styles = theme => ({
   form: {
-    marginLeft: 20
-  }
+    marginLeft: 20,
+  },
 });
 
 class AddNewProductType extends Component {
   initialData = {
-    id: "",
-    description: ""
+    id: '',
+    description: '',
   };
 
   state = {
@@ -30,7 +30,7 @@ class AddNewProductType extends Component {
     errors: {},
     showMessageDialog: false,
     isLoading: false,
-    isEdit: false
+    isEdit: false,
   };
 
   async componentDidMount() {
@@ -56,10 +56,10 @@ class AddNewProductType extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value },
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
   };
 
@@ -74,10 +74,10 @@ class AddNewProductType extends Component {
     this.props.history.goBack();
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
-    const errors = isValueExists(this.state.data, ["description"]);
+    const errors = isValueExists(this.state.data, ['description']);
 
     if (Object.keys(errors).length > 0) {
       this.setState({ errors });
@@ -99,11 +99,11 @@ class AddNewProductType extends Component {
     const res = await api.productType.createNew(this.state.data);
 
     if (res.status === 200) {
-      this.showMessage("Saved successfully");
+      this.showMessage('Saved successfully');
       this.clearForm();
     } else {
       throw new Error(
-        `Unable to create the record. The status code is ${res.status}`
+        `Unable to create the record. The status code is ${res.status}`,
       );
     }
   };
@@ -111,7 +111,7 @@ class AddNewProductType extends Component {
   update = async () => {
     const res = await api.productType.update(
       this.props.match.params.id,
-      this.state.data
+      this.state.data,
     );
 
     if (res.status === 200) {
@@ -124,7 +124,7 @@ class AddNewProductType extends Component {
   clearForm = (canShowMessageDialog = false) => {
     this.setState({
       data: this.initialData,
-      showMessageDialog: canShowMessageDialog
+      showMessageDialog: canShowMessageDialog,
     });
 
     if (this.idRef) {
@@ -135,8 +135,8 @@ class AddNewProductType extends Component {
   onMessageCloseClick = () => {
     this.setState({
       showMessage: false,
-      message: "",
-      isError: false
+      message: '',
+      isError: false,
     });
   };
 
@@ -145,7 +145,7 @@ class AddNewProductType extends Component {
       showMessage: true,
       message,
       isError,
-      isLoading: false
+      isLoading: false,
     });
   };
 
@@ -163,11 +163,11 @@ class AddNewProductType extends Component {
       message,
       showMessageDialog,
       isLoading,
-      isEdit
+      isEdit,
     } = this.state;
 
     return (
-      <Container title={isEdit ? "Edit product type" : "New product type"}>
+      <Container title={isEdit ? 'Edit product type' : 'New product type'}>
         <Message
           title="Message"
           message={message}
@@ -190,7 +190,7 @@ class AddNewProductType extends Component {
           onCancel={this.onCancelClick}
         >
           <CustomTextField
-            inputRef={input => {
+            inputRef={(input) => {
               this.idRef = input;
             }}
             error={!!errors.id}
@@ -216,5 +216,5 @@ class AddNewProductType extends Component {
 }
 
 export default withRouter(
-  withStyles(styles, { withTheme: true })(AddNewProductType)
+  withStyles(styles, { withTheme: true })(AddNewProductType),
 );

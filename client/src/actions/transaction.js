@@ -1,11 +1,11 @@
-import { INIT_TRANSACTION, CANCEL_TRANSACTION } from "../types";
+import { INIT_TRANSACTION, CANCEL_TRANSACTION } from '../types';
 
-export const initTransaction = data => ({
+export const initTransaction = (data) => ({
   type: INIT_TRANSACTION,
-  data
+  data,
 });
 
-export const cancelTransaction = data => ({
+export const cancelTransaction = (data) => ({
   type: CANCEL_TRANSACTION,
-  data
+  data,
 });

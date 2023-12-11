@@ -1,15 +1,15 @@
-import React from "react";
-import FooterTableCell from "./FooterTableCell";
-import FooterTableRow from "./FooterTableRow";
+import React from 'react';
+import FooterTableCell from './FooterTableCell';
+import FooterTableRow from './FooterTableRow';
 
 const TotalRow = ({ totalquantityText, totalPrice }) => (
-  <FooterTableRow style={{ paddingTop: "20px" }}>
+  <FooterTableRow style={{ paddingTop: '20px' }}>
     <FooterTableCell numeric>Total Items</FooterTableCell>
     <FooterTableCell numeric>{totalquantityText}</FooterTableCell>
     <FooterTableCell numeric />
-    <FooterTableCell style={{ paddingLeft: "15px" }}>
-      Total{" "}
-      <span style={{ fontWeight: "400", fontSize: "11px" }}>(discounted)</span>
+    <FooterTableCell style={{ paddingLeft: '15px' }}>
+      Total{' '}
+      <span style={{ fontWeight: '400', fontSize: '11px' }}>(discounted)</span>
     </FooterTableCell>
     <FooterTableCell numeric>{totalPrice}</FooterTableCell>
   </FooterTableRow>

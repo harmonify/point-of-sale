@@ -1,37 +1,37 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import CustomTabs from "../controls/Tabs";
-import TabContainer from "../controls/TabContainer";
-import ExpenseTab from "./ExpenseTab";
-import ExpenseTypeTab from "./ExpenseTypeTab";
+import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import CustomTabs from '../controls/Tabs';
+import TabContainer from '../controls/TabContainer';
+import ExpenseTab from './ExpenseTab';
+import ExpenseTypeTab from './ExpenseTypeTab';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    padding: 10
+    padding: 10,
   },
   tabHolder: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   tab: {
-    boxShadow: "none"
+    boxShadow: 'none',
   },
   tabItem: {
-    fontSize: "12px"
+    fontSize: '12px',
   },
   indicator: {
-    backgroundColor: "#3f51b5"
-  }
+    backgroundColor: '#3f51b5',
+  },
 });
 
 class Expense extends Component {
   state = {
-    value: 0
+    value: 0,
   };
 
   componentDidMount() {
-    if (this.props.history.location.pathname === "/expense") {
+    if (this.props.history.location.pathname === '/expense') {
       this.setState({ value: 0 });
     } else {
       this.setState({ value: 1 });
@@ -40,9 +40,9 @@ class Expense extends Component {
 
   handleChange = (event, value) => {
     if (value === 0) {
-      this.props.history.push("/expense");
+      this.props.history.push('/expense');
     } else {
-      this.props.history.push("/expensetypes");
+      this.props.history.push('/expensetypes');
     }
     this.setState({ value });
   };
@@ -57,7 +57,7 @@ class Expense extends Component {
           <CustomTabs
             onChange={this.handleChange}
             value={value}
-            items={["Expense", "Expense Types"]}
+            items={['Expense', 'Expense Types']}
           />
           {value === 0 && (
             <TabContainer>

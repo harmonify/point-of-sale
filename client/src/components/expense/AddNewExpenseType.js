@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import * as equal from "fast-deep-equal";
-import { withRouter } from "react-router";
-import Container from "../controls/Container";
-import Form from "../controls/Form";
-import CustomTextField from "../controls/textfields/CustomTextField";
-import { isValueExists } from "../../utils";
-import api from "../../api";
-import Message from "../controls/Message";
-import Prompt from "../controls/dialog/Prompt";
-import CircularLoader from "../controls/loader/CircularLoader";
+import React, { Component } from 'react';
+import * as equal from 'fast-deep-equal';
+import { withRouter } from 'react-router';
+import Container from '../controls/Container';
+import Form from '../controls/Form';
+import CustomTextField from '../controls/textfields/CustomTextField';
+import { isValueExists } from '../../utils';
+import api from '../../api';
+import Message from '../controls/Message';
+import Prompt from '../controls/dialog/Prompt';
+import CircularLoader from '../controls/loader/CircularLoader';
 
 class AddNewExpenseType extends Component {
   initialData = {
-    id: "",
-    description: ""
+    id: '',
+    description: '',
   };
 
   state = {
@@ -22,7 +22,7 @@ class AddNewExpenseType extends Component {
     errors: {},
     showMessageDialog: false,
     isLoading: false,
-    isEdit: false
+    isEdit: false,
   };
 
   async componentDidMount() {
@@ -48,10 +48,10 @@ class AddNewExpenseType extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value },
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
   };
 
@@ -66,10 +66,10 @@ class AddNewExpenseType extends Component {
     this.props.history.goBack();
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
-    const errors = isValueExists(this.state.data, ["description"]);
+    const errors = isValueExists(this.state.data, ['description']);
 
     if (Object.keys(errors).length > 0) {
       this.setState({ errors });
@@ -91,11 +91,11 @@ class AddNewExpenseType extends Component {
     const res = await api.expenseType.createNew(this.state.data);
 
     if (res.status === 200) {
-      this.showMessage("Saved successfully");
+      this.showMessage('Saved successfully');
       this.clearForm();
     } else {
       throw new Error(
-        `Unable to create the record. The status code is ${res.status}`
+        `Unable to create the record. The status code is ${res.status}`,
       );
     }
   };
@@ -103,7 +103,7 @@ class AddNewExpenseType extends Component {
   update = async () => {
     const res = await api.expenseType.update(
       this.props.match.params.id,
-      this.state.data
+      this.state.data,
     );
 
     if (res.status === 200) {
@@ -112,10 +112,11 @@ class AddNewExpenseType extends Component {
       throw new Error(`Unable to update. The status code is ${res.status}`);
     }
   };
+
   clearForm = (canShowMessageDialog = false) => {
     this.setState({
       data: this.initialData,
-      showMessageDialog: canShowMessageDialog
+      showMessageDialog: canShowMessageDialog,
     });
 
     if (this.idRef) {
@@ -126,8 +127,8 @@ class AddNewExpenseType extends Component {
   onMessageCloseClick = () => {
     this.setState({
       showMessage: false,
-      message: "",
-      isError: false
+      message: '',
+      isError: false,
     });
   };
 
@@ -136,7 +137,7 @@ class AddNewExpenseType extends Component {
       showMessage: true,
       message,
       isError,
-      isLoading: false
+      isLoading: false,
     });
   };
 
@@ -154,11 +155,11 @@ class AddNewExpenseType extends Component {
       message,
       showMessageDialog,
       isLoading,
-      isEdit
+      isEdit,
     } = this.state;
 
     return (
-      <Container title={isEdit ? "Edit expense type" : "New expense type"}>
+      <Container title={isEdit ? 'Edit expense type' : 'New expense type'}>
         <Message
           title="Message"
           message={message}
@@ -181,7 +182,7 @@ class AddNewExpenseType extends Component {
           onCancel={this.onCancelClick}
         >
           <CustomTextField
-            inputRef={input => {
+            inputRef={(input) => {
               this.idRef = input;
             }}
             error={!!errors.id}

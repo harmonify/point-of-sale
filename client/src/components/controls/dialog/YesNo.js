@@ -1,13 +1,13 @@
-import React from "react";
-import Button from "material-ui/Button";
+import React from 'react';
+import Button from 'material-ui/Button';
 import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
-} from "material-ui/Dialog";
+  DialogTitle,
+} from 'material-ui/Dialog';
 
-const YesNo = props => (
+const YesNo = (props) => (
   <Dialog
     open={props.open}
     aria-labelledby="alert-dialog-title"

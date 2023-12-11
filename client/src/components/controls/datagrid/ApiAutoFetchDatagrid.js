@@ -1,76 +1,76 @@
-import React, { Component } from "react";
-import classNames from "classnames";
-import axios from "axios";
-import { withStyles } from "material-ui/styles";
-import { LinearProgress } from "material-ui/Progress";
-import IconButton from "material-ui/IconButton";
-import DeleteIcon from "material-ui-icons/Delete";
-import EditIcon from "material-ui-icons/Edit";
-import Button from "material-ui/Button";
+import React, { Component } from 'react';
+import classNames from 'classnames';
+import axios from 'axios';
+import { withStyles } from 'material-ui/styles';
+import { LinearProgress } from 'material-ui/Progress';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
+import EditIcon from 'material-ui-icons/Edit';
+import Button from 'material-ui/Button';
 import Table, {
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TableFooter
-} from "material-ui/Table";
-import Paper from "material-ui/Paper";
-import CustomTablePagination from "./CustomTablePagination";
-import CustomTableCell from "./CustomTableCell";
-import Overlay from "../Overlay";
-import Message from "../Message";
-import { getPaginationInfo } from "../../../utils";
+  TableFooter,
+} from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
+import CustomTablePagination from './CustomTablePagination';
+import CustomTableCell from './CustomTableCell';
+import Overlay from '../Overlay';
+import Message from '../Message';
+import { getPaginationInfo } from '../../../utils';
 
 // eslint-disable-next-line
 const styles = theme => ({
   root: {
-    width: "100%",
-    overflowX: "auto",
-    flexShrink: 0
+    width: '100%',
+    overflowX: 'auto',
+    flexShrink: 0,
   },
   table: {
-    minWidth: 700
+    minWidth: 700,
   },
   head: {
-    background: "#e0e0e0"
+    background: '#e0e0e0',
   },
   wrapper: {
-    position: "relative"
+    position: 'relative',
   },
   overlay: {
     top: 0,
-    position: "absolute",
-    background: "#ffffffad",
-    height: "100%",
-    width: "100%",
-    zIndex: 100
+    position: 'absolute',
+    background: '#ffffffad',
+    height: '100%',
+    width: '100%',
+    zIndex: 100,
   },
   gridEdit: {
-    border: "none",
-    minWidth: "29px",
-    overflow: "hidden",
+    border: 'none',
+    minWidth: '29px',
+    overflow: 'hidden',
     outline: 0,
     lineHeight: 1,
-    "&:focus": {
+    '&:focus': {
       outline: 0,
-      backgroundColor: "#f3f9fd",
-      borderRadius: "1px",
-      boxShadow: "0 0 0 2px #f3f9fd, 0 0 0 4px #cdd4d9"
-    }
+      backgroundColor: '#f3f9fd',
+      borderRadius: '1px',
+      boxShadow: '0 0 0 2px #f3f9fd, 0 0 0 4px #cdd4d9',
+    },
   },
   gridNumberEdit: {
-    textAlign: "right",
-    width: "20px"
-  }
+    textAlign: 'right',
+    width: '20px',
+  },
 });
 
 class ApiAutoFetchDatagrid extends Component {
   state = {
     data: {
       list: [],
-      paginationInfo: {}
+      paginationInfo: {},
     },
-    isLoading: false
+    isLoading: false,
   };
 
   async componentDidMount() {
@@ -91,7 +91,7 @@ class ApiAutoFetchDatagrid extends Component {
       const list = res.data;
       const data = {
         list,
-        paginationInfo
+        paginationInfo,
       };
 
       this.setState({ isLoading: false, data });
@@ -102,22 +102,22 @@ class ApiAutoFetchDatagrid extends Component {
   };
 
   onFirst = () => {
-    this.fetch("first");
+    this.fetch('first');
   };
 
   onLast = () => {
-    this.fetch("last");
+    this.fetch('last');
   };
 
   onNext = async () => {
-    this.fetch("next");
+    this.fetch('next');
   };
 
   onPrev = () => {
-    this.fetch("prev");
+    this.fetch('prev');
   };
 
-  fetch = async action => {
+  fetch = async (action) => {
     try {
       this.setState({ isLoading: true });
 
@@ -127,7 +127,7 @@ class ApiAutoFetchDatagrid extends Component {
       const list = res.data;
       const data = {
         list,
-        paginationInfo
+        paginationInfo,
       };
 
       this.setState({ isLoading: false, data });
@@ -140,7 +140,7 @@ class ApiAutoFetchDatagrid extends Component {
   renderHeader = () => (
     <TableHead className={this.props.classes.head}>
       <TableRow>
-        {this.props.headers.map(h => (
+        {this.props.headers.map((h) => (
           <CustomTableCell key={h}>{h}</CustomTableCell>
         ))}
         {this.props.actions.length > 0 && (
@@ -157,11 +157,11 @@ class ApiAutoFetchDatagrid extends Component {
     return val;
   };
 
-  renderRow = row => {
+  renderRow = (row) => {
     const keys = Object.keys(row);
 
     return keys.map((k, idx) => {
-      if (this.props.actions.includes("sel") && idx === 0) {
+      if (this.props.actions.includes('sel') && idx === 0) {
         return (
           // eslint-disable-next-line react/no-array-index-key
           <TableCell key={`${keys[idx]}${idx}`}>
@@ -172,7 +172,7 @@ class ApiAutoFetchDatagrid extends Component {
         );
       }
 
-      if (keys[idx] === "price") {
+      if (keys[idx] === 'price') {
         return (
           // eslint-disable-next-line react/no-array-index-key
           <TableCell key={`${keys[idx]}${idx}`}>
@@ -181,7 +181,7 @@ class ApiAutoFetchDatagrid extends Component {
               value={this.renderCellValue(k, row[k])}
               className={classNames(
                 this.props.classes.gridEdit,
-                this.props.classes.gridNumberEdit
+                this.props.classes.gridNumberEdit,
               )}
             />
           </TableCell>
@@ -197,19 +197,19 @@ class ApiAutoFetchDatagrid extends Component {
     });
   };
 
-  renderActions = row => {
+  renderActions = (row) => {
     if (this.props.actions.length === 0) {
       return null;
     }
 
     return (
       <TableCell>
-        {this.props.actions.includes("edit") && (
+        {this.props.actions.includes('edit') && (
           <IconButton>
             <EditIcon onClick={() => this.props.onEdit(row)} />
           </IconButton>
         )}
-        {this.props.actions.includes("del") && (
+        {this.props.actions.includes('del') && (
           <IconButton>
             <DeleteIcon onClick={() => this.props.onDelete(row)} />
           </IconButton>
@@ -239,7 +239,7 @@ class ApiAutoFetchDatagrid extends Component {
 
     return (
       <Message
-        style={{ width: "100%", marginLeft: 0 }}
+        style={{ width: '100%', marginLeft: 0 }}
         title="Info"
         message="No records found"
         show={data.list.length === 0 && isLoading === false}
@@ -302,7 +302,7 @@ class ApiAutoFetchDatagrid extends Component {
 
 ApiAutoFetchDatagrid.defaultProps = {
   actions: [],
-  rowsPerPage: 10
+  rowsPerPage: 10,
 };
 
 export default withStyles(styles)(ApiAutoFetchDatagrid);

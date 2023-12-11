@@ -1,21 +1,21 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withStyles, Button } from "material-ui";
-import NormalSale from "../sale/NormalSale";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withStyles, Button } from 'material-ui';
+import NormalSale from '../sale/NormalSale';
 
 const styles = () => ({
   root: {
-    marginTop: "20px"
+    marginTop: '20px',
   },
   button: {
-    marginBottom: "1px",
-    boxShadow: "none"
-  }
+    marginBottom: '1px',
+    boxShadow: 'none',
+  },
 });
 
 class Footer extends Component {
   state = {
-    showNormalPopup: false
+    showNormalPopup: false,
   };
 
   normalSaleClick = () => {
@@ -68,7 +68,7 @@ class Footer extends Component {
 
 function mapStateToProps({ cart }) {
   return {
-    summary: cart.summary
+    summary: cart.summary,
   };
 }
 

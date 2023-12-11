@@ -1,53 +1,53 @@
-import React, { Component } from "react";
-import { withStyles } from "material-ui/styles";
-import { LinearProgress } from "material-ui/Progress";
-import IconButton from "material-ui/IconButton";
-import DeleteIcon from "material-ui-icons/Delete";
-import EditIcon from "material-ui-icons/Edit";
-import Button from "material-ui/Button";
+import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
+import { LinearProgress } from 'material-ui/Progress';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
+import EditIcon from 'material-ui-icons/Edit';
+import Button from 'material-ui/Button';
 import Table, {
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TableFooter
-} from "material-ui/Table";
-import Paper from "material-ui/Paper";
-import CustomTablePagination from "./CustomTablePagination";
-import CustomTableCell from "./CustomTableCell";
-import Overlay from "../Overlay";
-import Message from "../Message";
+  TableFooter,
+} from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
+import CustomTablePagination from './CustomTablePagination';
+import CustomTableCell from './CustomTableCell';
+import Overlay from '../Overlay';
+import Message from '../Message';
 
 // eslint-disable-next-line
 const styles = theme => ({
   root: {
-    width: "100%",
-    overflowX: "auto",
-    flexShrink: 0
+    width: '100%',
+    overflowX: 'auto',
+    flexShrink: 0,
   },
   table: {
-    minWidth: 700
+    minWidth: 700,
   },
   head: {
-    background: "#e0e0e0"
+    background: '#e0e0e0',
   },
   wrapper: {
-    position: "relative"
+    position: 'relative',
   },
   overlay: {
     top: 0,
-    position: "absolute",
-    background: "#ffffffad",
-    height: "100%",
-    width: "100%",
-    zIndex: 100
-  }
+    position: 'absolute',
+    background: '#ffffffad',
+    height: '100%',
+    width: '100%',
+    zIndex: 100,
+  },
 });
 
 class SimpleDatagrid extends Component {
   state = {
     currentPageData: [],
-    currentPageNumber: 1
+    currentPageNumber: 1,
   };
 
   componentDidMount() {
@@ -58,7 +58,7 @@ class SimpleDatagrid extends Component {
     this.initialize(nextProps);
   }
 
-  initialize = props => {
+  initialize = (props) => {
     if (props.data.list.length === 0) {
       this.setState({ currentPageData: [] });
       return;
@@ -101,7 +101,7 @@ class SimpleDatagrid extends Component {
   renderHeader = () => (
     <TableHead className={this.props.classes.head}>
       <TableRow>
-        {this.props.headers.map(h => (
+        {this.props.headers.map((h) => (
           <CustomTableCell key={h}>{h}</CustomTableCell>
         ))}
         {this.props.actions.length > 0 && (
@@ -111,7 +111,7 @@ class SimpleDatagrid extends Component {
     </TableHead>
   );
 
-  renderRow = row => {
+  renderRow = (row) => {
     const keys = Object.keys(row);
 
     const renderValue = (key, val) => {
@@ -122,7 +122,7 @@ class SimpleDatagrid extends Component {
     };
 
     return keys.map((k, idx) => {
-      if (this.props.actions.includes("sel") && idx === 0) {
+      if (this.props.actions.includes('sel') && idx === 0) {
         return (
           // eslint-disable-next-line react/no-array-index-key
           <TableCell key={`${keys[idx]}${idx}`}>
@@ -142,19 +142,19 @@ class SimpleDatagrid extends Component {
     });
   };
 
-  renderActions = row => {
+  renderActions = (row) => {
     if (this.props.actions.length === 0) {
       return null;
     }
 
     return (
       <TableCell>
-        {this.props.actions.includes("edit") && (
+        {this.props.actions.includes('edit') && (
           <IconButton>
             <EditIcon onClick={() => this.props.onEdit(row)} />
           </IconButton>
         )}
-        {this.props.actions.includes("del") && (
+        {this.props.actions.includes('del') && (
           <IconButton>
             <DeleteIcon onClick={() => this.props.onDelete(row)} />
           </IconButton>
@@ -187,7 +187,7 @@ class SimpleDatagrid extends Component {
 
     return (
       <Message
-        style={{ width: "100%", marginLeft: 0 }}
+        style={{ width: '100%', marginLeft: 0 }}
         title="Info"
         message="No records found"
         show={this.state.currentPageData.length === 0 && isLoading === false}
@@ -249,7 +249,7 @@ class SimpleDatagrid extends Component {
 
 SimpleDatagrid.defaultProps = {
   actions: [],
-  rowsPerPage: 10
+  rowsPerPage: 10,
 };
 
 export default withStyles(styles)(SimpleDatagrid);

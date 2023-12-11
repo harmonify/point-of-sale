@@ -1,44 +1,44 @@
-import React, { Component } from "react";
-import currency from "currency.js";
-import { connect } from "react-redux";
-import { withStyles } from "material-ui/styles";
-import FullPageDialog from "../../../controls/dialog/FullPageDialog";
-import api from "../../../../api";
-import Message from "../../../controls/Message";
-import { getCartItemsArraySelector } from "../../../../selectors";
-import NormalSaleForm from "./NormalSaleForm";
-import CircularLoader from "../../../controls/loader/CircularLoader";
+import React, { Component } from 'react';
+import currency from 'currency.js';
+import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
+import FullPageDialog from '../../../controls/dialog/FullPageDialog';
+import api from '../../../../api';
+import Message from '../../../controls/Message';
+import { getCartItemsArraySelector } from '../../../../selectors';
+import NormalSaleForm from './NormalSaleForm';
+import CircularLoader from '../../../controls/loader/CircularLoader';
 import {
   initTransaction,
-  cancelTransaction
-} from "../../../../actions/transaction";
-import { emptyCart } from "../../../../actions/cart";
-import YesNo from "../../../controls/dialog/YesNo";
+  cancelTransaction,
+} from '../../../../actions/transaction';
+import { emptyCart } from '../../../../actions/cart';
+import YesNo from '../../../controls/dialog/YesNo';
 
 const styles = () => ({
   message: {
     margin: 0,
-    paddingBottom: "10px"
+    paddingBottom: '10px',
   },
   formContainer: {
-    padding: "30px",
-    margin: "auto",
-    width: "500px",
-    height: "100%"
-  }
+    padding: '30px',
+    margin: 'auto',
+    width: '500px',
+    height: '100%',
+  },
 });
 
 class NormalSale extends Component {
   state = {
-    error: "",
+    error: '',
     showMessage: false,
     showConfirmDeleteDialog: false,
     isLoading: false,
     errors: {},
     data: {
-      balanceToPay: "0.00",
-      amountPaid: ""
-    }
+      balanceToPay: '0.00',
+      amountPaid: '',
+    },
   };
 
   async componentDidMount() {
@@ -58,12 +58,12 @@ class NormalSale extends Component {
       this.setState({
         error: error.message,
         showMessage: true,
-        isLoading: false
+        isLoading: false,
       });
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     const amountPaid = e.target.value;
     const { netTotal } = this.props.cart.summary;
     const balance = currency(amountPaid).subtract(netTotal);
@@ -71,14 +71,14 @@ class NormalSale extends Component {
     if (balance.value > 0) {
       this.setState({
         errors: {},
-        data: { amountPaid, balanceToPay: balance.toString() }
+        data: { amountPaid, balanceToPay: balance.toString() },
       });
     } else {
-      this.setState({ errors: {}, data: { amountPaid, balanceToPay: "0.00" } });
+      this.setState({ errors: {}, data: { amountPaid, balanceToPay: '0.00' } });
     }
   };
 
-  onNormalSaleFormSubmit = async e => {
+  onNormalSaleFormSubmit = async (e) => {
     e.preventDefault();
 
     const { amountPaid } = this.state.data;
@@ -91,8 +91,8 @@ class NormalSale extends Component {
       this.setState({
         errors: {
           amountPaid:
-            "You have entered a less amount than the bill. Please correct it"
-        }
+            'You have entered a less amount than the bill. Please correct it',
+        },
       });
 
       return;
@@ -105,7 +105,7 @@ class NormalSale extends Component {
     sale.total = currency(summary.total).value;
     sale.taxAmount = currency(summary.taxAmount).value;
     sale.totalDiscount = currency(summary.discountOnItems).add(
-      summary.discountOnTotal
+      summary.discountOnTotal,
     ).value;
     sale.netTotal = currency(netTotal).value;
 
@@ -155,12 +155,8 @@ class NormalSale extends Component {
 
   render() {
     const { handleClose, open, classes } = this.props;
-    const {
-      error,
-      showMessage,
-      isLoading,
-      showConfirmDeleteDialog
-    } = this.state;
+    const { error, showMessage, isLoading, showConfirmDeleteDialog } =
+      this.state;
 
     return (
       <FullPageDialog open={open} handleClose={handleClose} title="Normal Sale">
@@ -179,7 +175,7 @@ class NormalSale extends Component {
             title="Got an error"
             message={error}
             show={showMessage}
-            isError={true}
+            isError
             onCloseClick={this.onMessageCloseClick}
           />
           {this.renderForm()}
@@ -193,14 +189,14 @@ function mapStateToProps(state) {
   return {
     transaction: state.transaction,
     cart: state.cart,
-    cartArray: getCartItemsArraySelector(state)
+    cartArray: getCartItemsArraySelector(state),
   };
 }
 
 const mapDispatchToProps = {
   initTransaction,
   cancelTransaction,
-  emptyCart
+  emptyCart,
 };
 
 const component = withStyles(styles)(NormalSale);

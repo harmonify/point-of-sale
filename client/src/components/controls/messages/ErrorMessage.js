@@ -1,27 +1,27 @@
-import React from "react";
-import { withStyles } from "material-ui/styles";
-import classNames from "classnames";
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
+import classNames from 'classnames';
 
 const styles = () => ({
   root: {
-    padding: "15px",
-    border: "1px solid #e91e639c",
-    background: "#f4433612",
-    color: "#f44336d6",
+    padding: '15px',
+    border: '1px solid #e91e639c',
+    background: '#f4433612',
+    color: '#f44336d6',
     margin: 5,
-    width: "100%",
+    width: '100%',
     fontSize: 14,
-    borderRadius: 3
-  }
+    borderRadius: 3,
+  },
 });
 
-const ErrorMessage = props => {
+const ErrorMessage = (props) => {
   const style = {};
 
   if (props.show && props.show === true) {
-    style.display = "block";
+    style.display = 'block';
   } else {
-    style.display = "none";
+    style.display = 'none';
   }
 
   return (

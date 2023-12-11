@@ -1,12 +1,12 @@
-import axios from "axios";
-import { setAuthorizationHeader } from "../utils";
+import axios from 'axios';
+import { setAuthorizationHeader } from '../utils';
 
-setAuthorizationHeader(sessionStorage.getItem("token"));
+setAuthorizationHeader(sessionStorage.getItem('token'));
 
 // Add a response interceptor
 axios.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     if (error.response) {
       const { data } = error.response;
 
@@ -15,7 +15,7 @@ axios.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axios;

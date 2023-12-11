@@ -1,15 +1,15 @@
-import React from "react";
-import { withStyles } from "material-ui/styles";
-import CustomTableCell from "../controls/CustomTableCell";
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
+import CustomTableCell from '../controls/CustomTableCell';
 
 const styles = () => ({
   footerTableCell: {
-    fontSize: "13px",
+    fontSize: '13px',
     // padding: "5px",
-    fontWeight: "bold",
-    color: "black",
-    borderBottom: "none"
-  }
+    fontWeight: 'bold',
+    color: 'black',
+    borderBottom: 'none',
+  },
 });
 
 const FooterTableCell = ({ classes, children, ...rest }) => (

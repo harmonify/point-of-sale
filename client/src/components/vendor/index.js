@@ -1,4 +1,4 @@
-import AddNew from "./AddNew";
-import Vendors from "./Vendors";
+import AddNew from './AddNew';
+import Vendors from './Vendors';
 
 export default { AddNew, Vendors };

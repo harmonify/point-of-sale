@@ -1,39 +1,39 @@
-import React, { Component } from "react";
-import { withStyles } from "material-ui/styles";
-import { InputAdornment } from "material-ui/Input";
-import IconButton from "material-ui/IconButton";
-import Search from "material-ui-icons/Search";
-import CustomTextField from "./textfields/CustomTextField";
+import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
+import { InputAdornment } from 'material-ui/Input';
+import IconButton from 'material-ui/IconButton';
+import Search from 'material-ui-icons/Search';
+import CustomTextField from './textfields/CustomTextField';
 
 // eslint-disable-next-line
 const styles = theme => ({
   root: {
-    [theme.breakpoints.up("xs")]: {
-      float: "none"
+    [theme.breakpoints.up('xs')]: {
+      float: 'none',
     },
-    [theme.breakpoints.up("md")]: {
-      float: "right"
-    }
+    [theme.breakpoints.up('md')]: {
+      float: 'right',
+    },
   },
   textfield: {
-    width: 200
-  }
+    width: 200,
+  },
 });
 
 class Searchbox extends Component {
-  state = { id: "" };
+  state = { id: '' };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.clear) {
-      this.setState({ id: "" });
+      this.setState({ id: '' });
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ id: e.target.value });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
     this.props.onSubmit(this.state.id);
   };
@@ -47,7 +47,7 @@ class Searchbox extends Component {
           onChange={this.onChange}
           value={this.state.id}
           style={{ width: 200 }}
-          placeholder={placeholder !== undefined ? placeholder : "Enter ID"}
+          placeholder={placeholder !== undefined ? placeholder : 'Enter ID'}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -55,7 +55,7 @@ class Searchbox extends Component {
                   <Search />
                 </IconButton>
               </InputAdornment>
-            )
+            ),
           }}
         />
       </form>

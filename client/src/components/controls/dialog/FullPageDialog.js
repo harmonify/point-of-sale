@@ -1,30 +1,30 @@
-import React from "react";
-import { withStyles } from "material-ui/styles";
-import Dialog from "material-ui/Dialog";
-import AppBar from "material-ui/AppBar";
-import Toolbar from "material-ui/Toolbar";
-import IconButton from "material-ui/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Slide from "material-ui/transitions/Slide";
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
+import Dialog from 'material-ui/Dialog';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from 'material-ui/transitions/Slide';
 
 const styles = {
   appBar: {
-    position: "relative"
+    position: 'relative',
   },
   title: {
     flex: 1,
-    paddingLeft: "5px",
+    paddingLeft: '5px',
     fontWeight: 100,
-    fontSize: "20px"
+    fontSize: '20px',
   },
   subTitle: {
-    paddingLeft: "10px",
+    paddingLeft: '10px',
     fontWeight: 100,
-    fontSize: "16px"
-  }
+    fontSize: '16px',
+  },
 };
 
-const Transition = props => <Slide direction="up" {...props} />;
+const Transition = (props) => <Slide direction="up" {...props} />;
 
 const FullPageDialog = ({ classes, open, handleClose, children, title }) => (
   <Dialog

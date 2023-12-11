@@ -1,38 +1,38 @@
-import React, { Component } from "react";
-import { withStyles } from "material-ui/styles";
-import Paper from "material-ui/Paper";
-import TextField from "material-ui/TextField";
-import { CircularProgress } from "material-ui/Progress";
-import Button from "material-ui/Button";
-import { withRouter } from "react-router";
-import { connect } from "react-redux";
-import ErrorMessage from "../controls/messages/ErrorMessage";
-import { loginUser } from "../../actions/auth";
+import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
+import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import { CircularProgress } from 'material-ui/Progress';
+import Button from 'material-ui/Button';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import ErrorMessage from '../controls/messages/ErrorMessage';
+import { loginUser } from '../../actions/auth';
 
-import styles from "./styles";
+import styles from './styles';
 
 class LoginPage extends Component {
   state = {
     data: {
-      username: "",
-      password: ""
+      username: '',
+      password: '',
     },
     loading: false,
-    errors: {}
+    errors: {},
   };
 
   componentDidMount() {
     if (this.props.isLoggedIn) {
-      this.props.history.push("/home");
+      this.props.history.push('/home');
     } else {
-      this.props.history.push("/");
+      this.props.history.push('/');
     }
   }
 
   hasErrors = () =>
     this.state.errors.global && this.state.errors.global.length > 0;
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
     const errors = this.validate(this.state.data);
@@ -46,32 +46,32 @@ class LoginPage extends Component {
 
     try {
       await this.props.loginUser({ ...this.state.data });
-      this.props.history.push("/");
+      this.props.history.push('/');
     } catch (error) {
       this.setState({
         errors: { global: error.message },
-        data: { username: "", password: "" },
-        loading: false
+        data: { username: '', password: '' },
+        loading: false,
       });
 
       if (this.usernameRef) this.usernameRef.focus();
     }
   };
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
+      data: { ...this.state.data, [e.target.name]: e.target.value },
     });
   };
 
-  validate = data => {
+  validate = (data) => {
     const errors = {};
 
     if (!data.username || data.username.length === 0)
-      errors.username = "Enter username";
+      errors.username = 'Enter username';
 
     if (!data.password || data.password.length === 0)
-      errors.password = "Enter password";
+      errors.password = 'Enter password';
 
     return errors;
   };
@@ -96,7 +96,7 @@ class LoginPage extends Component {
               />
 
               <TextField
-                inputRef={input => {
+                inputRef={(input) => {
                   this.usernameRef = input;
                 }}
                 error={!!errors.username}
@@ -148,15 +148,10 @@ function mapStateToProps(state) {
   const isLoggedIn = state.auth !== undefined ? !!state.auth.tokens : false;
 
   return {
-    isLoggedIn
+    isLoggedIn,
   };
 }
 
 const component = withStyles(styles, { withTheme: true })(LoginPage);
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { loginUser }
-  )(component)
-);
+export default withRouter(connect(mapStateToProps, { loginUser })(component));

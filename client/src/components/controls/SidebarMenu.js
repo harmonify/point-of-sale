@@ -1,30 +1,30 @@
-import React, { Component } from "react";
-import classNames from "classnames";
-import { withStyles } from "material-ui/styles";
-import { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import React, { Component } from 'react';
+import classNames from 'classnames';
+import { withStyles } from 'material-ui/styles';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 // eslint-disable-next-line
 const styles = theme => ({
   listItem: {
-    "&:hover": {
+    '&:hover': {
       backgroundColor: theme.palette.primary.main,
-      "& $primary, & $icon": {
-        color: theme.palette.common.white
-      }
-    }
+      '& $primary, & $icon': {
+        color: theme.palette.common.white,
+      },
+    },
   },
   primary: {},
   icon: {
-    width: 19
+    width: 19,
   },
   selected: {
-    backgroundColor: "#00000014",
-    borderLeft: "5px solid #3f50b5",
-    paddingLeft: 20
+    backgroundColor: '#00000014',
+    borderLeft: '5px solid #3f50b5',
+    paddingLeft: 20,
   },
   normal: {
-    backgroundColor: "white"
-  }
+    backgroundColor: 'white',
+  },
 });
 
 class SidebarMenu extends Component {

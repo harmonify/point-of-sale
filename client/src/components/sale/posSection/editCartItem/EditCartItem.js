@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import currency from "currency.js";
-import FormDialog from "../../../controls/dialog/FormDialog";
-import CustomTextField from "../../../controls/textfields/CustomTextField";
-import NumberTextField from "../../../controls/textfields/NumberTextField";
-import Footer from "./Footer";
+import React, { Component } from 'react';
+import currency from 'currency.js';
+import FormDialog from '../../../controls/dialog/FormDialog';
+import CustomTextField from '../../../controls/textfields/CustomTextField';
+import NumberTextField from '../../../controls/textfields/NumberTextField';
+import Footer from './Footer';
 
 class EditCartItem extends Component {
   state = {
-    errors: {}
+    errors: {},
   };
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
 
     this.props.onChange(e);
@@ -25,8 +25,8 @@ class EditCartItem extends Component {
       this.setState({
         errors: {
           ...this.state.errors,
-          discount: "Enter the discount value lesser than cost price."
-        }
+          discount: 'Enter the discount value lesser than cost price.',
+        },
       });
       return;
     }
@@ -35,8 +35,8 @@ class EditCartItem extends Component {
       this.setState({
         errors: {
           ...this.state.errors,
-          quantity: "quantity should be greater than 0."
-        }
+          quantity: 'quantity should be greater than 0.',
+        },
       });
       return;
     }
@@ -62,7 +62,7 @@ class EditCartItem extends Component {
           value={item.id}
           label="Product Id"
           onChange={this.onChange}
-          disabled={true}
+          disabled
         />
 
         <CustomTextField
@@ -71,10 +71,10 @@ class EditCartItem extends Component {
           value={item.name}
           label="Name"
           onChange={this.onChange}
-          disabled={true}
+          disabled
         />
 
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex' }}>
           <NumberTextField
             error={!!errors.quantity}
             name="quantity"
@@ -90,7 +90,7 @@ class EditCartItem extends Component {
             value={item.price}
             label="Unit Price"
             onChange={this.onChange}
-            disabled={true}
+            disabled
           />
 
           <NumberTextField

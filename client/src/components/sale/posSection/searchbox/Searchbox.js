@@ -1,19 +1,19 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import Message from "../../../controls/Message";
-import api from "../../../../api";
-import { sleep } from "../../../../utils";
-import AutoSuggestWithApiDatasource from "../../../controls/autoSuggest/AutoSuggestWithApiDatasource";
-import { addItemToCart, updateCartItem } from "../../../../actions/cart";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import Message from '../../../controls/Message';
+import api from '../../../../api';
+import { sleep } from '../../../../utils';
+import AutoSuggestWithApiDatasource from '../../../controls/autoSuggest/AutoSuggestWithApiDatasource';
+import { addItemToCart, updateCartItem } from '../../../../actions/cart';
 
 class SearchBox extends Component {
   state = {
     showMessage: false,
-    searchText: "",
-    products: []
+    searchText: '',
+    products: [],
   };
 
-  onChange = async e => {
+  onChange = async (e) => {
     const searchText = e.target.value;
 
     if (!searchText || searchText.length < 3) {
@@ -47,12 +47,12 @@ class SearchBox extends Component {
     return i.id === searchText || i.name === searchText;
   };
 
-  onSelected = selectedItem => {
-    this.setState({ searchText: "" });
+  onSelected = (selectedItem) => {
+    this.setState({ searchText: '' });
     this.updateCart(selectedItem);
   };
 
-  updateCart = item => {
+  updateCart = (item) => {
     const { cart } = this.props;
     const existingItem = cart[item.id];
 
@@ -65,14 +65,14 @@ class SearchBox extends Component {
     }
   };
 
-  constructCartObjForUpdate = obj => {
+  constructCartObjForUpdate = (obj) => {
     const clone = {};
     Object.assign(clone, obj);
     clone.quantity += 1;
     return clone;
   };
 
-  constructCartObjForAddNew = obj => {
+  constructCartObjForAddNew = (obj) => {
     const clone = {};
     Object.assign(clone, obj);
 
@@ -89,8 +89,8 @@ class SearchBox extends Component {
     this.setState({ showMessage: false });
   };
 
-  handleKeyDown = event => {
-    if (event.key === "F11") {
+  handleKeyDown = (event) => {
+    if (event.key === 'F11') {
       console.log(event.key);
     }
   };
@@ -99,13 +99,13 @@ class SearchBox extends Component {
     const { products, searchText, showMessage } = this.state;
 
     return (
-      <Fragment>
+      <>
         <Message
           style={{ width: 430 }}
           title="Message"
           message="Something went wrong. Please try again later"
           show={showMessage}
-          isError={true}
+          isError
           onCloseClick={this.onMessageCloseClick}
         />
         <AutoSuggestWithApiDatasource
@@ -117,16 +117,15 @@ class SearchBox extends Component {
           onSelected={this.onSelected}
           datasource={products}
         />
-      </Fragment>
+      </>
     );
   }
 }
 
 const mapStateToProps = ({ cart }) => ({
-  cart: cart.items
+  cart: cart.items,
 });
 
-export default connect(
-  mapStateToProps,
-  { updateCartItem, addItemToCart }
-)(SearchBox);
+export default connect(mapStateToProps, { updateCartItem, addItemToCart })(
+  SearchBox,
+);

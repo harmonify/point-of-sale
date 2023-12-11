@@ -1,38 +1,38 @@
-import { createSelector } from "reselect";
+import { createSelector } from 'reselect';
 
 const getProductTypeSelector = () =>
   createSelector(
-    state => state.productType,
-    productType => {
+    (state) => state.productType,
+    (productType) => {
       if (productType.list) {
         return productType;
       }
       return {
         list: [],
         pagination: {},
-        meta: {}
+        meta: {},
       };
-    }
+    },
   );
 
 const getProductTypeDataForDropdownSelector = () =>
   createSelector(
-    state => state.productType,
-    productType => {
+    (state) => state.productType,
+    (productType) => {
       if (productType.list) {
         return productType;
       }
       return {
         list: [],
         pagination: {},
-        meta: {}
+        meta: {},
       };
-    }
+    },
   );
 
 const getCartItemsArraySelector = createSelector(
-  state => state.cart.items,
-  cart => {
+  (state) => state.cart.items,
+  (cart) => {
     const keys = Object.keys(cart);
     const cartArray = [];
     for (let i = 0; i < keys.length; i++) {
@@ -40,16 +40,16 @@ const getCartItemsArraySelector = createSelector(
     }
 
     return cartArray;
-  }
+  },
 );
 
 const getTotalSelector = createSelector(
-  state => state.cart,
-  cart => {
+  (state) => state.cart,
+  (cart) => {
     const keys = Object.keys(cart);
     const total = {
       quantity: 0,
-      price: 0
+      price: 0,
     };
 
     for (let i = 0; i < keys.length; i++) {
@@ -58,12 +58,12 @@ const getTotalSelector = createSelector(
     }
 
     return total;
-  }
+  },
 );
 
 export {
   getProductTypeSelector,
   getProductTypeDataForDropdownSelector,
   getCartItemsArraySelector,
-  getTotalSelector
+  getTotalSelector,
 };

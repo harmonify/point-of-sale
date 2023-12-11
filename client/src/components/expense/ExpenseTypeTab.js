@@ -1,60 +1,60 @@
-import React, { Component } from "react";
-import Button from "material-ui/Button";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Searchbox from "../controls/Searchbox";
-import api from "../../api";
-import ApiAutoFetchDatagrid from "../controls/datagrid/ApiAutoFetchDatagrid";
-import Message from "../controls/Message";
-import CircularLoader from "../controls/loader/CircularLoader";
-import YesNo from "../controls/dialog/YesNo";
+import React, { Component } from 'react';
+import Button from 'material-ui/Button';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Searchbox from '../controls/Searchbox';
+import api from '../../api';
+import ApiAutoFetchDatagrid from '../controls/datagrid/ApiAutoFetchDatagrid';
+import Message from '../controls/Message';
+import CircularLoader from '../controls/loader/CircularLoader';
+import YesNo from '../controls/dialog/YesNo';
 
-const styles = theme => ({
+const styles = (theme) => ({
   leftIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   iconSmall: {
-    fontSize: 20
+    fontSize: 20,
   },
   wrapper: {
     marginTop: 20,
-    position: "relative"
-  }
+    position: 'relative',
+  },
 });
 
 class ExpenseTypeTab extends Component {
-  expenseColumns = ["Expense Type ID", "Description"];
+  expenseColumns = ['Expense Type ID', 'Description'];
 
   state = {
     clearSearch: false,
-    serachQuery: "",
-    message: "",
+    serachQuery: '',
+    message: '',
     showMessage: false,
     isError: false,
     isLoading: false,
-    showConfirmDeleteDialog: false
+    showConfirmDeleteDialog: false,
   };
 
   onListClick = () => {
-    this.setState({ clearSearch: true, serachQuery: "", showMessage: false });
+    this.setState({ clearSearch: true, serachQuery: '', showMessage: false });
   };
 
-  onSearchSubmit = async id => {
+  onSearchSubmit = async (id) => {
     this.setState({ clearSearch: false, serachQuery: id });
   };
 
   onCreateNewClick = () => {
-    this.props.history.push("expensetypes/new");
+    this.props.history.push('expensetypes/new');
   };
 
-  onEdit = row => {
+  onEdit = (row) => {
     this.props.history.push(`expensetypes/edit/${row.id}`);
   };
 
-  onDelete = itemToDelete => {
+  onDelete = (itemToDelete) => {
     this.setState({ showConfirmDeleteDialog: true, itemToDelete });
   };
 
@@ -67,10 +67,10 @@ class ExpenseTypeTab extends Component {
       const res = await api.expenseType.delete(id);
 
       if (res.status === 200) {
-        this.showMessage("Deleted successfully.");
+        this.showMessage('Deleted successfully.');
       } else {
         throw new Error(
-          `Couldn't delete the record. The status code is ${res.status}`
+          `Couldn't delete the record. The status code is ${res.status}`,
         );
       }
     } catch (error) {
@@ -102,7 +102,7 @@ class ExpenseTypeTab extends Component {
       isError,
       message,
       isLoading: false,
-      showConfirmDeleteDialog: false
+      showConfirmDeleteDialog: false,
     });
   };
 
@@ -113,7 +113,7 @@ class ExpenseTypeTab extends Component {
       showMessage,
       isError,
       isLoading,
-      showConfirmDeleteDialog
+      showConfirmDeleteDialog,
     } = this.state;
     const { classes } = this.props;
 
@@ -154,7 +154,7 @@ class ExpenseTypeTab extends Component {
         </div>
 
         <Message
-          style={{ width: "98%" }}
+          style={{ width: '98%' }}
           title="Message"
           message={message}
           show={showMessage}
@@ -166,7 +166,7 @@ class ExpenseTypeTab extends Component {
         <div className={classes.wrapper}>
           <ApiAutoFetchDatagrid
             datasourcePromise={this.getApiPromise}
-            actions={["del", "edit"]}
+            actions={['del', 'edit']}
             onEdit={this.onEdit}
             onDelete={this.onDelete}
             headers={this.expenseColumns}

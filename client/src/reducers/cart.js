@@ -1,4 +1,4 @@
-import currency from "currency.js";
+import currency from 'currency.js';
 import {
   ADD_ITEM_TO_CART,
   REMOVE_ITEM_FROM_CART,
@@ -6,27 +6,27 @@ import {
   EMPTY_CART,
   UPDATE_DISCOUNT_ON_TOTAL,
   UPDATE_DISCOUNT_ON_ITEMS,
-  UPDATE_TAX
-} from "../types";
+  UPDATE_TAX,
+} from '../types';
 
 const initialState = {
   items: {},
   summary: {
     noOfItems: 0,
     noOfInividualItems: 0,
-    tax: "0",
-    taxAmount: "0.00",
-    discountOnTotal: "0.00",
-    discountOnItems: "0.00",
-    total: "0.00", // With discount on items
-    netTotal: "0.00" // Net - (tax + discount on total)
-  }
+    tax: '0',
+    taxAmount: '0.00',
+    discountOnTotal: '0.00',
+    discountOnItems: '0.00',
+    total: '0.00', // With discount on items
+    netTotal: '0.00', // Net - (tax + discount on total)
+  },
 };
 
-const cloneObj = state => {
+const cloneObj = (state) => {
   const clone = {
     items: {},
-    summary: {}
+    summary: {},
   };
 
   Object.assign(clone.items, state.items);
@@ -51,7 +51,9 @@ const setCartItem = (state, item) => {
   newItem.sellingPrice = currency(item.price).subtract(newItem.discount).value;
 
   // This is the total price on each item in cart gridview.
-  newItem.totalPrice = currency(newItem.sellingPrice).multiply(item.quantity).value;
+  newItem.totalPrice = currency(newItem.sellingPrice).multiply(
+    item.quantity,
+  ).value;
 };
 
 const updateCartItem = (oldState, item) => {
@@ -75,15 +77,15 @@ const updateCartItem = (oldState, item) => {
     .subtract(oldItem.totalPrice).value;
 
   const totalAfterDiscountOnTotal = currency(summary.total).subtract(
-    summary.discountOnTotal
+    summary.discountOnTotal,
   );
 
   summary.taxAmount = totalAfterDiscountOnTotal.multiply(
-    summary.tax * 0.01
+    summary.tax * 0.01,
   ).value;
 
   summary.netTotal = totalAfterDiscountOnTotal.subtract(
-    summary.taxAmount
+    summary.taxAmount,
   ).value;
 
   return state;
@@ -104,22 +106,22 @@ const addItemToCart = (oldState, item) => {
   summary.noOfInividualItems += newItem.quantity;
 
   summary.discountOnItems = currency(summary.discountOnItems).add(
-    newItem.discountTotal
+    newItem.discountTotal,
   ).value;
 
   // This is the total price after applying discount on items.
   summary.total = currency(summary.total).add(newItem.totalPrice).value;
 
   const totalAfterDiscountOnTotal = currency(summary.total).subtract(
-    summary.discountOnTotal
+    summary.discountOnTotal,
   );
 
   summary.taxAmount = totalAfterDiscountOnTotal.multiply(
-    summary.tax * 0.01
+    summary.tax * 0.01,
   ).value;
 
   summary.netTotal = totalAfterDiscountOnTotal.subtract(
-    summary.taxAmount
+    summary.taxAmount,
   ).value;
 
   return state;
@@ -140,20 +142,20 @@ const removeItemFromCart = (oldState, item) => {
   summary.noOfItems--;
   summary.noOfInividualItems -= item.quantity;
   summary.discountOnItems = currency(summary.discountOnItems).subtract(
-    item.discountTotal
+    item.discountTotal,
   ).value;
   summary.total = currency(summary.total).subtract(item.totalPrice).value;
 
   const totalAfterDiscountOnTotal = currency(summary.total).subtract(
-    summary.discountOnTotal
+    summary.discountOnTotal,
   );
 
   summary.taxAmount = totalAfterDiscountOnTotal.multiply(
-    summary.tax * 0.01
+    summary.tax * 0.01,
   ).value;
 
   summary.netTotal = totalAfterDiscountOnTotal.subtract(
-    summary.taxAmount
+    summary.taxAmount,
   ).value;
 
   return state;
@@ -180,7 +182,7 @@ const updateDiscountOnItems = (oldState, discount) => {
   const oldDiscountOnItems = summary.discountOnItems;
 
   summary.discountOnItems = currency(discount).multiply(
-    summary.noOfInividualItems
+    summary.noOfInividualItems,
   ).value;
 
   summary.total = currency(summary.total)
@@ -188,15 +190,15 @@ const updateDiscountOnItems = (oldState, discount) => {
     .subtract(summary.discountOnItems).value;
 
   const totalAfterDiscountOnTotal = currency(summary.total).subtract(
-    summary.discountOnTotal
+    summary.discountOnTotal,
   );
 
   summary.taxAmount = totalAfterDiscountOnTotal.multiply(
-    summary.tax * 0.01
+    summary.tax * 0.01,
   ).value;
 
   summary.netTotal = totalAfterDiscountOnTotal.subtract(
-    summary.taxAmount
+    summary.taxAmount,
   ).value;
 
   return state;
@@ -210,15 +212,15 @@ const updateDiscountOnTotal = (oldState, discount) => {
   summary.discountOnTotal = currency(discount).value;
 
   const totalAfterDiscountOnTotal = currency(summary.total).subtract(
-    summary.discountOnTotal
+    summary.discountOnTotal,
   );
 
   summary.taxAmount = totalAfterDiscountOnTotal.multiply(
-    summary.tax * 0.01
+    summary.tax * 0.01,
   ).value;
 
   summary.netTotal = totalAfterDiscountOnTotal.subtract(
-    summary.taxAmount
+    summary.taxAmount,
   ).value;
 
   return state;
@@ -230,17 +232,17 @@ const updateTax = (oldState, tax) => {
   const { summary } = state;
 
   const totalAfterDiscountOnTotal = currency(summary.total).subtract(
-    summary.discountOnTotal
+    summary.discountOnTotal,
   );
 
   summary.tax = tax;
 
   summary.taxAmount = totalAfterDiscountOnTotal.multiply(
-    summary.tax * 0.01
+    summary.tax * 0.01,
   ).value;
 
   summary.netTotal = totalAfterDiscountOnTotal.subtract(
-    summary.taxAmount
+    summary.taxAmount,
   ).value;
 
   return state;

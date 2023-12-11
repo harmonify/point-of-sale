@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Hidden from "material-ui/Hidden";
-import Drawer from "material-ui/Drawer";
-import ShoppingCart from "material-ui-icons/ShoppingCart";
-import Divider from "material-ui/Divider";
-import Menus from "./Menus";
+import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Hidden from 'material-ui/Hidden';
+import Drawer from 'material-ui/Drawer';
+import ShoppingCart from 'material-ui-icons/ShoppingCart';
+import Divider from 'material-ui/Divider';
+import Menus from './Menus';
 
 const drawerWidth = 200;
 
@@ -13,30 +13,30 @@ const drawerWidth = 200;
 const styles = theme => ({
   drawerPaper: {
     width: drawerWidth,
-    [theme.breakpoints.up("md")]: {
-      position: "relative"
+    [theme.breakpoints.up('md')]: {
+      position: 'relative',
     },
-    height: "calc(100vh - 1px)",
-    borderBottom: "1px solid #e0e0e0"
+    height: 'calc(100vh - 1px)',
+    borderBottom: '1px solid #e0e0e0',
   },
   drawerPaper2: {
     width: drawerWidth,
-    height: "calc(100vh - 1px)",
-    borderBottom: "1px solid #e0e0e0"
+    height: 'calc(100vh - 1px)',
+    borderBottom: '1px solid #e0e0e0',
   },
   logo: {
-    height: "64px",
-    background: "#3f51b5"
+    height: '64px',
+    background: '#3f51b5',
   },
   logoContainer: {
-    padding: "18px 5px 5px 15px",
-    display: "flex",
-    color: "white",
-    "&:only-child > span": {
-      padding: "4px 0px 0px 10px",
-      fontWeight: "lighter"
-    }
-  }
+    padding: '18px 5px 5px 15px',
+    display: 'flex',
+    color: 'white',
+    '&:only-child > span': {
+      padding: '4px 0px 0px 10px',
+      fontWeight: 'lighter',
+    },
+  },
 });
 
 class Sidebar extends Component {
@@ -60,7 +60,7 @@ class Sidebar extends Component {
   renderPermamentDrawer = () => {
     const { classes } = this.props;
 
-    if (this.props.history.location.pathname === "/sale") {
+    if (this.props.history.location.pathname === '/sale') {
       return null;
     }
 
@@ -69,7 +69,7 @@ class Sidebar extends Component {
         variant="permanent"
         open
         classes={{
-          paper: classes.drawerPaper
+          paper: classes.drawerPaper,
         }}
       >
         {this.renderMenus()}
@@ -83,14 +83,14 @@ class Sidebar extends Component {
     return (
       <Drawer
         variant="temporary"
-        anchor={theme.direction === "rtl" ? "right" : "left"}
+        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
         open={mobileOpen}
         onClose={handleDrawerToggle}
         classes={{
-          paper: classes.drawerPaper
+          paper: classes.drawerPaper,
         }}
         ModalProps={{
-          keepMounted: true // Better open performance on mobile.
+          keepMounted: true, // Better open performance on mobile.
         }}
       >
         {this.renderMenus()}
@@ -101,7 +101,7 @@ class Sidebar extends Component {
   renderSlidingDrawerForSale = () => {
     const { classes, theme, mobileOpen, handleDrawerToggle } = this.props;
 
-    const isSale = this.props.history.location.pathname === "/sale";
+    const isSale = this.props.history.location.pathname === '/sale';
 
     if (isSale === false) {
       return null;
@@ -110,14 +110,14 @@ class Sidebar extends Component {
     return (
       <Drawer
         variant="temporary"
-        anchor={theme.direction === "rtl" ? "right" : "left"}
+        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
         open={mobileOpen}
         onClose={handleDrawerToggle}
         classes={{
-          paper: classes.drawerPaper2
+          paper: classes.drawerPaper2,
         }}
         ModalProps={{
-          keepMounted: true // Better open performance on mobile.
+          keepMounted: true, // Better open performance on mobile.
         }}
       >
         {this.renderMenus()}
@@ -127,7 +127,7 @@ class Sidebar extends Component {
 
   render() {
     return (
-      <Fragment>
+      <>
         {/* MEDIUM SCREENS */}
         <Hidden mdUp>{this.renderSlidingDrawer()}</Hidden>
 
@@ -138,13 +138,13 @@ class Sidebar extends Component {
         <Hidden smDown implementation="css">
           {this.renderPermamentDrawer()}
         </Hidden>
-      </Fragment>
+      </>
     );
   }
 }
 
 Sidebar.defaultProps = {
-  mobileOpen: false
+  mobileOpen: false,
 };
 
 const component = withStyles(styles, { withTheme: true })(Sidebar);

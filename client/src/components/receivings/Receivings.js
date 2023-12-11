@@ -1,70 +1,70 @@
-import React, { Component } from "react";
-import * as moment from "moment";
-import Button from "material-ui/Button";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Container from "../controls/Container";
-import Searchbox from "../controls/Searchbox";
-import Message from "../controls/Message";
-import ApiAutoFetchDatagrid from "../controls/datagrid/ApiAutoFetchDatagrid";
-import api from "../../api";
-import CircularLoader from "../controls/loader/CircularLoader";
-import YesNo from "../controls/dialog/YesNo";
+import React, { Component } from 'react';
+import * as moment from 'moment';
+import Button from 'material-ui/Button';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Container from '../controls/Container';
+import Searchbox from '../controls/Searchbox';
+import Message from '../controls/Message';
+import ApiAutoFetchDatagrid from '../controls/datagrid/ApiAutoFetchDatagrid';
+import api from '../../api';
+import CircularLoader from '../controls/loader/CircularLoader';
+import YesNo from '../controls/dialog/YesNo';
 
-const styles = theme => ({
+const styles = (theme) => ({
   leftIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   iconSmall: {
-    fontSize: 20
+    fontSize: 20,
   },
   wrapper: {
-    position: "relative",
-    margin: "20px 5px 5px 5px"
-  }
+    position: 'relative',
+    margin: '20px 5px 5px 5px',
+  },
 });
 
 class Receivings extends Component {
   receivingsColumns = [
-    "Order Id",
-    "Product",
-    "Vendor",
-    "quantity",
-    "Price",
-    "Paid",
-    "Date"
+    'Order Id',
+    'Product',
+    'Vendor',
+    'quantity',
+    'Price',
+    'Paid',
+    'Date',
   ];
 
   state = {
     clearSearch: false,
-    serachQuery: "",
-    message: "",
+    serachQuery: '',
+    message: '',
     showMessage: false,
     isError: false,
     isLoading: false,
-    showConfirmDeleteDialog: false
+    showConfirmDeleteDialog: false,
   };
 
   onListClick = () => {
-    this.setState({ clearSearch: true, serachQuery: "", showMessage: false });
+    this.setState({ clearSearch: true, serachQuery: '', showMessage: false });
   };
 
-  onSearchSubmit = async id => {
+  onSearchSubmit = async (id) => {
     this.setState({ clearSearch: false, serachQuery: id });
   };
 
   onCreateNewClick = () => {
-    this.props.history.push("receivings/new");
+    this.props.history.push('receivings/new');
   };
 
-  onEdit = row => {
+  onEdit = (row) => {
     this.props.history.push(`receivings/edit/${row.id}`);
   };
 
-  onDelete = itemToDelete => {
+  onDelete = (itemToDelete) => {
     this.setState({ showConfirmDeleteDialog: true, itemToDelete });
   };
 
@@ -77,10 +77,10 @@ class Receivings extends Component {
       const res = await api.receiving.delete(id);
 
       if (res.status === 200) {
-        this.showMessage("Deleted successfully.");
+        this.showMessage('Deleted successfully.');
       } else {
         throw new Error(
-          `Couldn't delete the record. The status code is ${res.status}`
+          `Couldn't delete the record. The status code is ${res.status}`,
         );
       }
     } catch (error) {
@@ -94,7 +94,7 @@ class Receivings extends Component {
       isError,
       message,
       isLoading: false,
-      showConfirmDeleteDialog: false
+      showConfirmDeleteDialog: false,
     });
   };
 
@@ -124,7 +124,7 @@ class Receivings extends Component {
       showMessage,
       isError,
       isLoading,
-      showConfirmDeleteDialog
+      showConfirmDeleteDialog,
     } = this.state;
 
     return (
@@ -167,7 +167,7 @@ class Receivings extends Component {
         </div>
 
         <Message
-          style={{ width: "98%" }}
+          style={{ width: '98%' }}
           title="Message"
           message={message}
           show={showMessage}
@@ -178,12 +178,12 @@ class Receivings extends Component {
         <div className={classes.wrapper}>
           <ApiAutoFetchDatagrid
             datasourcePromise={this.getApiPromise}
-            actions={["del", "edit", "sel"]}
+            actions={['del', 'edit', 'sel']}
             onEdit={this.onEdit}
             onDelete={this.onDelete}
             headers={this.receivingsColumns}
             transformers={{
-              date: value => moment(value).format("DD-MM-YYYY")
+              date: (value) => moment(value).format('DD-MM-YYYY'),
             }}
           />
         </div>

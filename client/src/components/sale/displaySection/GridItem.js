@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Paper, Avatar } from "material-ui";
-import { withStyles } from "material-ui/styles";
+import React, { Component } from 'react';
+import { Paper, Avatar } from 'material-ui';
+import { withStyles } from 'material-ui/styles';
 
 const styles = () => ({
   purpleAvatar: {
-    color: "#fff",
-    backgroundColor: "#3f50b5"
-  }
+    color: '#fff',
+    backgroundColor: '#3f50b5',
+  },
 });
 
 class GridItem extends Component {
@@ -20,22 +20,22 @@ class GridItem extends Component {
         style={{
           width: 150,
           height: 150,
-          overflow: "auto",
-          display: "inline-block"
+          overflow: 'auto',
+          display: 'inline-block',
         }}
       >
         <div style={{ paddingTop: 30 }}>
-          <Avatar style={{ margin: "auto" }} className={classes.purpleAvatar}>
+          <Avatar style={{ margin: 'auto' }} className={classes.purpleAvatar}>
             BR
           </Avatar>
         </div>
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: 'center' }}>
           <p
             style={{
               width: 130,
-              overflowWrap: "break-word",
+              overflowWrap: 'break-word',
               padding: 5,
-              fontSize: "13px"
+              fontSize: '13px',
             }}
           >
             Britania Tiger

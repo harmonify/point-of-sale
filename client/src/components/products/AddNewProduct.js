@@ -1,36 +1,36 @@
-import React, { Component } from "react";
-import * as equal from "fast-deep-equal";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Container from "../controls/Container";
-import Form from "../controls/Form";
-import CustomTextField from "../controls/textfields/CustomTextField";
-import Dropdown from "../controls/dropdown/Dropdown";
-import CircularLoader from "../controls/loader/CircularLoader";
-import api from "../../api";
-import NumberTextField from "../controls/textfields/NumberTextField";
-import { isValueExists } from "../../utils";
-import Message from "../controls/Message";
-import Prompt from "../controls/dialog/Prompt";
+import React, { Component } from 'react';
+import * as equal from 'fast-deep-equal';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Container from '../controls/Container';
+import Form from '../controls/Form';
+import CustomTextField from '../controls/textfields/CustomTextField';
+import Dropdown from '../controls/dropdown/Dropdown';
+import CircularLoader from '../controls/loader/CircularLoader';
+import api from '../../api';
+import NumberTextField from '../controls/textfields/NumberTextField';
+import { isValueExists } from '../../utils';
+import Message from '../controls/Message';
+import Prompt from '../controls/dialog/Prompt';
 
 // eslint-disable-next-line
 const styles = theme => ({
   form: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   wrapper: {
-    position: "relative"
-  }
+    position: 'relative',
+  },
 });
 
 class AddNewProduct extends Component {
   initialData = {
-    id: "",
-    name: "",
-    description: "",
-    costPrice: "",
-    sellingPrice: "",
-    productTypeId: ""
+    id: '',
+    name: '',
+    description: '',
+    costPrice: '',
+    sellingPrice: '',
+    productTypeId: '',
   };
 
   state = {
@@ -40,13 +40,13 @@ class AddNewProduct extends Component {
     productTypeIds: [],
     showMessage: false,
     isEdit: false,
-    showMessageDialog: false
+    showMessageDialog: false,
   };
 
   constructor(props) {
     super(props);
     window.onbeforeunload = () => {
-      sessionStorage.setItem("form", JSON.stringify(this.state.data));
+      sessionStorage.setItem('form', JSON.stringify(this.state.data));
     };
   }
 
@@ -57,9 +57,9 @@ class AddNewProduct extends Component {
       const stateToUpdate = {};
 
       const res = await api.productType.fetchAll();
-      const productTypeIds = res.data.map(d => ({
+      const productTypeIds = res.data.map((d) => ({
         value: d.id,
-        label: d.id
+        label: d.id,
       }));
 
       stateToUpdate.productTypeIds = productTypeIds;
@@ -80,19 +80,19 @@ class AddNewProduct extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value },
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
   };
 
-  onProductTypeDropdownChange = value => {
-    const productTypeId = value === null ? "" : value;
+  onProductTypeDropdownChange = (value) => {
+    const productTypeId = value === null ? '' : value;
 
     this.setState({
       data: { ...this.state.data, productTypeId },
-      errors: { ...this.state.errors, productTypeId: "" }
+      errors: { ...this.state.errors, productTypeId: '' },
     });
   };
 
@@ -107,7 +107,7 @@ class AddNewProduct extends Component {
     this.props.history.goBack();
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
     const errors = isValueExists(this.state.data);
@@ -131,20 +131,20 @@ class AddNewProduct extends Component {
     }
   };
 
-  createNew = async data => {
+  createNew = async (data) => {
     const res = await api.product.createNew(data);
 
     if (res.status === 200) {
-      this.showMessage("Saved successfully");
+      this.showMessage('Saved successfully');
       this.clearForm();
     } else {
       throw new Error(
-        `Unable to create the record. The status code is ${res.status}`
+        `Unable to create the record. The status code is ${res.status}`,
       );
     }
   };
 
-  update = async data => {
+  update = async (data) => {
     const res = await api.product.update(this.props.match.params.id, data);
 
     if (res.status === 200) {
@@ -157,7 +157,7 @@ class AddNewProduct extends Component {
   clearForm = (canShowMessageDialog = false) => {
     this.setState({
       data: this.initialData,
-      showMessageDialog: canShowMessageDialog
+      showMessageDialog: canShowMessageDialog,
     });
 
     if (this.idRef) {
@@ -168,25 +168,25 @@ class AddNewProduct extends Component {
   onMessageCloseClick = () => {
     this.setState({
       showMessage: false,
-      message: "",
-      isError: false
+      message: '',
+      isError: false,
     });
   };
 
-  showMessage = message => {
+  showMessage = (message) => {
     this.setState({
       showMessage: true,
       message,
-      isError: false
+      isError: false,
     });
   };
 
-  showError = error => {
+  showError = (error) => {
     this.setState({
       showMessage: true,
       message: error.message,
       isError: true,
-      isLoading: false
+      isLoading: false,
     });
   };
 
@@ -206,11 +206,11 @@ class AddNewProduct extends Component {
       isError,
       message,
       isEdit,
-      showMessageDialog
+      showMessageDialog,
     } = this.state;
 
     return (
-      <Container title={isEdit ? "Edit Product" : "New Product"}>
+      <Container title={isEdit ? 'Edit Product' : 'New Product'}>
         <Prompt
           message="The product you entered was saved successfully."
           open={showMessageDialog}
@@ -233,7 +233,7 @@ class AddNewProduct extends Component {
           className={classes.form}
         >
           <CustomTextField
-            inputRef={input => {
+            inputRef={(input) => {
               this.idRef = input;
             }}
             error={!!errors.id}

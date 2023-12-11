@@ -1,36 +1,36 @@
-import React, { Component } from "react";
-import * as equal from "fast-deep-equal";
-import { withRouter } from "react-router";
-import { withStyles } from "material-ui/styles";
-import Container from "../controls/Container";
-import Form from "../controls/Form";
-import Dropdown from "../controls/dropdown/Dropdown";
-import CircularLoader from "../controls/loader/CircularLoader";
-import api from "../../api";
-import NumberTextField from "../controls/textfields/NumberTextField";
-import { isValueExists } from "../../utils";
-import Message from "../controls/Message";
-import Prompt from "../controls/dialog/Prompt";
-import CustomDatePicker from "../controls/pickers/CustomDatePicker";
+import React, { Component } from 'react';
+import * as equal from 'fast-deep-equal';
+import { withRouter } from 'react-router';
+import { withStyles } from 'material-ui/styles';
+import Container from '../controls/Container';
+import Form from '../controls/Form';
+import Dropdown from '../controls/dropdown/Dropdown';
+import CircularLoader from '../controls/loader/CircularLoader';
+import api from '../../api';
+import NumberTextField from '../controls/textfields/NumberTextField';
+import { isValueExists } from '../../utils';
+import Message from '../controls/Message';
+import Prompt from '../controls/dialog/Prompt';
+import CustomDatePicker from '../controls/pickers/CustomDatePicker';
 
 // eslint-disable-next-line
 const styles = theme => ({
   form: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   wrapper: {
-    position: "relative"
-  }
+    position: 'relative',
+  },
 });
 
 class AddNew extends Component {
   initialData = {
-    productId: "pen",
-    vendorId: "mrlabs",
-    quantity: "1",
-    price: "100",
-    paid: "100",
-    date: new Date()
+    productId: 'pen',
+    vendorId: 'mrlabs',
+    quantity: '1',
+    price: '100',
+    paid: '100',
+    date: new Date(),
   };
 
   state = {
@@ -43,7 +43,7 @@ class AddNew extends Component {
     message: false,
     showMessage: false,
     isError: false,
-    isEdit: false
+    isEdit: false,
   };
 
   async componentDidMount() {
@@ -53,15 +53,15 @@ class AddNew extends Component {
       const stateToUpdate = {};
 
       const productPromise = await api.product.fetchAll();
-      const productIds = productPromise.data.map(d => ({
+      const productIds = productPromise.data.map((d) => ({
         value: d.id,
-        label: d.id
+        label: d.id,
       }));
 
       const vendorPromise = await api.vendor.fetchAll();
-      const vendorIds = vendorPromise.data.map(d => ({
+      const vendorIds = vendorPromise.data.map((d) => ({
         value: d.id,
-        label: d.id
+        label: d.id,
       }));
 
       stateToUpdate.productIds = productIds;
@@ -83,28 +83,28 @@ class AddNew extends Component {
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value },
-      errors: { ...this.state.errors, [e.target.name]: "" }
+      errors: { ...this.state.errors, [e.target.name]: '' },
     });
   };
 
-  onProductIdDropdownChange = value => {
-    const productId = value === null ? "" : value;
+  onProductIdDropdownChange = (value) => {
+    const productId = value === null ? '' : value;
 
     this.setState({
       data: { ...this.state.data, productId },
-      errors: { ...this.state.errors, productId: "" }
+      errors: { ...this.state.errors, productId: '' },
     });
   };
 
-  onVendorIdDropdownChange = value => {
-    const vendorId = value === null ? "" : value;
+  onVendorIdDropdownChange = (value) => {
+    const vendorId = value === null ? '' : value;
 
     this.setState({
       data: { ...this.state.data, vendorId },
-      errors: { ...this.state.errors, vendorId: "" }
+      errors: { ...this.state.errors, vendorId: '' },
     });
   };
 
@@ -117,7 +117,7 @@ class AddNew extends Component {
     this.props.history.goBack();
   };
 
-  onSubmit = async e => {
+  onSubmit = async (e) => {
     e.preventDefault();
 
     const errors = isValueExists(this.state.data);
@@ -142,20 +142,20 @@ class AddNew extends Component {
     }
   };
 
-  createNew = async data => {
+  createNew = async (data) => {
     const res = await api.receiving.createNew(data);
 
     if (res.status === 200) {
-      this.showMessage("Saved successfully");
+      this.showMessage('Saved successfully');
       this.clearForm();
     } else {
       throw new Error(
-        `Unable to create the record. The status code is ${res.status}`
+        `Unable to create the record. The status code is ${res.status}`,
       );
     }
   };
 
-  update = async data => {
+  update = async (data) => {
     const res = await api.receiving.update(this.props.match.params.id, data);
 
     if (res.status === 200) {
@@ -168,7 +168,7 @@ class AddNew extends Component {
   clearForm = (canShowMessageDialog = false) => {
     this.setState({
       data: this.initialData,
-      showMessageDialog: canShowMessageDialog
+      showMessageDialog: canShowMessageDialog,
     });
 
     if (this.idRef) {
@@ -179,25 +179,25 @@ class AddNew extends Component {
   onMessageCloseClick = () => {
     this.setState({
       showMessage: false,
-      message: "",
-      isError: false
+      message: '',
+      isError: false,
     });
   };
 
-  showMessage = message => {
+  showMessage = (message) => {
     this.setState({
       showMessage: true,
       message,
-      isError: false
+      isError: false,
     });
   };
 
-  showError = error => {
+  showError = (error) => {
     this.setState({
       showMessage: true,
       message: error.message,
       isError: true,
-      isLoading: false
+      isLoading: false,
     });
   };
 
@@ -218,11 +218,11 @@ class AddNew extends Component {
       isError,
       message,
       isEdit,
-      showMessageDialog
+      showMessageDialog,
     } = this.state;
 
     return (
-      <Container title={isEdit ? "Edit Receiving" : "Add new receiving"}>
+      <Container title={isEdit ? 'Edit Receiving' : 'Add new receiving'}>
         <Prompt
           message="The item you entered was saved successfully."
           open={showMessageDialog}
@@ -292,7 +292,7 @@ class AddNew extends Component {
             name="date"
             value={data.date}
             label="Received At"
-            showTodayButton={true}
+            showTodayButton
             handleDateChange={this.onChange}
           />
         </Form>

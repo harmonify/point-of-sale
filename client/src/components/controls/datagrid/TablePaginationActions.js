@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { withStyles } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import FirstPageIcon from "material-ui-icons/FirstPage";
-import KeyboardArrowLeft from "material-ui-icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "material-ui-icons/KeyboardArrowRight";
-import LastPageIcon from "material-ui-icons/LastPage";
+import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
+import IconButton from 'material-ui/IconButton';
+import FirstPageIcon from 'material-ui-icons/FirstPage';
+import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
+import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
+import LastPageIcon from 'material-ui-icons/LastPage';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexShrink: 0,
     color: theme.palette.text.secondary,
-    marginLeft: theme.spacing.unit * 2.5
-  }
+    marginLeft: theme.spacing.unit * 2.5,
+  },
 });
 
 class TablePaginationActions extends Component {
@@ -24,7 +24,7 @@ class TablePaginationActions extends Component {
       onFirst,
       onPrev,
       onLast,
-      onNext
+      onNext,
     } = this.props;
 
     return (
