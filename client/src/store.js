@@ -2,6 +2,7 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 import reducers from './reducers';
+import { isProd } from './utils';
 
 const persistedState = sessionStorage.getItem('appstate')
   ? JSON.parse(sessionStorage.getItem('appstate'))
@@ -12,7 +13,7 @@ const configureStore = () => {
 
   middlewares.push(thunk);
 
-  if (process.env.REACT_APP_ACC_BOOK !== 'production') {
+  if (!isProd()) {
     middlewares.push(createLogger());
   }
 

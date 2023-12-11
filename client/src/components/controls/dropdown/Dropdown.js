@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import 'react-select/dist/react-select.css';
 import CustomTextField from '../textfields/CustomTextField';
 import SelectWrapped from './SelectWrapped';

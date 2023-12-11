@@ -1,8 +1,8 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import { TableCell } from 'material-ui/Table';
+import { withStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { TableCell } from '@material-ui/core/Table';
 import TablePaginationActions from './TablePaginationActions';
 
 export const styles = (theme) => ({

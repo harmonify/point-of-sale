@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui';
-import Paper from 'material-ui/Paper';
+import { withStyles } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import classNames from 'classnames';
 
 const styles = (theme) => ({

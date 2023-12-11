@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import { InputAdornment } from 'material-ui/Input';
-import IconButton from 'material-ui/IconButton';
-import Search from 'material-ui-icons/Search';
+import { withStyles } from '@material-ui/core/styles';
+import { InputAdornment } from '@material-ui/core/Input';
+import IconButton from '@material-ui/core/IconButton';
+import Search from '@material-ui/icons/Search';
 import CustomTextField from './textfields/CustomTextField';
 
 // eslint-disable-next-line

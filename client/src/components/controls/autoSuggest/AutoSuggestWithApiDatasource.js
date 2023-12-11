@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import List, { ListItem, ListItemText } from 'material-ui/List';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import List, { ListItem, ListItemText } from '@material-ui/core/List';
 import CustomTextField from '../textfields/CustomTextField';
 
 // eslint-disable-next-line

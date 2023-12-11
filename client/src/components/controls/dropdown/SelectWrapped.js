@@ -1,10 +1,10 @@
 import React from 'react';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ClearIcon from '@material-ui/icons/Clear';
-import Chip from 'material-ui/Chip';
+import Chip from '@material-ui/core/Chip';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import Option from './Option';

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import classNames from 'classnames';
-import { withStyles } from 'material-ui/styles';
-import TextField from 'material-ui/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 // eslint-disable-next-line
 const styles = theme => ({

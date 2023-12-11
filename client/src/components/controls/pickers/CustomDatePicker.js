@@ -1,11 +1,11 @@
 import React from 'react';
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-import DatePicker from 'material-ui-pickers/DatePicker';
-import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
-import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
-import DateRange from 'material-ui-icons/DateRange';
-import { withStyles } from 'material-ui';
+import MomentUtils from '@material-ui/core-pickers/utils/moment-utils';
+import MuiPickersUtilsProvider from '@material-ui/core-pickers/utils/MuiPickersUtilsProvider';
+import DatePicker from '@material-ui/core-pickers/DatePicker';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import DateRange from '@material-ui/icons/DateRange';
+import { withStyles } from '@material-ui/core';
 
 // eslint-disable-next-line
 const styles = theme => ({

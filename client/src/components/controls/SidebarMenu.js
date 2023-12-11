@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { withStyles } from 'material-ui/styles';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import { withStyles } from '@material-ui/core/styles';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/List';
 
 // eslint-disable-next-line
 const styles = theme => ({

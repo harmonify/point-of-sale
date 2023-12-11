@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableBody, TableRow } from 'material-ui';
+import { TableBody, TableRow } from '@material-ui/core';
 import CustomTableCell from '../controls/CustomTableCell';
 import LightButton from '../controls/LightButton';
 import DeleteButton from '../controls/DeleteButton';

@@ -1,9 +1,14 @@
 import React from 'react';
-import { withStyles } from 'material-ui';
+import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import axios from 'axios';
 import * as moment from 'moment';
+
+export const isProd = () => {
+  const env = process.env.NODE_ENV;
+  return typeof env === 'string' ? env.includes('prod') : true;
+};
 
 const styled = (Component) => (style, options) => {
   function StyledComponent(props) {

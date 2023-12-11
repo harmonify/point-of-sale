@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import CustomTabs from '../controls/Tabs';
 import TabContainer from '../controls/TabContainer';
 import ProductTab from './ProductTab';

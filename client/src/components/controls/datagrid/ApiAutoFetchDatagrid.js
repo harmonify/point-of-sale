@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import axios from 'axios';
-import { withStyles } from 'material-ui/styles';
-import { LinearProgress } from 'material-ui/Progress';
-import IconButton from 'material-ui/IconButton';
-import DeleteIcon from 'material-ui-icons/Delete';
-import EditIcon from 'material-ui-icons/Edit';
-import Button from 'material-ui/Button';
+import { withStyles } from '@material-ui/core/styles';
+import { LinearProgress } from '@material-ui/core/Progress';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import Button from '@material-ui/core/Button';
 import Table, {
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   TableFooter,
-} from 'material-ui/Table';
-import Paper from 'material-ui/Paper';
+} from '@material-ui/core/Table';
+import Paper from '@material-ui/core/Paper';
 import CustomTablePagination from './CustomTablePagination';
 import CustomTableCell from './CustomTableCell';
 import Overlay from '../Overlay';

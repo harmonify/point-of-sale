@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Message from '../../../controls/Message';
-import api from '../../../../api';
+import api from '../../../../services/api';
 import { sleep } from '../../../../utils';
 import AutoSuggestWithApiDatasource from '../../../controls/autoSuggest/AutoSuggestWithApiDatasource';
 import { addItemToCart, updateCartItem } from '../../../../actions/cart';

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
-import { CircularProgress } from 'material-ui/Progress';
-import Button from 'material-ui/Button';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import { CircularProgress } from '@material-ui/core/Progress';
+import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import ErrorMessage from '../controls/messages/ErrorMessage';

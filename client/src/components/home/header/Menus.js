@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from 'material-ui/styles';
-import AccountCircle from 'material-ui-icons/AccountCircle';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import IconButton from 'material-ui/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Menu, { MenuItem } from '@material-ui/core/Menu';
+import IconButton from '@material-ui/core/IconButton';
 import { logout } from '../../../actions/auth';
 
 // eslint-disable-next-line

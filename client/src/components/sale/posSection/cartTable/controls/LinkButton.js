@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { withStyles } from 'material-ui';
+import { withStyles } from '@material-ui/core';
 
 const styles = () => ({
   root: {

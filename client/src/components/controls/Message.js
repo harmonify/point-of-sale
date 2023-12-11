@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Clear from 'material-ui-icons/Clear';
+import { withStyles } from '@material-ui/core/styles';
+import { Clear } from '@material-ui/icons';
 import classNames from 'classnames';
 
 const styles = (theme) => ({
@@ -94,19 +94,17 @@ class Message extends Component {
     }
 
     return (
-      <>
-        {show === true && (
-          <div className={root} style={style}>
-            <div className={messageContainerClass}>
-              {onCloseClick && (
-                <Clear className={errorClose} onClick={onCloseClick} />
-              )}
-              {title && <div className={headerClass}> {title} </div>}
-              <span>{message}</span>
-            </div>
+      show === true && (
+        <div className={root} style={style}>
+          <div className={messageContainerClass}>
+            {onCloseClick && (
+              <Clear className={errorClose} onClick={onCloseClick} />
+            )}
+            {title && <div className={headerClass}> {title} </div>}
+            <span>{message}</span>
           </div>
-        )}
-      </>
+        </div>
+      )
     );
   }
 }

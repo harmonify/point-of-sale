@@ -5,7 +5,7 @@ import Container from '../controls/Container';
 import Form from '../controls/Form';
 import CustomTextField from '../controls/textfields/CustomTextField';
 import { isValueExists } from '../../utils';
-import api from '../../api';
+import api from '../../services/api';
 import Message from '../controls/Message';
 import Prompt from '../controls/dialog/Prompt';
 import CircularLoader from '../controls/loader/CircularLoader';

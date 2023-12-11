@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import * as moment from 'moment';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Searchbox from '../controls/Searchbox';
-import api from '../../api';
+import api from '../../services/api';
 import ApiAutoFetchDatagrid from '../controls/datagrid/ApiAutoFetchDatagrid';
 import YesNo from '../controls/dialog/YesNo';
 import CircularLoader from '../controls/loader/CircularLoader';

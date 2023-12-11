@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Paper, Avatar } from 'material-ui';
-import { withStyles } from 'material-ui/styles';
+import { Paper, Avatar } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = () => ({
   purpleAvatar: {
