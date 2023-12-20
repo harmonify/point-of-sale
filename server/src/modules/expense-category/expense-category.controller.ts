@@ -26,7 +26,7 @@ import {
 } from './dtos';
 
 @ApiTags('ExpenseCategories')
-@Controller({ path: '/expenseCategories', version: '1' })
+@Controller({ path: '/expense-categories', version: '1' })
 export class ExpenseCategoryController {
   constructor(private readonly prismaService: PrismaService) {}
 

@@ -29,21 +29,21 @@ export class CreateCustomerRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  phoneNumber?: string;
+  phoneNumber?: string | null;
 
   @IsOptional()
   @IsString()
   @IsEmail()
   @ApiProperty()
-  email?: string;
+  email?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description?: string;
+  description?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  address?: string;
+  address?: string | null;
 }

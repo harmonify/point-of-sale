@@ -70,6 +70,10 @@ export class TestUtil {
   }
 
   async seed() {
+    console.log(
+      `🚀 ~ testUser.password ~ ${JSON.stringify(testUser.password, null, 2)}`,
+    );
+
     await this.seedUser(adminUser);
     await this.seedUser(testUser);
     await this.seedCustomer(customer);

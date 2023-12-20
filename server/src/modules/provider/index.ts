@@ -1,1 +1,2 @@
-export * from './provider.module';
+export * from './dtos';
+export * from './provider.query';

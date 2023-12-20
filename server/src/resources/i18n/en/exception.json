@@ -1,6 +1,6 @@
 {
   "itemExists": "{item} already registered with {property}!",
-  "itemDoesNotExist": "{item} does not exist or unauthorized!",
+  "itemDoesNotExist": "{item} does not exist!",
   "unauthorized": "Unauthorized!",
   "internalError": "Internal Server Error!",
   "otpRequired": "OTP required!",

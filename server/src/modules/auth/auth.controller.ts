@@ -37,6 +37,12 @@ export class AuthController {
   async login(
     @Body() authCredentialsDto: LoginRequestDto,
   ): Promise<IResponseBody<LoginResponseDto>> {
+    // Simulate
+    // await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve(null);
+    //   }, 5000);
+    // });
     return {
       statusCode: HttpStatus.OK,
       data: await this.authService.login(authCredentialsDto),

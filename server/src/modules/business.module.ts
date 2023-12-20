@@ -3,6 +3,7 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { CashFlowModule } from '@/modules/cash-flow/cash-flow.module';
 import { CategoryModule } from '@/modules/category/category.module';
 import { CustomerModule } from '@/modules/customer/customer.module';
+import { DashboardModule } from '@/modules/dashboard/dashboard.module';
 import { ExpenseCategoryModule } from '@/modules/expense-category/expense-category.module';
 import { ExpenseModule } from '@/modules/expense/expense.module';
 import { NotificationModule } from '@/modules/notification/notification.module';
@@ -30,6 +31,7 @@ import { Module } from '@nestjs/common';
     ExpenseModule,
     ProcurementModule,
     SaleModule,
+    DashboardModule,
   ],
 })
 export class BusinessModule {}

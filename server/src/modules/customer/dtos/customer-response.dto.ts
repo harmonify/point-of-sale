@@ -1,3 +1,4 @@
+import { UserResponseDto } from '@/modules/user';
 import { ApiProperty } from '@nestjs/swagger';
 import { Customer, Gender } from '@prisma/client';
 

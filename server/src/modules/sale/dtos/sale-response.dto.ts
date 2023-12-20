@@ -5,6 +5,8 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsDate,
+  IsDefined,
   IsInt,
   IsNumber,
   IsOptional,
@@ -15,7 +17,47 @@ import {
 
 import { SaleProductResponseDto } from './sale-product-response.dto';
 
-export class SaleResponseDto extends BaseResponseDto implements Sale {
+export class SaleResponseDto implements Sale {
+  @IsDefined()
+  @IsInt()
+  @ApiProperty()
+  id: number;
+
+  @IsDefined()
+  @IsBoolean()
+  @ApiProperty()
+  isActive: boolean;
+
+  @IsDefined()
+  @IsDate()
+  @ApiProperty()
+  createdAt: Date;
+
+  @IsDefined()
+  @IsDate()
+  @ApiProperty()
+  updatedAt: Date;
+
+  @IsOptional()
+  @IsDate()
+  @ApiProperty()
+  deletedAt: Date | null;
+
+  @IsDefined()
+  @IsInt()
+  @ApiProperty()
+  createdById: number;
+
+  @IsDefined()
+  @IsInt()
+  @ApiProperty()
+  updatedById: number;
+
+  @IsOptional()
+  @IsDate()
+  @ApiProperty()
+  deletedById: number | null;
+
   @IsOptional()
   @IsInt()
   @Min(1)

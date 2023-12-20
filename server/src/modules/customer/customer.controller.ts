@@ -24,6 +24,8 @@ import {
   CustomerResponseDto,
   UpdateCustomerRequestDto,
 } from './dtos';
+import _ from 'lodash';
+import { CustomerInfoResponseDto } from './dtos/customer-info-response.dto';
 
 @ApiTags('Customers')
 @Controller({ path: '/customers', version: '1' })
@@ -36,6 +38,9 @@ export class CustomerController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody<CustomerResponseDto>> {
     const newCustomer = await this.prismaService.customer.create({
+      include: {
+        createdBy: true,
+      },
       data: {
         ...customer,
         createdById: user.id,
@@ -50,8 +55,12 @@ export class CustomerController {
   @Get()
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody<CustomerResponseDto[]>> {
+  ): Promise<IResponseBody<CustomerInfoResponseDto[]>> {
     const customers = await this.prismaService.customer.findMany({
+      include: {
+        createdBy: { select: { name: true } },
+        sales: { select: { netAmount: true } },
+      },
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where: paginationInfo.search
@@ -65,7 +74,11 @@ export class CustomerController {
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {
-      data: customers,
+      data: customers.map((customer) => ({
+        ...customer,
+        authorName: customer.createdBy.name,
+        purchasedAmount: _.sumBy(customer.sales, (sale) => sale.netAmount),
+      })),
     };
   }
 
@@ -74,6 +87,9 @@ export class CustomerController {
     @Param('id') id: number,
   ): Promise<IResponseBody<CustomerResponseDto>> {
     const customer = await this.prismaService.customer.findFirstOrThrow({
+      include: {
+        createdBy: true,
+      },
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -91,6 +107,9 @@ export class CustomerController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody<CustomerResponseDto>> {
     const updatedCustomer = await this.prismaService.customer.update({
+      include: {
+        createdBy: true,
+      },
       data: { ...data, updatedById: user.id },
       where: BaseQuery.Filter.byId(id),
     });

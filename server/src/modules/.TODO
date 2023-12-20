@@ -2,13 +2,21 @@
 
 - [x] auth
 - [x] category
+- [x] cash-flow
+  - procurement
+  - sale
 - [x] customer
 - [x] expense (SKIPPED FOR NOW)
 - [x] expense category (SKIPPED FOR NOW)
 - [x] notification
 - [x] procurement
+  - send notification to user
 - [x] product
 - [x] provider
 - [] sale
+  - inspect how sale works in NexoPOS, UI and database
+  - check product unit stock
+  - add CashFlow credit record
+  - create -> send notification to user
 - [x] unit
 - [x] user
