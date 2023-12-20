@@ -12,25 +12,11 @@ import CartFooter from "./cartFooter"
 import {
   emptyCart,
   removeItemFromCart,
-  selectCartItemsArray,
   selectCartState,
   updateCartItem,
 } from "@/features/cart"
 import { createSelector } from "@reduxjs/toolkit"
 import { useAppSelector } from "@/app/hooks"
-
-const getCartItemsArraySelector = createSelector(
-  (state) => state.cart.items,
-  (cart) => {
-    const keys = Object.keys(cart)
-    const cartArray = []
-    for (let i = 0; i < keys.length; i++) {
-      cartArray.push(cart[keys[i]])
-    }
-
-    return cartArray
-  },
-)
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 const CartTable: React.FC = () => {
   const classes = useStyles()
   const cartObj = useAppSelector(selectCartState)
-  const cartArray = useAppSelector(selectCartItemsArray)
+  const cartArray = Object.values(cartObj)
 
   const initialCartItem = {
     id: "",
@@ -77,8 +63,8 @@ const CartTable: React.FC = () => {
     const sellingPrice = currency(clone.price).subtract(discount)
     const totalPrice = currency(sellingPrice).multiply(quantity)
 
-    clone.quantity = quantity === "" ? "" : Number(quantity)
-    clone.discount = discount === "" ? "" : discount
+    clone.quantity = Number(quantity)
+    clone.discount = discount
 
     clone.sellingPrice = sellingPrice.toString()
     clone.totalPrice = totalPrice.toString()

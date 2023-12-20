@@ -17,6 +17,7 @@ import Home from "./pages/home/Home"
 import Login from "./pages/login/Login"
 import sale from "./pages/sales"
 import HomeInfo from "./pages/home/HomeInfo"
+import ProductList from "./pages/products/ProductList"
 
 // @ts-ignore
 // import UnderMaintenance from "./views/UnderMaintenance"
@@ -56,12 +57,12 @@ const routeObjects: IRoute[] = [
   {
     Component: Home,
     path: "/",
-    title: t("Point Of Sale"),
+    title: t("Point of Sales"),
     children: [
       {
         path: "",
         Component: HomeInfo,
-        title: t("Point Of Sale"),
+        title: t("Point of Sales"),
       },
       {
         Component: sale,
@@ -84,6 +85,23 @@ const routeObjects: IRoute[] = [
         title: t("Edit Customer"),
         path: "customers/edit/:id",
         loader: customerDetailLoader,
+      },
+      {
+        Component: ProductList,
+        title: t("Product"),
+        path: "products",
+        // loader: productListLoader,
+      },
+      {
+        // Component: ProductForm,
+        title: t("Create Product"),
+        path: "products/create",
+      },
+      {
+        // Component: ProductForm,
+        title: t("Edit Product"),
+        path: "products/edit/:id",
+        // loader: productDetailLoader,
       },
     ],
   },

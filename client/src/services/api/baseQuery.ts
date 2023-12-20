@@ -10,6 +10,7 @@ import {
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
+  FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query/react"
 import { Mutex } from "async-mutex"
 
@@ -18,7 +19,7 @@ import { logger } from "../logger"
 // create a new mutex
 const mutex = new Mutex()
 
-const baseQuery = fetchBaseQuery({
+export const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
   timeout: 60000,
   prepareHeaders: (headers, { getState }) => {
@@ -37,8 +38,15 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock()
-  let result = await baseQuery(args, api, extraOptions)
-  if (result.error && result.error.status === 401) {
+
+  let result
+  try {
+    result = await baseQuery(args, api, extraOptions)
+  } catch (error) {
+    logger.warn(error)
+  }
+
+  if (result!.error && result!.error.status === 401) {
     // checking whether the mutex is locked
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()

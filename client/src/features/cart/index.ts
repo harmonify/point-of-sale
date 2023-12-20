@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit"
 import currency from "currency.js"
 
 export interface CartItemState {
@@ -304,11 +304,5 @@ export const {
 } = slice.actions
 
 export const selectCartState = (state: RootState) => state.cart
-
-export const selectCartItemsArray = (state: RootState) => {
-  const cart = state.cart.items
-  const cartArray = Object.values(cart)
-  return cartArray
-}
 
 export default slice.reducer

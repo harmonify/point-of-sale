@@ -4,7 +4,7 @@ import { Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Form from '../../../../components/forms/Form';
 import CustomLabel from './CustomLabel';
-import NumberTextField from '../../../../components/controls/textfields/NumberTextField';
+import NumberTextField from '../../../../components/forms/FormikNumberInput/NumberTextField';
 
 const styles = (theme) => ({
   textField: {

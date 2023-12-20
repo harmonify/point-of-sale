@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles"
 import CustomTextField from "../../controls/textfields/CustomTextField"
 import SelectWrapped from "./SelectWrapped"
 import styles from "./styles"
-import TextInput from "@/components/forms/TextInput"
+import FormikTextInput from "@/components/forms/FormikTextInput"
 import { TextFieldProps } from "@material-ui/core"
 import { useField } from "formik"
 
@@ -23,7 +23,7 @@ const DropdownInput: React.FC<
 
   return (
     <>
-      <TextInput
+      <FormikTextInput
         {...field}
         {...props}
         fullWidth

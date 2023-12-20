@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, SliceCaseReducers } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export interface AppUIState {
   title: string
@@ -15,6 +15,12 @@ const slice = createSlice({
     setPageTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload
     },
+    showMobileDrawer: (state) => {
+      state.shouldOpenMobileDrawer = true
+    },
+    hideMobileDrawer: (state) => {
+      state.shouldOpenMobileDrawer = false
+    },
     toggleMobileDrawer: (state) => {
       state.shouldOpenMobileDrawer = !state.shouldOpenMobileDrawer
     },
@@ -23,7 +29,12 @@ const slice = createSlice({
 
 export default slice.reducer
 
-export const { setPageTitle, toggleMobileDrawer } = slice.actions
+export const {
+  setPageTitle,
+  showMobileDrawer,
+  hideMobileDrawer,
+  toggleMobileDrawer,
+} = slice.actions
 
 export const selectPageTitle = (state: RootState) => state.app.title
 

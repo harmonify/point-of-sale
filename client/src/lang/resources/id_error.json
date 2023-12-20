@@ -1,6 +1,8 @@
 {
   "undefined": "Terjadi kesalahan. Silahkan coba lagi.",
+  "Ooops": "Ooops",
   "An error occured": "Terjadi kesalahan. Silahkan coba lagi.",
   "Page not found": "Halaman tidak ditemukan",
-  "FETCH_ERROR": "Gagal untuk menghubungi server. Silahkan coba lagi nanti."
+  "FETCH_ERROR": "Gagal untuk menghubungi server. Silahkan coba lagi nanti.",
+  "You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation": "Antara kamu lagi coba-coba rute yang mencurigakan atau datang ke sini dengan tidak sengaja. Apapun itu, coba pakai tombol navigasi dibawah"
 }

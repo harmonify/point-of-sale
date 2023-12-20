@@ -1,6 +1,4 @@
 import store, { persistor } from "@/app/store"
-import PageHeader from "@/components/PageHeader"
-import ScrollReset from "@/components/ScrollReset"
 import SnackbarWrapper from "@/features/snackbar/SnackbarWrapper"
 import { router } from "@/router"
 import { theme } from "@/theme"
@@ -15,7 +13,6 @@ import { Suspense } from "react"
 import { Provider } from "react-redux"
 import { RouterProvider } from "react-router-dom"
 import { PersistGate } from "redux-persist/integration/react"
-import ConfirmationDialogProvider from "./features/dialog/provider"
 
 function App() {
   return (
@@ -24,7 +21,6 @@ function App() {
         <ThemeProvider theme={theme}>
           <StylesProvider>
             <MuiPickersUtilsProvider utils={LuxonUtils}>
-              <PageHeader />
               <Suspense
                 fallback={
                   <div

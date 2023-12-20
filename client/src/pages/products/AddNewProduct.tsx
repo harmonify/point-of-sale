@@ -8,7 +8,7 @@ import CustomTextField from '../../components/controls/textfields/CustomTextFiel
 import DropdownInput from '../../components/forms/DropdownInput/DropdownInput';
 import CircularLoader from '../../components/controls/loader/CircularLoader';
 import api from '../../services/api';
-import NumberTextField from '../../components/controls/textfields/NumberTextField';
+import NumberTextField from '../../components/forms/FormikNumberInput/NumberTextField';
 import { isValueExists } from '../../utils';
 import Message from '../../components/controls/Message';
 import Prompt from '../../features/dialog/Prompt';

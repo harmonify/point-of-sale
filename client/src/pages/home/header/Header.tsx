@@ -73,7 +73,7 @@ const Header: React.FC<{
             >
               <MenuIcon />
             </IconButton>
-            <span>{t("Point Of Sale")}</span>
+            <span>{t("Point of Sales")}</span>
           </div>
         </div>
         {/* This is the right side menu - Logout, My Profile */}

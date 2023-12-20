@@ -47,8 +47,11 @@ export const parseApiErrorMessage = (error: any) => {
     : t(`FETCH_ERROR`, { ns: "error" })
 }
 
-export const formatRupiah = (amount?: number) => {
-  if (!amount) return "IDR -"
+export const formatRupiah = (
+  amount?: number | null,
+  fallbackValue: number | string = "-",
+) => {
+  if (!amount) return `IDR ${fallbackValue}`
   return currency(amount, {
     symbol: "IDR",
     separator: ".",

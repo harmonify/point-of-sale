@@ -1,21 +1,18 @@
 import { useAppDispatch } from "@/app/hooks"
-import { FormikSubmissionHandler, TextInput } from "@/components/forms"
+import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
 import { showSnackbar } from "@/features/snackbar"
-import { logger } from "@/services/logger"
-import * as equal from "fast-deep-equal"
 import { Formik } from "formik"
 import { t } from "i18next"
-import React, { useCallback, useEffect, useState } from "react"
+import React from "react"
 import { useLoaderData, useNavigate, useParams } from "react-router-dom"
 
 import Container from "../../../components/controls/Container"
-import CircularLoader from "../../../components/controls/loader/CircularLoader"
 import Form from "../../../components/forms/Form"
 import {
   useCreateCustomerApiMutation,
-  useLazyFindOneCustomerApiQuery,
   useUpdateCustomerApiMutation,
 } from "../../../services/api"
+import createCustomerValidationSchema from "./validationSchema"
 
 export interface CustomerState {
   name: string
@@ -44,115 +41,61 @@ const CustomerForm: React.FC = () => {
   const customer = useLoaderData() as
     | Monorepo.Api.Response.CustomerResponseDto
     | undefined
-  console.log(`🚀 ~ customer ~ ${JSON.stringify(customer, null, 2)}`)
-
-  const [findOneCustomerApiQuery, { data, isLoading }] =
-    useLazyFindOneCustomerApiQuery()
-
-  const [customerState, setState] = useState(initialValues)
-
-  const fetchData = useCallback(async () => {
-    findOneCustomerApiQuery({ id: id! })
-      .unwrap()
-      .then((data) => {
-        setState(data.data)
-      })
-      .catch((error) => {
-        navigate("/customers")
-      })
-  }, [])
-  useEffect(() => {
-    if (!id) return
-    fetchData()
-  }, [fetchData])
 
   const onSubmit: FormikSubmissionHandler<CustomerState> = async (data) => {
     const promise = id
       ? updateCustomerApiMutation({ id, data })
       : createCustomerApiMutation(data)
-
-    promise
-      .unwrap()
-      .then((data) => {
-        dispatch(
-          showSnackbar({
-            message: id
-              ? t("Customer successfully updated")
-              : t("Customer successfully created"),
-            variant: "success",
-          }),
-        )
-        if (!id) navigate(`/customers/${data.data.id}`)
-      })
-      .catch((error) => {
-        logger.error(error)
-        dispatch(
-          showSnackbar({
-            message: error
-              ? error.message ||
-                (error.data && error.data.message) ||
-                t(`error.${error.status}` as any)
-              : t(`error.FETCH_ERROR`),
-            variant: "error",
-          }),
-        )
-      })
+    return promise.unwrap().then(() => {
+      dispatch(
+        showSnackbar({
+          message: id
+            ? t("Customer updated successfully")
+            : t("Customer created successfully"),
+          variant: "success",
+        }),
+      )
+      navigate(`/customers`)
+    })
   }
 
   const onCancel = () => {
-    const isDirty = id
-      ? !equal(data, customerState)
-      : !equal(initialValues, customerState)
-    if (isDirty === true) {
-    }
+    // const isDirty = id
+    //   ? !equal(data, customer)
+    //   : !equal(initialValues, customer)
+    // if (isDirty === true) {
+    // TODO: show confirmation dialog
+    // }
     navigate(-1)
   }
 
   return (
     <Container title={id ? t("Edit Customer") : t("Create Customer")}>
-      <CircularLoader isLoading={isLoading} />
-
       <Formik
-        initialValues={
-          id
-            ? (() => {
-                console.log(
-                  `🚀 ~ customerState ~ ${JSON.stringify(
-                    customerState,
-                    null,
-                    2,
-                  )}`,
-                )
-                return customerState
-              })()
-            : initialValues
-        }
-        validationSchema={customerValidationSchema}
+        initialValues={customer || initialValues}
+        validationSchema={createCustomerValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
         onSubmit={onSubmit}
       >
         <Form onCancel={onCancel}>
-          <TextInput
+          <FormikTextInput
             name="name"
-            label="Customer Name"
+            label={t("Name")}
             margin="normal"
             fullWidth
           />
-          <TextInput
+          <FormikTextInput
             name="description"
-            label="Description"
+            label={t("Description")}
             margin="normal"
             fullWidth
+            multiline={true}
+            minRows={3}
           />
-          <TextInput name="address" label="Address" margin="normal" fullWidth />
-          <TextInput
-            name="phoneNumber"
-            label="Mobile"
-            margin="normal"
-            fullWidth
-          />
-          <TextInput name="email" label="Email Id" margin="normal" fullWidth />
+          <FormikTextInput name="address" label={t("Address")} margin="normal" />
+          <FormikTextInput name="phoneNumber" label={t("Phone Number")} margin="normal" />
+          <FormikTextInput name="email" label={t("Email")} margin="normal" />
         </Form>
       </Formik>
     </Container>

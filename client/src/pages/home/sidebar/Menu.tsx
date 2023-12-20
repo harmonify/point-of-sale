@@ -29,7 +29,7 @@ const Menu: React.FC = () => {
       <div className={classes.logo}>
         <Button onClick={() => navigate("/")} className={classes.logoContainer}>
           <ShoppingCart />
-          <span>Point Of Sale</span>
+          <span>Point of Sales</span>
         </Button>
       </div>
 

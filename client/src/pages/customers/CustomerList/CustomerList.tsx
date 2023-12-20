@@ -1,7 +1,6 @@
 import { useAppDispatch } from "@/app/hooks"
 import Container from "@/components/controls/Container"
 import Searchbox from "@/components/controls/Searchbox"
-import { setPageTitle } from "@/features/app"
 import YesNo from "@/features/dialog/YesNo"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
@@ -17,13 +16,13 @@ import {
   GridColumns,
   GridRenderCellParams,
   GridToolbar,
-  GridValueGetterParams,
 } from "@mui/x-data-grid"
 import { DateTime } from "luxon"
 import React, { useState } from "react"
 import { useLoaderData, useNavigate } from "react-router-dom"
 
 import { useStyles } from "./styles"
+import { t } from "i18next"
 
 // import DataGrid from "../../components/controls/datagrid/DataGrid"
 
@@ -31,12 +30,16 @@ const CustomerList: React.FC = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [findAllCustomerApiQuery] = useLazyFindAllCustomerApiQuery()
   const [deleteCustomerApiMutation, { isLoading: isLoadingDeleteCustomer }] =
     useDeleteCustomerApiMutation()
-
-  const customerList =
+  const [findAllCustomerApiQuery, { data: lazyCustomerResponseQuery }] =
+    useLazyFindAllCustomerApiQuery()
+  const initialCustomerList =
     useLoaderData() as Monorepo.Api.Response.CustomerResponseDto[]
+
+  const customerList = lazyCustomerResponseQuery
+    ? lazyCustomerResponseQuery.data
+    : initialCustomerList
 
   const [state, setState] = useState({
     showConfirmDeleteDialog: false,
@@ -59,30 +62,22 @@ const CustomerList: React.FC = () => {
     setState({ ...state, showConfirmDeleteDialog: true, itemToDelete: row })
   }
   const onClickConfirmDelete = async () => {
-    const { id } = state.itemToDelete!
-    await deleteCustomerApiMutation({ id })
-      .unwrap()
-      .then(() => {
-        dispatch(
-          showSnackbar({ message: "The customer is deleted successfully" }),
-        )
+    try {
+      const { id } = state.itemToDelete!
+      await deleteCustomerApiMutation({ id }).unwrap()
+      dispatch(
+        showSnackbar({
+          message: t("Customer deleted successfully"),
+          variant: "success",
+        }),
+      )
+    } finally {
+      setState({
+        ...state,
+        showConfirmDeleteDialog: false,
+        itemToDelete: null,
       })
-      .catch((error) => {
-        logger.error(error)
-        dispatch(
-          showSnackbar({
-            message: error.message || "Failed to delete the customer",
-            variant: "error",
-          }),
-        )
-      })
-      .finally(() => {
-        setState({
-          ...state,
-          showConfirmDeleteDialog: false,
-          itemToDelete: null,
-        })
-      })
+    }
   }
   const onCancelConfirmDeleteClick = () => {
     setState({ ...state, showConfirmDeleteDialog: false })
@@ -120,6 +115,7 @@ const CustomerList: React.FC = () => {
         )
       },
       flex: 1,
+      minWidth: 100,
       sortable: false,
       disableColumnMenu: true,
     },

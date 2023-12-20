@@ -1,3 +1,4 @@
+import { persistor } from "@/app/store"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export interface AuthState {

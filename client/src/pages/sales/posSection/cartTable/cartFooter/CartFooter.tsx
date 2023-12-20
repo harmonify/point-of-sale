@@ -1,25 +1,29 @@
-import React, { Component } from 'react';
-import { Table, TableBody } from '@material-ui/core';
-import TotalRow from './TotalRow';
-import TaxDiscountRow from './TaxDiscountRow';
-import TotalBillRow from './TotalBillRow';
+import React, { Component } from "react"
+import { Table, TableBody } from "@material-ui/core"
+import TotalRow from "./TotalRow"
+import TaxDiscountRow from "./TaxDiscountRow"
+import TotalBillRow from "./TotalBillRow"
+import { CartItemState, CartState } from "@/features/cart"
 
-class CartFooter extends Component {
-  state = {};
+class CartFooter extends Component<{
+  cartArray: CartItemState[]
+  summary: CartState["summary"]
+}> {
+  state = {}
 
   render() {
-    const { cartArray, summary } = this.props;
+    const { cartArray, summary } = this.props
 
     if (summary.noOfItems === 0) {
-      return null;
+      return null
     }
 
-    const totalquantityText = `${summary.noOfItems} (${summary.noOfInividualItems})`;
-    const totalPrice = summary.total;
-    const { netTotal } = summary;
+    const totalquantityText = `${summary.noOfItems} (${summary.noOfInividualItems})`
+    const totalPrice = summary.total
+    const { netTotal } = summary
 
     return (
-      <Table style={{ marginTop: '50px' }}>
+      <Table style={{ marginTop: "50px" }}>
         <TableBody>
           <TotalRow
             totalquantityText={totalquantityText}
@@ -29,8 +33,8 @@ class CartFooter extends Component {
           <TotalBillRow netTotal={netTotal} />
         </TableBody>
       </Table>
-    );
+    )
   }
 }
 
-export default CartFooter;
+export default CartFooter

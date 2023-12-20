@@ -1,37 +1,37 @@
-import React, { Fragment } from 'react';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import NumberFormatCustom from './NumberFormatCustom';
+import React, { Fragment } from "react"
+import classNames from "classnames"
+import { withStyles } from "@material-ui/core/styles"
+import TextField from "@material-ui/core/TextField"
+import NumberFormatCustom from "./NumberFormatCustom"
 
 // eslint-disable-next-line
 //  TODO remove this and make it common if textfield and this has same styles.
 const styles = (theme) => ({
   textField: {
-    [theme.breakpoints.up('xs')]: {
+    [theme.breakpoints.up("xs")]: {
       width: 250,
     },
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: 300,
     },
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up("md")]: {
       width: 500,
     },
     marginRight: 10,
   },
   textFieldFormLabel: {
-    fontSize: '1.05rem',
+    fontSize: "1.05rem",
   },
-});
+})
 
 const NumberTextField = (props) => {
-  const { classes, autoComplete, className, ...rest } = props;
-  let ac = 'off';
-  if (autoComplete !== undefined) ac = autoComplete;
+  const { classes, autoComplete, className, ...rest } = props
+  let ac = "off"
+  if (autoComplete !== undefined) ac = autoComplete
 
-  let clsName = classes.textField;
+  let clsName = classes.textField
   if (className) {
-    clsName = classNames(classes.textField, className);
+    clsName = classNames(classes.textField, className)
   }
 
   return (
@@ -51,7 +51,7 @@ const NumberTextField = (props) => {
       />
       <br />
     </>
-  );
-};
+  )
+}
 
-export default withStyles(styles, { withTheme: true })(NumberTextField);
+export default withStyles(styles, { withTheme: true })(NumberTextField)

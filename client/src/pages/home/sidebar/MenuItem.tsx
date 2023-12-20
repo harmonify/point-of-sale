@@ -1,10 +1,14 @@
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core"
-import { withStyles } from "@material-ui/core/styles"
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
 import React, { Component } from "react"
 
-// eslint-disable-next-line
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   listItem: {
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
@@ -13,53 +17,40 @@ const styles = (theme) => ({
       },
     },
   },
-  primary: {},
   icon: {
-    width: 19,
+    width: 20,
   },
   selected: {
     backgroundColor: "#00000014",
-    borderLeft: "5px solid #3f50b5",
+    borderColor: theme.palette.primary.main,
+    borderLeft: "5px solid",
     paddingLeft: 20,
   },
-})
+}))
 
-class MenuItem extends Component<{
+const MenuItem: React.FC<{
   isSelected?: boolean
   onClick?: React.MouseEventHandler
   text: string
   icon: React.ReactElement
   classes: any
-}> {
-  state = {}
+}> = (props) => {
+  const classes = useStyles()
+  const { isSelected = false } = props
 
-  getClassName = () => {
-    const { isSelected = false, classes } = this.props
-
+  const getClassName = () => {
     if (isSelected) return classNames(classes.listItem, classes.selected)
-
     return classNames(classes.listItem)
   }
-
-  render() {
-    const { classes } = this.props
-
-    return (
-      <ListItem
-        button
-        dense
-        onClick={this.props.onClick}
-        className={this.getClassName()}
-      >
-        <ListItemIcon className={classes.icon}>{this.props.icon}</ListItemIcon>
-        <ListItemText
-          style={{ padding: 2 }}
-          classes={{ primary: classes.primary }}
-          primary={this.props.text}
-        />
-      </ListItem>
-    )
-  }
+  return (
+    <ListItem button dense onClick={props.onClick} className={getClassName()}>
+      <ListItemIcon className={classes.icon}>{props.icon}</ListItemIcon>
+      <ListItemText
+        style={{ padding: 2 }}
+        primary={<Typography variant="button">{props.text}</Typography>}
+      />
+    </ListItem>
+  )
 }
 
-export default withStyles(styles, { withTheme: true })(MenuItem)
+export default MenuItem

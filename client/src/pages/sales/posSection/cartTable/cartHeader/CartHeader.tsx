@@ -3,11 +3,12 @@ import { TableRow, TableHead } from "@material-ui/core"
 import CustomTableCell from "../controls/CustomTableCell"
 import DeleteButton from "../controls/DeleteButton"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { emptyCart, selectCartItemsArray, selectCartState } from "@/features/cart"
+import { emptyCart, selectCartState } from "@/features/cart"
 
 const CartHeader: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const cartArr = useAppSelector(selectCartItemsArray)
+  const dispatch = useAppDispatch()
+  const cartState = useAppSelector(selectCartState)
+  const cartArr = Object.values(cartState.items)
 
   const isCartEmpty = cartArr.length === 0
 

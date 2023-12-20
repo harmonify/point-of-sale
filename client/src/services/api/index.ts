@@ -1,7 +1,7 @@
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions"
 import { createApi } from "@reduxjs/toolkit/query/react"
 
-import baseQueryWithReauth from "./baseQuery"
+import baseQueryWithReauth, { baseQuery } from "./baseQuery"
 import apiBuilder from "./builder"
 import {
   postLoginBuilder,
@@ -31,7 +31,7 @@ export type ApiEndpointBuilder = EndpointBuilder<
 
 const api = createApi({
   reducerPath,
-  baseQuery: baseQueryWithReauth,
+  baseQuery: baseQuery,
   endpoints: (builder: ApiEndpointBuilder) => {
     const userApi = apiBuilder<
       Monorepo.Api.Response.UserResponseDto,

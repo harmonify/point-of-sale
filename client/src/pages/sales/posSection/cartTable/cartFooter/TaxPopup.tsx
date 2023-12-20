@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FormDialog from '../../../../../components/forms/FormDialog';
-import NumberTextField from '../../../../../components/controls/textfields/NumberTextField';
+import NumberTextField from '../../../../../components/forms/FormikNumberInput/NumberTextField';
 import { updateTax } from '@/features/cart';
 
 class TaxPopup extends Component {

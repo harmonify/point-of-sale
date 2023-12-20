@@ -3,7 +3,7 @@ import currency from "currency.js"
 import { connect } from "react-redux"
 import { Switch, withStyles } from "@material-ui/core"
 import FormDialog from "../../../../../components/forms/FormDialog"
-import NumberTextField from "../../../../../components/controls/textfields/NumberTextField"
+import NumberTextField from "../../../../../components/forms/FormikNumberInput/NumberTextField"
 import { updateDiscountOnItems, updateDiscountOnTotal } from "@/features/cart"
 
 const styles = () => ({

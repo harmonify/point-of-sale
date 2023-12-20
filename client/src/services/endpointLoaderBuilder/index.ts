@@ -1,13 +1,9 @@
 import store from "@/app/store"
 import { showSnackbar } from "@/features/snackbar"
+import { logger } from "@/services/logger"
 import { parseApiErrorMessage } from "@/utils"
 import { ApiEndpointQuery } from "@reduxjs/toolkit/query"
 import { LoaderFunction, redirect } from "react-router-dom"
-
-import { logger } from "../logger"
-import { setPageTitle } from "@/features/app"
-import { useAppSelector } from "@/app/hooks"
-import { selectAuthCredentials } from "@/features/auth"
 
 interface IListLoaderBuilderParams {
   apiEndpointQuery: ApiEndpointQuery<any, any>

@@ -1,6 +1,6 @@
 import { object, string } from "yup"
 
-const customerValidationSchema = object({
+const createCustomerValidationSchema = object({
   name: string().required(),
   address: string().required(),
   phoneNumber: string()
@@ -10,4 +10,4 @@ const customerValidationSchema = object({
   email: string().email().required(),
 })
 
-export default customerValidationSchema
+export default createCustomerValidationSchema

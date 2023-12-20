@@ -1,6 +1,6 @@
 import { setCredentials, setLogout } from "@/features/auth"
 import type { ApiEndpointBuilder } from ".."
-import { persistor } from "@/app/store"
+import store from "@/app/store"
 
 export const postLoginBuilder = (builder: ApiEndpointBuilder) => {
   return builder.mutation<
@@ -14,7 +14,7 @@ export const postLoginBuilder = (builder: ApiEndpointBuilder) => {
     }),
     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
       const { data } = await queryFulfilled
-      dispatch(setCredentials(data.data))
+      store.dispatch(setCredentials(data.data))
     },
   })
 }
@@ -31,7 +31,7 @@ export const postRefreshTokenBuilder = (builder: ApiEndpointBuilder) => {
     }),
     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
       const { data } = await queryFulfilled
-      dispatch(setCredentials({ refreshToken: arg.refreshToken, ...data.data }))
+      store.dispatch(setCredentials({ refreshToken: arg.refreshToken, ...data.data }))
     },
   })
 }
@@ -44,8 +44,7 @@ export const postLogoutBuilder = (builder: ApiEndpointBuilder) => {
       body,
     }),
     async onQueryStarted(arg, { dispatch }) {
-      await persistor.purge()
-      dispatch(setLogout())
+      store.dispatch(setLogout())
     },
   })
 }

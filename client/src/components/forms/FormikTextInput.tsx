@@ -4,24 +4,20 @@ import { useField } from "formik"
 import React, { HTMLInputTypeAttribute, useRef } from "react"
 
 const useStyles = makeStyles((theme) => ({
-  textField: {
-    // [theme.breakpoints.up("xs")]: {
-    //   width: 250,
-    // },
-    // [theme.breakpoints.up("sm")]: {
-    //   width: 300,
-    // },
-    // [theme.breakpoints.up("md")]: {
-    //   width: 500,
-    // },
-    // marginRight: 10,
-  },
-  textFieldFormLabel: {
-    // fontSize: "1.05rem",
+  fieldDynamicWidth: {
+    [theme.breakpoints.up("xs")]: {
+      width: 250,
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: 300,
+    },
+    [theme.breakpoints.up("md")]: {
+      width: 500,
+    },
   },
 }))
 
-const TextInput: React.FC<
+const FormikTextInput: React.FC<
   {
     label: string
     id?: string
@@ -39,28 +35,30 @@ const TextInput: React.FC<
   const [field, meta] = useField(props)
   const inputRef = useRef<HTMLDivElement | null>(null)
 
-  let clsName = classes.textField
+  let clsName = undefined
+  if (!props.fullWidth) {
+    clsName = classes.fieldDynamicWidth
+  }
   if (props.className) {
-    clsName = classNames(classes.textField, props.className)
+    clsName = classNames(clsName, props.className)
   }
 
   return (
     <TextField
-      {...field}
-      {...props}
       ref={inputRef}
-      type={props.type || "text"}
-      margin={props.margin || "normal"}
-      className={classes.textField}
-      InputLabelProps={{
-        shrink: true,
-        htmlFor: props.id || props.name,
-        className: classes.textFieldFormLabel,
-      }}
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
+      className={clsName}
+      {...field}
+      {...props}
+      InputLabelProps={{
+        htmlFor: props.id || props.name,
+        ...props.InputLabelProps,
+      }}
+      type={props.type || "text"}
+      margin={props.margin || "normal"}
     />
   )
 }
 
-export default TextInput
+export default FormikTextInput

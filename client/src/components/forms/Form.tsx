@@ -1,6 +1,5 @@
-import { Button, CircularProgress } from "@material-ui/core"
+import { Box, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { ClassNameMap } from "@material-ui/core/styles/withStyles"
 import { Save } from "@material-ui/icons"
 import classNames from "classnames"
 import { Form as FormikForm } from "formik"
@@ -56,26 +55,28 @@ const Form: React.FC<{
     >
       {props.children}
 
-      <Button
-        type="submit"
-        startIcon={<Save />}
-        className={classes.buttonSubmit}
-        color="primary"
-        variant="contained"
-        disabled={props.submitDisabled}
-      >
-        {props.submitText || "Submit"}
-      </Button>
-
-      {props.onCancel && (
+      <Box>
         <Button
-          className={classes.buttonCancel}
-          onClick={props.onCancel}
-          disabled={props.cancelDisabled}
+          type="submit"
+          startIcon={<Save />}
+          className={classes.buttonSubmit}
+          color="primary"
+          variant="contained"
+          disabled={props.submitDisabled}
         >
-          {props.cancelText || "Cancel"}
+          {props.submitText || "Submit"}
         </Button>
-      )}
+
+        {props.onCancel && (
+          <Button
+            className={classes.buttonCancel}
+            onClick={props.onCancel}
+            disabled={props.cancelDisabled}
+          >
+            {props.cancelText || "Cancel"}
+          </Button>
+        )}
+      </Box>
     </FormikForm>
   )
 }

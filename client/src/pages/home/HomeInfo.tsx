@@ -28,6 +28,10 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
+  cardTypography: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  }
 }))
 
 const HomeInfo: React.FC = () => {
@@ -49,29 +53,33 @@ const HomeInfo: React.FC = () => {
 
   return (
     <Box className={classes.root}>
-      <Typography variant="h1">
-        {t("Welcome to POS, {name}", { name: user?.name })}
+      <Typography variant="h1" style={{ marginBottom: ".5em" }}>
+        {t("Hello!", { name: user?.name })}
+      </Typography>
+
+      <Typography variant="h4" style={{ marginBottom: "1em" }}>
+        {t("Welcome to POS")}
       </Typography>
 
       <Box className={classes.cardInfoContainer}>
         <Card>
           <CardContent className={classes.cardContent}>
-            <Typography variant="h6">{t("Total Sales")}</Typography>
-            <Typography variant="h6">{formatRupiah(totalSales)}</Typography>
+            <Typography className={classes.cardTypography} variant="h3">{t("Total Sales")}</Typography>
+            <Typography className={classes.cardTypography} variant="h4">{formatRupiah(totalSales, 0)}</Typography>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className={classes.cardContent}>
-            <Typography variant="h6">{t("Total Expenses")}</Typography>
-            <Typography variant="h6">{formatRupiah(totalExpenses)}</Typography>
+            <Typography className={classes.cardTypography} variant="h3">{t("Total Expenses")}</Typography>
+            <Typography className={classes.cardTypography} variant="h4">{formatRupiah(totalExpenses, 0)}</Typography>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className={classes.cardContent}>
-            <Typography variant="h6">{t("Total Customers")}</Typography>
-            <Typography variant="h6">{totalCustomers}</Typography>
+            <Typography className={classes.cardTypography} variant="h3">{t("Total Customers")}</Typography>
+            <Typography className={classes.cardTypography} variant="h4">{totalCustomers}</Typography>
           </CardContent>
         </Card>
       </Box>

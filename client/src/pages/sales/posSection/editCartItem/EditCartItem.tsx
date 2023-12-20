@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import currency from 'currency.js';
 import FormDialog from '../../../../components/forms/FormDialog';
 import CustomTextField from '../../../../components/controls/textfields/CustomTextField';
-import NumberTextField from '../../../../components/controls/textfields/NumberTextField';
+import NumberTextField from '../../../../components/forms/FormikNumberInput/NumberTextField';
 import Footer from './Footer';
 
 class EditCartItem extends Component {
