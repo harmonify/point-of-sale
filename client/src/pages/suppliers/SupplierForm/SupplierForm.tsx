@@ -2,39 +2,49 @@ import { useAppDispatch } from "@/app/hooks"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
 import { Formik } from "formik"
 import { t } from "i18next"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useLoaderData, useNavigate, useParams } from "react-router-dom"
 
-import Container from "../../../components/controls/Container"
+import Container from "../../../components/controls/layout/Container/Container"
 import Form from "../../../components/forms/Form"
 import {
   useCreateSupplierApiMutation,
+  useFindOneSupplierApiQuery,
+  useLazyFindOneSupplierApiQuery,
   useUpdateSupplierApiMutation,
 } from "../../../services/api"
 import createSupplierValidationSchema, {
   SupplierState,
 } from "./validationSchema"
-import { Grid } from "@material-ui/core"
+import { Grid, MenuItem, Typography } from "@material-ui/core"
+import FormikDropdownInput from "@/components/forms/FormikSelectInput"
+import FormikSelectInput from "@/components/forms/FormikSelectInput"
 
 const initialValues = {
-  name: "",
-  address: "",
-  phoneNumber: "",
-  description: "",
-  email: "",
-} as SupplierState
+  name: null,
+  gender: "NOT_DEFINED",
+  address: null,
+  phoneNumber: null,
+  description: null,
+  email: null,
+} as unknown as SupplierState
 
 const SupplierForm: React.FC = () => {
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const [createSupplierApiMutation] = useCreateSupplierApiMutation()
   const [updateSupplierApiMutation] = useUpdateSupplierApiMutation()
 
   const { id } = useParams()
-  const supplier = useLoaderData() as
-    | Monorepo.Api.Response.SupplierResponseDto
-    | undefined
+  const [findOneSupplierApiQuery, { data: supplierApiQueryResponse }] =
+    useLazyFindOneSupplierApiQuery({
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    })
+  useEffect(() => {
+    if (!id) return
+    findOneSupplierApiQuery({ id })
+  }, [findOneSupplierApiQuery])
 
   const onSubmit: FormikSubmissionHandler<SupplierState> = async (data) => {
     const promise = id
@@ -58,7 +68,12 @@ const SupplierForm: React.FC = () => {
       }
     >
       <Formik
-        initialValues={supplier || initialValues}
+        enableReinitialize={true}
+        initialValues={
+          supplierApiQueryResponse
+            ? supplierApiQueryResponse.data
+            : initialValues
+        }
         validationSchema={createSupplierValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
@@ -66,39 +81,24 @@ const SupplierForm: React.FC = () => {
       >
         <Form onCancel={onCancel}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="name" label={t("Name")} margin="normal" />
-            </Grid>
-            <Grid item xs={12}>
-              <FormikTextInput
-                name="description"
-                label={t("Description")}
-                margin="normal"
-              />
+            <Grid item xs={9} md={8}>
+              <FormikTextInput name="name" label={t("Name")} />
             </Grid>
 
             <Grid item xs={12}>
-              <FormikTextInput
-                name="address"
-                label={t("Address")}
-                margin="normal"
-              />
+              <FormikTextInput name="description" label={t("Description")} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormikTextInput name="address" label={t("Address")} />
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <FormikTextInput
-                name="phoneNumber"
-                label={t("Phone Number")}
-                margin="normal"
-              />
+              <FormikTextInput name="phoneNumber" label={t("Phone Number")} />
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <FormikTextInput
-                name="email"
-                label={t("Email")}
-                margin="normal"
-              />
+              <FormikTextInput name="email" label={t("Email")} />
             </Grid>
           </Grid>
         </Form>

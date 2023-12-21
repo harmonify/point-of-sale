@@ -19,13 +19,15 @@ const genderArray = genderOptions.map((g) => g.value)
 
 const createCustomerValidationSchema = object({
   name: string().required(),
-  gender: string().optional().oneOf(genderArray),
+  gender: string().optional().nullable().oneOf(genderArray),
   address: string().optional().nullable(),
   phoneNumber: string().optional().nullable().min(10),
   description: string().optional().nullable(),
   email: string().optional().nullable().email(),
 })
 
-export type CustomerState = InferType<typeof createCustomerValidationSchema>
+export type CustomerState = InferType<typeof createCustomerValidationSchema> & {
+  gender?: Monorepo.Api.Response.CustomerResponseDto['gender']
+}
 
 export default createCustomerValidationSchema

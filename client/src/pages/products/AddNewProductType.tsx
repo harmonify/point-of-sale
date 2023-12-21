@@ -4,7 +4,7 @@ import React, { Component } from "react"
 
 import api from "../../services/api"
 import { isValueExists } from "../../utils"
-import Container from "../../components/controls/Container"
+import Container from "../../components/controls/layout/Container/Container"
 import Prompt from "../../features/dialog/Prompt"
 import Form from "../../components/forms/Form"
 import CircularLoader from "../../components/controls/loader/CircularLoader"

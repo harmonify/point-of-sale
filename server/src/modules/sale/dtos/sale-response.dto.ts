@@ -1,4 +1,3 @@
-import { BaseResponseDto } from '@/libs/prisma';
 import { ApiProperty } from '@nestjs/swagger';
 import { Sale } from '@prisma/client';
 import { Type } from 'class-transformer';

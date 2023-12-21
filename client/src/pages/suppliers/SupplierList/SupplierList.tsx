@@ -1,10 +1,11 @@
 import { useAppDispatch } from "@/app/hooks"
-import Container from "@/components/controls/Container"
+import Container from "@/components/controls/layout/Container/Container"
 import Searchbox from "@/components/controls/Searchbox"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
   useDeleteSupplierApiMutation,
+  useFindAllSupplierApiQuery,
   useLazyFindAllSupplierApiQuery,
 } from "@/services/api"
 import { formatGender, formatISOToLocale, formatRupiah } from "@/utils"
@@ -31,17 +32,17 @@ const SupplierList: React.FC = () => {
   const navigate = useNavigate()
   const [deleteSupplierApiMutation, { isLoading: isLoadingDeleteSupplier }] =
     useDeleteSupplierApiMutation()
-  const [
-    findAllSupplierApiQuery,
-    { isLoading: isLoadingFetchSupplier, data: lazySupplierResponseQuery },
-  ] = useLazyFindAllSupplierApiQuery()
-  const initialSupplierList =
-    useLoaderData() as Monorepo.Api.Response.SupplierResponseDto[]
+  const { isLoading: isLoadingFetchSupplier, data: supplierResponseQuery } =
+    useFindAllSupplierApiQuery(
+      { all: true },
+      {
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: true,
+        refetchOnReconnect: true,
+      },
+    )
 
-  const supplierList =
-    (lazySupplierResponseQuery
-      ? lazySupplierResponseQuery.data
-      : initialSupplierList) || []
+  const supplierList = supplierResponseQuery ? supplierResponseQuery.data : []
 
   const onClickCreate = () => {
     return navigate("/suppliers/create")
@@ -69,7 +70,6 @@ const SupplierList: React.FC = () => {
             throw new Error()
           }
           await deleteSupplierApiMutation({ id: row.id }).unwrap()
-          // await findAllSupplierApiQuery().unwrap()
         } catch (e) {
           dispatch(
             showSnackbar({
@@ -125,6 +125,12 @@ const SupplierList: React.FC = () => {
       minWidth: 160,
     },
     {
+      field: "description",
+      headerName: t("Description"),
+      flex: 2,
+      minWidth: 160,
+    },
+    {
       field: "phoneNumber",
       headerName: t("Phone Number"),
       flex: 2,
@@ -137,25 +143,10 @@ const SupplierList: React.FC = () => {
       minWidth: 240,
     },
     {
-      field: "gender",
-      headerName: t("Gender"),
+      field: "address",
+      headerName: t("Address"),
       flex: 2,
-      minWidth: 160,
-      valueGetter: (params) => formatGender(params.value as string),
-      sortable: false,
-    },
-    {
-      field: "purchasedAmount",
-      headerName: t("Purchased Amount"),
-      flex: 2,
-      minWidth: 220,
-      valueGetter: (params) => formatRupiah(params.value as number),
-    },
-    {
-      field: "createdByName",
-      headerName: t("Created By"),
-      flex: 2,
-      minWidth: 180,
+      minWidth: 240,
     },
     {
       field: "createdAt",

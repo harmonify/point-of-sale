@@ -43,7 +43,9 @@ const HeaderMenu: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await postLogout({ refreshToken: auth.refreshToken! }).unwrap()
+      const response = await postLogout({
+        refreshToken: auth.refreshToken!,
+      }).unwrap()
     } finally {
       return navigate("/login")
     }
@@ -83,7 +85,7 @@ const HeaderMenu: React.FC = () => {
           {t("Profile")}
         </MenuItem>
         <MenuItem className={classes.menuItem} onClick={handleLogout}>
-          {t("Logout")}
+          {t("Logout", { ns: "action" })}
         </MenuItem>
       </Menu>
     </>

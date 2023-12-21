@@ -1,8 +1,8 @@
 import React, { Component, useEffect, useState } from "react"
 
 import { makeStyles, withStyles } from "@material-ui/core/styles"
-import CustomTabs from "../../components/controls/Tabs"
-import TabContainer from "../../components/controls/TabContainer"
+import CustomTabs from "../../components/controls/layout/Tabs/Tabs"
+import TabContainer from "../../components/controls/layout/Tabs/TabContainer"
 import ProductTab from "./ProductTab"
 import ProductTypeTab from "./ProductTypeTab"
 import { useLocation, useNavigate } from "react-router-dom"

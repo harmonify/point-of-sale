@@ -2,17 +2,20 @@ import { useAppDispatch } from "@/app/hooks"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
 import { Formik } from "formik"
 import { t } from "i18next"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useLoaderData, useNavigate, useParams } from "react-router-dom"
 
-import Container from "../../../components/controls/Container"
+import Container from "../../../components/controls/layout/Container/Container"
 import Form from "../../../components/forms/Form"
 import {
   useCreateCustomerApiMutation,
+  useFindOneCustomerApiQuery,
+  useLazyFindOneCustomerApiQuery,
   useUpdateCustomerApiMutation,
 } from "../../../services/api"
 import createCustomerValidationSchema, {
-  CustomerState, genderOptions,
+  CustomerState,
+  genderOptions,
 } from "./validationSchema"
 import { Grid, MenuItem, Typography } from "@material-ui/core"
 import FormikDropdownInput from "@/components/forms/FormikSelectInput"
@@ -20,7 +23,7 @@ import FormikSelectInput from "@/components/forms/FormikSelectInput"
 
 const initialValues = {
   name: null,
-  gender: 'NOT_DEFINED',
+  gender: "NOT_DEFINED",
   address: null,
   phoneNumber: null,
   description: null,
@@ -28,16 +31,21 @@ const initialValues = {
 } as unknown as CustomerState
 
 const CustomerForm: React.FC = () => {
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const [createCustomerApiMutation] = useCreateCustomerApiMutation()
   const [updateCustomerApiMutation] = useUpdateCustomerApiMutation()
 
   const { id } = useParams()
-  const customer = useLoaderData() as
-    | Monorepo.Api.Response.CustomerResponseDto
-    | undefined
+  const [findOneCustomerApiQuery, { data: customerApiQueryResponse }] =
+    useLazyFindOneCustomerApiQuery({
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    })
+  useEffect(() => {
+    if (!id) return
+    findOneCustomerApiQuery({ id })
+  }, [findOneCustomerApiQuery])
 
   const onSubmit: FormikSubmissionHandler<CustomerState> = async (data) => {
     const promise = id
@@ -67,7 +75,12 @@ const CustomerForm: React.FC = () => {
       }
     >
       <Formik
-        initialValues={customer || initialValues}
+        enableReinitialize={true}
+        initialValues={
+          customerApiQueryResponse
+            ? customerApiQueryResponse.data
+            : initialValues
+        }
         validationSchema={createCustomerValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}

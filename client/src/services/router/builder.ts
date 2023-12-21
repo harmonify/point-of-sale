@@ -16,6 +16,7 @@ interface IDetailLoaderBuilderParams {
   redirectOnErrorUrl: string
 }
 
+/** @deprecated */
 export const modelListLoaderBuilder = ({
   apiEndpointQuery,
   all,
@@ -38,6 +39,7 @@ export const modelListLoaderBuilder = ({
   }
 }
 
+/** @deprecated */
 export const modelDetailLoaderBuilder = ({
   apiEndpointQuery,
   redirectOnErrorUrl,

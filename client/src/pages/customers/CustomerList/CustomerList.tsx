@@ -1,10 +1,11 @@
 import { useAppDispatch } from "@/app/hooks"
-import Container from "@/components/controls/Container"
+import Container from "@/components/controls/layout/Container/Container"
 import Searchbox from "@/components/controls/Searchbox"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
   useDeleteCustomerApiMutation,
+  useFindAllCustomerApiQuery,
   useLazyFindAllCustomerApiQuery,
 } from "@/services/api"
 import { formatGender, formatISOToLocale, formatRupiah } from "@/utils"
@@ -31,17 +32,17 @@ const CustomerList: React.FC = () => {
   const navigate = useNavigate()
   const [deleteCustomerApiMutation, { isLoading: isLoadingDeleteCustomer }] =
     useDeleteCustomerApiMutation()
-  const [
-    findAllCustomerApiQuery,
-    { isLoading: isLoadingFetchCustomer, data: lazyCustomerResponseQuery },
-  ] = useLazyFindAllCustomerApiQuery()
-  const initialCustomerList =
-    useLoaderData() as Monorepo.Api.Response.CustomerResponseDto[]
+  const { isLoading: isLoadingFetchCustomer, data: customerResponseQuery } =
+    useFindAllCustomerApiQuery(
+      { all: true },
+      {
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: true,
+        refetchOnReconnect: true,
+      },
+    )
 
-  const customerList =
-    (lazyCustomerResponseQuery
-      ? lazyCustomerResponseQuery.data
-      : initialCustomerList) || []
+  const customerList = customerResponseQuery ? customerResponseQuery.data : []
 
   const onClickCreate = () => {
     return navigate("/customers/create")
@@ -69,7 +70,6 @@ const CustomerList: React.FC = () => {
             throw new Error()
           }
           await deleteCustomerApiMutation({ id: row.id }).unwrap()
-          // await findAllCustomerApiQuery().unwrap()
         } catch (e) {
           dispatch(
             showSnackbar({
@@ -125,6 +125,12 @@ const CustomerList: React.FC = () => {
       minWidth: 160,
     },
     {
+      field: "description",
+      headerName: t("Description"),
+      flex: 2,
+      minWidth: 160,
+    },
+    {
       field: "phoneNumber",
       headerName: t("Phone Number"),
       flex: 2,
@@ -137,19 +143,19 @@ const CustomerList: React.FC = () => {
       minWidth: 240,
     },
     {
+      field: "purchasedAmount",
+      headerName: t("Purchased Amount"),
+      flex: 2,
+      minWidth: 220,
+      valueGetter: (params) => formatRupiah(params.value as number),
+    },
+    {
       field: "gender",
       headerName: t("Gender"),
       flex: 2,
       minWidth: 160,
       valueGetter: (params) => formatGender(params.value as string),
       sortable: false,
-    },
-    {
-      field: "purchasedAmount",
-      headerName: t("Purchased Amount"),
-      flex: 2,
-      minWidth: 220,
-      valueGetter: (params) => formatRupiah(params.value as number),
     },
     {
       field: "createdByName",

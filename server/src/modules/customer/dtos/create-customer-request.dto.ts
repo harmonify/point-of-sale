@@ -24,7 +24,7 @@ export class CreateCustomerRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty({ enum: Gender })
-  gender?: Gender;
+  gender?: Gender | null;
 
   @IsOptional()
   @IsString()

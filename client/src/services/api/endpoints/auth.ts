@@ -1,6 +1,7 @@
 import { setCredentials, setLogout } from "@/features/auth"
 import type { ApiEndpointBuilder } from ".."
 import store from "@/app/store"
+import { cacher } from "../rtkQueryCacheUtils"
 
 export const postLoginMutationName = "postLogin"
 export const postRefreshTokenMutationName = "postRefreshToken"
@@ -20,6 +21,7 @@ export const postLoginBuilder = (builder: ApiEndpointBuilder) => {
       method: "POST",
       body,
     }),
+    invalidatesTags: cacher.invalidatesUnauthorized(),
     async onQueryStarted(arg, { dispatch, queryFulfilled, getCacheEntry }) {
       const { data } = await queryFulfilled
       if (getCacheEntry().isSuccess && data) {
@@ -39,6 +41,7 @@ export const postRefreshTokenBuilder = (builder: ApiEndpointBuilder) => {
       method: "POST",
       body,
     }),
+    invalidatesTags: cacher.invalidatesUnauthorized(),
     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
       const { data } = await queryFulfilled
       store.dispatch(

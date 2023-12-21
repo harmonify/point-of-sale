@@ -1,11 +1,21 @@
 import { useAppSelector } from "@/app/hooks"
+import CircularLoader from "@/components/controls/loader/CircularLoader"
 import { selectCurrentUser } from "@/features/auth"
 import { useConfirmationDialog } from "@/features/dialog"
 import { useGetDashboardInfoQuery } from "@/services/api"
 import { logger } from "@/services/logger"
-import { formatRupiah } from "@/utils"
-import { Box, Card, CardContent, Typography } from "@material-ui/core"
+import { formatISOToLocale, formatRupiah } from "@/utils"
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Icon,
+  Typography,
+} from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
+import { AttachMoney, Money, MoneyOff, People } from "@material-ui/icons"
+import { DataGrid, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -13,27 +23,43 @@ import { useNavigate } from "react-router-dom"
 // eslint-disable-next-line
 export const useStyles = makeStyles((theme) => ({
   root: {
+    margin: theme.spacing(1),
+  },
+  card: {
     display: "flex",
     flexDirection: "column",
-    flexGrow: 1,
-    margin: "16px",
+    padding: theme.spacing(1),
+    justifyContent: "center",
+    alignItems: "center",
   },
-  cardInfoContainer: {
+  cardHeader: {
     display: "flex",
-    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
     "& > *": {
-      margin: "16px",
-      marginLeft: 0,
-      padding: theme.spacing(1),
+      margin: theme.spacing(1),
     },
   },
   cardContent: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  cardTypography: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+  datagrid: {
+    display: "flex",
+    position: "relative",
+    width: "100%",
+    minHeight: "380px",
+    flexDirection: "column",
+    "& .MuiFormGroup-options": {
+      alignItems: "center",
+      paddingBottom: theme.spacing(1),
+      "& > div": {
+        minWidth: 100,
+        margin: theme.spacing(2, 2, 2, 0),
+      },
+    },
   },
 }))
 
@@ -42,7 +68,7 @@ const HomeInfo: React.FC = () => {
   const navigate = useNavigate()
   const user = useAppSelector(selectCurrentUser)
 
-  const { data, isError } = useGetDashboardInfoQuery(null, {
+  const { data, isError, isFetching } = useGetDashboardInfoQuery(null, {
     // pollingInterval: 15000,
     refetchOnMountOrArgChange: true,
   })
@@ -55,58 +81,169 @@ const HomeInfo: React.FC = () => {
     totalSales,
     totalExpenses,
     totalCustomers,
-    topCustomers,
-    recentOrders,
+    topCustomers = [],
+    recentOrders = [],
   } = data?.data || {}
 
+  const topCustomersDataGridColumns: GridColumns = [
+    {
+      field: "name",
+      headerName: t("Name"),
+      flex: 2,
+      minWidth: 160,
+    },
+    {
+      field: "phoneNumber",
+      headerName: t("Phone Number"),
+      flex: 2,
+      minWidth: 200,
+    },
+    {
+      field: "purchasedAmount",
+      headerName: t("Purchased Amount"),
+      flex: 2,
+      minWidth: 220,
+      valueGetter: (params) => formatRupiah(params.value as number),
+    },
+    {
+      field: "createdAt",
+      headerName: t("Created At"),
+      flex: 2,
+      minWidth: 260,
+      valueGetter: (params) => formatISOToLocale(params.value as string),
+    },
+  ]
+
+  const recentOrdersDataGridColumns: GridColumns = [
+    {
+      field: "customerName",
+      headerName: t("Customer Name"),
+      flex: 2,
+      minWidth: 160,
+    },
+    {
+      field: "description",
+      headerName: t("Description"),
+      flex: 2,
+      minWidth: 200,
+    },
+    {
+      field: "netAmount",
+      headerName: t("Net Amount"),
+      flex: 2,
+      minWidth: 220,
+      valueGetter: (params) => formatRupiah(params.value as number),
+    },
+    {
+      field: "createdAt",
+      headerName: t("Created At"),
+      flex: 2,
+      minWidth: 260,
+      valueGetter: (params) => formatISOToLocale(params.value as string),
+    },
+  ]
+
   return (
-    <Box className={classes.root}>
-      <Typography variant="h1" style={{ marginBottom: ".5em" }}>
-        {t("Hello!", { ns: "message", name: user?.name })}
-      </Typography>
+    <Grid container className={classes.root} spacing={1} wrap="wrap">
+      <Grid item xs={12}>
+        <Typography style={{ margin: ".2em", marginLeft: 0 }} variant="h1">
+          {t("Hello!", { ns: "message", name: user?.name })}
+        </Typography>
+      </Grid>
 
-      <Typography variant="h4" style={{ marginBottom: "1em" }}>
-        {t("Welcome to POS", { ns: "message" })}
-      </Typography>
+      <Grid item xs={12}>
+        <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h4">
+          {t("Welcome to POS", { ns: "message" })}
+        </Typography>
+      </Grid>
 
-      <Box className={classes.cardInfoContainer}>
-        <Card>
+      <Grid item xs={12} md={4}>
+        <Card className={classes.card}>
           <CardContent className={classes.cardContent}>
-            <Typography className={classes.cardTypography} variant="h3">
-              {t("Total Sales")}
-            </Typography>
-            <Typography className={classes.cardTypography} variant="h4">
+            <Box className={classes.cardHeader}>
+              <Icon>
+                <AttachMoney />
+              </Icon>
+              <Typography
+                style={{ margin: ".2em", marginLeft: 0 }}
+                variant="h2"
+              >
+                {t("Sales")}
+              </Typography>
+            </Box>
+            <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h2">
               {formatRupiah(totalSales)}
             </Typography>
           </CardContent>
         </Card>
+      </Grid>
 
-        <Card>
+      <Grid item xs={12} md={4}>
+        <Card className={classes.card}>
           <CardContent className={classes.cardContent}>
-            <Typography className={classes.cardTypography} variant="h3">
-              {t("Total Expenses")}
-            </Typography>
-            <Typography className={classes.cardTypography} variant="h4">
+            <Box className={classes.cardHeader}>
+              <Icon>
+                <MoneyOff />
+              </Icon>
+              <Typography
+                style={{ margin: ".2em", marginLeft: 0 }}
+                variant="h2"
+              >
+                {t("Expenses")}
+              </Typography>
+            </Box>
+            <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h2">
               {formatRupiah(totalExpenses)}
             </Typography>
           </CardContent>
         </Card>
+      </Grid>
 
-        <Card>
+      <Grid item xs={12} md={4}>
+        <Card className={classes.card}>
           <CardContent className={classes.cardContent}>
-            <Typography className={classes.cardTypography} variant="h3">
-              {t("Total Customers")}
-            </Typography>
-            <Typography className={classes.cardTypography} variant="h4">
+            <Box className={classes.cardHeader}>
+              <Icon>
+                <People />
+              </Icon>
+              <Typography
+                style={{ margin: ".2em", marginLeft: 0 }}
+                variant="h2"
+              >
+                {t("Customers")}
+              </Typography>
+            </Box>
+            <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h2">
               {totalCustomers}
             </Typography>
           </CardContent>
         </Card>
-      </Box>
+      </Grid>
 
-      {/* <Table></Table> */}
-      {/* {JSON.stringify(data, null, 2)} */}
-    </Box>
+      <Grid item xs={12} md={6}>
+        <DataGrid
+          className={classes.datagrid}
+          columns={topCustomersDataGridColumns}
+          rows={topCustomers}
+          loading={isFetching}
+          disableSelectionOnClick
+          disableDensitySelector
+          pageSize={5}
+        />
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <DataGrid
+          className={classes.datagrid}
+          columns={recentOrdersDataGridColumns}
+          rows={recentOrders}
+          loading={isFetching}
+          disableSelectionOnClick
+          disableDensitySelector
+          pageSize={5}
+        />
+      </Grid>
+    </Grid>
   )
 }
 

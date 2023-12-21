@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as equal from 'fast-deep-equal';
 
 import { withStyles } from '@material-ui/core/styles';
-import Container from '../../components/controls/Container';
+import Container from '../../components/controls/layout/Container/Container';
 import Form from '../../components/forms/Form';
 import CustomTextField from '../../components/controls/textfields/CustomTextField';
 import FormikDropdownInput from '../../components/forms/FormikSelectInput/FormikSelectInput';

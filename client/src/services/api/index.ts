@@ -12,10 +12,12 @@ import {
   postRefreshTokenMutationName,
 } from "./endpoints/auth"
 import { getDashboardInfoBuilder } from "./endpoints/dashboard"
+import { cacher } from "./rtkQueryCacheUtils"
 
 const reducerPath = "api"
 
 const tagTypes = [
+  ...cacher.defaultTags,
   "auth",
   "category",
   "customer",
@@ -105,6 +107,13 @@ const api = createApi({
       [postLoginMutationName]: postLoginBuilder(builder),
       [postRefreshTokenMutationName]: postRefreshTokenBuilder(builder),
       [postLogoutMutationName]: postLogoutBuilder(builder),
+
+      refetchErroredQueries: builder.mutation<unknown, void>({
+        queryFn() {
+          return { data: {} }
+        },
+        invalidatesTags: cacher.invalidatesUnknownErrors(),
+      }),
 
       getDashboardInfo: getDashboardInfoBuilder(builder),
 
@@ -201,18 +210,23 @@ export const {
 
   useCreateCustomerApiMutation,
   useFindAllCustomerApiQuery,
+  useFindOneCustomerApiQuery,
   useLazyFindAllCustomerApiQuery,
   useLazyFindOneCustomerApiQuery,
   useUpdateCustomerApiMutation,
   useDeleteCustomerApiMutation,
 
   useCreateSupplierApiMutation,
+  useFindAllSupplierApiQuery,
+  useFindOneSupplierApiQuery,
   useLazyFindAllSupplierApiQuery,
   useLazyFindOneSupplierApiQuery,
   useUpdateSupplierApiMutation,
   useDeleteSupplierApiMutation,
 
   useCreateCategoryApiMutation,
+  useFindAllCategoryApiQuery,
+  useFindOneCategoryApiQuery,
   useLazyFindAllCategoryApiQuery,
   useLazyFindOneCategoryApiQuery,
   useUpdateCategoryApiMutation,

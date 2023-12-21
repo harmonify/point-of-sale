@@ -2,6 +2,7 @@ import store from "@/app/store"
 import type { ApiEndpointBuilder } from "."
 import { showSnackbar } from "@/features/snackbar"
 import { t } from "i18next"
+import { cacher } from "./rtkQueryCacheUtils"
 
 const builder = <
   TGet extends { id: number | string },
@@ -23,14 +24,7 @@ const builder = <
       method: "POST",
       body,
     }),
-    invalidatesTags: (result) => {
-      return result && result.data
-        ? [
-            { type: resourceName, id: result.data.id },
-            { type: resourceName, id: "LIST" },
-          ]
-        : []
-    },
+    invalidatesTags: cacher.invalidatesList(resourceName),
     onQueryStarted: async (arg, { queryFulfilled, getState, requestId }) => {
       const response = await queryFulfilled
       store.dispatch(
@@ -74,13 +68,8 @@ const builder = <
         method: "GET",
       }
     },
-    providesTags: (result) =>
-      result && result.data
-        ? [
-            ...result.data.map(({ id }) => ({ type: resourceName, id })),
-            { type: resourceName, id: "LIST" },
-          ]
-        : [{ type: resourceName, id: "LIST" }],
+    providesTags: (results, error) =>
+      cacher.providesList(resourceName)(results?.data, error),
   }),
 
   findOne: builder.query<
@@ -91,8 +80,7 @@ const builder = <
       url: `/${version}/${resourceName}/${id}`,
       method: "GET",
     }),
-    providesTags: (result) =>
-      result && result.data ? [{ type: resourceName, id: result.data.id }] : [],
+    providesTags: cacher.cacheByIdArgProperty(resourceName),
   }),
 
   update: builder.mutation<
@@ -104,14 +92,7 @@ const builder = <
       method: "PUT",
       body: data,
     }),
-    invalidatesTags: (result, error, arg, meta) => {
-      return error
-        ? []
-        : [
-            { type: resourceName, id: arg.id },
-            { type: resourceName, id: "LIST" },
-          ]
-    },
+    invalidatesTags: cacher.cacheByIdArgProperty(resourceName),
     onQueryStarted: async (arg, { queryFulfilled }) => {
       await queryFulfilled
       store.dispatch(
@@ -134,14 +115,7 @@ const builder = <
       url: `/${version}/${resourceName}/${id}`,
       method: "DELETE",
     }),
-    invalidatesTags: (result, error, arg, meta) => {
-      return error
-        ? []
-        : [
-            { type: resourceName, id: arg.id },
-            { type: resourceName, id: "LIST" },
-          ]
-    },
+    invalidatesTags: cacher.cacheByIdArgProperty(resourceName),
     onQueryStarted: async (arg, { queryFulfilled, getState }) => {
       await queryFulfilled
       store.dispatch(

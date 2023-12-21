@@ -10,10 +10,10 @@ const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // if (!user) {
-    //   persistor.purge()
-    //   navigate("/login")
-    // }
+    if (!user) {
+      persistor.purge()
+      navigate("/login")
+    }
   }, [])
 
   return children

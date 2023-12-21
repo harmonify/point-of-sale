@@ -30,6 +30,7 @@ const FormikTextInput: React.FC<IFormikTextInputProps> = (props) => {
       fullWidth={typeof props.fullWidth === "boolean" ? props.fullWidth : true}
       InputLabelProps={{
         htmlFor: props.id || props.name,
+        shrink: !!field.value,
         ...props.InputLabelProps,
       }}
       type={props.type || "text"}

@@ -5,9 +5,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom"
 
 import AuthGuard from "./components/AuthGuard"
 import { APP_ENV } from "./environment"
-import { customerDetailLoader, customerListLoader } from "./pages/customers"
 import { Error500 } from "./pages/errors"
-import { supplierDetailLoader, supplierListLoader } from "./pages/suppliers"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -62,7 +60,6 @@ const routeObjects: IRoute[] = [
         ),
         title: t("Customers"),
         path: "customers",
-        loader: customerListLoader,
       },
       {
         Component: lazy(
@@ -77,7 +74,6 @@ const routeObjects: IRoute[] = [
         ),
         title: t("Edit Customer", { ns: "action" }),
         path: "customers/edit/:id",
-        loader: customerDetailLoader,
       },
       {
         Component: lazy(
@@ -85,7 +81,6 @@ const routeObjects: IRoute[] = [
         ),
         title: t("Suppliers"),
         path: "suppliers",
-        loader: supplierListLoader,
       },
       {
         Component: lazy(
@@ -100,7 +95,6 @@ const routeObjects: IRoute[] = [
         ),
         title: t("Edit Supplier", { ns: "action" }),
         path: "suppliers/edit/:id",
-        loader: supplierDetailLoader,
       },
     ],
   },
