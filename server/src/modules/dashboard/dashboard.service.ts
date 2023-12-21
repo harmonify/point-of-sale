@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { DashboardResponseDto } from './dtos';
+import { BaseQuery } from '@/libs/prisma';
 
 @Injectable()
 export class DashboardService {
@@ -11,11 +12,15 @@ export class DashboardService {
     try {
       const totalSalesAggregate = await this.prisma.sale.aggregate({
         _sum: { netAmount: true },
+        where: BaseQuery.Filter.available(),
       });
       const totalExpensesAggregate = await this.prisma.expense.aggregate({
         _sum: { amount: true },
+        where: BaseQuery.Filter.available(),
       });
-      const totalCustomers = await this.prisma.customer.count();
+      const totalCustomers = await this.prisma.customer.count({
+        where: BaseQuery.Filter.available(),
+      });
 
       // Fetch the top 5 customers
       const topCustomers = await this.prisma.customer.findMany({
@@ -28,6 +33,7 @@ export class DashboardService {
             _count: 'desc',
           },
         },
+        where: BaseQuery.Filter.available(),
       });
 
       // Fetch the 10 most recent orders
@@ -40,6 +46,7 @@ export class DashboardService {
         orderBy: {
           createdAt: 'desc',
         },
+        where: BaseQuery.Filter.available(),
       });
 
       return {

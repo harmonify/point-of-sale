@@ -1,4 +1,4 @@
-import "@/lang/setup"
+import "@/services/lang/setup"
 import "@/styles/index.css"
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"

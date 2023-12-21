@@ -1,4 +1,4 @@
-import { defaultNS, IResourceLanguage } from "@/lang"
+import { defaultNS, IResourceLanguage } from "@/services/lang"
 
 export {}
 
