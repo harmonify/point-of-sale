@@ -1,6 +1,6 @@
-import { useAppSelector } from "@/app/hooks"
+import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { Form, FormikTextInput } from "@/components/forms"
-import { selectAuthCredentials } from "@/features/auth"
+import { selectAuthCredentials, setCredentials } from "@/features/auth"
 import { usePostLoginMutation } from "@/services/api"
 import Paper from "@material-ui/core/Paper"
 import { Formik } from "formik"
@@ -21,6 +21,7 @@ const Login: React.FC = () => {
   const { t } = useTranslation(["translation", "message"])
   const navigate = useNavigate()
   const classes = useStyles()
+  const dispatch = useAppDispatch()
 
   const auth = useAppSelector(selectAuthCredentials)
 
@@ -43,16 +44,10 @@ const Login: React.FC = () => {
             validateOnChange={true}
             validateOnBlur={true}
             onSubmit={async (values) => {
-              const p = postLogin({
+              const response = await postLogin({
                 email: values.email,
                 password: values.password,
-              })
-              try {
-                await p.unwrap()
-                navigate("/")
-              } finally {
-                p.reset()
-              }
+              }).unwrap()
             }}
           >
             <Form

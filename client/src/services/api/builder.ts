@@ -31,8 +31,8 @@ const builder = <
           ]
         : []
     },
-    onQueryStarted: async (arg, { queryFulfilled }) => {
-      await queryFulfilled
+    onQueryStarted: async (arg, { queryFulfilled, getState, requestId }) => {
+      const response = await queryFulfilled
       store.dispatch(
         showSnackbar({
           message: t(`Data created successfully`, {
@@ -142,7 +142,7 @@ const builder = <
             { type: resourceName, id: "LIST" },
           ]
     },
-    onQueryStarted: async (arg, { queryFulfilled }) => {
+    onQueryStarted: async (arg, { queryFulfilled, getState }) => {
       await queryFulfilled
       store.dispatch(
         showSnackbar({

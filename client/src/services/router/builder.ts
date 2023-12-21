@@ -7,27 +7,20 @@ import { LoaderFunction, redirect } from "react-router-dom"
 
 interface IListLoaderBuilderParams {
   apiEndpointQuery: ApiEndpointQuery<any, any>
-  skipAuth?: boolean
   /** Fetch all records? */
   all?: boolean
 }
 
 interface IDetailLoaderBuilderParams {
   apiEndpointQuery: ApiEndpointQuery<any, any>
-  skipAuth?: boolean
   redirectOnErrorUrl: string
 }
 
 export const modelListLoaderBuilder = ({
   apiEndpointQuery,
-  skipAuth,
   all,
 }: IListLoaderBuilderParams): LoaderFunction => {
   return async ({ params }) => {
-    if (!skipAuth) {
-      const auth = store.getState().auth
-      if (!auth.accessToken) return redirect("/login")
-    }
     const promise = store.dispatch(
       apiEndpointQuery.initiate({ all: Boolean(all) }),
     )

@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '../../components/controls/Container';
 import Form from '../../components/forms/Form';
 import CustomTextField from '../../components/controls/textfields/CustomTextField';
-import DropdownInput from '../../components/forms/DropdownInput/DropdownInput';
+import FormikDropdownInput from '../../components/forms/FormikSelectInput/FormikSelectInput';
 import CircularLoader from '../../components/controls/loader/CircularLoader';
 import api from '../../services/api';
 import NumberTextField from '../../components/forms/FormikNumberInput/NumberTextField';
@@ -253,7 +253,7 @@ class AddNewProduct extends Component {
             onChange={this.onChange}
           />
 
-          <DropdownInput
+          <FormikDropdownInput
             name="productType"
             value={data.productTypeId}
             error={!!errors.productType}

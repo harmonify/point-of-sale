@@ -43,7 +43,7 @@ const HeaderMenu: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await postLogout({ refreshToken: auth.refreshToken! })
+      const response = await postLogout({ refreshToken: auth.refreshToken! }).unwrap()
     } finally {
       return navigate("/login")
     }
