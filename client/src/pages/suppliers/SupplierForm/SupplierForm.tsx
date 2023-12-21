@@ -11,15 +11,10 @@ import {
   useCreateSupplierApiMutation,
   useUpdateSupplierApiMutation,
 } from "../../../services/api"
-import createSupplierValidationSchema from "./validationSchema"
-
-export interface SupplierState {
-  name: string
-  phoneNumber: string
-  email: string
-  description?: string
-  address: string | undefined
-}
+import createSupplierValidationSchema, {
+  SupplierState,
+} from "./validationSchema"
+import { Grid } from "@material-ui/core"
 
 const initialValues = {
   name: "",
@@ -29,7 +24,7 @@ const initialValues = {
   email: "",
 } as SupplierState
 
-const supplierForm: React.FC = () => {
+const SupplierForm: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -51,12 +46,6 @@ const supplierForm: React.FC = () => {
   }
 
   const onCancel = () => {
-    // const isDirty = id
-    //   ? !equal(data, supplier)
-    //   : !equal(initialValues, supplier)
-    // if (isDirty === true) {
-    // TODO: show confirmation dialog
-    // }
     navigate(-1)
   }
 
@@ -76,39 +65,46 @@ const supplierForm: React.FC = () => {
         onSubmit={onSubmit}
       >
         <Form onCancel={onCancel}>
-          <FormikTextInput
-            name="name"
-            label={t("Name")}
-            margin="normal"
-            fullWidth
-          />
-          <FormikTextInput
-            name="description"
-            label={t("Description")}
-            margin="normal"
-            fullWidth
-            multiline={true}
-            minRows={3}
-          />
-          <FormikTextInput
-            name="address"
-            label={t("Address")}
-            margin="normal"
-          />
-          <FormikTextInput
-            name="phoneNumber"
-            label={t("Phone Number")}
-            margin="normal"
-          />
-          <FormikTextInput
-            name="email"
-            label={t("Email")}
-            margin="normal"
-          />
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={6}>
+              <FormikTextInput name="name" label={t("Name")} margin="normal" />
+            </Grid>
+            <Grid item xs={12}>
+              <FormikTextInput
+                name="description"
+                label={t("Description")}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormikTextInput
+                name="address"
+                label={t("Address")}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormikTextInput
+                name="phoneNumber"
+                label={t("Phone Number")}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormikTextInput
+                name="email"
+                label={t("Email")}
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
         </Form>
       </Formik>
     </Container>
   )
 }
 
-export default supplierForm
+export default SupplierForm

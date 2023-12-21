@@ -25,29 +25,24 @@ import { useStyles } from "./styles"
 
 // import DataGrid from "../../components/controls/datagrid/DataGrid"
 
-const supplierList: React.FC = () => {
+const SupplierList: React.FC = () => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [deletesupplierApiMutation, { isLoading: isLoadingDeletesupplier }] =
+  const [deleteSupplierApiMutation, { isLoading: isLoadingDeleteSupplier }] =
     useDeleteSupplierApiMutation()
   const [
-    findAllsupplierApiQuery,
-    { isLoading: isLoadingFetchsupplier, data: lazysupplierResponseQuery },
+    findAllSupplierApiQuery,
+    { isLoading: isLoadingFetchSupplier, data: lazySupplierResponseQuery },
   ] = useLazyFindAllSupplierApiQuery()
-  const initialsupplierList =
+  const initialSupplierList =
     useLoaderData() as Monorepo.Api.Response.SupplierResponseDto[]
 
-  const supplierList = lazysupplierResponseQuery
-    ? lazysupplierResponseQuery.data
-    : initialsupplierList
+  const supplierList =
+    (lazySupplierResponseQuery
+      ? lazySupplierResponseQuery.data
+      : initialSupplierList) || []
 
-  const onDebounceSearch = async (value: string) => {
-    findAllsupplierApiQuery({ search: value })
-  }
-  const onClickList = () => {
-    return navigate("/suppliers")
-  }
   const onClickCreate = () => {
     return navigate("/suppliers/create")
   }
@@ -56,23 +51,25 @@ const supplierList: React.FC = () => {
   }
 
   const { show } = useConfirmationDialog({
-    content: `Do you want to delete this supplier?`,
+    content: t("Do you want to delete this data?", {
+      ns: "message",
+      model: t("supplier"),
+    }),
     title: t("Delete Supplier", { ns: "action" }),
     confirmText: "Delete",
     variant: "destructive",
-    isLoading: isLoadingDeletesupplier,
+    isLoading: isLoadingDeleteSupplier,
   })
 
   const onClickDelete = (row: Monorepo.Api.Response.SupplierResponseDto) => {
     show({
-      content: `Do you want to delete this supplier named ${row.name}?`,
       onConfirm: async () => {
         try {
           if (!row.id) {
             throw new Error()
           }
-          await deletesupplierApiMutation({ id: row.id }).unwrap()
-          await findAllsupplierApiQuery().unwrap()
+          await deleteSupplierApiMutation({ id: row.id }).unwrap()
+          // await findAllSupplierApiQuery().unwrap()
         } catch (e) {
           dispatch(
             showSnackbar({
@@ -170,20 +167,18 @@ const supplierList: React.FC = () => {
   ]
 
   return (
-    <Container title={t("suppliers")}>
+    <Container title={t("Suppliers")}>
       <Box>
         <Button
-          className={classes.button}
+          className={classes.createButton}
           variant="contained"
           color="primary"
           size="small"
           onClick={onClickCreate}
           startIcon={<Add />}
         >
-          {t("Create supplier", { ns: "action" })}
+          {t("Create Supplier", { ns: "action" })}
         </Button>
-
-        <Searchbox onDebounce={onDebounceSearch} />
       </Box>
 
       <div className={classes.wrapper}>
@@ -191,7 +186,7 @@ const supplierList: React.FC = () => {
           className={classes.datagrid}
           columns={dataGridColumns}
           rows={supplierList}
-          loading={isLoadingFetchsupplier}
+          loading={isLoadingFetchSupplier}
           components={{
             Toolbar: GridToolbar,
           }}
@@ -206,4 +201,4 @@ const supplierList: React.FC = () => {
   )
 }
 
-export default supplierList
+export default SupplierList

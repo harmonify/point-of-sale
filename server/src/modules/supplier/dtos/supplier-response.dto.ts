@@ -24,11 +24,11 @@ export class SupplierResponseDto implements Partial<Supplier> {
   phoneNumber: string;
 
   @ApiProperty()
-  email: string;
+  email: string | null;
 
   @ApiProperty()
   description?: string | null;
 
   @ApiProperty()
-  address: string;
+  address: string | null;
 }

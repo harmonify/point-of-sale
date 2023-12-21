@@ -1,26 +1,13 @@
-import { Counter } from "@/features/counter/Counter"
 import { t } from "i18next"
-import { Fragment } from "react"
+import { Fragment, lazy } from "react"
 import { Helmet } from "react-helmet"
 import { createBrowserRouter, RouteObject } from "react-router-dom"
 
 import AuthGuard from "./components/AuthGuard"
 import { APP_ENV } from "./environment"
-import {
-  customerDetailLoader,
-  CustomerForm,
-  CustomerList,
-  customerListLoader,
-} from "./pages/customers"
-import { Error404, Error500 } from "./pages/errors"
-import Home from "./pages/home/Home"
-import Login from "./pages/login/Login"
-import sale from "./pages/sales"
-import HomeInfo from "./pages/home/HomeInfo"
-import ProductList from "./pages/products/ProductList"
-
-// @ts-ignore
-// import UnderMaintenance from "./views/UnderMaintenance"
+import { customerDetailLoader, customerListLoader } from "./pages/customers"
+import { Error500 } from "./pages/errors"
+import { supplierDetailLoader, supplierListLoader } from "./pages/suppliers"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -37,79 +24,91 @@ const routeObjects: IRoute[] = [
   //   skipAuth: true,
   // },
   {
-    Component: Error500,
+    Component: lazy(() => import("./pages/errors/Error500")),
     path: "error",
     title: t("error:FETCH_ERROR"),
     skipAuth: true,
   },
   {
-    Component: Counter,
+    Component: lazy(() => import("./features/counter/Counter")),
     path: "test",
     title: "Test",
     skipAuth: true,
   },
   {
-    Component: Login,
+    Component: lazy(() => import("./pages/login/Login")),
     path: "login",
     title: t("Login", { ns: "action" }),
     skipAuth: true,
   },
   {
-    Component: Home,
+    Component: lazy(() => import("./pages/home/Home")),
     path: "/",
     title: t("Point of Sales"),
     children: [
       {
         path: "",
-        Component: HomeInfo,
+        Component: lazy(() => import("./pages/home/HomeInfo")),
         title: t("Point of Sales"),
       },
       {
-        Component: sale,
+        Component: lazy(() => import("./pages/sales")),
         title: t("Sale"),
         path: "sale",
       },
       {
-        Component: CustomerList,
+        Component: lazy(
+          () => import("./pages/customers/CustomerList/CustomerList"),
+        ),
         title: t("Customers"),
         path: "customers",
         loader: customerListLoader,
       },
       {
-        Component: CustomerForm,
+        Component: lazy(
+          () => import("./pages/customers/CustomerForm/CustomerForm"),
+        ),
         title: t("Create Customer", { ns: "action" }),
         path: "customers/create",
       },
       {
-        Component: CustomerForm,
+        Component: lazy(
+          () => import("./pages/customers/CustomerForm/CustomerForm"),
+        ),
         title: t("Edit Customer", { ns: "action" }),
         path: "customers/edit/:id",
         loader: customerDetailLoader,
       },
       {
-        Component: ProductList,
-        title: t("Products"),
-        path: "products",
-        // loader: productListLoader,
+        Component: lazy(
+          () => import("./pages/suppliers/SupplierList/SupplierList"),
+        ),
+        title: t("Suppliers"),
+        path: "suppliers",
+        loader: supplierListLoader,
       },
-      // {
-      //   Component: ProductForm,
-      //   title: t("Create Product"),
-      //   path: "products/create",
-      // },
-      // {
-      //   Component: ProductForm,
-      //   title: t("Edit Product"),
-      //   path: "products/edit/:id",
-      //   // loader: productDetailLoader,
-      // },
+      {
+        Component: lazy(
+          () => import("./pages/suppliers/SupplierForm/SupplierForm"),
+        ),
+        title: t("Create Supplier", { ns: "action" }),
+        path: "suppliers/create",
+      },
+      {
+        Component: lazy(
+          () => import("./pages/suppliers/SupplierForm/SupplierForm"),
+        ),
+        title: t("Edit Supplier", { ns: "action" }),
+        path: "suppliers/edit/:id",
+        loader: supplierDetailLoader,
+      },
     ],
   },
   {
     path: "*",
     skipAuth: true,
     title: t("Page not found", { ns: "error" }),
-    Component: Error404,
+    Component: lazy(() => import("./pages/errors/Error404")),
   },
 ]
 

@@ -28,17 +28,17 @@ export class UpdateSupplierRequestDto implements Prisma.SupplierUpdateInput {
   @IsString()
   @IsEmail()
   @ApiProperty()
-  email?: string;
+  email?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description?: string;
+  description?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  address?: string;
+  address?: string | null;
 
   @IsOptional()
   @IsDateString()

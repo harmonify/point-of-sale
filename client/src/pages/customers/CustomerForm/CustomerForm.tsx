@@ -14,6 +14,7 @@ import {
 import createCustomerValidationSchema, {
   CustomerState,
 } from "./validationSchema"
+import { Grid } from "@material-ui/core"
 
 const initialValues = {
   name: "",
@@ -49,7 +50,7 @@ const CustomerForm: React.FC = () => {
     //   ? !equal(data, customer)
     //   : !equal(initialValues, customer)
     // if (isDirty === true) {
-    // TODO: show confirmation dialog
+    //   // TODO: show confirmation dialog
     // }
     navigate(-1)
   }
@@ -70,35 +71,42 @@ const CustomerForm: React.FC = () => {
         onSubmit={onSubmit}
       >
         <Form onCancel={onCancel}>
-          <FormikTextInput
-            name="name"
-            label={t("Name")}
-            margin="normal"
-            fullWidth
-          />
-          <FormikTextInput
-            name="description"
-            label={t("Description")}
-            margin="normal"
-            fullWidth
-            multiline={true}
-            minRows={3}
-          />
-          <FormikTextInput
-            name="address"
-            label={t("Address")}
-            margin="normal"
-          />
-          <FormikTextInput
-            name="phoneNumber"
-            label={t("Phone Number")}
-            margin="normal"
-          />
-          <FormikTextInput
-            name="email"
-            label={t("Email")}
-            margin="normal"
-          />
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={6}>
+              <FormikTextInput name="name" label={t("Name")} margin="normal" />
+            </Grid>
+            <Grid item xs={12}>
+              <FormikTextInput
+                name="description"
+                label={t("Description")}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormikTextInput
+                name="address"
+                label={t("Address")}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormikTextInput
+                name="phoneNumber"
+                label={t("Phone Number")}
+                margin="normal"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormikTextInput
+                name="email"
+                label={t("Email")}
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
         </Form>
       </Formik>
     </Container>

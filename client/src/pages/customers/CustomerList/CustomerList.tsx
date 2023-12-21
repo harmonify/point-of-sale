@@ -38,16 +38,11 @@ const CustomerList: React.FC = () => {
   const initialCustomerList =
     useLoaderData() as Monorepo.Api.Response.CustomerResponseDto[]
 
-  const customerList = lazyCustomerResponseQuery
-    ? lazyCustomerResponseQuery.data
-    : initialCustomerList
+  const customerList =
+    (lazyCustomerResponseQuery
+      ? lazyCustomerResponseQuery.data
+      : initialCustomerList) || []
 
-  const onDebounceSearch = async (value: string) => {
-    findAllCustomerApiQuery({ search: value })
-  }
-  const onClickList = () => {
-    return navigate("/customers")
-  }
   const onClickCreate = () => {
     return navigate("/customers/create")
   }
@@ -56,7 +51,10 @@ const CustomerList: React.FC = () => {
   }
 
   const { show } = useConfirmationDialog({
-    content: t("Do you want to delete this data?", { ns: "message" }),
+    content: t("Do you want to delete this data?", {
+      ns: "message",
+      model: t("customer"),
+    }),
     title: t("Delete Customer", { ns: "action" }),
     confirmText: "Delete",
     variant: "destructive",
@@ -71,7 +69,7 @@ const CustomerList: React.FC = () => {
             throw new Error()
           }
           await deleteCustomerApiMutation({ id: row.id }).unwrap()
-          await findAllCustomerApiQuery().unwrap()
+          // await findAllCustomerApiQuery().unwrap()
         } catch (e) {
           dispatch(
             showSnackbar({
@@ -172,7 +170,7 @@ const CustomerList: React.FC = () => {
     <Container title={t("Customers")}>
       <Box>
         <Button
-          className={classes.button}
+          className={classes.createButton}
           variant="contained"
           color="primary"
           size="small"
@@ -181,8 +179,6 @@ const CustomerList: React.FC = () => {
         >
           {t("Create Customer", { ns: "action" })}
         </Button>
-
-        <Searchbox onDebounce={onDebounceSearch} />
       </Box>
 
       <div className={classes.wrapper}>

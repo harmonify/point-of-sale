@@ -278,9 +278,9 @@ model Supplier {
   deletedById  Int?
   name         String
   description  String?
-  address      String
+  address      String?
   phoneNumber  String // @unique()
-  email        String // @unique()
+  email        String? // @unique()
   procurements Procurement[] @relation()
   createdBy    User          @relation(name: "supplier_createdBy_user", map: "supplier_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   updatedBy    User          @relation(name: "supplier_updatedBy_user", map: "supplier_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)

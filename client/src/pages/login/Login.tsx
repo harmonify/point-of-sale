@@ -18,7 +18,7 @@ const validationSchema = object({
 
 const Login: React.FC = () => {
   const [postLogin, { isLoading }] = usePostLoginMutation()
-  const { t } = useTranslation(["translation", "field"])
+  const { t } = useTranslation(["translation", "message"])
   const navigate = useNavigate()
   const classes = useStyles()
 
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
               // onCancel={() => {}}
             >
               <div style={{ marginBottom: "1em" }}>
-                <span>{t("Welcome to POS")}</span>
+                <span>{t("Welcome to POS", { ns: "message" })}</span>
               </div>
 
               <FormikTextInput

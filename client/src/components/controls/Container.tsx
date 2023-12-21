@@ -6,7 +6,8 @@ import { Box } from "@material-ui/core"
 const useStyles = makeStyles((theme) => ({
   root: {
     borderTop: "1px solid #3f50b5",
-    padding: "10px 5px 5px 5px",
+    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
     position: "relative",
   },
   title: {

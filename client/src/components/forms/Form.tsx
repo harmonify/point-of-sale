@@ -1,18 +1,11 @@
 import { Box, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import { Save } from "@material-ui/icons"
-import classNames from "classnames"
 import { Form as FormikForm } from "formik"
 import React, { useEffect } from "react"
 
 // eslint-disable-next-line
 const useStyles = makeStyles((theme) => ({
-  form: {
-    padding: ".75em .2em",
-    "& > *": {
-      marginBottom: "1em",
-    },
-  },
   buttonSubmit: {
     marginTop: "1.5em",
     marginRight: ".5em",
@@ -46,11 +39,7 @@ const Form: React.FC<{
     <FormikForm
       // On submit will take on the parent `Formik` component
       // onSubmit={props.onSubmit}
-      className={
-        props.className
-          ? classNames(classes.form, props.className)
-          : classes.form
-      }
+      className={props.className}
       style={props.style}
     >
       {props.children}

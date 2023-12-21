@@ -1,6 +1,6 @@
-import { object, string } from "yup"
+import { InferType, object, string } from "yup"
 
-const createsupplierValidationSchema = object({
+const createSupplierValidationSchema = object({
   name: string().required(),
   address: string().optional().nullable(),
   phoneNumber: string().required().min(10),
@@ -8,4 +8,6 @@ const createsupplierValidationSchema = object({
   email: string().optional().nullable().email(),
 })
 
-export default createsupplierValidationSchema
+export type SupplierState = InferType<typeof createSupplierValidationSchema>
+
+export default createSupplierValidationSchema

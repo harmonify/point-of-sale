@@ -33,7 +33,6 @@ export const modelListLoaderBuilder = ({
     )
     try {
       const response = (await promise.unwrap()) as any
-      console.log(`🚀 ~ response ~ ${JSON.stringify(response, null, 2)}`);
       return response && typeof response === "object" && response.data
         ? response.data
         : response
@@ -56,7 +55,6 @@ export const modelDetailLoaderBuilder = ({
     )
     try {
       const response = (await promise.unwrap()) as any
-      console.log(`🚀 ~ response ~ ${JSON.stringify(response, null, 2)}`);
       return response && typeof response === "object" && response.data
         ? response.data
         : response

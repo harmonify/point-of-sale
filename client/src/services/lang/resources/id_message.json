@@ -1,9 +1,9 @@
 {
   "Data created successfully": "{{model, sentencecase, default(value: Data)}} berhasil ditambahkan",
+  "Data updated successfully": "Data{{model, spaceBeforeIfDefined, removeIfUndefined}} berhasil diubah",
   "Data deleted successfully": "{{model, sentencecase, default(value: Data)}} berhasil dihapus",
-  "Data updated successfully": "Data{{model, spaceBeforeWhenDefined}} berhasil diubah",
-  "Do you want to update this data?": "Apakah kamu mau mengubah data{{model, spaceBeforeWhenDefined}} ini?",
-  "Do you want to delete this data?": "Apakah kamu mau menghapus data{{model, spaceBeforeWhenDefined}} ini?",
+  "Do you want to update this data?": "Apakah kamu mau mengubah data{{model, spaceBeforeIfDefined, removeIfUndefined}} ini?",
+  "Do you want to delete this data?": "Apakah kamu mau menghapus data{{model, spaceBeforeIfDefined, removeIfUndefined}} ini?",
   "Hello!": "Halo {{name}}",
   "Welcome to POS": "Selamat datang di POS Toko Dinamis"
 }

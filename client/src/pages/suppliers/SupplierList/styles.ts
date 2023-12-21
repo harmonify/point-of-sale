@@ -4,8 +4,8 @@ export const useStyles = makeStyles((theme) => ({
   leftIcon: {
     marginRight: theme.spacing(1),
   },
-  button: {
-    margin: theme.spacing(1),
+  createButton: {
+    marginBottom: theme.spacing(2),
   },
   iconSmall: {
     fontSize: 20,
@@ -14,7 +14,6 @@ export const useStyles = makeStyles((theme) => ({
     position: "relative",
     width: "100%",
     height: 600,
-    margin: "20px 5px 5px 5px",
   },
   datagrid: {
     display: "flex",

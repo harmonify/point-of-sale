@@ -16,7 +16,12 @@ import {
 } from "@material-ui/core"
 import MuiDialog from "@material-ui/core/Dialog"
 import { makeStyles } from "@material-ui/core/styles"
-import React, { MouseEventHandler, ReactElement, ReactNode } from "react"
+import React, {
+  MouseEventHandler,
+  ReactElement,
+  ReactNode,
+  useRef,
+} from "react"
 import { IConfirmationDialogState } from "./ConfirmationDialogProvider"
 import { t } from "i18next"
 
@@ -51,6 +56,7 @@ const Transition = (props: FadeProps) => <Fade {...props} />
 
 const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
   const classes = useStyles()
+  const ref = useRef()
 
   return (
     <MuiDialog
@@ -63,7 +69,12 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
     >
       {!!props.title && (
         <DialogTitle disableTypography color="textPrimary">
-          <Typography variant="h4" color="textPrimary" gutterBottom>
+          <Typography
+            innerRef={ref}
+            variant="h4"
+            color="textPrimary"
+            gutterBottom
+          >
             {props.title}
           </Typography>
           <Divider />

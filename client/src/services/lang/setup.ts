@@ -40,8 +40,12 @@ i18n.services.formatter?.addCached("sentencecase", () => (value) => {
   return normalized[0].toUpperCase() + normalized.slice(1)
 })
 
-i18n.services.formatter?.addCached("spaceBeforeWhenDefined", () => (value) => {
+i18n.services.formatter?.addCached("spaceBeforeIfDefined", () => (value) => {
   return value ? " " + value : value
+})
+
+i18n.services.formatter?.addCached("removeIfUndefined", () => (value) => {
+  return value ? value : ""
 })
 
 i18n.services.formatter?.addCached("default", (lng, options) => (value) => {
