@@ -22,7 +22,7 @@ export class UpdateProcurementRequestDto
   implements
     Omit<
       Prisma.ProcurementUpdateInput,
-      'createdBy' | 'updatedBy' | 'provider' | 'procurementProducts'
+      'createdBy' | 'updatedBy' | 'supplier' | 'procurementProducts'
     >
 {
   @IsDefined()
@@ -73,7 +73,7 @@ export class UpdateProcurementRequestDto
   @IsDefined()
   @IsInt()
   @ApiProperty()
-  providerId: number;
+  supplierId: number;
 
   @IsDefined()
   @IsArray()

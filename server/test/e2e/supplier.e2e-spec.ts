@@ -1,25 +1,25 @@
 import { ResponseBodyDto } from '@/libs/http';
-import { ProviderResponseDto } from '@/modules/provider/dtos';
-import { appUrl, provider } from '@test/fixtures';
+import { SupplierResponseDto } from '@/modules/supplier/dtos';
+import { appUrl, supplier } from '@test/fixtures';
 import {
   buildResponseBodySchema,
-  providerJSONSchema,
+  supplierJSONSchema,
   responseBodyJSONSchema,
 } from '@test/schemas';
 import { TestUtil } from '@test/test.service';
 import request from 'supertest';
 
-describe('Provider (e2e)', () => {
+describe('supplier (e2e)', () => {
   let testUtil: TestUtil;
   let accessToken: string;
 
-  const providerListResponseJSONSchema = buildResponseBodySchema({
+  const supplierListResponseJSONSchema = buildResponseBodySchema({
     type: 'array',
-    items: providerJSONSchema,
+    items: supplierJSONSchema,
   });
 
-  const providerResponseJSONSchema =
-    buildResponseBodySchema(providerJSONSchema);
+  const supplierResponseJSONSchema =
+    buildResponseBodySchema(supplierJSONSchema);
 
   beforeAll(async () => {
     testUtil = new TestUtil();
@@ -33,107 +33,107 @@ describe('Provider (e2e)', () => {
   });
 
   describe('v1', () => {
-    describe('POST /v1/providers', () => {
+    describe('POST /v1/suppliers', () => {
       describe('201', () => {
-        it('Should return the provider information', () => {
+        it('Should return the supplier information', () => {
           return request(appUrl)
-            .post('/v1/providers')
+            .post('/v1/suppliers')
             .auth(accessToken, { type: 'bearer' })
-            .send(provider)
+            .send(supplier)
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProviderResponseDto> = res.body;
+              const body: ResponseBodyDto<SupplierResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 201. ${JSON.stringify(body)}`,
               ).toBe(201);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(providerResponseJSONSchema);
+              expect(body).toMatchSchema(supplierResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('GET /v1/providers', () => {
+    describe('GET /v1/suppliers', () => {
       describe('200', () => {
-        it('Should return list of provider information', () => {
+        it('Should return list of supplier information', () => {
           return request(appUrl)
-            .get('/v1/providers')
+            .get('/v1/suppliers')
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProviderResponseDto> = res.body;
+              const body: ResponseBodyDto<SupplierResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(providerListResponseJSONSchema);
+              expect(body).toMatchSchema(supplierListResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('GET /v1/providers/:id', () => {
+    describe('GET /v1/suppliers/:id', () => {
       describe('200', () => {
-        it('Should return provider information', () => {
+        it('Should return supplier information', () => {
           return request(appUrl)
-            .get(`/v1/providers/${provider.id}`)
+            .get(`/v1/suppliers/${supplier.id}`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProviderResponseDto> = res.body;
+              const body: ResponseBodyDto<SupplierResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(providerResponseJSONSchema);
+              expect(body).toMatchSchema(supplierResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('PUT /v1/providers/:id', () => {
+    describe('PUT /v1/suppliers/:id', () => {
       describe('200', () => {
-        it('Should return provider information', () => {
+        it('Should return supplier information', () => {
           return request(appUrl)
-            .put(`/v1/providers/${provider.id}`)
+            .put(`/v1/suppliers/${supplier.id}`)
             .auth(accessToken, { type: 'bearer' })
             .send({
               isActive: false,
-              name: 'Provider 2',
+              name: 'supplier 2',
               phoneNumber: '1234558',
-              description: 'updated provider',
+              description: 'updated supplier',
               address: 'Mars',
             })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProviderResponseDto> = res.body;
+              const body: ResponseBodyDto<SupplierResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,
               ).toBe(200);
               expect(body).toBeDefined();
               expect(body.data).toBeDefined();
-              expect(body).toMatchSchema(providerResponseJSONSchema);
+              expect(body).toMatchSchema(supplierResponseJSONSchema);
             });
         });
       });
     });
 
-    describe('DELETE /v1/providers/:id', () => {
+    describe('DELETE /v1/suppliers/:id', () => {
       describe('200', () => {
         it('Should return a response', () => {
           return request(appUrl)
-            .delete(`/v1/providers/${provider.id}`)
+            .delete(`/v1/suppliers/${supplier.id}`)
             .auth(accessToken, { type: 'bearer' })
             .then((res) => {
               const statusCode = res.statusCode;
-              const body: ResponseBodyDto<ProviderResponseDto> = res.body;
+              const body: ResponseBodyDto<SupplierResponseDto> = res.body;
               expect(
                 statusCode,
                 `expected statusCode to be 200. ${JSON.stringify(body)}`,

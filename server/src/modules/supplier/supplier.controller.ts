@@ -18,40 +18,40 @@ import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
-import { ProviderQuery } from './provider.query';
+import { SupplierQuery } from './supplier.query';
 import {
-  CreateProviderRequestDto,
-  ProviderResponseDto,
-  UpdateProviderRequestDto,
+  CreateSupplierRequestDto,
+  SupplierResponseDto,
+  UpdateSupplierRequestDto,
 } from './dtos';
 
-@ApiTags('Providers')
-@Controller({ path: '/providers', version: '1' })
-export class ProviderController {
+@ApiTags('Suppliers')
+@Controller({ path: '/suppliers', version: '1' })
+export class SupplierController {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Post()
   async create(
-    @Body() provider: CreateProviderRequestDto,
+    @Body() supplier: CreateSupplierRequestDto,
     @CurrentUser() user: User,
-  ): Promise<IResponseBody<ProviderResponseDto>> {
-    const newProvider = await this.prismaService.provider.create({
+  ): Promise<IResponseBody<SupplierResponseDto>> {
+    const newSupplier = await this.prismaService.supplier.create({
       data: {
-        ...provider,
+        ...supplier,
         createdById: user.id,
         updatedById: user.id,
       },
     });
     return {
-      data: newProvider,
+      data: newSupplier,
     };
   }
 
   @Get()
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody<ProviderResponseDto[]>> {
-    const providers = await this.prismaService.provider.findMany({
+  ): Promise<IResponseBody<SupplierResponseDto[]>> {
+    const suppliers = await this.prismaService.supplier.findMany({
       ...(paginationInfo.all
         ? undefined
         : {
@@ -61,7 +61,7 @@ export class ProviderController {
               ? {
                   AND: [
                     BaseQuery.Filter.available(),
-                    ProviderQuery.Filter.search(paginationInfo.search),
+                    SupplierQuery.Filter.search(paginationInfo.search),
                   ],
                 }
               : BaseQuery.Filter.available(),
@@ -69,37 +69,37 @@ export class ProviderController {
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {
-      data: providers,
+      data: suppliers,
     };
   }
 
   @Get('/:id')
   async findOne(
     @Param('id') id: number,
-  ): Promise<IResponseBody<ProviderResponseDto>> {
-    const provider = await this.prismaService.provider.findFirstOrThrow({
+  ): Promise<IResponseBody<SupplierResponseDto>> {
+    const supplier = await this.prismaService.supplier.findFirstOrThrow({
       where: {
         ...BaseQuery.Filter.available(),
         id,
       },
     });
     return {
-      data: provider,
+      data: supplier,
     };
   }
 
   @Put('/:id')
   async update(
     @Param('id') id: number,
-    @Body() data: UpdateProviderRequestDto,
+    @Body() data: UpdateSupplierRequestDto,
     @CurrentUser() user: User,
-  ): Promise<IResponseBody<ProviderResponseDto>> {
-    const updatedProvider = await this.prismaService.provider.update({
+  ): Promise<IResponseBody<SupplierResponseDto>> {
+    const updatedSupplier = await this.prismaService.supplier.update({
       data: { ...data, updatedById: user.id },
       where: BaseQuery.Filter.byId(id),
     });
     return {
-      data: updatedProvider,
+      data: updatedSupplier,
     };
   }
 
@@ -108,7 +108,7 @@ export class ProviderController {
     @Param('id') id: number,
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
-    await this.prismaService.provider.update({
+    await this.prismaService.supplier.update({
       data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
     });

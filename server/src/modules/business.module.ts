@@ -9,7 +9,7 @@ import { ExpenseModule } from '@/modules/expense/expense.module';
 import { NotificationModule } from '@/modules/notification/notification.module';
 import { ProcurementModule } from '@/modules/procurement/procurement.module';
 import { ProductModule } from '@/modules/product/product.module';
-import { ProviderModule } from '@/modules/provider/provider.module';
+import { SupplierModule } from '@/modules/supplier/supplier.module';
 import { SaleModule } from '@/modules/sale/sale.module';
 import { UnitModule } from '@/modules/unit/unit.module';
 import { UserModule } from '@/modules/user/user.module';
@@ -22,7 +22,7 @@ import { Module } from '@nestjs/common';
     UserModule,
     NotificationModule,
     CustomerModule,
-    ProviderModule,
+    SupplierModule,
     CategoryModule,
     UnitModule,
     ProductModule,

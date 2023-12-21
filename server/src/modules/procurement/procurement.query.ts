@@ -11,7 +11,7 @@ const procurementQueryFilter = {
       OR: [
         { name: { contains: term } },
         { description: { contains: term } },
-        { provider: { name: { contains: term } } },
+        { supplier: { name: { contains: term } } },
       ],
     }) satisfies Prisma.ProcurementWhereInput,
 } satisfies Record<string, (...args: any[]) => Prisma.ProcurementWhereInput>;

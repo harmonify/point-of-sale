@@ -25,14 +25,14 @@ export class CreateProcurementRequestDto
   implements
     Omit<
       Prisma.ProcurementCreateInput,
-      'createdBy' | 'updatedBy' | 'provider' | 'procurementProducts'
+      'createdBy' | 'updatedBy' | 'supplier' | 'procurementProducts'
     >
 {
   @IsDefined()
   @IsInt()
   @Min(1)
   @ApiProperty()
-  providerId: number;
+  supplierId: number;
 
   @IsOptional()
   @IsBoolean()

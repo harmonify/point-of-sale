@@ -165,7 +165,7 @@ model Procurement {
   createdById         Int
   updatedById         Int
   deletedById         Int?
-  providerId          Int
+  supplierId          Int
   name                String
   description         String?
   invoiceNumber       String?
@@ -177,7 +177,7 @@ model Procurement {
   createdBy           User                      @relation(name: "procurement_createdBy_user", map: "procurement_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   updatedBy           User                      @relation(name: "procurement_updatedBy_user", map: "procurement_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
   deletedBy           User?                     @relation(name: "procurement_deletedBy_user", map: "procurement_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  provider            Provider                  @relation(fields: [providerId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  supplier            Supplier                  @relation(fields: [supplierId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   procurementProducts ProcurementProduct[]      @relation()
   cashFlow            CashFlow[]
 
@@ -267,7 +267,7 @@ model ProductUnit {
   @@map("product_unit")
 }
 
-model Provider {
+model Supplier {
   id           Int           @id @default(autoincrement())
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
@@ -282,11 +282,11 @@ model Provider {
   phoneNumber  String // @unique()
   email        String // @unique()
   procurements Procurement[] @relation()
-  createdBy    User          @relation(name: "provider_createdBy_user", map: "provider_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  updatedBy    User          @relation(name: "provider_updatedBy_user", map: "provider_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  deletedBy    User?         @relation(name: "provider_deletedBy_user", map: "provider_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  createdBy    User          @relation(name: "supplier_createdBy_user", map: "supplier_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  updatedBy    User          @relation(name: "supplier_updatedBy_user", map: "supplier_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  deletedBy    User?         @relation(name: "supplier_deletedBy_user", map: "supplier_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
-  @@map("provider")
+  @@map("supplier")
 }
 
 model Sale {
@@ -427,9 +427,9 @@ model User {
   createdSaleProducts        SaleProduct[]        @relation(name: "saleProduct_createdBy_user")
   updatedSaleProducts        SaleProduct[]        @relation(name: "saleProduct_updatedBy_user")
   deletedSaleProducts        SaleProduct[]        @relation(name: "saleProduct_deletedBy_user")
-  createdProviders           Provider[]           @relation(name: "provider_createdBy_user")
-  updatedProviders           Provider[]           @relation(name: "provider_updatedBy_user")
-  deletedProviders           Provider[]           @relation(name: "provider_deletedBy_user")
+  createdSuppliers           Supplier[]           @relation(name: "supplier_createdBy_user")
+  updatedSuppliers           Supplier[]           @relation(name: "supplier_updatedBy_user")
+  deletedSuppliers           Supplier[]           @relation(name: "supplier_deletedBy_user")
   createdUnits               Unit[]               @relation(name: "unit_createdBy_user")
   updatedUnits               Unit[]               @relation(name: "unit_updatedBy_user")
   deletedUnits               Unit[]               @relation(name: "unit_deletedBy_user")

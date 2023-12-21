@@ -53,11 +53,11 @@ const api = createApi({
       Monorepo.Api.Request.UpdateCustomerRequestDto
     >(builder, "customers")
 
-    const providerApi = apiBuilder<
-      Monorepo.Api.Response.ProviderResponseDto,
-      Monorepo.Api.Request.CreateProviderRequestDto,
-      Monorepo.Api.Request.UpdateProviderRequestDto
-    >(builder, "providers")
+    const supplierApi = apiBuilder<
+      Monorepo.Api.Response.SupplierResponseDto,
+      Monorepo.Api.Request.CreateSupplierRequestDto,
+      Monorepo.Api.Request.UpdateSupplierRequestDto
+    >(builder, "suppliers")
 
     const categoryApi = apiBuilder<
       Monorepo.Api.Response.CategoryResponseDto,
@@ -126,11 +126,11 @@ const api = createApi({
       updateCustomerApi: customerApi.update,
       deleteCustomerApi: customerApi.delete,
 
-      createProviderApi: providerApi.create,
-      findAllProviderApi: providerApi.findAll,
-      findOneProviderApi: providerApi.findOne,
-      updateProviderApi: providerApi.update,
-      deleteProviderApi: providerApi.delete,
+      createSupplierApi: supplierApi.create,
+      findAllSupplierApi: supplierApi.findAll,
+      findOneSupplierApi: supplierApi.findOne,
+      updateSupplierApi: supplierApi.update,
+      deleteSupplierApi: supplierApi.delete,
 
       createCategoryApi: categoryApi.create,
       findAllCategoryApi: categoryApi.findAll,
@@ -206,11 +206,11 @@ export const {
   useUpdateCustomerApiMutation,
   useDeleteCustomerApiMutation,
 
-  useCreateProviderApiMutation,
-  useLazyFindAllProviderApiQuery,
-  useLazyFindOneProviderApiQuery,
-  useUpdateProviderApiMutation,
-  useDeleteProviderApiMutation,
+  useCreateSupplierApiMutation,
+  useLazyFindAllSupplierApiQuery,
+  useLazyFindOneSupplierApiQuery,
+  useUpdateSupplierApiMutation,
+  useDeleteSupplierApiMutation,
 
   useCreateCategoryApiMutation,
   useLazyFindAllCategoryApiQuery,

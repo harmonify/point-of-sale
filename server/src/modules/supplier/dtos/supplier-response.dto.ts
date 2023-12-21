@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Provider } from '@prisma/client';
+import { Supplier } from '@prisma/client';
 
-export class ProviderResponseDto implements Partial<Provider> {
+export class SupplierResponseDto implements Partial<Supplier> {
   @ApiProperty()
   id: number;
 

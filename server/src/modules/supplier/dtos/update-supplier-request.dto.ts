@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class UpdateProviderRequestDto implements Prisma.ProviderUpdateInput {
+export class UpdateSupplierRequestDto implements Prisma.SupplierUpdateInput {
   @IsOptional()
   @IsBoolean()
   @ApiProperty()

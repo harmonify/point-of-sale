@@ -1,5 +1,5 @@
-export const providerJSONSchema = {
-  title: 'Customer Schema V1',
+export const supplierJSONSchema = {
+  title: 'Supplier Schema V1',
   type: 'object',
   required: [
     'id',

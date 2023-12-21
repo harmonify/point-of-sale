@@ -21,8 +21,8 @@ declare global {
           import("../server/src/modules/user").CreateUserRequestDto
         type CreateCustomerRequestDto =
           import("../server/src/modules/customer").CreateCustomerRequestDto
-        type CreateProviderRequestDto =
-          import("../server/src/modules/provider").CreateProviderRequestDto
+        type CreateSupplierRequestDto =
+          import("../server/src/modules/supplier").CreateSupplierRequestDto
         type CreateCategoryRequestDto =
           import("../server/src/modules/category").CreateCategoryRequestDto
         type CreateUnitRequestDto =
@@ -38,8 +38,8 @@ declare global {
           import("../server/src/modules/user").UpdateUserRequestDto
         type UpdateCustomerRequestDto =
           import("../server/src/modules/customer").UpdateCustomerRequestDto
-        type UpdateProviderRequestDto =
-          import("../server/src/modules/provider").UpdateProviderRequestDto
+        type UpdateSupplierRequestDto =
+          import("../server/src/modules/supplier").UpdateSupplierRequestDto
         type UpdateCategoryRequestDto =
           import("../server/src/modules/category").UpdateCategoryRequestDto
         type UpdateUnitRequestDto =
@@ -63,8 +63,8 @@ declare global {
           import("../server/src/modules/user").UserResponseDto
         type CustomerResponseDto =
           import("../server/src/modules/customer").CustomerResponseDto
-        type ProviderResponseDto =
-          import("../server/src/modules/provider").ProviderResponseDto
+        type SupplierResponseDto =
+          import("../server/src/modules/supplier").SupplierResponseDto
         type CategoryResponseDto =
           import("../server/src/modules/category").CategoryResponseDto
         type UnitResponseDto =

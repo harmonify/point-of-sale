@@ -10,7 +10,7 @@ import {
   Procurement,
   Product,
   ProductUnit,
-  Provider,
+  supplier,
   Sale,
   SaleProduct,
   Unit,
@@ -26,7 +26,7 @@ import {
   product,
   productDozenUnit,
   productPieceUnit,
-  provider,
+  Supplier,
   sale,
   saleDozenProduct,
   salePieceProduct,
@@ -77,7 +77,7 @@ export class TestUtil {
     await this.seedUser(adminUser);
     await this.seedUser(testUser);
     await this.seedCustomer(customer);
-    await this.seedProvider(provider);
+    await this.seedsupplier(supplier);
     await this.seedCategory(category);
     await this.seedNotification(notification);
     await this.seedUnit(pieceUnit);
@@ -115,12 +115,12 @@ export class TestUtil {
     });
   }
 
-  seedProvider(provider: Provider) {
-    return this.prismaService.provider.upsert({
-      create: provider,
-      update: provider,
+  seedsupplier(supplier: supplier) {
+    return this.prismaService.supplier.upsert({
+      create: supplier,
+      update: supplier,
       where: {
-        id: provider.id,
+        id: supplier.id,
       },
     });
   }

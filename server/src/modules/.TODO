@@ -12,7 +12,7 @@
 - [x] procurement
   - send notification to user
 - [x] product
-- [x] provider
+- [x] supplier
 - [] sale
   - inspect how sale works in NexoPOS, UI and database
   - check product unit stock

@@ -5,7 +5,7 @@ export * from './procurement-product-json.schema';
 export * from './product-json.schema';
 export * from './product-unit-json.schema';
 export * from './category-json.schema';
-export * from './provider-json.schema';
+export * from './supplier-json.schema';
 export * from './response-body-json.schema';
 export * from './sale-json.schema';
 export * from './sale-product-json.schema';

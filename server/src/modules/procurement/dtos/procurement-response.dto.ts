@@ -105,7 +105,7 @@ export class ProcurementResponseDto implements Procurement {
   @IsDefined()
   @IsNumber()
   @ApiProperty()
-  providerId: number;
+  supplierId: number;
 
   @IsDefined()
   @IsArray()

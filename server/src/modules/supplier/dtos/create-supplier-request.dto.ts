@@ -8,8 +8,8 @@ import {
   IsString,
 } from 'class-validator';
 
-export class CreateProviderRequestDto
-  implements Omit<Prisma.ProviderCreateInput, 'createdBy' | 'updatedBy'>
+export class CreateSupplierRequestDto
+  implements Omit<Prisma.SupplierCreateInput, 'createdBy' | 'updatedBy'>
 {
   @IsOptional()
   @IsBoolean()
