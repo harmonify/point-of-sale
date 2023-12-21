@@ -8,6 +8,8 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  Fade,
+  FadeProps,
   Slide,
   SlideProps,
   Typography,
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Transition = (props: SlideProps) => <Slide direction="up" {...props} />
+const Transition = (props: FadeProps) => <Fade {...props} />
 
 const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
   const classes = useStyles()
@@ -100,7 +102,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
             {props.isLoading ? (
               <CircularProgress size={18} color="inherit" />
             ) : (
-              props.confirmText || t("OK")
+              props.confirmText || t("OK", { ns: "action" })
             )}
           </Button>
         </Box>
@@ -113,7 +115,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
               className={classes.button}
               disabled={props.isLoading}
             >
-              {props.cancelText || t("Cancel")}
+              {props.cancelText || t("Cancel", { ns: "action" })}
             </Button>
           </Box>
         )}

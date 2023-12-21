@@ -67,15 +67,15 @@ const Login: React.FC = () => {
               <FormikTextInput
                 name="email"
                 fullWidth
-                label={t("Email", { ns: "field" })}
-                placeholder={t("Email", { ns: "field" })}
+                label={t("Email")}
+                placeholder={t("Email")}
                 margin="normal"
               />
               <FormikTextInput
                 name="password"
                 fullWidth
-                label={t("Password", { ns: "field" })}
-                placeholder={t("Password", { ns: "field" })}
+                label={t("Password")}
+                placeholder={t("Password")}
                 type="password"
                 margin="normal"
               />

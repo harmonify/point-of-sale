@@ -78,13 +78,13 @@ const supplierForm: React.FC = () => {
         <Form onCancel={onCancel}>
           <FormikTextInput
             name="name"
-            label={t("Name", { ns: "field" })}
+            label={t("Name")}
             margin="normal"
             fullWidth
           />
           <FormikTextInput
             name="description"
-            label={t("Description", { ns: "field" })}
+            label={t("Description")}
             margin="normal"
             fullWidth
             multiline={true}
@@ -92,17 +92,17 @@ const supplierForm: React.FC = () => {
           />
           <FormikTextInput
             name="address"
-            label={t("Address", { ns: "field" })}
+            label={t("Address")}
             margin="normal"
           />
           <FormikTextInput
             name="phoneNumber"
-            label={t("Phone Number", { ns: "field" })}
+            label={t("Phone Number")}
             margin="normal"
           />
           <FormikTextInput
             name="email"
-            label={t("Email", { ns: "field" })}
+            label={t("Email")}
             margin="normal"
           />
         </Form>

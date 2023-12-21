@@ -39,6 +39,13 @@ export type IConfirmationDialogState = {
 } & IDialogConfirmationProps &
   IDialogCancellationProps
 
+type IShowDialogConfirmationParams = Omit<
+  IConfirmationDialogState,
+  "open" | "content"
+> & {
+  content?: string
+}
+
 const defaultState: IConfirmationDialogState = {
   open: false,
   title: "",
@@ -58,7 +65,7 @@ const defaultState: IConfirmationDialogState = {
 export const ConfirmationDialogContext = createContext<{
   state: IConfirmationDialogState
   setState: (newState: IConfirmationDialogState) => void
-  show: (newState?: Omit<IConfirmationDialogState, "open">) => void
+  show: (newState?: IShowDialogConfirmationParams) => void
   close: () => void
 } | null>(null)
 
@@ -68,7 +75,7 @@ const ConfirmationDialogProvider: React.FC<{
   const [state, setState] = useState(defaultState)
 
   const show = useCallback(
-    (newState?: Omit<IConfirmationDialogState, "open">) => {
+    (newState?: IShowDialogConfirmationParams) => {
       setState((prev) => ({ ...prev, ...newState, open: true }))
     },
     [state],

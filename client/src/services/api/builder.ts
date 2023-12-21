@@ -36,6 +36,7 @@ const builder = <
       store.dispatch(
         showSnackbar({
           message: t(`Data created successfully`, {
+            ns: "message",
             model: t(resourceName as any),
           }),
           variant: "success",
@@ -116,6 +117,7 @@ const builder = <
       store.dispatch(
         showSnackbar({
           message: t(`Data updated successfully`, {
+            ns: "message",
             model: t(resourceName as any),
           }),
           variant: "success",
@@ -145,6 +147,7 @@ const builder = <
       store.dispatch(
         showSnackbar({
           message: t(`Data deleted successfully`, {
+            ns: "message",
             model: t(resourceName as any),
           }),
           variant: "success",

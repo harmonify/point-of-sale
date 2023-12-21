@@ -56,7 +56,7 @@ const CustomerList: React.FC = () => {
   }
 
   const { show } = useConfirmationDialog({
-    content: `Do you want to delete this customer?`,
+    content: t("Do you want to delete this data?", { ns: "message" }),
     title: t("Delete Customer", { ns: "action" }),
     confirmText: "Delete",
     variant: "destructive",
@@ -65,7 +65,6 @@ const CustomerList: React.FC = () => {
 
   const onClickDelete = (row: Monorepo.Api.Response.CustomerResponseDto) => {
     show({
-      content: `Do you want to delete this customer named ${row.name}?`,
       onConfirm: async () => {
         try {
           if (!row.id) {
@@ -123,25 +122,25 @@ const CustomerList: React.FC = () => {
     },
     {
       field: "name",
-      headerName: t("Name", { ns: "field" }),
+      headerName: t("Name"),
       flex: 2,
       minWidth: 160,
     },
     {
       field: "phoneNumber",
-      headerName: t("Phone Number", { ns: "field" }),
+      headerName: t("Phone Number"),
       flex: 2,
       minWidth: 200,
     },
     {
       field: "email",
-      headerName: t("Email", { ns: "field" }),
+      headerName: t("Email"),
       flex: 2,
       minWidth: 240,
     },
     {
       field: "gender",
-      headerName: t("Gender", { ns: "field" }),
+      headerName: t("Gender"),
       flex: 2,
       minWidth: 160,
       valueGetter: (params) => formatGender(params.value as string),
@@ -149,20 +148,20 @@ const CustomerList: React.FC = () => {
     },
     {
       field: "purchasedAmount",
-      headerName: t("Purchased Amount", { ns: "field" }),
+      headerName: t("Purchased Amount"),
       flex: 2,
       minWidth: 220,
       valueGetter: (params) => formatRupiah(params.value as number),
     },
     {
       field: "createdByName",
-      headerName: t("Created By", { ns: "field" }),
+      headerName: t("Created By"),
       flex: 2,
       minWidth: 180,
     },
     {
       field: "createdAt",
-      headerName: t("Created At", { ns: "field" }),
+      headerName: t("Created At"),
       flex: 2,
       minWidth: 260,
       valueGetter: (params) => formatISOToLocale(params.value as string),

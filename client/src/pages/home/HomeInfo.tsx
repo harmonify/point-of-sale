@@ -62,11 +62,11 @@ const HomeInfo: React.FC = () => {
   return (
     <Box className={classes.root}>
       <Typography variant="h1" style={{ marginBottom: ".5em" }}>
-        {t("Hello!", { name: user?.name })}
+        {t("Hello!", { ns: "message", name: user?.name })}
       </Typography>
 
       <Typography variant="h4" style={{ marginBottom: "1em" }}>
-        {t("Welcome to POS")}
+        {t("Welcome to POS", { ns: "message" })}
       </Typography>
 
       <Box className={classes.cardInfoContainer}>

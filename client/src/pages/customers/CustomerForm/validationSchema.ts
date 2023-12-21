@@ -5,7 +5,7 @@ const createCustomerValidationSchema = object({
   address: string().optional().nullable(),
   phoneNumber: string().optional().nullable().min(10),
   description: string().optional().nullable(),
-  email: string().email(),
+  email: string().optional().nullable().email(),
 })
 
 export type CustomerState = InferType<typeof createCustomerValidationSchema>

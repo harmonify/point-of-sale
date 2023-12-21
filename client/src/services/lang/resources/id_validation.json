@@ -1,0 +1,8 @@
+{
+  "default": "{{label}} tidak valid",
+  "required": "harus diisi",
+  "string": {
+    "email": "harus berupa email yang valid",
+    "min": "harus memiliki minimal {{x}} jumlah karakter"
+  }
+}
