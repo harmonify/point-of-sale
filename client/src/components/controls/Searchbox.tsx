@@ -34,6 +34,7 @@ const Searchbox: React.FC<{
 }> = ({ placeholder, onDebounce }) => {
   const classes = useStyles()
   const [searchTerm, setSearchTerm] = useState("")
+  const [isDirty, setIsDirty] = useState(false)
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
   const handleChange = (e) => {
@@ -47,7 +48,9 @@ const Searchbox: React.FC<{
   }
 
   useEffect(() => {
+    if (!debouncedSearchTerm && !isDirty) return
     onDebounce(debouncedSearchTerm)
+    setIsDirty(true)
   }, [debouncedSearchTerm])
 
   return (

@@ -6,6 +6,7 @@ import {
 
 export const customerListLoader = modelListLoaderBuilder({
   apiEndpointQuery: api.endpoints.findAllCustomerApi,
+  all: true,
 })
 
 export const customerDetailLoader = modelDetailLoaderBuilder({

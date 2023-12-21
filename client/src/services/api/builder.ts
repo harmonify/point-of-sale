@@ -9,14 +9,17 @@ const builder = <
   TUpdate = unknown,
 >(
   builder: ApiEndpointBuilder,
+  /** Resource name */
   resourceName: string,
+  /** API version */
+  version: string = "v1",
 ) => ({
   create: builder.mutation<
     Monorepo.Api.Response.ResponseBodyDto<TGet>,
     TCreate
   >({
     query: (body) => ({
-      url: `/v1/${resourceName}`,
+      url: `/${version}/${resourceName}`,
       method: "POST",
       body,
     }),
@@ -46,14 +49,27 @@ const builder = <
     Partial<Monorepo.Api.Request.RequestPaginationInfoDto> | void
   >({
     query: (paginationInfoDto) => {
-      const { page, perPage, search } = paginationInfoDto || {}
+      const { page, perPage, search, all = false } = paginationInfoDto || {}
 
-      let url = `/v1/${resourceName}?`
-      if (page && perPage) url += `page=${page},per_page=${perPage}`
-      if (search) url += `,search=${search}`
+      const url = `/${version}/${resourceName}`
+
+      const searchParams = new URLSearchParams()
+      if (all) {
+        searchParams.set("all", "true")
+      } else {
+        if (page && perPage) {
+          searchParams.set("page", page.toString())
+          searchParams.set("per_page", perPage.toString())
+        }
+        if (search) {
+          searchParams.set("search", search)
+        }
+      }
+
+      const finalUrl = url + searchParams.toString()
 
       return {
-        url,
+        url: finalUrl,
         method: "GET",
       }
     },
@@ -71,7 +87,7 @@ const builder = <
     { id: string | number }
   >({
     query: ({ id }) => ({
-      url: `/v1/${resourceName}/${id}`,
+      url: `/${version}/${resourceName}/${id}`,
       method: "GET",
     }),
     providesTags: (result) =>
@@ -83,7 +99,7 @@ const builder = <
     { id: string | number; data: TUpdate }
   >({
     query: ({ id, data }) => ({
-      url: `/v1/${resourceName}/${id}`,
+      url: `/${version}/${resourceName}/${id}`,
       method: "PUT",
       body: data,
     }),
@@ -113,7 +129,7 @@ const builder = <
     { id: string | number }
   >({
     query: ({ id }) => ({
-      url: `/v1/${resourceName}/${id}`,
+      url: `/${version}/${resourceName}/${id}`,
       method: "DELETE",
     }),
     invalidatesTags: (result, error, arg, meta) => {

@@ -8,6 +8,8 @@ import { LoaderFunction, redirect } from "react-router-dom"
 interface IListLoaderBuilderParams {
   apiEndpointQuery: ApiEndpointQuery<any, any>
   skipAuth?: boolean
+  /** Fetch all records? */
+  all?: boolean
 }
 
 interface IDetailLoaderBuilderParams {
@@ -19,13 +21,16 @@ interface IDetailLoaderBuilderParams {
 export const modelListLoaderBuilder = ({
   apiEndpointQuery,
   skipAuth,
+  all,
 }: IListLoaderBuilderParams): LoaderFunction => {
   return async ({ params }) => {
     if (!skipAuth) {
       const auth = store.getState().auth
       if (!auth.accessToken) return redirect("/login")
     }
-    const promise = store.dispatch(apiEndpointQuery.initiate({}))
+    const promise = store.dispatch(
+      apiEndpointQuery.initiate({ all: Boolean(all) }),
+    )
     try {
       const response = await promise.unwrap()
       return (response as any).data

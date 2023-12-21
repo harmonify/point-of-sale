@@ -22,7 +22,9 @@ export const PaginationInfo = createParamDecorator(
       isInteger: true,
     });
     const search = request.query['search'] as string;
+    const all = Boolean(request.query['all']);
     return new RequestPaginationInfoDto({
+      all,
       page,
       perPage,
       search,

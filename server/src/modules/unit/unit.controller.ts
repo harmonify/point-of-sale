@@ -51,17 +51,23 @@ export class UnitController {
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<UnitResponseDto[]>> {
+    const paginationRequest = paginationInfo.all
+      ? null
+      : {
+          skip: paginationInfo.skip,
+          take: paginationInfo.take,
+          where: paginationInfo.search
+            ? {
+                AND: [
+                  BaseQuery.Filter.available(),
+                  UnitQuery.Filter.search(paginationInfo.search),
+                ],
+              }
+            : BaseQuery.Filter.available(),
+        };
+
     const units = await this.prismaService.unit.findMany({
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: paginationInfo.search
-        ? {
-            AND: [
-              BaseQuery.Filter.available(),
-              UnitQuery.Filter.search(paginationInfo.search),
-            ],
-          }
-        : BaseQuery.Filter.available(),
+      ...paginationRequest,
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {

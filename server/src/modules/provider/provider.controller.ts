@@ -52,16 +52,20 @@ export class ProviderController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<ProviderResponseDto[]>> {
     const providers = await this.prismaService.provider.findMany({
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: paginationInfo.search
-        ? {
-            AND: [
-              BaseQuery.Filter.available(),
-              ProviderQuery.Filter.search(paginationInfo.search),
-            ],
-          }
-        : BaseQuery.Filter.available(),
+      ...(paginationInfo.all
+        ? undefined
+        : {
+            skip: paginationInfo.skip,
+            take: paginationInfo.take,
+            where: paginationInfo.search
+              ? {
+                  AND: [
+                    BaseQuery.Filter.available(),
+                    ProviderQuery.Filter.search(paginationInfo.search),
+                  ],
+                }
+              : BaseQuery.Filter.available(),
+          }),
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {

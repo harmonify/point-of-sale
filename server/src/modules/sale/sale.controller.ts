@@ -65,7 +65,7 @@ export class SaleController {
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<SaleResponseDto[]>> {
-    const sales = await this.prismaService.sale.findMany({
+    const paginationRequest = {
       skip: paginationInfo.skip,
       take: paginationInfo.take,
       where: paginationInfo.search
@@ -76,6 +76,10 @@ export class SaleController {
             ],
           }
         : BaseQuery.Filter.available(),
+    };
+
+    const sales = await this.prismaService.sale.findMany({
+      ...paginationRequest,
       orderBy: BaseQuery.OrderBy.latest(),
       include: {
         customer: true,

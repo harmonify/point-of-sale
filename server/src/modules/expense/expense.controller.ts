@@ -52,16 +52,20 @@ export class ExpenseController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<ExpenseResponseDto[]>> {
     const expenses = await this.prismaService.expense.findMany({
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: paginationInfo.search
-        ? {
-            AND: [
-              BaseQuery.Filter.available(),
-              ExpenseQuery.Filter.search(paginationInfo.search),
-            ],
-          }
-        : BaseQuery.Filter.available(),
+      ...(paginationInfo.all
+        ? null
+        : {
+            skip: paginationInfo.skip,
+            take: paginationInfo.take,
+            where: paginationInfo.search
+              ? {
+                  AND: [
+                    BaseQuery.Filter.available(),
+                    ExpenseQuery.Filter.search(paginationInfo.search),
+                  ],
+                }
+              : BaseQuery.Filter.available(),
+          }),
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {

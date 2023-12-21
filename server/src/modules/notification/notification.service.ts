@@ -23,15 +23,15 @@ export class NotificationService {
       AND: [BaseQuery.Filter.available(), { userId }],
     };
 
-    if (paginationInfo.search) {
+    if (!paginationInfo.all && paginationInfo.search) {
       (where.AND as Prisma.NotificationWhereInput[]).push(
         NotificationQuery.Filter.search(paginationInfo.search),
       );
     }
 
     return this.prismaService.notification.findMany({
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
+      skip: paginationInfo.all ? undefined : paginationInfo.skip,
+      take: paginationInfo.all ? undefined : paginationInfo.take,
       where,
       orderBy: BaseQuery.OrderBy.latest(),
     });

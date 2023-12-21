@@ -56,21 +56,27 @@ export class CustomerController {
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<CustomerInfoResponseDto[]>> {
+    const paginationRequest = paginationInfo.all
+      ? null
+      : {
+          skip: paginationInfo.skip,
+          take: paginationInfo.take,
+          where: paginationInfo.search
+            ? {
+                AND: [
+                  BaseQuery.Filter.available(),
+                  CustomerQuery.Filter.search(paginationInfo.search),
+                ],
+              }
+            : BaseQuery.Filter.available(),
+        };
+
     const customers = await this.prismaService.customer.findMany({
+      ...paginationRequest,
       include: {
         createdBy: { select: { name: true } },
         sales: { select: { netAmount: true } },
       },
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
-      where: paginationInfo.search
-        ? {
-            AND: [
-              BaseQuery.Filter.available(),
-              CustomerQuery.Filter.search(paginationInfo.search),
-            ],
-          }
-        : BaseQuery.Filter.available(),
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {

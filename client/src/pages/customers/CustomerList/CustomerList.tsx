@@ -31,8 +31,10 @@ const CustomerList: React.FC = () => {
   const navigate = useNavigate()
   const [deleteCustomerApiMutation, { isLoading: isLoadingDeleteCustomer }] =
     useDeleteCustomerApiMutation()
-  const [findAllCustomerApiQuery, { data: lazyCustomerResponseQuery }] =
-    useLazyFindAllCustomerApiQuery()
+  const [
+    findAllCustomerApiQuery,
+    { isLoading: isLoadingFetchCustomer, data: lazyCustomerResponseQuery },
+  ] = useLazyFindAllCustomerApiQuery()
   const initialCustomerList =
     useLoaderData() as Monorepo.Api.Response.CustomerResponseDto[]
 
@@ -189,7 +191,7 @@ const CustomerList: React.FC = () => {
           className={classes.datagrid}
           columns={dataGridColumns}
           rows={customerList}
-          loading={customerList.length === 0}
+          loading={isLoadingFetchCustomer}
           components={{
             Toolbar: GridToolbar,
           }}
