@@ -25,7 +25,7 @@ export default {
   },
   text: {
     primary: colors.indigo[900],
-    secondary: colors.indigo[500],
+    secondary: offBlack,
     disabled: colors.blueGrey[500],
     hint: colors.indigo[600],
   },

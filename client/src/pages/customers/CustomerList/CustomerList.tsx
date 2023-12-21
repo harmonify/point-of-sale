@@ -1,14 +1,14 @@
 import { useAppDispatch } from "@/app/hooks"
 import Container from "@/components/controls/Container"
 import Searchbox from "@/components/controls/Searchbox"
-import YesNo from "@/features/dialog/YesNo"
+import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
   useDeleteCustomerApiMutation,
   useLazyFindAllCustomerApiQuery,
 } from "@/services/api"
-import { logger } from "@/services/logger"
-import { IconButton } from "@material-ui/core"
+import { formatGender, formatISOToLocale, formatRupiah } from "@/utils"
+import { Box, IconButton } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
 import { Add, Delete, Edit, FormatListBulleted } from "@material-ui/icons"
 import {
@@ -17,12 +17,11 @@ import {
   GridRenderCellParams,
   GridToolbar,
 } from "@mui/x-data-grid"
-import { DateTime } from "luxon"
+import { t } from "i18next"
 import React, { useState } from "react"
 import { useLoaderData, useNavigate } from "react-router-dom"
 
 import { useStyles } from "./styles"
-import { t } from "i18next"
 
 // import DataGrid from "../../components/controls/datagrid/DataGrid"
 
@@ -41,11 +40,6 @@ const CustomerList: React.FC = () => {
     ? lazyCustomerResponseQuery.data
     : initialCustomerList
 
-  const [state, setState] = useState({
-    showConfirmDeleteDialog: false,
-    itemToDelete: null as Monorepo.Api.Response.CustomerResponseDto | null,
-  })
-
   const onDebounceSearch = async (value: string) => {
     findAllCustomerApiQuery({ search: value })
   }
@@ -58,35 +52,41 @@ const CustomerList: React.FC = () => {
   const onClickEdit = (row: Monorepo.Api.Response.CustomerResponseDto) => {
     return navigate(`/customers/edit/${row.id}`)
   }
+
+  const { show } = useConfirmationDialog({
+    content: `Do you want to delete this customer?`,
+    title: t("Delete Customer", { ns: "action" }),
+    confirmText: "Delete",
+    variant: "destructive",
+    isLoading: isLoadingDeleteCustomer,
+  })
+
   const onClickDelete = (row: Monorepo.Api.Response.CustomerResponseDto) => {
-    setState({ ...state, showConfirmDeleteDialog: true, itemToDelete: row })
-  }
-  const onClickConfirmDelete = async () => {
-    try {
-      const { id } = state.itemToDelete!
-      await deleteCustomerApiMutation({ id }).unwrap()
-      dispatch(
-        showSnackbar({
-          message: t("Customer deleted successfully"),
-          variant: "success",
-        }),
-      )
-    } finally {
-      setState({
-        ...state,
-        showConfirmDeleteDialog: false,
-        itemToDelete: null,
-      })
-    }
-  }
-  const onCancelConfirmDeleteClick = () => {
-    setState({ ...state, showConfirmDeleteDialog: false })
+    show({
+      content: `Do you want to delete this customer named ${row.name}?`,
+      onConfirm: async () => {
+        try {
+          if (!row.id) {
+            throw new Error()
+          }
+          await deleteCustomerApiMutation({ id: row.id }).unwrap()
+          await findAllCustomerApiQuery().unwrap()
+        } catch (e) {
+          dispatch(
+            showSnackbar({
+              message: t("An error occured", { ns: "error" }),
+              variant: "error",
+            }),
+          )
+        }
+      },
+    })
   }
 
   const dataGridColumns: GridColumns = [
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: t("Actions"),
       renderCell: (params: GridRenderCellParams) => {
         return (
           <>
@@ -121,81 +121,55 @@ const CustomerList: React.FC = () => {
     },
     {
       field: "name",
-      headerName: "Name",
+      headerName: t("Name", { ns: "field" }),
       flex: 2,
-      minWidth: 140,
+      minWidth: 160,
     },
     {
       field: "phoneNumber",
-      headerName: "Phone Number",
+      headerName: t("Phone Number", { ns: "field" }),
       flex: 2,
+      minWidth: 200,
     },
     {
       field: "email",
-      headerName: "Email",
+      headerName: t("Email", { ns: "field" }),
       flex: 2,
+      minWidth: 240,
     },
     {
       field: "gender",
-      headerName: "Gender",
+      headerName: t("Gender", { ns: "field" }),
       flex: 2,
-      minWidth: 140,
+      minWidth: 160,
+      valueGetter: (params) => formatGender(params.value as string),
+      sortable: false,
     },
     {
       field: "purchasedAmount",
-      headerName: "Purchased Amount",
+      headerName: t("Purchased Amount", { ns: "field" }),
       flex: 2,
-      minWidth: 140,
+      minWidth: 220,
+      valueGetter: (params) => formatRupiah(params.value as number),
     },
     {
-      field: "authorName",
-      headerName: "Author",
+      field: "createdByName",
+      headerName: t("Created By", { ns: "field" }),
       flex: 2,
-      minWidth: 140,
+      minWidth: 180,
     },
     {
       field: "createdAt",
-      headerName: "Created At",
+      headerName: t("Created At", { ns: "field" }),
       flex: 2,
-      minWidth: 200,
-      valueGetter(params) {
-        return params.value
-          ? DateTime.fromISO(params.value as string)
-              .setLocale("id")
-              .toLocaleString({
-                weekday: "long",
-                day: "2-digit",
-                month: "short",
-                year: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-          : "-"
-      },
+      minWidth: 260,
+      valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]
 
   return (
-    <Container title="Customers">
-      <YesNo
-        open={state.showConfirmDeleteDialog}
-        message="Are you sure wan't to delete the selected item"
-        onOk={onClickConfirmDelete}
-        onCancel={onCancelConfirmDeleteClick}
-      />
-
-      <div>
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="default"
-          size="small"
-          onClick={onClickList}
-          startIcon={<FormatListBulleted />}
-        >
-          List
-        </Button>
-
+    <Container title={t("Customers")}>
+      <Box>
         <Button
           className={classes.button}
           variant="contained"
@@ -204,11 +178,11 @@ const CustomerList: React.FC = () => {
           onClick={onClickCreate}
           startIcon={<Add />}
         >
-          Create
+          {t("Create Customer", { ns: "action" })}
         </Button>
 
         <Searchbox onDebounce={onDebounceSearch} />
-      </div>
+      </Box>
 
       <div className={classes.wrapper}>
         <DataGrid
@@ -219,11 +193,11 @@ const CustomerList: React.FC = () => {
           components={{
             Toolbar: GridToolbar,
           }}
-          logger={logger}
           disableSelectionOnClick
           disableDensitySelector
           rowsPerPageOptions={[10, 25, 100]}
           pageSize={10}
+          paginationMode="client"
         />
       </div>
     </Container>

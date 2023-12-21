@@ -1,4 +1,7 @@
+import store from "@/app/store"
 import type { ApiEndpointBuilder } from "."
+import { showSnackbar } from "@/features/snackbar"
+import { t } from "i18next"
 
 const builder = <
   TGet extends { id: number | string },
@@ -17,13 +20,25 @@ const builder = <
       method: "POST",
       body,
     }),
-    invalidatesTags: (result) =>
-      result && result.data
+    invalidatesTags: (result) => {
+      return result && result.data
         ? [
             { type: resourceName, id: result.data.id },
             { type: resourceName, id: "LIST" },
           ]
-        : [],
+        : []
+    },
+    onQueryStarted: async (arg, { queryFulfilled }) => {
+      await queryFulfilled
+      store.dispatch(
+        showSnackbar({
+          message: t(`Data created successfully`, {
+            model: t(resourceName as any),
+          }),
+          variant: "success",
+        }),
+      )
+    },
   }),
 
   findAll: builder.query<
@@ -72,13 +87,25 @@ const builder = <
       method: "PUT",
       body: data,
     }),
-    invalidatesTags: (result, error, arg, meta) =>
-      !error
-        ? [
+    invalidatesTags: (result, error, arg, meta) => {
+      return error
+        ? []
+        : [
             { type: resourceName, id: arg.id },
             { type: resourceName, id: "LIST" },
           ]
-        : [],
+    },
+    onQueryStarted: async (arg, { queryFulfilled }) => {
+      await queryFulfilled
+      store.dispatch(
+        showSnackbar({
+          message: t(`Data updated successfully`, {
+            model: t(resourceName as any),
+          }),
+          variant: "success",
+        }),
+      )
+    },
   }),
 
   delete: builder.mutation<
@@ -89,13 +116,25 @@ const builder = <
       url: `/v1/${resourceName}/${id}`,
       method: "DELETE",
     }),
-    invalidatesTags: (result, error, arg, meta) =>
-      !error
-        ? [
+    invalidatesTags: (result, error, arg, meta) => {
+      return error
+        ? []
+        : [
             { type: resourceName, id: arg.id },
             { type: resourceName, id: "LIST" },
           ]
-        : [],
+    },
+    onQueryStarted: async (arg, { queryFulfilled }) => {
+      await queryFulfilled
+      store.dispatch(
+        showSnackbar({
+          message: t(`Data deleted successfully`, {
+            model: t(resourceName as any),
+          }),
+          variant: "success",
+        }),
+      )
+    },
   }),
 })
 

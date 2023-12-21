@@ -1,6 +1,5 @@
 import { useAppDispatch } from "@/app/hooks"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
-import { showSnackbar } from "@/features/snackbar"
 import { Formik } from "formik"
 import { t } from "i18next"
 import React from "react"
@@ -47,15 +46,7 @@ const CustomerForm: React.FC = () => {
       ? updateCustomerApiMutation({ id, data })
       : createCustomerApiMutation(data)
     return promise.unwrap().then(() => {
-      dispatch(
-        showSnackbar({
-          message: id
-            ? t("Customer updated successfully")
-            : t("Customer created successfully"),
-          variant: "success",
-        }),
-      )
-      navigate(`/customers`)
+      return navigate(`/customers`)
     })
   }
 
@@ -70,7 +61,13 @@ const CustomerForm: React.FC = () => {
   }
 
   return (
-    <Container title={id ? t("Edit Customer") : t("Create Customer")}>
+    <Container
+      title={
+        id
+          ? t("Edit Customer", { ns: "action" })
+          : t("Create Customer", { ns: "action" })
+      }
+    >
       <Formik
         initialValues={customer || initialValues}
         validationSchema={createCustomerValidationSchema}
@@ -81,21 +78,33 @@ const CustomerForm: React.FC = () => {
         <Form onCancel={onCancel}>
           <FormikTextInput
             name="name"
-            label={t("Name")}
+            label={t("Name", { ns: "field" })}
             margin="normal"
             fullWidth
           />
           <FormikTextInput
             name="description"
-            label={t("Description")}
+            label={t("Description", { ns: "field" })}
             margin="normal"
             fullWidth
             multiline={true}
             minRows={3}
           />
-          <FormikTextInput name="address" label={t("Address")} margin="normal" />
-          <FormikTextInput name="phoneNumber" label={t("Phone Number")} margin="normal" />
-          <FormikTextInput name="email" label={t("Email")} margin="normal" />
+          <FormikTextInput
+            name="address"
+            label={t("Address", { ns: "field" })}
+            margin="normal"
+          />
+          <FormikTextInput
+            name="phoneNumber"
+            label={t("Phone Number", { ns: "field" })}
+            margin="normal"
+          />
+          <FormikTextInput
+            name="email"
+            label={t("Email", { ns: "field" })}
+            margin="normal"
+          />
         </Form>
       </Formik>
     </Container>

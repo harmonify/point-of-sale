@@ -10,16 +10,27 @@ import {
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
-  FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query/react"
 import { Mutex } from "async-mutex"
 
 import { logger } from "../logger"
+import {
+  postLoginMutationName,
+  postLogoutMutationName,
+  postRefreshTokenMutationName,
+  postRefreshTokenUrl,
+} from "./endpoints/auth"
 
 // create a new mutex
 const mutex = new Mutex()
 
-export const baseQuery = fetchBaseQuery({
+const BLACKLISTED_REAUTH_ENDPOINTS = [
+  postLoginMutationName,
+  postRefreshTokenMutationName,
+  postLogoutMutationName,
+]
+
+const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
   timeout: 60000,
   prepareHeaders: (headers, { getState }) => {
@@ -31,6 +42,7 @@ export const baseQuery = fetchBaseQuery({
     return headers
   },
 })
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -39,11 +51,9 @@ const baseQueryWithReauth: BaseQueryFn<
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock()
 
-  let result
-  try {
-    result = await baseQuery(args, api, extraOptions)
-  } catch (error) {
-    logger.warn(error)
+  let result = await baseQuery(args, api, extraOptions)
+  if (BLACKLISTED_REAUTH_ENDPOINTS.includes(api.endpoint)) {
+    return result
   }
 
   if (result!.error && result!.error.status === 401) {
@@ -54,17 +64,18 @@ const baseQueryWithReauth: BaseQueryFn<
         logger.debug("Unauthorized. Start refresh token auth flow.")
         const authCredentials = selectAuthCredentials(store.getState())
         if (!(authCredentials && authCredentials.refreshToken)) {
+          logger.debug(
+            "Failed to execute refresh token auth flow. Refresh token is empty",
+          )
+          api.dispatch(setLogout())
           return {
-            error: {
-              status: "FETCH_ERROR",
-              error: "Refresh token is empty",
-            },
+            data: null,
           }
         }
 
         const refreshResult = await baseQuery(
           {
-            url: "/v1/auth/refresh-token",
+            url: postRefreshTokenUrl,
             method: "POST",
             body: { refreshToken: authCredentials.refreshToken },
           },
@@ -78,7 +89,7 @@ const baseQueryWithReauth: BaseQueryFn<
 
           api.dispatch(setCredentials(credentials.data))
           logger.debug("Successfully ran the refresh token auth flow.")
-          // retry the initial query
+          logger.debug("Retry the initial query.")
           result = await baseQuery(args, api, extraOptions)
         } else {
           logger.debug("Error when executing refresh token auth flow.")

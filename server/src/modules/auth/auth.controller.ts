@@ -81,6 +81,7 @@ export class AuthController {
 
   @ApiOperation({ description: 'Logout user' })
   @Post('logout')
+  @SkipAuth()
   async logout(
     @CurrentUser() user: User,
     @Body() { fromAll, refreshToken }: LogoutRequestDto,

@@ -1,1 +1,1 @@
-export { default as useDialog } from "./useDialog"
+export { default as useConfirmationDialog } from "./useConfirmationDialog"

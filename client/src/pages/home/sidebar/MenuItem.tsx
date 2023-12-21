@@ -12,7 +12,8 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
-      "& $primary, & $icon": {
+      color: theme.palette.common.white,
+      "& $icon": {
         color: theme.palette.common.white,
       },
     },
@@ -33,7 +34,7 @@ const MenuItem: React.FC<{
   onClick?: React.MouseEventHandler
   text: string
   icon: React.ReactElement
-  classes: any
+  classes?: any
 }> = (props) => {
   const classes = useStyles()
   const { isSelected = false } = props
@@ -47,7 +48,11 @@ const MenuItem: React.FC<{
       <ListItemIcon className={classes.icon}>{props.icon}</ListItemIcon>
       <ListItemText
         style={{ padding: 2 }}
-        primary={<Typography variant="button">{props.text}</Typography>}
+        primary={
+          <Typography style={{ fontSize: 14 }} color="inherit" variant="button">
+            {props.text}
+          </Typography>
+        }
       />
     </ListItem>
   )

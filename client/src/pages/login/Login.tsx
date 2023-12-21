@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/app/hooks"
+import { useAppSelector } from "@/app/hooks"
 import { Form, FormikTextInput } from "@/components/forms"
 import { selectAuthCredentials } from "@/features/auth"
 import { usePostLoginMutation } from "@/services/api"
@@ -17,9 +17,8 @@ const validationSchema = object({
 })
 
 const Login: React.FC = () => {
-  const dispatch = useAppDispatch()
   const [postLogin, { isLoading }] = usePostLoginMutation()
-  const { t } = useTranslation()
+  const { t } = useTranslation(["translation", "field"])
   const navigate = useNavigate()
   const classes = useStyles()
 
@@ -68,15 +67,15 @@ const Login: React.FC = () => {
               <FormikTextInput
                 name="email"
                 fullWidth
-                label={t("Email")}
-                placeholder={t("Email")}
+                label={t("Email", { ns: "field" })}
+                placeholder={t("Email", { ns: "field" })}
                 margin="normal"
               />
               <FormikTextInput
                 name="password"
                 fullWidth
-                label={t("Password")}
-                placeholder={t("Password")}
+                label={t("Password", { ns: "field" })}
+                placeholder={t("Password", { ns: "field" })}
                 type="password"
                 margin="normal"
               />

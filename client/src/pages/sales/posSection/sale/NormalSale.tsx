@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import currency from "currency.js"
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
-import Dialog from "../../../../features/dialog/Dialog"
+import ConfirmationDialog from "../../../../features/dialog/ConfirmationDialog"
 import api from "../../../../services/api"
 import Message from "../../../../components/controls/Message"
 import NormalSaleForm from "./NormalSaleForm"
@@ -145,7 +145,7 @@ class NormalSale extends Component {
       this.state
 
     return (
-      <Dialog open={open} onClose={handleClose} title="Normal Sale">
+      <ConfirmationDialog open={open} onClose={handleClose} title="Normal Sale">
         <CircularLoader isLoading={isLoading} />
 
         <YesNo
@@ -166,7 +166,7 @@ class NormalSale extends Component {
           />
           {this.renderForm()}
         </div>
-      </Dialog>
+      </ConfirmationDialog>
     )
   }
 }

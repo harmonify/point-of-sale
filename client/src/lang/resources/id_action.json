@@ -1,0 +1,21 @@
+{
+  "OK": "OK",
+  "Cancel": "Batal",
+  "Back": "Kembali",
+  "Reload": "Muat ulang",
+  "Back to Home": "Ke halaman utama",
+  "Logout": "Logout",
+  "Login": "Login",
+  "Create Data": "Tambah{{model, default(value: Data), sentencecase, spaceBeforeWhenDefined}}",
+  "Edit Data": "Ubah Data{{model, sentencecase, spaceBeforeWhenDefined}}",
+  "Delete Data": "Hapus{{model, default(value: Data), sentencecase, spaceBeforeWhenDefined}}",
+  "Create Customer": "$t(Create Data, {\"model\":\"pelanggan\"})",
+  "Edit Customer": "$t(Edit Data, {\"model\":\"pelanggan\"})",
+  "Delete Customer": "$t(Delete Data, {\"model\":\"pelanggan\"})",
+  "Create Supplier": "Tambah Supplier",
+  "Edit Supplier": "Ubah Data Supplier",
+  "Delete Supplier": "Hapus Supplier",
+  "Create Product": "Tambah Produk",
+  "Edit Product": "Ubah Data Produk",
+  "Delete Product": "Hapus Produk"
+}

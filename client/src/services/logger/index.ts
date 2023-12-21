@@ -31,25 +31,23 @@ export class ConsoleLogger implements Logger {
     this.info = console.info.bind(console)
     this.debug = console.debug.bind(console)
 
-    switch (level) {
-      case "error": {
-        this.warn = NO_OP
-        this.info = NO_OP
-        this.debug = NO_OP
-      }
-      case "warn": {
-        this.info = NO_OP
-        this.debug = NO_OP
-      }
-      case "info": {
-        this.debug = NO_OP
-      }
-      default: {
-        this.error = NO_OP
-        this.warn = NO_OP
-        this.info = NO_OP
-        this.debug = NO_OP
-      }
+    if (level === "debug") {
+      // If you are wondering why the debug logs aren't showing, make sure to tick the 'Verbose' level log on your browser
+      // On Chrome > Developer Menu > Console > 'Default levels' > tick 'Verbose'
+    } else if (level === "info") {
+      this.debug = NO_OP
+    } else if (level === "warn") {
+      this.info = NO_OP
+      this.debug = NO_OP
+    } else if (level === "error") {
+      this.warn = NO_OP
+      this.info = NO_OP
+      this.debug = NO_OP
+    } else {
+      this.error = NO_OP
+      this.warn = NO_OP
+      this.info = NO_OP
+      this.debug = NO_OP
     }
   }
 }

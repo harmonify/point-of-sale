@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     // zIndex: 1,
     // overflow: "auto",
@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     background: "#3f51b5",
   },
   logoContainer: {
-    padding: "18px 5px 5px 15px",
+    padding: '1em .5em',
     display: "flex",
     color: "white",
     "&:only-child > span": {
@@ -21,6 +21,6 @@ const useStyles = makeStyles({
       fontWeight: "lighter",
     },
   },
-})
+}))
 
 export default useStyles

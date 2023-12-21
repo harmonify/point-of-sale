@@ -58,7 +58,7 @@ function Error404() {
           variant="outlined"
           startIcon={<Replay />}
         >
-          {t("Retry")}
+          {t("Reload")}
         </Button>
         <Button
           className={classes.button}

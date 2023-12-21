@@ -1,11 +1,16 @@
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import currency from "currency.js"
 import { t } from "i18next"
+import { DateTime } from "luxon"
 
-export const isValueExists = (object, keysToIgnore = []) => {
+export const isValueExists = (
+  object: Record<string, any>,
+  keysToIgnore = [],
+) => {
   const keys = Object.keys(object)
   const errors: Record<string, string> = {}
 
-  const fn = (val) => {
+  const fn = (val: string) => {
     if (keysToIgnore.length === 0) return false
 
     for (let i = 0; i < keysToIgnore.length; i++) {
@@ -39,22 +44,55 @@ export const sleep = async (ms: number) => {
  * default: Fetch error
  */
 export const parseApiErrorMessage = (error: any) => {
-  return error
-    ? error.message ||
+  const defaultValue = t("An error occured", { ns: "error" })
+  return (
+    (error &&
+      (error.message ||
         (error.data && error.data.message) ||
-        t(`${error.error}` as any, { ns: "error" }) ||
-        t(`${error.status}` as any, { ns: "error" })
-    : t(`FETCH_ERROR`, { ns: "error" })
+        (error.error && t(error.error, { ns: "error", defaultValue })) ||
+        (error.status && t(error.status, { ns: "error", defaultValue })))) ||
+    defaultValue
+  )
 }
 
 export const formatRupiah = (
   amount?: number | null,
-  fallbackValue: number | string = "-",
+  fallbackValue: number | string = "0,00",
 ) => {
-  if (!amount) return `IDR ${fallbackValue}`
+  if (!amount) return `IDR${fallbackValue}`
   return currency(amount, {
     symbol: "IDR",
     separator: ".",
     decimal: ",",
   }).format()
+}
+
+export const formatISOToLocale = (
+  isoString?: string | null,
+  fallbackValue: string = "-",
+): string => {
+  return isoString
+    ? DateTime.fromISO(isoString).setLocale("id").toLocaleString({
+        weekday: "long",
+        day: "2-digit",
+        month: "short",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : fallbackValue
+}
+
+export const formatGender = (
+  value?: "MALE" | "FEMALE" | "NOT_DEFINED" | string | null,
+  fallbackValue: string = "-",
+): string => {
+  switch (value) {
+    case "MALE":
+      return t("Male")
+    case "FEMALE":
+      return t("Female")
+    default:
+      return fallbackValue
+  }
 }

@@ -1,8 +1,12 @@
 {
-  "undefined": "Terjadi kesalahan. Silahkan coba lagi.",
+  "default": "Terjadi kesalahan. Silahkan coba lagi nanti.",
+  "undefined": "$t(default)",
   "Ooops": "Ooops",
-  "An error occured": "Terjadi kesalahan. Silahkan coba lagi.",
+  "An error occured": "$t(default)",
   "Page not found": "Halaman tidak ditemukan",
+  "You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation": "Antara kamu lagi coba-coba rute yang mencurigakan atau datang ke sini dengan tidak sengaja. Apapun itu, coba pakai tombol navigasi dibawah",
   "FETCH_ERROR": "Gagal untuk menghubungi server. Silahkan coba lagi nanti.",
-  "You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation": "Antara kamu lagi coba-coba rute yang mencurigakan atau datang ke sini dengan tidak sengaja. Apapun itu, coba pakai tombol navigasi dibawah"
+  "PARSING_ERROR": "Terjadi kesalahan fatal. Silahkan hubungi tim pengembang.",
+  "TIMEOUT_ERROR": "Server sedang sibuk. Silahkan coba lagi nanti.",
+  "CUSTOM_ERROR": "$t(default)"
 }

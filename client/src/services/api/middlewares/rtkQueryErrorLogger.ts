@@ -14,7 +14,10 @@ export const rtkQueryErrorLogger: Middleware =
   (action: PayloadAction<Monorepo.Api.Response.ResponseBodyDto<unknown>>) => {
     // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these matchers!
     if (isRejectedWithValue(action)) {
-      const data = (action.payload && action.payload.data) || {}
+      const data =
+        action.payload && action.payload.data
+          ? action.payload.data
+          : action.payload
       logger.warn(data)
       store.dispatch(
         showSnackbar({

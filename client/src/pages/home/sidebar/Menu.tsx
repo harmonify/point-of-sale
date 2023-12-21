@@ -1,4 +1,11 @@
-import { Button, List, ListSubheader } from "@material-ui/core"
+import {
+  Box,
+  Button,
+  IconButton,
+  List,
+  ListSubheader,
+  Typography,
+} from "@material-ui/core"
 import {
   Assessment,
   GroupAdd,
@@ -25,13 +32,15 @@ const Menu: React.FC = () => {
     location.pathname === `/${path}` || location.pathname.includes(`/${path}/`)
 
   return (
-    <div>
-      <div className={classes.logo}>
+    <>
+      <Box className={classes.logo}>
         <Button onClick={() => navigate("/")} className={classes.logoContainer}>
           <ShoppingCart />
-          <span>Point of Sales</span>
+          <Typography color="inherit" variant="button">
+            {t("Point of Sales")}
+          </Typography>
         </Button>
-      </div>
+      </Box>
 
       <List>
         <MenuItem
@@ -41,7 +50,9 @@ const Menu: React.FC = () => {
           icon={<ViewModule />}
         />
 
-        <ListSubheader>{t("Features")}</ListSubheader>
+        <ListSubheader>
+          <Typography variant="button">{t("Features")}</Typography>
+        </ListSubheader>
 
         <MenuItem
           isSelected={isSelected("customers")}
@@ -78,11 +89,13 @@ const Menu: React.FC = () => {
           icon={<NoteAdd />}
         />
 
-        <ListSubheader>{t("Reports")}</ListSubheader>
+        <ListSubheader>
+          <Typography variant="button">{t("Reports")}</Typography>
+        </ListSubheader>
         <MenuItem text={t("Todays Sales")} icon={<Assessment />} />
         <MenuItem text={t("Expense")} icon={<LocalAtm />} />
       </List>
-    </div>
+    </>
   )
 }
 

@@ -1,12 +1,15 @@
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions"
 import { createApi } from "@reduxjs/toolkit/query/react"
 
-import baseQueryWithReauth, { baseQuery } from "./baseQuery"
+import baseQueryWithReauth from "./baseQuery"
 import apiBuilder from "./builder"
 import {
   postLoginBuilder,
+  postLoginMutationName,
   postLogoutBuilder,
+  postLogoutMutationName,
   postRefreshTokenBuilder,
+  postRefreshTokenMutationName,
 } from "./endpoints/auth"
 import { getDashboardInfoBuilder } from "./endpoints/dashboard"
 
@@ -31,7 +34,7 @@ export type ApiEndpointBuilder = EndpointBuilder<
 
 const api = createApi({
   reducerPath,
-  baseQuery: baseQuery,
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder: ApiEndpointBuilder) => {
     const userApi = apiBuilder<
       Monorepo.Api.Response.UserResponseDto,
@@ -99,9 +102,9 @@ const api = createApi({
     >(builder, "sales")
 
     return {
-      postLogin: postLoginBuilder(builder),
-      postRefreshToken: postRefreshTokenBuilder(builder),
-      postLogout: postLogoutBuilder(builder),
+      [postLoginMutationName]: postLoginBuilder(builder),
+      [postRefreshTokenMutationName]: postRefreshTokenBuilder(builder),
+      [postLogoutMutationName]: postLogoutBuilder(builder),
 
       getDashboardInfo: getDashboardInfoBuilder(builder),
 

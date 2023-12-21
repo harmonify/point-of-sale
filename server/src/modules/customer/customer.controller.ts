@@ -76,7 +76,7 @@ export class CustomerController {
     return {
       data: customers.map((customer) => ({
         ...customer,
-        authorName: customer.createdBy.name,
+        createdByName: customer.createdBy.name,
         purchasedAmount: _.sumBy(customer.sales, (sale) => sale.netAmount),
       })),
     };

@@ -51,7 +51,7 @@ const routeObjects: IRoute[] = [
   {
     Component: Login,
     path: "login",
-    title: t("Login"),
+    title: t("Login", { ns: "action" }),
     skipAuth: true,
   },
   {
@@ -71,38 +71,38 @@ const routeObjects: IRoute[] = [
       },
       {
         Component: CustomerList,
-        title: t("Customer"),
+        title: t("Customers"),
         path: "customers",
         loader: customerListLoader,
       },
       {
         Component: CustomerForm,
-        title: t("Create Customer"),
+        title: t("Create Customer", { ns: "action" }),
         path: "customers/create",
       },
       {
         Component: CustomerForm,
-        title: t("Edit Customer"),
+        title: t("Edit Customer", { ns: "action" }),
         path: "customers/edit/:id",
         loader: customerDetailLoader,
       },
       {
         Component: ProductList,
-        title: t("Product"),
+        title: t("Products"),
         path: "products",
         // loader: productListLoader,
       },
-      {
-        // Component: ProductForm,
-        title: t("Create Product"),
-        path: "products/create",
-      },
-      {
-        // Component: ProductForm,
-        title: t("Edit Product"),
-        path: "products/edit/:id",
-        // loader: productDetailLoader,
-      },
+      // {
+      //   Component: ProductForm,
+      //   title: t("Create Product"),
+      //   path: "products/create",
+      // },
+      // {
+      //   Component: ProductForm,
+      //   title: t("Edit Product"),
+      //   path: "products/edit/:id",
+      //   // loader: productDetailLoader,
+      // },
     ],
   },
   {

@@ -13,6 +13,7 @@ import { Suspense } from "react"
 import { Provider } from "react-redux"
 import { RouterProvider } from "react-router-dom"
 import { PersistGate } from "redux-persist/integration/react"
+import ConfirmationDialogProvider from "./features/dialog/ConfirmationDialogProvider"
 
 function App() {
   return (
@@ -34,9 +35,9 @@ function App() {
                   </div>
                 }
               >
-                {/* <ConfirmationDialogProvider> */}
-                <RouterProvider router={router} />
-                {/* </ConfirmationDialogProvider> */}
+                <ConfirmationDialogProvider>
+                  <RouterProvider router={router} />
+                </ConfirmationDialogProvider>
                 <SnackbarWrapper />
               </Suspense>
             </MuiPickersUtilsProvider>
