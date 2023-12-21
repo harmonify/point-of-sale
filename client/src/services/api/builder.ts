@@ -66,7 +66,7 @@ const builder = <
         }
       }
 
-      const finalUrl = url + searchParams.toString()
+      const finalUrl = `${url}?${searchParams.toString()}`
 
       return {
         url: finalUrl,
