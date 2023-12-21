@@ -2,7 +2,7 @@ export class RequestPaginationInfoDto {
   readonly page: number;
   readonly perPage: number;
   readonly search: string | null;
-  /** If `true`, all other pagination info will be ignored */
+  /** If `true`, other pagination info such as `page` and `perPage` will be ignored */
   readonly all: boolean;
 
   get skip() {

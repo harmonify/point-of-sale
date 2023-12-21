@@ -52,20 +52,18 @@ export class CategoryController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<CategoryResponseDto[]>> {
     const productCategories = await this.prismaService.category.findMany({
-      ...(paginationInfo.all
-        ? null
-        : {
-            skip: paginationInfo.skip,
-            take: paginationInfo.take,
-            where: paginationInfo.search
-              ? {
-                  AND: [
-                    BaseQuery.Filter.available(),
-                    CategoryQuery.Filter.search(paginationInfo.search),
-                  ],
-                }
-              : BaseQuery.Filter.available(),
-          }),
+      ...(!paginationInfo.all && {
+        skip: paginationInfo.skip,
+        take: paginationInfo.take,
+      }),
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              CategoryQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {

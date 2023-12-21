@@ -32,8 +32,11 @@ export const modelListLoaderBuilder = ({
       apiEndpointQuery.initiate({ all: Boolean(all) }),
     )
     try {
-      const response = await promise.unwrap()
-      return (response as any).data
+      const response = (await promise.unwrap()) as any
+      console.log(`🚀 ~ response ~ ${JSON.stringify(response, null, 2)}`);
+      return response && typeof response === "object" && response.data
+        ? response.data
+        : response
     } catch (e) {
       // see https://reactrouter.com/en/main/fetch/redirect
       return redirect("/error")
@@ -52,8 +55,11 @@ export const modelDetailLoaderBuilder = ({
       apiEndpointQuery.initiate({ id: params.id! }),
     )
     try {
-      const response = await promise.unwrap()
-      return (response as any).data
+      const response = (await promise.unwrap()) as any
+      console.log(`🚀 ~ response ~ ${JSON.stringify(response, null, 2)}`);
+      return response && typeof response === "object" && response.data
+        ? response.data
+        : response
     } catch (e) {
       // see https://reactrouter.com/en/main/fetch/redirect
       logger.error(e)

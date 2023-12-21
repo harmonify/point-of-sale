@@ -1,13 +1,13 @@
-import { object, string } from "yup"
+import { InferType, object, string } from "yup"
 
 const createCustomerValidationSchema = object({
   name: string().required(),
-  address: string().required(),
-  phoneNumber: string()
-    .min(10, "Phone number must be 10 characters or longer")
-    .required(),
-  description: string().required(),
-  email: string().email().required(),
+  address: string().optional().nullable(),
+  phoneNumber: string().optional().nullable().min(10),
+  description: string().optional().nullable(),
+  email: string().email(),
 })
+
+export type CustomerState = InferType<typeof createCustomerValidationSchema>
 
 export default createCustomerValidationSchema

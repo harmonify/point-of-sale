@@ -179,20 +179,18 @@ export class ProcurementService {
     paginationInfo: RequestPaginationInfoDto,
   ): Promise<ProcurementResponseDto[]> {
     return this.prismaService.procurement.findMany({
-      ...(paginationInfo.all
-        ? null
-        : {
-            skip: paginationInfo.skip,
-            take: paginationInfo.take,
-            where: paginationInfo.search
-              ? {
-                  AND: [
-                    BaseQuery.Filter.available(),
-                    ProcurementQuery.Filter.search(paginationInfo.search),
-                  ],
-                }
-              : BaseQuery.Filter.available(),
-          }),
+      ...(!paginationInfo.all && {
+        skip: paginationInfo.skip,
+        take: paginationInfo.take,
+      }),
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              ProcurementQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
       include: {
         procurementProducts: true,
       },

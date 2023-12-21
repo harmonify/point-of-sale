@@ -52,20 +52,18 @@ export class SupplierController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<SupplierResponseDto[]>> {
     const suppliers = await this.prismaService.supplier.findMany({
-      ...(paginationInfo.all
-        ? undefined
-        : {
-            skip: paginationInfo.skip,
-            take: paginationInfo.take,
-            where: paginationInfo.search
-              ? {
-                  AND: [
-                    BaseQuery.Filter.available(),
-                    SupplierQuery.Filter.search(paginationInfo.search),
-                  ],
-                }
-              : BaseQuery.Filter.available(),
-          }),
+      ...(!paginationInfo.all && {
+        skip: paginationInfo.skip,
+        take: paginationInfo.take,
+      }),
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              SupplierQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {

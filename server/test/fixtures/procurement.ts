@@ -8,7 +8,7 @@ import {
 import { DateTime } from 'luxon';
 
 import { productDozenUnit, productPieceUnit } from './product';
-import { Supplier } from './supplier';
+import { supplier } from './supplier';
 import { testUser } from './user';
 
 export const procurement: Procurement = {
@@ -20,7 +20,7 @@ export const procurement: Procurement = {
   createdById: testUser.id,
   updatedById: testUser.id,
   deletedById: null,
-  supplierId: Supplier.id,
+  supplierId: supplier.id,
   name: 'Getting Eggs',
   description: 'Getting eggs shoulder knee and toes',
   deliveryStatus: ProcurementDeliveryStatus.DELIVERED,

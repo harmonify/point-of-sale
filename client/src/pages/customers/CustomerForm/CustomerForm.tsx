@@ -11,15 +11,9 @@ import {
   useCreateCustomerApiMutation,
   useUpdateCustomerApiMutation,
 } from "../../../services/api"
-import createCustomerValidationSchema from "./validationSchema"
-
-export interface CustomerState {
-  name: string
-  address: string | null | undefined
-  phoneNumber: string | null | undefined
-  description: string | null | undefined
-  email: string | null | undefined
-}
+import createCustomerValidationSchema, {
+  CustomerState,
+} from "./validationSchema"
 
 const initialValues = {
   name: "",

@@ -1,7 +1,8 @@
-import i18n from "i18next"
+import i18n, { t } from "i18next"
 import { initReactI18next } from "react-i18next"
 
 import { defaultNS, idResource } from "."
+import { setLocale } from "yup"
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -41,22 +42,25 @@ i18n.services.formatter?.addCached("default", (lng, options) => (value) => {
   return value ? value : options.value
 })
 
-// setLocale({
-//   // use constant translation keys for messages without values
-//   mixed: {
-//     default: "validationError.field_invalid",
-//   },
-//   // use functions to generate an error object that includes the value from the schema
-//   number: {
-//     min: ({ min }) => ({
-//       key: "validationError.field_too_short",
-//       values: { min },
-//     }),
-//     max: ({ max }) => ({
-//       key: "validationError.field_too_big",
-//       values: { max },
-//     }),
-//   },
-// })
+setLocale({
+  // use constant translation keys for messages without values
+  mixed: {
+    default: "validationError.field_invalid",
+  },
+  // use functions to generate an error object that includes the value from the schema
+  number: {
+    min: ({ min }) => ({
+      key: "validationError.field_too_short",
+      values: { min },
+    }),
+    max: ({ max }) => ({
+      key: "validationError.field_too_big",
+      values: { max },
+    }),
+  },
+  string: {
+    email: t("Must be a valid email", { ns: "validation" }),
+  },
+})
 
 export default i18n

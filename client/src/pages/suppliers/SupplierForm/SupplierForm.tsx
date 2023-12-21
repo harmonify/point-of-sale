@@ -8,17 +8,17 @@ import { useLoaderData, useNavigate, useParams } from "react-router-dom"
 import Container from "../../../components/controls/Container"
 import Form from "../../../components/forms/Form"
 import {
-  useCreatesupplierApiMutation,
-  useUpdatesupplierApiMutation,
+  useCreateSupplierApiMutation,
+  useUpdateSupplierApiMutation,
 } from "../../../services/api"
-import createsupplierValidationSchema from "./validationSchema"
+import createSupplierValidationSchema from "./validationSchema"
 
-export interface supplierState {
+export interface SupplierState {
   name: string
-  address: string | null | undefined
-  phoneNumber: string | null | undefined
-  description: string | null | undefined
-  email: string | null | undefined
+  phoneNumber: string
+  email: string
+  description?: string
+  address: string | undefined
 }
 
 const initialValues = {
@@ -27,24 +27,24 @@ const initialValues = {
   phoneNumber: "",
   description: "",
   email: "",
-} as supplierState
+} as SupplierState
 
 const supplierForm: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const [createsupplierApiMutation] = useCreatesupplierApiMutation()
-  const [updatesupplierApiMutation] = useUpdatesupplierApiMutation()
+  const [createSupplierApiMutation] = useCreateSupplierApiMutation()
+  const [updateSupplierApiMutation] = useUpdateSupplierApiMutation()
 
   const { id } = useParams()
   const supplier = useLoaderData() as
-    | Monorepo.Api.Response.supplierResponseDto
+    | Monorepo.Api.Response.SupplierResponseDto
     | undefined
 
-  const onSubmit: FormikSubmissionHandler<supplierState> = async (data) => {
+  const onSubmit: FormikSubmissionHandler<SupplierState> = async (data) => {
     const promise = id
-      ? updatesupplierApiMutation({ id, data })
-      : createsupplierApiMutation(data)
+      ? updateSupplierApiMutation({ id, data })
+      : createSupplierApiMutation(data)
     return promise.unwrap().then(() => {
       return navigate(`/suppliers`)
     })
@@ -64,13 +64,13 @@ const supplierForm: React.FC = () => {
     <Container
       title={
         id
-          ? t("Edit supplier", { ns: "action" })
-          : t("Create supplier", { ns: "action" })
+          ? t("Edit Supplier", { ns: "action" })
+          : t("Create Supplier", { ns: "action" })
       }
     >
       <Formik
         initialValues={supplier || initialValues}
-        validationSchema={createsupplierValidationSchema}
+        validationSchema={createSupplierValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
         onSubmit={onSubmit}

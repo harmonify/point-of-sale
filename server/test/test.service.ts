@@ -10,7 +10,7 @@ import {
   Procurement,
   Product,
   ProductUnit,
-  supplier,
+  Supplier,
   Sale,
   SaleProduct,
   Unit,
@@ -26,7 +26,7 @@ import {
   product,
   productDozenUnit,
   productPieceUnit,
-  Supplier,
+  supplier,
   sale,
   saleDozenProduct,
   salePieceProduct,
@@ -115,7 +115,7 @@ export class TestUtil {
     });
   }
 
-  seedsupplier(supplier: supplier) {
+  seedsupplier(supplier: Supplier) {
     return this.prismaService.supplier.upsert({
       create: supplier,
       update: supplier,

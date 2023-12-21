@@ -4,8 +4,8 @@ import Searchbox from "@/components/controls/Searchbox"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
-  useDeletesupplierApiMutation,
-  useLazyFindAllsupplierApiQuery,
+  useDeleteSupplierApiMutation,
+  useLazyFindAllSupplierApiQuery,
 } from "@/services/api"
 import { formatGender, formatISOToLocale, formatRupiah } from "@/utils"
 import { Box, IconButton } from "@material-ui/core"
@@ -30,13 +30,13 @@ const supplierList: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [deletesupplierApiMutation, { isLoading: isLoadingDeletesupplier }] =
-    useDeletesupplierApiMutation()
+    useDeleteSupplierApiMutation()
   const [
     findAllsupplierApiQuery,
     { isLoading: isLoadingFetchsupplier, data: lazysupplierResponseQuery },
-  ] = useLazyFindAllsupplierApiQuery()
+  ] = useLazyFindAllSupplierApiQuery()
   const initialsupplierList =
-    useLoaderData() as Monorepo.Api.Response.supplierResponseDto[]
+    useLoaderData() as Monorepo.Api.Response.SupplierResponseDto[]
 
   const supplierList = lazysupplierResponseQuery
     ? lazysupplierResponseQuery.data
@@ -51,19 +51,19 @@ const supplierList: React.FC = () => {
   const onClickCreate = () => {
     return navigate("/suppliers/create")
   }
-  const onClickEdit = (row: Monorepo.Api.Response.supplierResponseDto) => {
+  const onClickEdit = (row: Monorepo.Api.Response.SupplierResponseDto) => {
     return navigate(`/suppliers/edit/${row.id}`)
   }
 
   const { show } = useConfirmationDialog({
     content: `Do you want to delete this supplier?`,
-    title: t("Delete supplier", { ns: "action" }),
+    title: t("Delete Supplier", { ns: "action" }),
     confirmText: "Delete",
     variant: "destructive",
     isLoading: isLoadingDeletesupplier,
   })
 
-  const onClickDelete = (row: Monorepo.Api.Response.supplierResponseDto) => {
+  const onClickDelete = (row: Monorepo.Api.Response.SupplierResponseDto) => {
     show({
       content: `Do you want to delete this supplier named ${row.name}?`,
       onConfirm: async () => {
@@ -96,7 +96,7 @@ const supplierList: React.FC = () => {
               size="small"
               onClick={() =>
                 onClickEdit(
-                  params.row as Monorepo.Api.Response.supplierResponseDto,
+                  params.row as Monorepo.Api.Response.SupplierResponseDto,
                 )
               }
             >
@@ -107,7 +107,7 @@ const supplierList: React.FC = () => {
               size="small"
               onClick={() =>
                 onClickDelete(
-                  params.row as Monorepo.Api.Response.supplierResponseDto,
+                  params.row as Monorepo.Api.Response.SupplierResponseDto,
                 )
               }
             >

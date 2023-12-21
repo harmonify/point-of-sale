@@ -52,23 +52,19 @@ export class UserController {
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<UserResponseDto[]>> {
-    const paginationRequest = paginationInfo.all
-      ? null
-      : {
-          skip: paginationInfo.skip,
-          take: paginationInfo.take,
-          where: paginationInfo.search
-            ? {
-                AND: [
-                  BaseQuery.Filter.available(),
-                  UserQuery.Filter.search(paginationInfo.search),
-                ],
-              }
-            : BaseQuery.Filter.available(),
-        };
-
     const users = await this.prismaService.user.findMany({
-      ...paginationRequest,
+      ...(!paginationInfo.all && {
+        skip: paginationInfo.skip,
+        take: paginationInfo.take,
+      }),
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              UserQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {
