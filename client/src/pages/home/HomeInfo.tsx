@@ -71,6 +71,8 @@ const HomeInfo: React.FC = () => {
   const { data, isError, isFetching } = useGetDashboardInfoQuery(null, {
     // pollingInterval: 15000,
     refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
   })
 
   useEffect(() => {
@@ -152,7 +154,10 @@ const HomeInfo: React.FC = () => {
       </Grid>
 
       <Grid item xs={12}>
-        <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h4">
+        <Typography
+          style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+          variant="h4"
+        >
           {t("Welcome to POS", { ns: "message" })}
         </Typography>
       </Grid>
@@ -171,7 +176,10 @@ const HomeInfo: React.FC = () => {
                 {t("Sales")}
               </Typography>
             </Box>
-            <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h2">
+            <Typography
+              style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+              variant="h2"
+            >
               {formatRupiah(totalSales)}
             </Typography>
           </CardContent>
@@ -192,7 +200,10 @@ const HomeInfo: React.FC = () => {
                 {t("Expenses")}
               </Typography>
             </Box>
-            <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h2">
+            <Typography
+              style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+              variant="h2"
+            >
               {formatRupiah(totalExpenses)}
             </Typography>
           </CardContent>
@@ -213,7 +224,10 @@ const HomeInfo: React.FC = () => {
                 {t("Customers")}
               </Typography>
             </Box>
-            <Typography style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }} variant="h2">
+            <Typography
+              style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+              variant="h2"
+            >
               {totalCustomers}
             </Typography>
           </CardContent>

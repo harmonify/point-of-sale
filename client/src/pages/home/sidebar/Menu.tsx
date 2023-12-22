@@ -56,9 +56,7 @@ const Menu: React.FC = () => {
 
         <MenuItem
           isSelected={isSelected("customers")}
-          onClick={() => {
-            return navigate("/customers", { replace: true })
-          }}
+          onClick={() => navigate("/customers")}
           text={t("Customers")}
           icon={<GroupAdd />}
         />

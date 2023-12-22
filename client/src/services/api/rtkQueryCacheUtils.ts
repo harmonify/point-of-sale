@@ -1,4 +1,5 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
+import { logger } from "../logger"
 
 /**
  * Default tags used by the cacher helpers
@@ -12,10 +13,12 @@ function concatErrorCache<T, ID>(
 ): CacheList<T, ID> {
   if (error && "status" in error && error.status === 401) {
     // unauthorized error
+    logger.debug("concatErrorCache ~ unauthorized error:", error)
     return [...existingCache, "UNAUTHORIZED"]
   }
 
   // unknown error
+  logger.debug("concatErrorCache ~ unknown error:", error)
   return [...existingCache, "UNKNOWN_ERROR"]
 }
 

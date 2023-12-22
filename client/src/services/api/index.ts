@@ -108,13 +108,6 @@ const api = createApi({
       [postRefreshTokenMutationName]: postRefreshTokenBuilder(builder),
       [postLogoutMutationName]: postLogoutBuilder(builder),
 
-      refetchErroredQueries: builder.mutation<unknown, void>({
-        queryFn() {
-          return { data: {} }
-        },
-        invalidatesTags: cacher.invalidatesUnknownErrors(),
-      }),
-
       getDashboardInfo: getDashboardInfoBuilder(builder),
 
       createUserApi: userApi.create,
@@ -182,6 +175,13 @@ const api = createApi({
       findOneSaleApi: saleApi.findOne,
       updateSaleApi: saleApi.update,
       deleteSaleApi: saleApi.delete,
+
+      refetchErroredQueries: builder.mutation<unknown, void>({
+        queryFn() {
+          return { data: {} }
+        },
+        invalidatesTags: tagTypes,
+      }),
     }
   },
   tagTypes,

@@ -1,16 +1,16 @@
 import { useAppSelector } from "@/app/hooks"
 import { persistor } from "@/app/store"
-import { selectCurrentUser } from "@/features/auth"
+import { selectAuthCredentials, selectCurrentUser } from "@/features/auth"
 import PropTypes from "prop-types"
 import React, { ReactNode, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const user = useAppSelector(selectCurrentUser)
+  const credentials = useAppSelector(selectAuthCredentials)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!user) {
+    if (!(credentials.accessToken || credentials.refreshToken)) {
       persistor.purge()
       navigate("/login")
     }

@@ -1,4 +1,4 @@
-import store, { RootState } from "@/app/store"
+import store, { RootState, persistor } from "@/app/store"
 import { API_BASE_URL } from "@/environment"
 import {
   selectAuthCredentials,
@@ -67,10 +67,9 @@ const baseQueryWithReauth: BaseQueryFn<
           logger.debug(
             "Failed to execute refresh token auth flow. Refresh token is empty",
           )
-          api.dispatch(setLogout())
-          return {
-            data: null,
-          }
+          store.dispatch(setLogout())
+          await persistor.purge()
+          return result
         }
 
         const refreshResult = await baseQuery(
@@ -87,13 +86,14 @@ const baseQueryWithReauth: BaseQueryFn<
           const credentials =
             refreshResult.data as Monorepo.Api.Response.ResponseBodyDto<Monorepo.Api.Response.RefreshTokenResponseDto>
 
-          api.dispatch(setCredentials(credentials.data))
+          store.dispatch(setCredentials(credentials.data))
           logger.debug("Successfully ran the refresh token auth flow.")
           logger.debug("Retry the initial query.")
           result = await baseQuery(args, api, extraOptions)
         } else {
           logger.debug("Error when executing refresh token auth flow.")
-          api.dispatch(setLogout())
+          store.dispatch(setLogout())
+          await persistor.purge()
         }
       } finally {
         // release must be called once the mutex should be released again.

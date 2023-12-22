@@ -60,7 +60,7 @@ export const postLogoutBuilder = (builder: ApiEndpointBuilder) => {
     }),
     async onQueryStarted(arg, { dispatch, queryFulfilled }) {
       await queryFulfilled
-      // if (data)
+
       store.dispatch(setLogout())
     },
   })

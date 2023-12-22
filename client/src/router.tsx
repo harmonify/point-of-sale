@@ -6,6 +6,10 @@ import { createBrowserRouter, RouteObject } from "react-router-dom"
 import AuthGuard from "./components/AuthGuard"
 import { APP_ENV } from "./environment"
 import { Error500 } from "./pages/errors"
+import { Login } from "./pages/login"
+import Home from "./pages/home/Home"
+import HomeInfo from "./pages/home/HomeInfo"
+import sales from "./pages/sales"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -34,23 +38,23 @@ const routeObjects: IRoute[] = [
     skipAuth: true,
   },
   {
-    Component: lazy(() => import("./pages/login/Login")),
+    Component: Login,
     path: "login",
     title: t("Login", { ns: "action" }),
     skipAuth: true,
   },
   {
-    Component: lazy(() => import("./pages/home/Home")),
+    Component: Home,
     path: "/",
     title: t("Point of Sales"),
     children: [
       {
         path: "",
-        Component: lazy(() => import("./pages/home/HomeInfo")),
+        Component: HomeInfo,
         title: t("Point of Sales"),
       },
       {
-        Component: lazy(() => import("./pages/sales")),
+        Component: sales,
         title: t("Sale"),
         path: "sale",
       },
