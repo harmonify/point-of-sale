@@ -6,9 +6,9 @@ import { createBrowserRouter, RouteObject } from "react-router-dom"
 import AuthGuard from "./components/AuthGuard"
 import { APP_ENV } from "./environment"
 import { Error500 } from "./pages/errors"
-import { Login } from "./pages/login"
 import Home from "./pages/home/Home"
 import HomeInfo from "./pages/home/HomeInfo"
+import { Login } from "./pages/login"
 import sales from "./pages/sales"
 
 type IRoute = Omit<RouteObject, "children"> & {
@@ -59,46 +59,40 @@ const routeObjects: IRoute[] = [
         path: "sale",
       },
       {
-        Component: lazy(
-          () => import("./pages/customers/CustomerList/CustomerList"),
-        ),
+        Component: lazy(() => import("./pages/customers/CustomerList")),
         title: t("Customers"),
         path: "customers",
       },
       {
-        Component: lazy(
-          () => import("./pages/customers/CustomerForm/CustomerForm"),
-        ),
+        Component: lazy(() => import("./pages/customers/CustomerForm")),
         title: t("Create Customer", { ns: "action" }),
         path: "customers/create",
       },
       {
-        Component: lazy(
-          () => import("./pages/customers/CustomerForm/CustomerForm"),
-        ),
+        Component: lazy(() => import("./pages/customers/CustomerForm")),
         title: t("Edit Customer", { ns: "action" }),
-        path: "customers/edit/:id",
+        path: "customers/:id",
       },
       {
         Component: lazy(
-          () => import("./pages/suppliers/SupplierList/SupplierList"),
+          () => import("./pages/suppliers/SupplierList"),
         ),
         title: t("Suppliers"),
         path: "suppliers",
       },
       {
         Component: lazy(
-          () => import("./pages/suppliers/SupplierForm/SupplierForm"),
+          () => import("./pages/suppliers/SupplierForm"),
         ),
         title: t("Create Supplier", { ns: "action" }),
         path: "suppliers/create",
       },
       {
         Component: lazy(
-          () => import("./pages/suppliers/SupplierForm/SupplierForm"),
+          () => import("./pages/suppliers/SupplierForm"),
         ),
         title: t("Edit Supplier", { ns: "action" }),
-        path: "suppliers/edit/:id",
+        path: "suppliers/:id",
       },
     ],
   },

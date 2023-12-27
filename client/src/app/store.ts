@@ -13,11 +13,13 @@ import storage from "redux-persist/lib/storage"
 import { rootReducer } from "./reducer"
 import api from "@/services/api"
 import { rtkQueryErrorLogger } from "@/services/api/middlewares/rtkQueryErrorLogger"
+import { authSliceName } from "@/features/auth"
 
 const persistedReducer = persistReducer(
   {
     key: "root",
     version: 1,
+    whitelist: [authSliceName],
     storage,
   },
   rootReducer,

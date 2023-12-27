@@ -7,8 +7,10 @@ export interface AuthState {
   refreshToken?: string | null
 }
 
+export const authSliceName = "auth"
+
 const slice = createSlice({
-  name: "auth",
+  name: authSliceName,
   initialState: {
     user: null,
     accessToken: null,

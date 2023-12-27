@@ -1,76 +1,102 @@
-import React, { Component, useEffect, useState } from "react"
+import { useAppDispatch } from '@/app/hooks';
+import Container from '@/components/controls/layout/Container/Container';
+import { useConfirmationDialog } from '@/features/dialog';
+import { showSnackbar } from '@/features/snackbar';
+import api, { useDeleteProductApiMutation, useFindAllProductApiQuery } from '@/services/api';
+import Button from '@material-ui/core/Button';
+import { Add } from '@material-ui/icons';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { t } from 'i18next';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { makeStyles, withStyles } from "@material-ui/core/styles"
-import CustomTabs from "../../components/controls/layout/Tabs/Tabs"
-import TabContainer from "../../components/controls/layout/Tabs/TabContainer"
-import ProductTab from "./ProductTab"
-import ProductTypeTab from "./ProductTypeTab"
-import { useLocation, useNavigate } from "react-router-dom"
+import renderProductDataGridColumns from './dataGridColumns';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: 10,
-  },
-  tabHolder: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-  tab: {
-    boxShadow: "none",
-  },
-  tabItem: {
-    fontSize: "12px",
-  },
-  indicator: {
-    backgroundColor: "#3f51b5",
-  },
-}))
-
-const Products = () => {
-  const classes = useStyles()
-  const location = useLocation()
+const ProductList: React.FC = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const [deleteProductApiMutation, { isLoading: isLoadingDeleteProduct }] =
+    useDeleteProductApiMutation()
+  const { isLoading: isLoadingFetchProduct, data: productResponseQuery } =
+    useFindAllProductApiQuery(
+      { all: true },
+      {
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: true,
+        refetchOnReconnect: true,
+      },
+    )
 
-  const [value, setValue] = useState(0)
+  const productList = productResponseQuery ? productResponseQuery.data : []
 
-  useEffect(() => {
-    if (location.pathname === "/products") {
-      setValue(0)
-    } else {
-      setValue(1)
-    }
-  }, [])
-
-  const handleChange = (event, value) => {
-    if (value === 0) {
-      return navigate("/products")
-    } else {
-      return navigate("/producttypes")
-    }
-    setValue(value)
+  const onClickCreate = () => {
+    return navigate("/products/create")
+  }
+  const onClickEdit = (row: Monorepo.Api.Response.ProductResponseDto) => {
+    return navigate(`/products/${row.id}`)
   }
 
+  const { show } = useConfirmationDialog({
+    content: t("Do you want to delete this data?", {
+      ns: "message",
+      model: t("product"),
+    }),
+    title: t("Delete Product", { ns: "action" }),
+    confirmText: "Delete",
+    variant: "destructive",
+    isLoading: isLoadingDeleteProduct,
+  })
+
+  const onClickDelete = (row: Monorepo.Api.Response.ProductResponseDto) => {
+    show({
+      onConfirm: async () => {
+        try {
+          if (!row.id) {
+            throw new Error()
+          }
+          await deleteProductApiMutation({ id: row.id }).unwrap()
+        } catch (e) {
+          dispatch(
+            showSnackbar({
+              message: t("An error occured", { ns: "error" }),
+              variant: "error",
+            }),
+          )
+        }
+      },
+    })
+  }
+
+  const dataGridColumns = renderProductDataGridColumns({
+    onClickDelete,
+    onClickEdit,
+  })
+
   return (
-    <div>
-      <div className={classes.tabHolder}>
-        <CustomTabs
-          onChange={handleChange}
-          value={value}
-          items={["Products", "Product Types"]}
-        />
-        {value === 0 && (
-          <TabContainer>
-            <ProductTab />
-          </TabContainer>
-        )}
-        {value === 1 && (
-          <TabContainer>
-            <ProductTypeTab />
-          </TabContainer>
-        )}
-      </div>
-    </div>
+    <Container title={t("Products")}>
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        onClick={onClickCreate}
+        startIcon={<Add />}
+      >
+        {t("Create Product", { ns: "action" })}
+      </Button>
+
+      <DataGrid
+        columns={dataGridColumns}
+        rows={productList}
+        loading={isLoadingFetchProduct}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        autoHeight
+        disableSelectionOnClick
+        disableDensitySelector
+      />
+    </Container>
   )
 }
 
-export default Products
+export default ProductList

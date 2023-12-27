@@ -233,12 +233,16 @@ export const {
   useDeleteCategoryApiMutation,
 
   useCreateUnitApiMutation,
+  useFindAllUnitApiQuery,
+  useFindOneUnitApiQuery,
   useLazyFindAllUnitApiQuery,
   useLazyFindOneUnitApiQuery,
   useUpdateUnitApiMutation,
   useDeleteUnitApiMutation,
 
   useCreateProductApiMutation,
+  useFindAllProductApiQuery,
+  useFindOneProductApiQuery,
   useLazyFindAllProductApiQuery,
   useLazyFindOneProductApiQuery,
   useUpdateProductApiMutation,

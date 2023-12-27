@@ -1,24 +1,20 @@
-import { useAppDispatch } from "@/app/hooks"
+import Container from "@/components/controls/layout/Container/Container"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
+import Form from "@/components/forms/Form"
+import {
+  useCreateProductApiMutation,
+  useLazyFindOneProductApiQuery,
+  useUpdateProductApiMutation,
+} from "@/services/api"
+import { Grid } from "@material-ui/core"
 import { Formik } from "formik"
 import { t } from "i18next"
 import React, { useEffect, useState } from "react"
-import { useLoaderData, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
-import Container from "../../../components/controls/layout/Container/Container"
-import Form from "../../../components/forms/Form"
-import {
-  useCreateSupplierApiMutation,
-  useFindOneSupplierApiQuery,
-  useLazyFindOneSupplierApiQuery,
-  useUpdateSupplierApiMutation,
-} from "../../../services/api"
-import createSupplierValidationSchema, {
-  SupplierState,
+import createProductValidationSchema, {
+  ProductState,
 } from "./validationSchema"
-import { Grid, MenuItem, Typography } from "@material-ui/core"
-import FormikDropdownInput from "@/components/forms/FormikSelectInput"
-import FormikSelectInput from "@/components/forms/FormikSelectInput"
 
 const initialValues = {
   name: null,
@@ -27,31 +23,31 @@ const initialValues = {
   phoneNumber: null,
   description: null,
   email: null,
-} as unknown as SupplierState
+} as unknown as ProductState
 
-const SupplierForm: React.FC = () => {
+const ProductForm: React.FC = () => {
   const navigate = useNavigate()
 
-  const [createSupplierApiMutation] = useCreateSupplierApiMutation()
-  const [updateSupplierApiMutation] = useUpdateSupplierApiMutation()
+  const [createProductApiMutation] = useCreateProductApiMutation()
+  const [updateProductApiMutation] = useUpdateProductApiMutation()
 
   const { id } = useParams()
-  const [findOneSupplierApiQuery, { data: supplierApiQueryResponse }] =
-    useLazyFindOneSupplierApiQuery({
+  const [findOneProductApiQuery, { data: productApiQueryResponse }] =
+    useLazyFindOneProductApiQuery({
       refetchOnFocus: true,
       refetchOnReconnect: true,
     })
   useEffect(() => {
     if (!id) return
-    findOneSupplierApiQuery({ id })
-  }, [findOneSupplierApiQuery])
+    findOneProductApiQuery({ id })
+  }, [findOneProductApiQuery])
 
-  const onSubmit: FormikSubmissionHandler<SupplierState> = async (data) => {
+  const onSubmit: FormikSubmissionHandler<ProductState> = async (data) => {
     const promise = id
-      ? updateSupplierApiMutation({ id, data })
-      : createSupplierApiMutation(data)
+      ? updateProductApiMutation({ id, data })
+      : createProductApiMutation(data)
     return promise.unwrap().then(() => {
-      return navigate(`/suppliers`)
+      return navigate(`/products`)
     })
   }
 
@@ -63,18 +59,18 @@ const SupplierForm: React.FC = () => {
     <Container
       title={
         id
-          ? t("Edit Supplier", { ns: "action" })
-          : t("Create Supplier", { ns: "action" })
+          ? t("Edit Product", { ns: "action" })
+          : t("Create Product", { ns: "action" })
       }
     >
       <Formik
         enableReinitialize={true}
         initialValues={
-          supplierApiQueryResponse
-            ? supplierApiQueryResponse.data
+          productApiQueryResponse
+            ? productApiQueryResponse.data
             : initialValues
         }
-        validationSchema={createSupplierValidationSchema}
+        validationSchema={createProductValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
         onSubmit={onSubmit}
@@ -107,4 +103,4 @@ const SupplierForm: React.FC = () => {
   )
 }
 
-export default SupplierForm
+export default ProductForm

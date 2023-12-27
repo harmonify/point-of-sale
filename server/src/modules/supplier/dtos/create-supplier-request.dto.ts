@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import {
   IsBoolean,
+  IsDefined,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -21,7 +22,7 @@ export class CreateSupplierRequestDto
   @ApiProperty()
   name: string;
 
-  @IsOptional()
+  @IsDefined()
   @IsString()
   @ApiProperty()
   phoneNumber: string;

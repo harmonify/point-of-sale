@@ -1,10 +1,9 @@
-import { t } from "i18next"
 import { InferType, object, string } from "yup"
 
 const createSupplierValidationSchema = object({
   name: string().required(),
   address: string().optional().nullable(),
-  phoneNumber: string().optional().nullable().min(10),
+  phoneNumber: string().required().min(10),
   description: string().optional().nullable(),
   email: string().optional().nullable().email(),
 })

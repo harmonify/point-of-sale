@@ -1,25 +1,22 @@
-import { useAppDispatch } from "@/app/hooks"
+import Container from "@/components/controls/layout/Container/Container"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
+import Form from "@/components/forms/Form"
+import FormikSelectInput from "@/components/forms/FormikSelectInput"
+import {
+  useCreateCustomerApiMutation,
+  useLazyFindOneCustomerApiQuery,
+  useUpdateCustomerApiMutation,
+} from "@/services/api"
+import { Grid } from "@material-ui/core"
 import { Formik } from "formik"
 import { t } from "i18next"
 import React, { useEffect, useState } from "react"
-import { useLoaderData, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
-import Container from "../../../components/controls/layout/Container/Container"
-import Form from "../../../components/forms/Form"
-import {
-  useCreateCustomerApiMutation,
-  useFindOneCustomerApiQuery,
-  useLazyFindOneCustomerApiQuery,
-  useUpdateCustomerApiMutation,
-} from "../../../services/api"
 import createCustomerValidationSchema, {
   CustomerState,
   genderOptions,
 } from "./validationSchema"
-import { Grid, MenuItem, Typography } from "@material-ui/core"
-import FormikDropdownInput from "@/components/forms/FormikSelectInput"
-import FormikSelectInput from "@/components/forms/FormikSelectInput"
 
 const initialValues = {
   name: null,
