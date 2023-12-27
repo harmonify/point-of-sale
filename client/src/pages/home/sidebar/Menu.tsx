@@ -8,7 +8,9 @@ import {
 } from "@material-ui/core"
 import {
   Assessment,
+  Category,
   GroupAdd,
+  HourglassFull,
   LocalAtm,
   More,
   NoteAdd,
@@ -66,6 +68,20 @@ const Menu: React.FC = () => {
           onClick={() => navigate("/suppliers")}
           text={t("Suppliers")}
           icon={<SupervisorAccount />}
+        />
+
+        <MenuItem
+          isSelected={isSelected("categories")}
+          onClick={() => navigate("/categories")}
+          text={t("Categories")}
+          icon={<Category />}
+        />
+
+        <MenuItem
+          isSelected={isSelected("units")}
+          onClick={() => navigate("/units")}
+          text={t("Units")}
+          icon={<HourglassFull />}
         />
 
         <MenuItem

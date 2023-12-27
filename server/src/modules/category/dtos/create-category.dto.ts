@@ -18,5 +18,5 @@ export class CreateCategoryRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description?: string;
+  description?: string | null;
 }

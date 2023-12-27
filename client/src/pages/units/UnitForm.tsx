@@ -2,9 +2,9 @@ import Container from "@/components/controls/layout/Container/Container"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
 import Form from "@/components/forms/Form"
 import {
-  useCreateSupplierApiMutation,
-  useLazyFindOneSupplierApiQuery,
-  useUpdateSupplierApiMutation,
+  useCreateUnitApiMutation,
+  useLazyFindOneUnitApiQuery,
+  useUpdateUnitApiMutation,
 } from "@/services/api"
 import { Grid } from "@material-ui/core"
 import { Formik } from "formik"
@@ -12,8 +12,8 @@ import { t } from "i18next"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
-import createSupplierValidationSchema, {
-  SupplierState,
+import createUnitValidationSchema, {
+  UnitState,
 } from "./validationSchema"
 
 const initialValues = {
@@ -23,29 +23,29 @@ const initialValues = {
   phoneNumber: null,
   description: null,
   email: null,
-} as unknown as SupplierState
+} as unknown as UnitState
 
-const SupplierForm: React.FC = () => {
+const UnitForm: React.FC = () => {
   const navigate = useNavigate()
 
-  const [createSupplierApiMutation] = useCreateSupplierApiMutation()
-  const [updateSupplierApiMutation] = useUpdateSupplierApiMutation()
+  const [createUnitApiMutation] = useCreateUnitApiMutation()
+  const [updateUnitApiMutation] = useUpdateUnitApiMutation()
 
   const { id } = useParams()
-  const [findOneSupplierApiQuery, { data: supplierApiQueryResponse }] =
-    useLazyFindOneSupplierApiQuery({
+  const [findOneUnitApiQuery, { data: unitApiQueryResponse }] =
+    useLazyFindOneUnitApiQuery({
       refetchOnFocus: true,
       refetchOnReconnect: true,
     })
   useEffect(() => {
     if (!id) return
-    findOneSupplierApiQuery({ id })
-  }, [findOneSupplierApiQuery])
+    findOneUnitApiQuery({ id })
+  }, [findOneUnitApiQuery])
 
-  const onSubmit: FormikSubmissionHandler<SupplierState> = async (data) => {
+  const onSubmit: FormikSubmissionHandler<UnitState> = async (data) => {
     const promise = id
-      ? updateSupplierApiMutation({ id, data })
-      : createSupplierApiMutation(data)
+      ? updateUnitApiMutation({ id, data })
+      : createUnitApiMutation(data)
     return promise.unwrap().then(() => {
       return navigate(-1)
     })
@@ -59,42 +59,30 @@ const SupplierForm: React.FC = () => {
     <Container
       title={
         id
-          ? t("Edit Supplier", { ns: "action" })
-          : t("Create Supplier", { ns: "action" })
+          ? t("Edit Unit", { ns: "action" })
+          : t("Create Unit", { ns: "action" })
       }
     >
       <Formik
         enableReinitialize={true}
         initialValues={
-          supplierApiQueryResponse
-            ? supplierApiQueryResponse.data
+          unitApiQueryResponse
+            ? unitApiQueryResponse.data
             : initialValues
         }
-        validationSchema={createSupplierValidationSchema}
+        validationSchema={createUnitValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
         onSubmit={onSubmit}
       >
         <Form onCancel={onCancel}>
           <Grid container spacing={1}>
-            <Grid item xs={9} md={8}>
+            <Grid item xs={12} md={8}>
               <FormikTextInput name="name" label={t("Name")} />
             </Grid>
 
             <Grid item xs={12}>
               <FormikTextInput name="description" label={t("Description")} />
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormikTextInput name="address" label={t("Address")} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="phoneNumber" label={t("Phone Number")} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="email" label={t("Email")} />
             </Grid>
           </Grid>
         </Form>
@@ -103,4 +91,4 @@ const SupplierForm: React.FC = () => {
   )
 }
 
-export default SupplierForm
+export default UnitForm

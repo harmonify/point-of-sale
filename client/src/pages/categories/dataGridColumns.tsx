@@ -4,16 +4,16 @@ import { Delete, Edit } from "@material-ui/icons"
 import { GridColDef, GridColumns, GridRenderCellParams } from "@mui/x-data-grid"
 import { t } from "i18next"
 
-type ISupplierColumns = (GridColDef & {
-  field: keyof Monorepo.Api.Response.SupplierInfoResponseDto
+type ICategoryInfo = (GridColDef & {
+  field: keyof Monorepo.Api.Response.CategoryInfoResponseDto
 })[]
 
-export default function renderSupplierDataGridColumns({
+export default function renderCategoryDataGridColumns({
   onClickEdit,
   onClickDelete,
 }: {
-  onClickEdit: (row: Monorepo.Api.Response.SupplierInfoResponseDto) => void
-  onClickDelete: (row: Monorepo.Api.Response.SupplierInfoResponseDto) => void
+  onClickEdit: (row: Monorepo.Api.Response.CategoryInfoResponseDto) => void
+  onClickDelete: (row: Monorepo.Api.Response.CategoryInfoResponseDto) => void
 }): GridColumns {
   return [
     {
@@ -27,7 +27,7 @@ export default function renderSupplierDataGridColumns({
               size="small"
               onClick={() =>
                 onClickEdit(
-                  params.row as Monorepo.Api.Response.SupplierInfoResponseDto,
+                  params.row as Monorepo.Api.Response.CategoryInfoResponseDto,
                 )
               }
             >
@@ -38,7 +38,7 @@ export default function renderSupplierDataGridColumns({
               size="small"
               onClick={() =>
                 onClickDelete(
-                  params.row as Monorepo.Api.Response.SupplierInfoResponseDto,
+                  params.row as Monorepo.Api.Response.CategoryInfoResponseDto,
                 )
               }
             >
@@ -65,24 +65,6 @@ export default function renderSupplierDataGridColumns({
       minWidth: 160,
     },
     {
-      field: "phoneNumber",
-      headerName: t("Phone Number"),
-      flex: 2,
-      minWidth: 200,
-    },
-    {
-      field: "email",
-      headerName: t("Email"),
-      flex: 2,
-      minWidth: 240,
-    },
-    {
-      field: "address",
-      headerName: t("Address"),
-      flex: 2,
-      minWidth: 240,
-    },
-    {
       field: "createdByName",
       headerName: t("Created By"),
       flex: 2,
@@ -95,5 +77,5 @@ export default function renderSupplierDataGridColumns({
       minWidth: 260,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
-  ] satisfies ISupplierColumns
+  ] satisfies ICategoryInfo
 }

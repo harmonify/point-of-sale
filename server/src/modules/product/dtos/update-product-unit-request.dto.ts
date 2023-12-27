@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import {
-  IsBoolean,
-  IsDefined,
-  IsInt,
-  IsNumber,
-  IsOptional,
-} from 'class-validator';
+import { IsDefined, IsInt, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateProductUnitRequestDto
   implements
@@ -28,20 +22,5 @@ export class UpdateProductUnitRequestDto
   @IsDefined()
   @IsNumber()
   @ApiProperty()
-  wholesalePrice: number;
-
-  @IsDefined()
-  @IsNumber()
-  @ApiProperty()
-  sellingPrice: number;
-
-  @IsOptional()
-  @IsInt()
-  @ApiProperty()
-  lowQuantity: number | null;
-
-  @IsOptional()
-  @IsBoolean()
-  @ApiProperty()
-  stockAlertEnabled: boolean | null;
+  price: number;
 }

@@ -33,14 +33,5 @@ export class ProductUnitResponseDto implements ProductUnit {
   unitId: number;
 
   @ApiProperty()
-  wholesalePrice: number;
-
-  @ApiProperty()
-  sellingPrice: number;
-
-  @ApiProperty()
-  stockAlertEnabled: boolean | null;
-
-  @ApiProperty()
-  lowQuantity: number | null;
+  price: number;
 }

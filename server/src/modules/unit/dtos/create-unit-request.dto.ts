@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import {
-  IsBoolean,
-  IsDefined,
-  IsInt,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsDefined, IsOptional, IsString } from 'class-validator';
 
 export class CreateUnitRequestDto
   implements Omit<Prisma.UnitCreateInput, 'createdBy' | 'updatedBy'>
@@ -24,10 +18,5 @@ export class CreateUnitRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description: string | null;
-
-  @IsOptional()
-  @IsInt()
-  @ApiProperty()
-  amount: number;
+  description?: string | null;
 }

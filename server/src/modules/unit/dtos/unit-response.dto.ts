@@ -55,7 +55,4 @@ export class UnitResponseDto extends BaseResponseDto implements Unit {
 
   @ApiProperty()
   description: string | null;
-
-  @ApiProperty()
-  amount: number;
 }

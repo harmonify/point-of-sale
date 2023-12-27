@@ -6,8 +6,8 @@ const productUnitQueryField = {
     ({
       ...BaseQuery.Field.default(),
       productId: true,
-      wholesalePrice: true,
-      sellingPrice: true,
+      price: true,
+      // wholesalePrice: true,
     }) satisfies Prisma.ProductUnitSelectScalar,
 } satisfies Record<string, () => Prisma.ProductUnitSelect>;
 

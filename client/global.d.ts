@@ -63,12 +63,20 @@ declare global {
           import("../server/src/modules/user").UserResponseDto
         type CustomerResponseDto =
           import("../server/src/modules/customer").CustomerResponseDto
+        type CustomerInfoResponseDto =
+          import("../server/src/modules/customer").CustomerInfoResponseDto
         type SupplierResponseDto =
           import("../server/src/modules/supplier").SupplierResponseDto
+        type SupplierInfoResponseDto =
+          import("../server/src/modules/supplier").SupplierInfoResponseDto
         type CategoryResponseDto =
           import("../server/src/modules/category").CategoryResponseDto
+        type CategoryInfoResponseDto =
+          import("../server/src/modules/category").CategoryInfoResponseDto
         type UnitResponseDto =
           import("../server/src/modules/unit").UnitResponseDto
+        type UnitInfoResponseDto =
+          import("../server/src/modules/unit").UnitInfoResponseDto
         type ProductResponseDto =
           import("../server/src/modules/product").ProductResponseDto
         type ProcurementResponseDto =

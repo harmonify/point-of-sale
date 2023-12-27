@@ -21,6 +21,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { SupplierQuery } from './supplier.query';
 import {
   CreateSupplierRequestDto,
+  SupplierInfoResponseDto,
   SupplierResponseDto,
   UpdateSupplierRequestDto,
 } from './dtos';
@@ -36,6 +37,9 @@ export class SupplierController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody<SupplierResponseDto>> {
     const newSupplier = await this.prismaService.supplier.create({
+      include: {
+        createdBy: { select: { name: true } },
+      },
       data: {
         ...supplier,
         createdById: user.id,
@@ -50,12 +54,15 @@ export class SupplierController {
   @Get()
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody<SupplierResponseDto[]>> {
+  ): Promise<IResponseBody<SupplierInfoResponseDto[]>> {
     const suppliers = await this.prismaService.supplier.findMany({
       ...(!paginationInfo.all && {
         skip: paginationInfo.skip,
         take: paginationInfo.take,
       }),
+      include: {
+        createdBy: { select: { name: true } },
+      },
       where: paginationInfo.search
         ? {
             AND: [
@@ -66,8 +73,12 @@ export class SupplierController {
         : BaseQuery.Filter.available(),
       orderBy: BaseQuery.OrderBy.latest(),
     });
+    console.log(`🚀 ~ suppliers ~ ${JSON.stringify(suppliers, null, 2)}`);
     return {
-      data: suppliers,
+      data: suppliers.map((supplier) => ({
+        ...supplier,
+        createdByName: supplier.createdBy.name,
+      })),
     };
   }
 
@@ -76,6 +87,9 @@ export class SupplierController {
     @Param('id') id: number,
   ): Promise<IResponseBody<SupplierResponseDto>> {
     const supplier = await this.prismaService.supplier.findFirstOrThrow({
+      include: {
+        createdBy: { select: { name: true } },
+      },
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -93,6 +107,9 @@ export class SupplierController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody<SupplierResponseDto>> {
     const updatedSupplier = await this.prismaService.supplier.update({
+      include: {
+        createdBy: { select: { name: true } },
+      },
       data: { ...data, updatedById: user.id },
       where: BaseQuery.Filter.byId(id),
     });
@@ -107,6 +124,9 @@ export class SupplierController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
     await this.prismaService.supplier.update({
+      include: {
+        createdBy: { select: { name: true } },
+      },
       data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
     });

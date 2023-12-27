@@ -3,8 +3,8 @@ import Container from "@/components/controls/layout/Container/Container"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
-  useDeleteCustomerApiMutation,
-  useFindAllCustomerApiQuery,
+  useDeleteCategoryApiMutation,
+  useFindAllCategoryApiQuery,
 } from "@/services/api"
 import Button from "@material-ui/core/Button"
 import { Add } from "@material-ui/icons"
@@ -13,15 +13,15 @@ import { t } from "i18next"
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import renderCustomerDataGridColumns from "./dataGridColumns"
+import renderCategoryDataGridColumns from "./dataGridColumns"
 
-const CustomerList: React.FC = () => {
+const CategoryList: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [deleteCustomerApiMutation, { isLoading: isLoadingDeleteCustomer }] =
-    useDeleteCustomerApiMutation()
-  const { isLoading: isLoadingFetchCustomer, data: customerResponseQuery } =
-    useFindAllCustomerApiQuery(
+  const [deleteCategoryApiMutation, { isLoading: isLoadingDeleteCategory }] =
+    useDeleteCategoryApiMutation()
+  const { isLoading: isLoadingFetchCategory, data: categoryResponseQuery } =
+    useFindAllCategoryApiQuery(
       { all: true },
       {
         refetchOnMountOrArgChange: true,
@@ -30,34 +30,34 @@ const CustomerList: React.FC = () => {
       },
     )
 
-  const customerList = customerResponseQuery ? customerResponseQuery.data : []
+  const categoryList = categoryResponseQuery ? categoryResponseQuery.data : []
 
   const onClickCreate = () => {
-    return navigate("/customers/create")
+    return navigate("/categories/create")
   }
-  const onClickEdit = (row: Monorepo.Api.Response.CustomerResponseDto) => {
-    return navigate(`/customers/${row.id}`)
+  const onClickEdit = (row: Monorepo.Api.Response.CategoryInfoResponseDto) => {
+    return navigate(`/categories/${row.id}`)
   }
 
   const { show } = useConfirmationDialog({
     content: t("Do you want to delete this data?", {
       ns: "message",
-      model: t("customer"),
+      model: t("category"),
     }),
-    title: t("Delete Customer", { ns: "action" }),
+    title: t("Delete Category", { ns: "action" }),
     confirmText: "Delete",
     variant: "destructive",
-    isLoading: isLoadingDeleteCustomer,
+    isLoading: isLoadingDeleteCategory,
   })
 
-  const onClickDelete = (row: Monorepo.Api.Response.CustomerResponseDto) => {
+  const onClickDelete = (row: Monorepo.Api.Response.CategoryInfoResponseDto) => {
     show({
       onConfirm: async () => {
         try {
           if (!row.id) {
             throw new Error()
           }
-          await deleteCustomerApiMutation({ id: row.id }).unwrap()
+          await deleteCategoryApiMutation({ id: row.id }).unwrap()
         } catch (e) {
           dispatch(
             showSnackbar({
@@ -70,13 +70,13 @@ const CustomerList: React.FC = () => {
     })
   }
 
-  const dataGridColumns = renderCustomerDataGridColumns({
-    onClickEdit,
+  const dataGridColumns = renderCategoryDataGridColumns({
     onClickDelete,
+    onClickEdit,
   })
 
   return (
-    <Container title={t("Customers")}>
+    <Container title={t("Categories")}>
       <Button
         variant="contained"
         color="primary"
@@ -84,13 +84,13 @@ const CustomerList: React.FC = () => {
         onClick={onClickCreate}
         startIcon={<Add />}
       >
-        {t("Create Customer", { ns: "action" })}
+        {t("Create Category", { ns: "action" })}
       </Button>
 
       <DataGrid
         columns={dataGridColumns}
-        rows={customerList}
-        loading={isLoadingFetchCustomer}
+        rows={categoryList}
+        loading={isLoadingFetchCategory}
         components={{
           Toolbar: GridToolbar,
         }}
@@ -102,4 +102,4 @@ const CustomerList: React.FC = () => {
   )
 }
 
-export default CustomerList
+export default CategoryList

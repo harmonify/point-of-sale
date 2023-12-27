@@ -22,10 +22,10 @@ import { CustomerQuery } from './customer.query';
 import {
   CreateCustomerRequestDto,
   CustomerResponseDto,
+  CustomerInfoResponseDto,
   UpdateCustomerRequestDto,
 } from './dtos';
 import _ from 'lodash';
-import { CustomerInfoResponseDto } from './dtos/customer-info-response.dto';
 
 @ApiTags('Customers')
 @Controller({ path: '/customers', version: '1' })
@@ -39,7 +39,7 @@ export class CustomerController {
   ): Promise<IResponseBody<CustomerResponseDto>> {
     const newCustomer = await this.prismaService.customer.create({
       include: {
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       data: {
         ...customer,
@@ -90,7 +90,7 @@ export class CustomerController {
   ): Promise<IResponseBody<CustomerResponseDto>> {
     const customer = await this.prismaService.customer.findFirstOrThrow({
       include: {
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       where: {
         ...BaseQuery.Filter.available(),
@@ -110,7 +110,7 @@ export class CustomerController {
   ): Promise<IResponseBody<CustomerResponseDto>> {
     const updatedCustomer = await this.prismaService.customer.update({
       include: {
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       data: { ...data, updatedById: user.id },
       where: BaseQuery.Filter.byId(id),

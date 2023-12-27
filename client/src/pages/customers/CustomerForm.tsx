@@ -49,7 +49,7 @@ const CustomerForm: React.FC = () => {
       ? updateCustomerApiMutation({ id, data })
       : createCustomerApiMutation(data)
     return promise.unwrap().then(() => {
-      return navigate(`/customers`)
+      return navigate(-1)
     })
   }
 

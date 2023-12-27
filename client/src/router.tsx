@@ -94,6 +94,48 @@ const routeObjects: IRoute[] = [
         title: t("Edit Supplier", { ns: "action" }),
         path: "suppliers/:id",
       },
+      {
+        Component: lazy(
+          () => import("./pages/categories/CategoryList"),
+        ),
+        title: t("Categories"),
+        path: "categories",
+      },
+      {
+        Component: lazy(
+          () => import("./pages/categories/CategoryForm"),
+        ),
+        title: t("Create Category", { ns: "action" }),
+        path: "categories/create",
+      },
+      {
+        Component: lazy(
+          () => import("./pages/categories/CategoryForm"),
+        ),
+        title: t("Edit Category", { ns: "action" }),
+        path: "categories/:id",
+      },
+      {
+        Component: lazy(
+          () => import("./pages/units/UnitList"),
+        ),
+        title: t("Units"),
+        path: "units",
+      },
+      {
+        Component: lazy(
+          () => import("./pages/units/UnitForm"),
+        ),
+        title: t("Create Unit", { ns: "action" }),
+        path: "units/create",
+      },
+      {
+        Component: lazy(
+          () => import("./pages/units/UnitForm"),
+        ),
+        title: t("Edit Unit", { ns: "action" }),
+        path: "units/:id",
+      },
     ],
   },
   {

@@ -1,18 +1,23 @@
 import { formatGender, formatISOToLocale, formatRupiah } from "@/utils"
 import { IconButton } from "@material-ui/core"
 import { Delete, Edit } from "@material-ui/icons"
-import { GridColumns, GridRenderCellParams } from "@mui/x-data-grid"
+import { GridColDef, GridColumns, GridRenderCellParams } from "@mui/x-data-grid"
 import { t } from "i18next"
+
+type ICustomerColumns = (GridColDef & {
+  field: keyof Monorepo.Api.Response.CustomerInfoResponseDto
+})[]
 
 export default function renderCustomerDataGridColumns({
   onClickEdit,
   onClickDelete,
 }: {
-  onClickEdit: (row: Monorepo.Api.Response.CustomerResponseDto) => void
-  onClickDelete: (row: Monorepo.Api.Response.CustomerResponseDto) => void
+  onClickEdit: (row: Monorepo.Api.Response.CustomerInfoResponseDto) => void
+  onClickDelete: (row: Monorepo.Api.Response.CustomerInfoResponseDto) => void
 }): GridColumns {
   return [
     {
+      // @ts-ignore
       field: "actions",
       headerName: t("Actions"),
       renderCell: (params: GridRenderCellParams) => {
@@ -22,7 +27,7 @@ export default function renderCustomerDataGridColumns({
               size="small"
               onClick={() =>
                 onClickEdit(
-                  params.row as Monorepo.Api.Response.CustomerResponseDto,
+                  params.row as Monorepo.Api.Response.CustomerInfoResponseDto,
                 )
               }
             >
@@ -33,7 +38,7 @@ export default function renderCustomerDataGridColumns({
               size="small"
               onClick={() =>
                 onClickDelete(
-                  params.row as Monorepo.Api.Response.CustomerResponseDto,
+                  params.row as Monorepo.Api.Response.CustomerInfoResponseDto,
                 )
               }
             >
@@ -99,5 +104,5 @@ export default function renderCustomerDataGridColumns({
       minWidth: 260,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
-  ]
+  ] satisfies ICustomerColumns
 }

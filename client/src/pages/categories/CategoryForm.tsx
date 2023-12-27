@@ -2,9 +2,9 @@ import Container from "@/components/controls/layout/Container/Container"
 import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
 import Form from "@/components/forms/Form"
 import {
-  useCreateSupplierApiMutation,
-  useLazyFindOneSupplierApiQuery,
-  useUpdateSupplierApiMutation,
+  useCreateCategoryApiMutation,
+  useLazyFindOneCategoryApiQuery,
+  useUpdateCategoryApiMutation,
 } from "@/services/api"
 import { Grid } from "@material-ui/core"
 import { Formik } from "formik"
@@ -12,8 +12,8 @@ import { t } from "i18next"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
-import createSupplierValidationSchema, {
-  SupplierState,
+import createCategoryValidationSchema, {
+  CategoryState,
 } from "./validationSchema"
 
 const initialValues = {
@@ -23,29 +23,29 @@ const initialValues = {
   phoneNumber: null,
   description: null,
   email: null,
-} as unknown as SupplierState
+} as unknown as CategoryState
 
-const SupplierForm: React.FC = () => {
+const CategoryForm: React.FC = () => {
   const navigate = useNavigate()
 
-  const [createSupplierApiMutation] = useCreateSupplierApiMutation()
-  const [updateSupplierApiMutation] = useUpdateSupplierApiMutation()
+  const [createCategoryApiMutation] = useCreateCategoryApiMutation()
+  const [updateCategoryApiMutation] = useUpdateCategoryApiMutation()
 
   const { id } = useParams()
-  const [findOneSupplierApiQuery, { data: supplierApiQueryResponse }] =
-    useLazyFindOneSupplierApiQuery({
+  const [findOneCategoryApiQuery, { data: categoryApiQueryResponse }] =
+    useLazyFindOneCategoryApiQuery({
       refetchOnFocus: true,
       refetchOnReconnect: true,
     })
   useEffect(() => {
     if (!id) return
-    findOneSupplierApiQuery({ id })
-  }, [findOneSupplierApiQuery])
+    findOneCategoryApiQuery({ id })
+  }, [findOneCategoryApiQuery])
 
-  const onSubmit: FormikSubmissionHandler<SupplierState> = async (data) => {
+  const onSubmit: FormikSubmissionHandler<CategoryState> = async (data) => {
     const promise = id
-      ? updateSupplierApiMutation({ id, data })
-      : createSupplierApiMutation(data)
+      ? updateCategoryApiMutation({ id, data })
+      : createCategoryApiMutation(data)
     return promise.unwrap().then(() => {
       return navigate(-1)
     })
@@ -59,42 +59,30 @@ const SupplierForm: React.FC = () => {
     <Container
       title={
         id
-          ? t("Edit Supplier", { ns: "action" })
-          : t("Create Supplier", { ns: "action" })
+          ? t("Edit Category", { ns: "action" })
+          : t("Create Category", { ns: "action" })
       }
     >
       <Formik
         enableReinitialize={true}
         initialValues={
-          supplierApiQueryResponse
-            ? supplierApiQueryResponse.data
+          categoryApiQueryResponse
+            ? categoryApiQueryResponse.data
             : initialValues
         }
-        validationSchema={createSupplierValidationSchema}
+        validationSchema={createCategoryValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
         onSubmit={onSubmit}
       >
         <Form onCancel={onCancel}>
           <Grid container spacing={1}>
-            <Grid item xs={9} md={8}>
+            <Grid item xs={12} md={8}>
               <FormikTextInput name="name" label={t("Name")} />
             </Grid>
 
             <Grid item xs={12}>
               <FormikTextInput name="description" label={t("Description")} />
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormikTextInput name="address" label={t("Address")} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="phoneNumber" label={t("Phone Number")} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="email" label={t("Email")} />
             </Grid>
           </Grid>
         </Form>
@@ -103,4 +91,4 @@ const SupplierForm: React.FC = () => {
   )
 }
 
-export default SupplierForm
+export default CategoryForm

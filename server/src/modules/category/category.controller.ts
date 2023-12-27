@@ -21,6 +21,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { CategoryQuery } from './category.query';
 import {
   CategoryResponseDto,
+  CategoryInfoResponseDto,
   CreateCategoryRequestDto,
   UpdateCategoryRequestDto,
 } from './dtos';
@@ -50,8 +51,9 @@ export class CategoryController {
   @Get()
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody<CategoryResponseDto[]>> {
+  ): Promise<IResponseBody<CategoryInfoResponseDto[]>> {
     const productCategories = await this.prismaService.category.findMany({
+
       ...(!paginationInfo.all && {
         skip: paginationInfo.skip,
         take: paginationInfo.take,
@@ -64,10 +66,16 @@ export class CategoryController {
             ],
           }
         : BaseQuery.Filter.available(),
+      include: {
+        createdBy: { select: { name: true } },
+      },
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {
-      data: productCategories,
+      data: productCategories.map((category) => ({
+        ...category,
+        createdByName: category.createdBy.name,
+      })),
     };
   }
 
@@ -76,6 +84,9 @@ export class CategoryController {
     @Param('id') id: number,
   ): Promise<IResponseBody<CategoryResponseDto>> {
     const category = await this.prismaService.category.findFirstOrThrow({
+      include: {
+        createdBy: true,
+      },
       where: {
         ...BaseQuery.Filter.available(),
         id,

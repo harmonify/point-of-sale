@@ -62,7 +62,7 @@ const api = createApi({
     >(builder, "suppliers")
 
     const categoryApi = apiBuilder<
-      Monorepo.Api.Response.CategoryResponseDto,
+      Monorepo.Api.Response.CategoryInfoResponseDto,
       Monorepo.Api.Request.CreateCategoryRequestDto,
       Monorepo.Api.Request.UpdateCategoryRequestDto
     >(builder, "categories")

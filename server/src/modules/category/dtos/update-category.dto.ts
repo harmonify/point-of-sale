@@ -18,5 +18,5 @@ export class UpdateCategoryRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description?: string;
+  description?: string | null;
 }

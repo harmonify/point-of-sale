@@ -6,6 +6,7 @@ import {
 import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -20,6 +21,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import {
   CreateUnitRequestDto,
+  UnitInfoResponseDto,
   UnitResponseDto,
   UpdateUnitRequestDto,
 } from './dtos';
@@ -41,6 +43,9 @@ export class UnitController {
         createdById: user.id,
         updatedById: user.id,
       },
+      include: {
+        createdBy: { select: { name: true } },
+      },
     });
     return {
       data: newUnit,
@@ -50,7 +55,7 @@ export class UnitController {
   @Get()
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody<UnitResponseDto[]>> {
+  ): Promise<IResponseBody<UnitInfoResponseDto[]>> {
     const units = await this.prismaService.unit.findMany({
       ...(!paginationInfo.all && {
         skip: paginationInfo.skip,
@@ -65,9 +70,15 @@ export class UnitController {
           }
         : BaseQuery.Filter.available(),
       orderBy: BaseQuery.OrderBy.latest(),
+      include: {
+        createdBy: { select: { name: true } },
+      },
     });
     return {
-      data: units,
+      data: units.map((unit) => ({
+        ...unit,
+        createdByName: unit.createdBy.name,
+      })),
     };
   }
 
@@ -79,6 +90,9 @@ export class UnitController {
       where: {
         ...BaseQuery.Filter.available(),
         id,
+      },
+      include: {
+        createdBy: { select: { name: true } },
       },
     });
     return {
@@ -92,9 +106,20 @@ export class UnitController {
     @Body() data: UpdateUnitRequestDto,
     @CurrentUser() user: User,
   ): Promise<IResponseBody<UnitResponseDto>> {
+    const productUnitCount = await this.prismaService.productUnit.count({
+      where: BaseQuery.Filter.available(),
+    });
+    if (productUnitCount <= 0) {
+      throw new BadRequestException({
+        message: 'Cannot update unit as it has product units',
+      });
+    }
     const updatedUnit = await this.prismaService.unit.update({
       data: { ...data, updatedById: user.id },
       where: BaseQuery.Filter.byId(id),
+      include: {
+        createdBy: { select: { name: true } },
+      },
     });
     return {
       data: updatedUnit,
@@ -106,9 +131,20 @@ export class UnitController {
     @Param('id') id: number,
     @CurrentUser() user: User,
   ): Promise<IResponseBody> {
+    const productUnitCount = await this.prismaService.productUnit.count({
+      where: BaseQuery.Filter.available(),
+    });
+    if (productUnitCount <= 0) {
+      throw new BadRequestException({
+        message: 'Cannot delete unit as it has product units',
+      });
+    }
     await this.prismaService.unit.update({
       data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
+      include: {
+        createdBy: { select: { name: true } },
+      },
     });
   }
 }
