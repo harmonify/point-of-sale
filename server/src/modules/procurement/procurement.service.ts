@@ -51,6 +51,8 @@ export class ProcurementService {
         },
         include: {
           procurementProducts: true,
+          supplier: { select: { name: true } },
+          createdBy: { select: { name: true } },
         },
       });
 
@@ -85,6 +87,8 @@ export class ProcurementService {
         where: { id },
         include: {
           procurementProducts: true,
+          supplier: { select: { name: true } },
+          createdBy: { select: { name: true } },
         },
       });
 
@@ -193,6 +197,8 @@ export class ProcurementService {
         : BaseQuery.Filter.available(),
       include: {
         procurementProducts: true,
+        supplier: { select: { name: true } },
+        createdBy: { select: { name: true } },
       },
       orderBy: BaseQuery.OrderBy.latest(),
     });
@@ -202,6 +208,8 @@ export class ProcurementService {
     return this.prismaService.procurement.findFirstOrThrow({
       include: {
         procurementProducts: true,
+        supplier: { select: { name: true } },
+        createdBy: { select: { name: true } },
       },
       where: {
         ...BaseQuery.Filter.available(),

@@ -104,7 +104,7 @@ const HomeInfo: React.FC = () => {
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]
@@ -133,7 +133,7 @@ const HomeInfo: React.FC = () => {
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]

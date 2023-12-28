@@ -16,6 +16,11 @@
   "Customer": "Pelanggan",
   "customers": "pelanggan",
   "Customers": "Pelanggan",
+  "DELIVERED": "Terkirim",
+  "Delivery Status": "Status Pengiriman",
+  "Delivered At": "Tanggal Terkirim",
+  "Payment Status": "Status Pembayaran",
+  "Payed At": "Tanggal Terbayar",
   "Description": "Deskripsi",
   "Email": "Email",
   "Expense": "Pengeluaran",
@@ -26,7 +31,9 @@
   "Gender": "Jenis Kelamin",
   "Male": "Laki-Laki",
   "Name": "Nama",
+  "PAID": "Terbayar",
   "Password": "Password",
+  "PENDING": "Tertunda",
   "Phone Number": "Nomor Telepon",
   "Point of Sales": "Point of Sales",
   "Price": "Harga",
@@ -65,5 +72,6 @@
   "Unit Name": "Nama Unit",
   "units": "unit",
   "Units": "Unit",
+  "UNPAID": "Belum Terbayar",
   "Updated At": "Tanggal Diubah"
 }

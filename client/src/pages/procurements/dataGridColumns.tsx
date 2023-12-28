@@ -46,31 +46,74 @@ export default function renderProcurementDataGridColumns({
       disableColumnMenu: true,
       disableExport: true,
       disableReorder: true,
+      resizable: false,
+      filterable: false,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "name",
       headerName: t("Name"),
       flex: 1,
-      minWidth: 160,
+      minWidth: 200,
     },
     {
       field: "description",
       headerName: t("Description"),
-      flex: 2,
+      flex: 1,
       minWidth: 140,
     },
     {
-      field: "barcode",
-      headerName: t("Barcode"),
+      field: "supplierName",
+      headerName: t("Supplier"),
       flex: 2,
+      minWidth: 200,
+      valueGetter(params) {
+        return (params.row as Monorepo.Api.Response.ProcurementResponseDto)
+          .supplier.name
+      },
+    },
+    {
+      field: "deliveryStatus",
+      headerName: t("Delivery Status"),
+      flex: 1,
       minWidth: 160,
       sortable: false,
+      resizable: false,
+      valueGetter: (params) =>
+        t(params.value as any, { defaultValue: params.value || "-" }),
+    },
+    {
+      field: "deliveredAt",
+      headerName: t("Delivered At"),
+      flex: 2,
+      minWidth: 220,
+      sortable: false,
+      valueGetter: (params) => formatISOToLocale(params.value as string),
+    },
+    {
+      field: "paymentStatus",
+      headerName: t("Payment Status"),
+      flex: 1,
+      minWidth: 160,
+      sortable: false,
+      valueGetter: (params) =>
+        t(params.value as any, { defaultValue: params.value || "-" }),
+    },
+    {
+      field: "payedAt",
+      headerName: t("Payed At"),
+      flex: 2,
+      minWidth: 220,
+      sortable: false,
+      valueGetter: (params) => formatISOToLocale(params.value as string),
     },
     {
       field: "createdByName",
       headerName: t("Created By"),
       flex: 1,
-      minWidth: 220,
+      minWidth: 200,
       valueGetter(params) {
         return (params.row as Monorepo.Api.Response.ProcurementResponseDto)
           .createdBy.name
@@ -80,14 +123,14 @@ export default function renderProcurementDataGridColumns({
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
     {
       field: "updatedAt",
       headerName: t("Updated At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]

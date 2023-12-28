@@ -46,6 +46,11 @@ export default function renderProductDataGridColumns({
       disableColumnMenu: true,
       disableExport: true,
       disableReorder: true,
+      resizable: false,
+      filterable: false,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "name",
@@ -90,14 +95,14 @@ export default function renderProductDataGridColumns({
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
     {
       field: "updatedAt",
       headerName: t("Updated At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]

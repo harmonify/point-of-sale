@@ -51,6 +51,11 @@ export default function renderCustomerDataGridColumns({
       disableColumnMenu: true,
       disableExport: true,
       disableReorder: true,
+      resizable: false,
+      filterable: false,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "name",
@@ -101,7 +106,7 @@ export default function renderCustomerDataGridColumns({
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 260,
+      minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ] satisfies ICustomerColumns

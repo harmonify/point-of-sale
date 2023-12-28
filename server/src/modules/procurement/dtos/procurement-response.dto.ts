@@ -20,6 +20,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ProcurementProductResponseDto } from './procurement-product-response.dto';
+import { UserResponseDto } from '@/modules/user';
+import { SupplierResponseDto } from '@/modules/supplier';
 
 export class ProcurementResponseDto implements Procurement {
   @IsDefined()
@@ -114,4 +116,8 @@ export class ProcurementResponseDto implements Procurement {
   @Type(() => ProcurementProductResponseDto)
   @ApiProperty({ type: () => ProcurementProductResponseDto })
   procurementProducts: ProcurementProductResponseDto[];
+
+  supplier: Pick<SupplierResponseDto, 'name'>;
+
+  createdBy: Pick<UserResponseDto, 'name'>;
 }

@@ -1,7 +1,8 @@
+import { APP_DEFAULT_LANG } from "@/environment"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import currency from "currency.js"
 import { t } from "i18next"
-import { DateTime } from "luxon"
+import { DateTime, FixedOffsetZone, Zone } from "luxon"
 import { ArraySchema, Flags } from "yup"
 
 export const isValueExists = (
@@ -73,14 +74,19 @@ export const formatISOToLocale = (
   fallbackValue: string = "-",
 ): string => {
   return isoString
-    ? DateTime.fromISO(isoString).setLocale("id").toLocaleString({
-        weekday: "long",
-        day: "2-digit",
-        month: "short",
-        year: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+    ? DateTime.fromISO(isoString, { zone: "utc" })
+        .setLocale(APP_DEFAULT_LANG)
+        .setZone(FixedOffsetZone.instance(7 * 60))
+        .toLocaleString({
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          hour12: false,
+        })
     : fallbackValue
 }
 

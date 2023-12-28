@@ -108,6 +108,7 @@ const ProcurementList: React.FC = () => {
             autoHeight
             disableSelectionOnClick
             disableDensitySelector
+            disableColumnMenu
           />
         </Grid>
       </Grid>
