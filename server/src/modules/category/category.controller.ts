@@ -53,7 +53,6 @@ export class CategoryController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<CategoryInfoResponseDto[]>> {
     const productCategories = await this.prismaService.category.findMany({
-
       ...(!paginationInfo.all && {
         skip: paginationInfo.skip,
         take: paginationInfo.take,
@@ -85,7 +84,7 @@ export class CategoryController {
   ): Promise<IResponseBody<CategoryResponseDto>> {
     const category = await this.prismaService.category.findFirstOrThrow({
       include: {
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       where: {
         ...BaseQuery.Filter.available(),

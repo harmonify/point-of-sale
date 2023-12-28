@@ -26,7 +26,9 @@ export class DashboardService {
       const topCustomers = await this.prisma.customer.findMany({
         take: 5,
         include: {
-          createdBy: true,
+          createdBy: {
+            select: { name: true },
+          },
         },
         orderBy: {
           sales: {
@@ -40,7 +42,9 @@ export class DashboardService {
       const recentOrders = await this.prisma.sale.findMany({
         take: 10,
         include: {
-          createdBy: true,
+          createdBy: {
+            select: { name: true },
+          },
           saleProducts: true,
         },
         orderBy: {

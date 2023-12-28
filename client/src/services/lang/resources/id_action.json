@@ -9,6 +9,7 @@
   "Create": "Tambah",
   "Edit": "Ubah",
   "Delete": "Hapus",
+  "Enter your query": "Masukkan kata pencarian",
   "Create Data": "Tambah{{model, unslugify, default(value: Data), sentencecase, spaceBeforeIfDefined}}",
   "Edit Data": "Ubah Data{{model, unslugify, sentencecase, spaceBeforeIfDefined, removeIfUndefined}}",
   "Delete Data": "Hapus{{model, unslugify, default(value: Data), sentencecase, spaceBeforeIfDefined}}",
@@ -28,6 +29,9 @@
   "Edit Product": "Ubah Data Produk",
   "Delete Product": "Hapus Produk",
   "Add Product Unit": "Tambah Unit Produk",
+  "Edit Product Unit": "Ubah Data Unit Produk",
   "Delete Product Unit": "Hapus Unit Produk",
-  "Enter your query": "Masukkan kata pencarian"
+  "Create Procurement": "Tambah Pengadaan",
+  "Edit Procurement": "Ubah Data Pengadaan",
+  "Delete Procurement": "Hapus Pengadaan"
 }

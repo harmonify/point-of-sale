@@ -100,24 +100,10 @@ const Menu: React.FC = () => {
           icon={<LocalShipping />}
         />
 
-        <MenuItem
-          isSelected={isSelected("expense") || isSelected("expensetypes")}
-          onClick={() => navigate("/expense")}
-          text={t("Expense")}
-          icon={<LocalAtm />}
-        />
-
-        <MenuItem
-          isSelected={isSelected("receivings")}
-          onClick={() => navigate("/receivings")}
-          text={t("Receivings")}
-          icon={<NoteAdd />}
-        />
-
         <ListSubheader>
           <Typography variant="button">{t("Reports")}</Typography>
         </ListSubheader>
-        <MenuItem text={t("Todays Sales")} icon={<Assessment />} />
+        <MenuItem text={t("Today Sales")} icon={<Assessment />} />
         <MenuItem text={t("Expense")} icon={<LocalAtm />} />
       </List>
     </>

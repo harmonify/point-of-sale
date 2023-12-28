@@ -60,7 +60,7 @@ export class ProductController {
         productUnits: {
           include: ProductUnitQuery.Relation.withQuantityRelationData(),
         },
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
     });
     return {
@@ -85,7 +85,7 @@ export class ProductController {
         productUnits: {
           include: ProductUnitQuery.Relation.withQuantityRelationData(),
         },
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       ...(!paginationInfo.all && {
         skip: paginationInfo.skip,
@@ -123,7 +123,7 @@ export class ProductController {
         productUnits: {
           include: ProductUnitQuery.Relation.withQuantityRelationData(),
         },
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       where: {
         ...BaseQuery.Filter.available(),
@@ -169,7 +169,7 @@ export class ProductController {
         productUnits: {
           include: ProductUnitQuery.Relation.withQuantityRelationData(),
         },
-        createdBy: true,
+        createdBy: { select: { name: true } },
       },
       where: BaseQuery.Filter.byId(id),
     });

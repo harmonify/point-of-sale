@@ -7,7 +7,9 @@
 - [x] Suppliers
 - [x] Categories
 - [x] Units
-- [] Products
+- [-] Products
+  - [x] Form and List
+  - [ ] Highlight the Fuzzy search result
 - [] Procurements
 - [] Sales
 - [] Notification API

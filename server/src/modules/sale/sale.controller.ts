@@ -52,7 +52,7 @@ export class SaleController {
       },
       include: {
         customer: true,
-        createdBy: true,
+        createdBy: { select: { name: true } },
         saleProducts: true,
       },
     });
@@ -83,7 +83,7 @@ export class SaleController {
       orderBy: BaseQuery.OrderBy.latest(),
       include: {
         customer: true,
-        createdBy: true,
+        createdBy: { select: { name: true } },
         saleProducts: true,
       },
     });
@@ -103,7 +103,7 @@ export class SaleController {
       },
       include: {
         customer: true,
-        createdBy: true,
+        createdBy: { select: { name: true } },
         saleProducts: true,
       },
     });
@@ -127,7 +127,7 @@ export class SaleController {
       where: BaseQuery.Filter.byId(id),
       include: {
         customer: true,
-        createdBy: true,
+        createdBy: { select: { name: true } },
         saleProducts: true,
       },
     });

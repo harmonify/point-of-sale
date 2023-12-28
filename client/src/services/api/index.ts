@@ -271,6 +271,8 @@ export const {
   useDeleteExpenseApiMutation,
 
   useCreateProcurementApiMutation,
+  useFindAllProcurementApiQuery,
+  useFindOneProcurementApiQuery,
   useLazyFindAllProcurementApiQuery,
   useLazyFindOneProcurementApiQuery,
   useUpdateProcurementApiMutation,

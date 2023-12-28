@@ -15,6 +15,7 @@ import SupplierList from "./pages/suppliers/SupplierList"
 import CategoryList from "./pages/categories/CategoryList"
 import UnitList from "./pages/units/UnitList"
 import ProductList from "./pages/products/ProductList"
+import ProcurementList from "./pages/procurements/ProcurementList"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -142,6 +143,22 @@ const routeObjects: IRoute[] = [
         Component: lazy(() => import("./pages/products/ProductForm")),
         title: t("Edit Product", { ns: "action" }),
         path: "products/:id",
+      },
+      // Procurements
+      {
+        Component: ProcurementList,
+        title: t("Procurements"),
+        path: "procurements",
+      },
+      {
+        Component: lazy(() => import("./pages/procurements/ProcurementForm")),
+        title: t("Create Procurement", { ns: "action" }),
+        path: "procurements/create",
+      },
+      {
+        Component: lazy(() => import("./pages/procurements/ProcurementForm")),
+        title: t("Edit Procurement", { ns: "action" }),
+        path: "procurements/:id",
       },
     ],
   },

@@ -53,5 +53,5 @@ export class ProductResponseDto extends ProductDto {
   productUnits: ProductUnitInfoResponseDto[];
 
   @ApiProperty()
-  createdBy: UserResponseDto;
+  createdBy: Pick<UserResponseDto, 'name'>;
 }
