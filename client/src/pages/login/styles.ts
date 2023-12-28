@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: "#efefef",
+    background: theme.palette.background.default,
     height: "100vh",
   },
   paper: {

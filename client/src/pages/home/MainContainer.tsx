@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     padding: "70px 10px 15px 10px",
+    background: theme.palette.background.default,
   },
   paper: {
     [theme.breakpoints.up("xs")]: {

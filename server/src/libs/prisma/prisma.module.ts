@@ -16,7 +16,7 @@ import {
       imports: [NestConfigModule],
       inject: [NestConfigService],
       useFactory: (configService: NestConfigService) => ({
-        explicitConnect: true,
+        // explicitConnect: true,
         middlewares: [
           loggingMiddleware({
             logLevel: configService.isProd()

@@ -1,40 +1,34 @@
-import { TextField, TextFieldProps } from "@material-ui/core"
 import { useField } from "formik"
-import React, { HTMLInputTypeAttribute, useRef } from "react"
+import React from "react"
 
-export type IFormikTextInputProps = {
-  label: string
-  id?: string
-  name: string
-  /** default: `true` */
-  fullWidth?: boolean
-  type?: HTMLInputTypeAttribute
-  placeholder?: string
-} & TextFieldProps
+import TextInput, { ITextInputProps } from "./TextInput"
 
-const FormikTextInput: React.FC<IFormikTextInputProps> = (props) => {
+const FormikTextInput: React.FC<ITextInputProps> = (props) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
   // message if the field is invalid and it has been touched (i.e. visited)
   // @ts-ignore
   const [field, meta] = useField(props)
-  const inputRef = useRef<HTMLDivElement | null>(null)
+
+  let helperText = props.helperText
+  if (meta.touched && meta.error) {
+    const errorMessage = meta.error.toString()
+    if (errorMessage.includes("[object Object]")) {
+      helperText = JSON.stringify(meta.error)
+    } else {
+      helperText = errorMessage
+    }
+  }
 
   return (
-    <TextField
-      ref={inputRef}
-      error={meta.touched && Boolean(meta.error)}
-      helperText={meta.touched && meta.error}
+    <TextInput
       {...field}
       {...props}
-      fullWidth={typeof props.fullWidth === "boolean" ? props.fullWidth : true}
+      error={meta.touched && Boolean(meta.error)}
+      helperText={helperText}
       InputLabelProps={{
-        htmlFor: props.id || props.name,
         shrink: !!field.value,
-        ...props.InputLabelProps,
       }}
-      type={props.type || "text"}
-      margin={props.margin || "normal"}
     />
   )
 }

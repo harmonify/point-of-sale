@@ -1,19 +1,18 @@
-import React from 'react';
-import currency from 'currency.js';
-import { Paper } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Form from '../../../../components/forms/Form';
-import CustomLabel from './CustomLabel';
-import NumberTextField from '../../../../components/forms/FormikNumberInput/NumberTextField';
+import React from "react"
+import currency from "currency.js"
+import { Paper, TextField } from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
+import Form from "../../../../components/forms/Form"
+import CustomLabel from "./CustomLabel"
 
 const styles = (theme) => ({
   textField: {
-    width: '470px',
-    [theme.breakpoints.up('md')]: {
-      width: '470px',
+    width: "470px",
+    [theme.breakpoints.up("md")]: {
+      width: "470px",
     },
   },
-});
+})
 
 const NormalSaleForm = (props) => {
   const {
@@ -25,23 +24,23 @@ const NormalSaleForm = (props) => {
     onChange,
     onSubmit,
     onCancel,
-  } = props;
-  const { summary } = cart;
+  } = props
+  const { summary } = cart
 
   const totalDiscount = currency(summary.discountOnItems)
     .add(summary.discountOnTotal)
-    .toString();
+    .toString()
 
   return (
     <Paper>
       <Form
-        style={{ marginLeft: '0px', padding: '15px' }}
+        style={{ marginLeft: "0px", padding: "15px" }}
         id="customer"
         onSubmit={onSubmit}
         onCancel={onCancel}
       >
         <CustomLabel
-          labelStyle={{ color: 'red' }}
+          labelStyle={{ color: "red" }}
           title="Transaction Id"
           text={transactionId}
           helperText="Please note this id incase of any error while saving."
@@ -60,7 +59,8 @@ const NormalSaleForm = (props) => {
         <CustomLabel title="Net bill" text={summary.netTotal} />
         <br />
 
-        <NumberTextField
+        <TextField
+          type="number"
           autoFocus
           className={classes.textField}
           error={!!errors.amountPaid}
@@ -75,7 +75,7 @@ const NormalSaleForm = (props) => {
         <CustomLabel title="Balance to pay" text={data.balanceToPay} />
       </Form>
     </Paper>
-  );
-};
+  )
+}
 
-export default withStyles(styles, { withTheme: true })(NormalSaleForm);
+export default withStyles(styles, { withTheme: true })(NormalSaleForm)

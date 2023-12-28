@@ -3,20 +3,6 @@ import { withStyles } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar"
 import { Tab, Tabs } from "@material-ui/core"
 
-// eslint-disable-next-line
-const styles = (theme) => ({
-  tab: {
-    boxShadow: "none",
-    border: "1px solid #e0e0e0",
-  },
-  tabItem: {
-    // fontSize: "12px"
-  },
-  indicator: {
-    backgroundColor: "#3f51b5",
-  },
-})
-
 class CustomTabs extends Component {
   state = {}
 
@@ -49,4 +35,18 @@ class CustomTabs extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(CustomTabs)
+export default withStyles(
+  (theme) => ({
+    tab: {
+      boxShadow: "none",
+      border: "1px solid #e0e0e0",
+    },
+    tabItem: {
+      // fontSize: "12px"
+    },
+    indicator: {
+      backgroundColor: theme.palette.primary.main,
+    },
+  }),
+  { withTheme: true },
+)(CustomTabs)

@@ -26,7 +26,7 @@ const builder = <
     }),
     invalidatesTags: cacher.invalidatesList(resourceName),
     onQueryStarted: async (arg, { queryFulfilled, getState, requestId }) => {
-      const response = await queryFulfilled
+      await queryFulfilled
       store.dispatch(
         showSnackbar({
           message: t(`Data created successfully`, {

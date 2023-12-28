@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/app/hooks"
-import Container from "@/components/controls/layout/Container/Container"
+import Container from "@/components/layout/Container/Container"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
@@ -20,7 +20,7 @@ const CustomerList: React.FC = () => {
   const navigate = useNavigate()
   const [deleteCustomerApiMutation, { isLoading: isLoadingDeleteCustomer }] =
     useDeleteCustomerApiMutation()
-  const { isLoading: isLoadingFetchCustomer, data: customerResponseQuery } =
+  const { isLoading: isLoadingFetchCustomer, isError, data: customerResponseQuery } =
     useFindAllCustomerApiQuery(
       { all: true },
       {

@@ -12,9 +12,6 @@ import { useNavigate } from "react-router-dom"
 
 // eslint-disable-next-line
 const useStyles = makeStyles((theme) => ({
-  menuLeft: {
-    float: "right",
-  },
   menuItem: {
     fontSize: "13.5px",
     padding: "5px 20px 5px 20px",
@@ -59,7 +56,6 @@ const HeaderMenu: React.FC = () => {
     <>
       {/* This is right corner menu [logout, my profile] */}
       <IconButton
-        className={classes.menuLeft}
         aria-owns={open ? "menu-appbar" : undefined}
         aria-haspopup="true"
         onClick={handleOpen}

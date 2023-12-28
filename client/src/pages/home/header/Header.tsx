@@ -1,8 +1,8 @@
 import { useAppDispatch } from "@/app/hooks"
-import { toggleMobileDrawer } from "@/features/app"
+import { toggleDarkMode, toggleMobileDrawer } from "@/features/app"
 import AppBar from "@material-ui/core/AppBar"
 import IconButton from "@material-ui/core/IconButton"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles, useTheme } from "@material-ui/core/styles"
 import Toolbar from "@material-ui/core/Toolbar"
 import MenuIcon from "@material-ui/icons/Menu"
 import classNames from "classnames"
@@ -10,6 +10,8 @@ import { t } from "i18next"
 import React from "react"
 
 import Menus from "./HeaderMenu"
+import { Brightness4, Brightness7 } from "@material-ui/icons"
+import { Box } from "@material-ui/core"
 
 const drawerWidth = 200
 
@@ -27,6 +29,12 @@ const useStyles = makeStyles((theme) => ({
   flex: {
     flex: 1,
   },
+  menuLeft: {
+    float: "left",
+  },
+  menuRight: {
+    float: "right",
+  },
   navIconHide: {
     [theme.breakpoints.up("md")]: {
       display: "none",
@@ -36,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
   },
   logo: {
-    background: "#3f51b5",
+    background: theme.palette.primary.main,
   },
   logoContainer: {
     color: "white",
@@ -52,6 +60,7 @@ const Header: React.FC<{
 }> = ({ shouldRenderMobileMenu }) => {
   const dispatch = useAppDispatch()
   const classes = useStyles()
+  const theme = useTheme()
 
   const navIconClass =
     shouldRenderMobileMenu === true ? classes.navIconShow : classes.navIconHide
@@ -63,8 +72,8 @@ const Header: React.FC<{
     <AppBar className={appBarClass}>
       <Toolbar>
         {/* Collapse button. Clicking this opens the drawer */}
-        <div className={classNames(classes.logo, navIconClass)}>
-          <div className={classes.logoContainer}>
+        <Box className={classNames(classes.logo, navIconClass)}>
+          <Box className={classes.logoContainer}>
             <IconButton
               style={{ margin: 0 }}
               color="inherit"
@@ -74,12 +83,24 @@ const Header: React.FC<{
               <MenuIcon />
             </IconButton>
             <span>{t("Point of Sales")}</span>
-          </div>
-        </div>
-        {/* This is the right side menu - Logout, My Profile */}
-        <div className={classes.flex}>
-          <Menus />
-        </div>
+          </Box>
+        </Box>
+        <Box className={classes.flex}>
+          {/* This is the right side menu - Logout, My Profile */}
+          <Box className={classes.menuRight}>
+            <IconButton
+              onClick={() => dispatch(toggleDarkMode())}
+              color="inherit"
+            >
+              {theme.palette.type === "dark" ? (
+                <Brightness7 />
+              ) : (
+                <Brightness4 />
+              )}
+            </IconButton>
+            <Menus />
+          </Box>
+        </Box>
       </Toolbar>
     </AppBar>
   )

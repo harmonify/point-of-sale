@@ -8,8 +8,6 @@ import WarningIcon from "@material-ui/icons/WarningOutlined"
 import clsx from "clsx"
 import React, { forwardRef } from "react"
 
-const white = "#ffffff"
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",

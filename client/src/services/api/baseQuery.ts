@@ -1,5 +1,5 @@
-import store, { RootState, persistor } from "@/app/store"
-import { API_BASE_URL } from "@/environment"
+import { RootState, persistor } from "@/app/store"
+import { API_BASE_URL, APP_ENV } from "@/environment"
 import {
   selectAuthCredentials,
   setCredentials,
@@ -57,17 +57,27 @@ const baseQueryWithReauth: BaseQueryFn<
   }
 
   if (result!.error && result!.error.status === 401) {
+    // TODO: Is this stable?
+    if (
+      ["production", "staging"].includes(APP_ENV) &&
+      result!.error.status >= 500
+    ) {
+      // router.navigate("/error")
+    }
+
     // checking whether the mutex is locked
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
         logger.debug("Unauthorized. Start refresh token auth flow.")
-        const authCredentials = selectAuthCredentials(store.getState())
+        const authCredentials = selectAuthCredentials(
+          api.getState() as RootState,
+        )
         if (!(authCredentials && authCredentials.refreshToken)) {
           logger.debug(
             "Failed to execute refresh token auth flow. Refresh token is empty",
           )
-          store.dispatch(setLogout())
+          api.dispatch(setLogout())
           await persistor.purge()
           return result
         }
@@ -86,13 +96,13 @@ const baseQueryWithReauth: BaseQueryFn<
           const credentials =
             refreshResult.data as Monorepo.Api.Response.ResponseBodyDto<Monorepo.Api.Response.RefreshTokenResponseDto>
 
-          store.dispatch(setCredentials(credentials.data))
+          api.dispatch(setCredentials(credentials.data))
           logger.debug("Successfully ran the refresh token auth flow.")
           logger.debug("Retry the initial query.")
           result = await baseQuery(args, api, extraOptions)
         } else {
           logger.debug("Error when executing refresh token auth flow.")
-          store.dispatch(setLogout())
+          api.dispatch(setLogout())
           await persistor.purge()
         }
       } finally {

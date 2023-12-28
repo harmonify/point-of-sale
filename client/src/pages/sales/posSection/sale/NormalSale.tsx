@@ -6,7 +6,7 @@ import ConfirmationDialog from "../../../../features/dialog/ConfirmationDialog"
 import api from "../../../../services/api"
 import Message from "../../../../components/controls/Message"
 import NormalSaleForm from "./NormalSaleForm"
-import CircularLoader from "../../../../components/controls/loader/CircularLoader"
+import CircularLoader from "../../../../components/controls/CircularLoader"
 import { emptyCart } from "@/features/cart"
 import YesNo from "../../../../features/dialog/YesNo"
 import { createSelector } from "@reduxjs/toolkit"
@@ -146,7 +146,7 @@ class NormalSale extends Component {
 
     return (
       <ConfirmationDialog open={open} onClose={handleClose} title="Normal Sale">
-        <CircularLoader isLoading={isLoading} />
+        <CircularLoader isLoading={true} />
 
         <YesNo
           open={showConfirmDeleteDialog}

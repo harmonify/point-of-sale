@@ -1,38 +1,38 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import FormDialog from '../../../../../components/forms/FormDialog';
-import NumberTextField from '../../../../../components/forms/FormikNumberInput/NumberTextField';
-import { updateTax } from '@/features/cart';
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import FormDialog from "../../../../../components/forms/FormDialog"
+import { updateTax } from "@/features/cart"
+import { TextField } from "@material-ui/core"
 
 class TaxPopup extends Component {
-  state = { tax: '', error: '' };
+  state = { tax: "", error: "" }
 
   onTaxChange = (e) => {
-    const tax = e.target.value;
+    const tax = e.target.value
 
-    this.setState({ tax, error: '' });
-  };
+    this.setState({ tax, error: "" })
+  }
 
   onSave = () => {
-    const { tax } = this.state;
+    const { tax } = this.state
 
-    if (tax === '') {
-      this.setState({ error: 'Enter the valid tax value' });
-      return;
+    if (tax === "") {
+      this.setState({ error: "Enter the valid tax value" })
+      return
     }
 
-    this.props.updateTax(tax);
-    this.setState({ tax: '', error: '' });
-    this.props.close();
-  };
+    this.props.updateTax(tax)
+    this.setState({ tax: "", error: "" })
+    this.props.close()
+  }
 
   onCancel = () => {
-    this.props.close();
-  };
+    this.props.close()
+  }
 
   render() {
-    const { open } = this.props;
-    const { tax, error } = this.state;
+    const { open } = this.props
+    const { tax, error } = this.state
 
     return (
       <FormDialog
@@ -42,10 +42,11 @@ class TaxPopup extends Component {
         title="Tax"
         subtitle="value entered here is considered as %"
       >
-        <NumberTextField
-          style={{ width: '250px' }}
+        <TextField
+          style={{ width: "250px" }}
           error={!!error}
           name="tax"
+          type="number"
           value={tax}
           label="Amount"
           onChange={this.onTaxChange}
@@ -53,8 +54,8 @@ class TaxPopup extends Component {
         />
         <div />
       </FormDialog>
-    );
+    )
   }
 }
 
-export default connect(null, { updateTax })(TaxPopup);
+export default connect(null, { updateTax })(TaxPopup)

@@ -41,17 +41,17 @@ export class CreateProductRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description: string | null;
+  description?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  barcode: string | null;
+  barcode?: string | null;
 
   @IsOptional()
   @IsEnum(BarcodeType)
   @ApiProperty({ enum: BarcodeType })
-  barcodeType: BarcodeType | null;
+  barcodeType?: BarcodeType | null;
 
   @IsDefined()
   @IsArray()

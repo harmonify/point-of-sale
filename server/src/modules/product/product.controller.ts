@@ -15,7 +15,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -24,11 +24,16 @@ import {
   UpdateProductRequestDto,
 } from './dtos';
 import { ProductQuery } from './product.query';
+import { ProductUnitService } from './product-unit.service';
+import { ProductUnitQuery } from './product-unit.query';
 
 @ApiTags('Products')
 @Controller({ path: '/products', version: '1' })
 export class ProductController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly productUnitService: ProductUnitService,
+  ) {}
 
   @Post()
   async create(
@@ -52,12 +57,21 @@ export class ProductController {
       },
       include: {
         category: true,
-        productUnits: true,
+        productUnits: {
+          include: ProductUnitQuery.Relation.withQuantityRelationData(),
+        },
         createdBy: true,
       },
     });
     return {
-      data: newProduct,
+      data: {
+        ...newProduct,
+        productUnits: newProduct.productUnits.map((pu) => ({
+          ...pu,
+          availableQuantity:
+            this.productUnitService.countProductUnitAvailableQuantity(pu),
+        })),
+      },
     };
   }
 
@@ -68,7 +82,9 @@ export class ProductController {
     const products = await this.prismaService.product.findMany({
       include: {
         category: true,
-        productUnits: true,
+        productUnits: {
+          include: ProductUnitQuery.Relation.withQuantityRelationData(),
+        },
         createdBy: true,
       },
       ...(!paginationInfo.all && {
@@ -86,7 +102,14 @@ export class ProductController {
       orderBy: BaseQuery.OrderBy.latest(),
     });
     return {
-      data: products,
+      data: products.map((product) => ({
+        ...product,
+        productUnits: product.productUnits.map((pu) => ({
+          ...pu,
+          availableQuantity:
+            this.productUnitService.countProductUnitAvailableQuantity(pu),
+        })),
+      })),
     };
   }
 
@@ -97,7 +120,9 @@ export class ProductController {
     const product = await this.prismaService.product.findFirstOrThrow({
       include: {
         category: true,
-        productUnits: true,
+        productUnits: {
+          include: ProductUnitQuery.Relation.withQuantityRelationData(),
+        },
         createdBy: true,
       },
       where: {
@@ -106,7 +131,14 @@ export class ProductController {
       },
     });
     return {
-      data: product,
+      data: {
+        ...product,
+        productUnits: product.productUnits.map((pu) => ({
+          ...pu,
+          availableQuantity:
+            this.productUnitService.countProductUnitAvailableQuantity(pu),
+        })),
+      },
     };
   }
 
@@ -120,17 +152,36 @@ export class ProductController {
       data: {
         ...data,
         updatedById: user.id,
-        productUnits: BaseQuery.nestedUpsertMany(data.productUnits, user.id),
+        productUnits: BaseQuery.nestedUpsertManyV2(
+          data.productUnits,
+          user.id,
+          (pu) =>
+            ({
+              productId_unitId: {
+                productId: id,
+                unitId: pu.unitId,
+              },
+            }) satisfies Prisma.ProductUnitWhereUniqueInput,
+        ),
       },
       include: {
         category: true,
-        productUnits: true,
+        productUnits: {
+          include: ProductUnitQuery.Relation.withQuantityRelationData(),
+        },
         createdBy: true,
       },
       where: BaseQuery.Filter.byId(id),
     });
     return {
-      data: updatedProduct,
+      data: {
+        ...updatedProduct,
+        productUnits: updatedProduct.productUnits.map((pu) => ({
+          ...pu,
+          availableQuantity:
+            this.productUnitService.countProductUnitAvailableQuantity(pu),
+        })),
+      },
     };
   }
 
@@ -142,6 +193,12 @@ export class ProductController {
     await this.prismaService.product.update({
       data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
+    });
+    await this.prismaService.productUnit.updateMany({
+      data: BaseQuery.softDelete(user.id),
+      where: {
+        productId: id,
+      },
     });
   }
 }

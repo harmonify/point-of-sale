@@ -42,44 +42,60 @@ export default function renderProductDataGridColumns({
           </>
         )
       },
-      flex: 1,
-      minWidth: 100,
       sortable: false,
       disableColumnMenu: true,
+      disableExport: true,
+      disableReorder: true,
     },
     {
       field: "name",
       headerName: t("Name"),
-      flex: 2,
+      flex: 1,
       minWidth: 160,
     },
     {
       field: "description",
       headerName: t("Description"),
       flex: 2,
-      minWidth: 160,
+      minWidth: 140,
     },
     {
-      field: "phoneNumber",
-      headerName: t("Phone Number"),
-      flex: 2,
+      field: "categoryName",
+      headerName: t("Category Name"),
+      flex: 3,
       minWidth: 200,
+      valueGetter(params) {
+        return (params.row as Monorepo.Api.Response.ProductResponseDto).category
+          .name
+      },
     },
     {
-      field: "email",
-      headerName: t("Email"),
+      field: "barcode",
+      headerName: t("Barcode"),
       flex: 2,
-      minWidth: 240,
+      minWidth: 160,
+      sortable: false,
     },
     {
-      field: "address",
-      headerName: t("Address"),
-      flex: 2,
-      minWidth: 240,
+      field: "createdByName",
+      headerName: t("Created By"),
+      flex: 1,
+      minWidth: 220,
+      valueGetter(params) {
+        return (params.row as Monorepo.Api.Response.ProductResponseDto)
+          .createdBy.name
+      },
     },
     {
       field: "createdAt",
       headerName: t("Created At"),
+      flex: 2,
+      minWidth: 260,
+      valueGetter: (params) => formatISOToLocale(params.value as string),
+    },
+    {
+      field: "updatedAt",
+      headerName: t("Updated At"),
       flex: 2,
       minWidth: 260,
       valueGetter: (params) => formatISOToLocale(params.value as string),

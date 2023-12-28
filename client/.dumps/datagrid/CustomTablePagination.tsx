@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import { TableCell } from "@material-ui/core"
-import TablePaginationActions from "./TablePaginationActions"
+import TablePaginationActions from "../../src/components/TablePaginationActions"
 
 export const styles = (theme) => ({
   root: {

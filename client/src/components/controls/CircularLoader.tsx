@@ -1,7 +1,7 @@
 import React from "react"
 import { CircularProgress } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import Overlay from "../Overlay"
+import Overlay from "./Overlay"
 
 const useStyles = makeStyles(() => ({
   loader: {

@@ -35,7 +35,7 @@ const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch()
   const location = useLocation()
 
-  const shouldOpenMobileDrawer = useAppSelector(selectShouldOpenMobileDrawer)
+  const openMobileDrawer = useAppSelector(selectShouldOpenMobileDrawer)
   const isSale = location.pathname === "/sale"
 
   const handleDrawerToggle = () => dispatch(toggleMobileDrawer())
@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
         <Drawer
           variant="temporary"
           anchor={theme.direction === "rtl" ? "right" : "left"}
-          open={shouldOpenMobileDrawer}
+          open={openMobileDrawer}
           onClose={handleDrawerToggle}
           classes={{
             paper: classes.drawerPaper,
@@ -66,7 +66,7 @@ const Sidebar: React.FC = () => {
         <Drawer
           variant="temporary"
           anchor={theme.direction === "rtl" ? "right" : "left"}
-          open={shouldOpenMobileDrawer}
+          open={openMobileDrawer}
           onClose={handleDrawerToggle}
           classes={{
             paper: classes.drawerPaper2,

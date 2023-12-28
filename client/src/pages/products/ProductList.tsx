@@ -1,16 +1,42 @@
-import { useAppDispatch } from '@/app/hooks';
-import Container from '@/components/controls/layout/Container/Container';
-import { useConfirmationDialog } from '@/features/dialog';
-import { showSnackbar } from '@/features/snackbar';
-import api, { useDeleteProductApiMutation, useFindAllProductApiQuery } from '@/services/api';
-import Button from '@material-ui/core/Button';
-import { Add } from '@material-ui/icons';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { t } from 'i18next';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from "@/app/hooks"
+import Container from "@/components/layout/Container/Container"
+import Searchbox from "@/components/forms/Searchbox"
+import { useConfirmationDialog } from "@/features/dialog"
+import { showSnackbar } from "@/features/snackbar"
+import api, {
+  useDeleteProductApiMutation,
+  useFindAllProductApiQuery,
+} from "@/services/api"
+import { Box, Grid } from "@material-ui/core"
+import Button from "@material-ui/core/Button"
+import { Add } from "@material-ui/icons"
+import { DataGrid, GridToolbar } from "@mui/x-data-grid"
+import { t } from "i18next"
+import React, { useCallback, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-import renderProductDataGridColumns from './dataGridColumns';
+import renderProductDataGridColumns from "./dataGridColumns"
+import useProductFuzzySearch from "./useProductFuzzySearch"
+
+const highlight = (text: string, indices: [number, number][]) => {
+  let result = ""
+  let currentIndex = 0
+
+  indices.forEach(([startIndex, endIndex]) => {
+    // Append the text before the highlight
+    result += text.substring(currentIndex, startIndex)
+    // Wrap the highlighted text with a <span> element and apply a CSS class
+    const highlightedText = text.substring(startIndex, endIndex + 1)
+    result += `<span class="highlight">${highlightedText}</span>`
+
+    currentIndex = endIndex + 1
+  })
+
+  // Append any remaining text
+  result += text.substring(currentIndex)
+
+  return result
+}
 
 const ProductList: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -72,29 +98,52 @@ const ProductList: React.FC = () => {
     onClickEdit,
   })
 
+  const {
+    searchTerm,
+    search,
+    loading: searchLoading,
+    items: searchResults,
+  } = useProductFuzzySearch(productList)
+
   return (
     <Container title={t("Products")}>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        onClick={onClickCreate}
-        startIcon={<Add />}
-      >
-        {t("Create Product", { ns: "action" })}
-      </Button>
+      <Grid container spacing={1}>
+        <Grid container item justifyContent="space-between">
+          <Grid item xs={12} md="auto">
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={onClickCreate}
+              startIcon={<Add />}
+            >
+              {t("Create Product", { ns: "action" })}
+            </Button>
+          </Grid>
 
-      <DataGrid
-        columns={dataGridColumns}
-        rows={productList}
-        loading={isLoadingFetchProduct}
-        components={{
-          Toolbar: GridToolbar,
-        }}
-        autoHeight
-        disableSelectionOnClick
-        disableDensitySelector
-      />
+          <Grid item xs={12} md="auto">
+            <Searchbox
+              name="search-product"
+              margin="none"
+              onValueChange={(term) => search(term)}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12}>
+          <DataGrid
+            columns={dataGridColumns}
+            rows={searchTerm.length >= 1 ? searchResults : productList}
+            loading={isLoadingFetchProduct || searchLoading}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            autoHeight
+            disableSelectionOnClick
+            disableDensitySelector
+          />
+        </Grid>
+      </Grid>
     </Container>
   )
 }

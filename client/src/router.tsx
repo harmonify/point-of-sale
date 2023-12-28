@@ -10,6 +10,11 @@ import Home from "./pages/home/Home"
 import HomeInfo from "./pages/home/HomeInfo"
 import { Login } from "./pages/login"
 import sales from "./pages/sales"
+import CustomerList from "./pages/customers/CustomerList"
+import SupplierList from "./pages/suppliers/SupplierList"
+import CategoryList from "./pages/categories/CategoryList"
+import UnitList from "./pages/units/UnitList"
+import ProductList from "./pages/products/ProductList"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -58,8 +63,9 @@ const routeObjects: IRoute[] = [
         title: t("Sale"),
         path: "sale",
       },
+      // Customer
       {
-        Component: lazy(() => import("./pages/customers/CustomerList")),
+        Component: CustomerList,
         title: t("Customers"),
         path: "customers",
       },
@@ -73,68 +79,69 @@ const routeObjects: IRoute[] = [
         title: t("Edit Customer", { ns: "action" }),
         path: "customers/:id",
       },
+      // Supplier
       {
-        Component: lazy(
-          () => import("./pages/suppliers/SupplierList"),
-        ),
+        Component: SupplierList,
         title: t("Suppliers"),
         path: "suppliers",
       },
       {
-        Component: lazy(
-          () => import("./pages/suppliers/SupplierForm"),
-        ),
+        Component: lazy(() => import("./pages/suppliers/SupplierForm")),
         title: t("Create Supplier", { ns: "action" }),
         path: "suppliers/create",
       },
       {
-        Component: lazy(
-          () => import("./pages/suppliers/SupplierForm"),
-        ),
+        Component: lazy(() => import("./pages/suppliers/SupplierForm")),
         title: t("Edit Supplier", { ns: "action" }),
         path: "suppliers/:id",
       },
+      // Category
       {
-        Component: lazy(
-          () => import("./pages/categories/CategoryList"),
-        ),
+        Component: CategoryList,
         title: t("Categories"),
         path: "categories",
       },
       {
-        Component: lazy(
-          () => import("./pages/categories/CategoryForm"),
-        ),
+        Component: lazy(() => import("./pages/categories/CategoryForm")),
         title: t("Create Category", { ns: "action" }),
         path: "categories/create",
       },
       {
-        Component: lazy(
-          () => import("./pages/categories/CategoryForm"),
-        ),
+        Component: lazy(() => import("./pages/categories/CategoryForm")),
         title: t("Edit Category", { ns: "action" }),
         path: "categories/:id",
       },
+      // Unit
       {
-        Component: lazy(
-          () => import("./pages/units/UnitList"),
-        ),
+        Component: UnitList,
         title: t("Units"),
         path: "units",
       },
       {
-        Component: lazy(
-          () => import("./pages/units/UnitForm"),
-        ),
+        Component: lazy(() => import("./pages/units/UnitForm")),
         title: t("Create Unit", { ns: "action" }),
         path: "units/create",
       },
       {
-        Component: lazy(
-          () => import("./pages/units/UnitForm"),
-        ),
+        Component: lazy(() => import("./pages/units/UnitForm")),
         title: t("Edit Unit", { ns: "action" }),
         path: "units/:id",
+      },
+      // Products
+      {
+        Component: ProductList,
+        title: t("Products"),
+        path: "products",
+      },
+      {
+        Component: lazy(() => import("./pages/products/ProductForm")),
+        title: t("Create Product", { ns: "action" }),
+        path: "products/create",
+      },
+      {
+        Component: lazy(() => import("./pages/products/ProductForm")),
+        title: t("Edit Product", { ns: "action" }),
+        path: "products/:id",
       },
     ],
   },

@@ -48,6 +48,19 @@ export class BaseQuery {
     };
   }
 
+  static nestedUpsertManyV2<
+    T extends Record<any, any>,
+    TUpsertWhere extends Record<any, any>,
+  >(data: T[], authorId: number, whereIteratee: (d: T) => TUpsertWhere) {
+    return {
+      upsert: data.map((d) => ({
+        create: { ...d, createdById: authorId, updatedById: authorId },
+        update: { ...d, updatedById: authorId },
+        where: whereIteratee(d),
+      })),
+    };
+  }
+
   static softDelete(authorId?: number) {
     return { deletedAt: DateTime.now().toJSDate(), deletedById: authorId };
   }

@@ -2,6 +2,7 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import currency from "currency.js"
 import { t } from "i18next"
 import { DateTime } from "luxon"
+import { ArraySchema, Flags } from "yup"
 
 export const isValueExists = (
   object: Record<string, any>,
@@ -36,23 +37,23 @@ export const sleep = async (ms: number) => {
 }
 
 /**
- * Parse API error message from:
+ * Parse and translate API error message from:
  * 1: `error.message`
  * 2: `error.data.message`
- * 3: `error:error` (+translated)
- * 4: `error:status` (+translated)
+ * 3: `error:error`
+ * 4: `error:status`
  * default: Fetch error
  */
 export const parseApiErrorMessage = (error: any) => {
   const defaultValue = t("An error occured", { ns: "error" })
-  return (
-    (error &&
-      (error.message ||
-        (error.data && error.data.message) ||
+  return error
+    ? (error.message && t(error.message, { ns: "error" })) ||
+        (error.data &&
+          error.data.message &&
+          t(error.data.message, { ns: "error" })) ||
         (error.error && t(error.error, { ns: "error", defaultValue })) ||
-        (error.status && t(error.status, { ns: "error", defaultValue })))) ||
-    defaultValue
-  )
+        (error.status && t(error.status, { ns: "error", defaultValue }))
+    : defaultValue
 }
 
 export const formatRupiah = (
@@ -95,4 +96,42 @@ export const formatGender = (
     default:
       return fallbackValue
   }
+}
+
+export const differenceBy = <T, K>(
+  array1: T[],
+  array2: T[],
+  iteratee: (item: T) => K,
+): T[] => {
+  const set2 = new Set(array2.map(iteratee))
+  return array1.filter((item) => !set2.has(iteratee(item)))
+}
+
+export const yupTestUnique = <
+  TIn extends any[] | null | undefined,
+  TContext,
+  TDefault,
+  TFlags extends Flags,
+>(params: {
+  arraySchema: ArraySchema<TIn, TContext, TDefault, TFlags>
+  iteratee?: (
+    value: TIn extends readonly (infer ElementType)[] ? ElementType : never,
+  ) => any
+  message?: string
+}) => {
+  return params.arraySchema.test(
+    "unique",
+    params.message ? params.message : t("array.unique", { ns: "validation" }),
+    (values, context) => {
+      return values?.length
+        ? new Set(
+            values.map((value) =>
+              typeof params.iteratee === "function"
+                ? params.iteratee(value)
+                : value,
+            ),
+          ).size === values.length
+        : true
+    },
+  )
 }

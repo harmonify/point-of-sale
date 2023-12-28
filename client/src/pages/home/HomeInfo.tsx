@@ -1,9 +1,7 @@
 import { useAppSelector } from "@/app/hooks"
-import CircularLoader from "@/components/controls/loader/CircularLoader"
+import { APP_ENV } from "@/environment"
 import { selectCurrentUser } from "@/features/auth"
-import { useConfirmationDialog } from "@/features/dialog"
 import { useGetDashboardInfoQuery } from "@/services/api"
-import { logger } from "@/services/logger"
 import { formatISOToLocale, formatRupiah } from "@/utils"
 import {
   Box,
@@ -14,11 +12,10 @@ import {
   Typography,
 } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { AttachMoney, Money, MoneyOff, People } from "@material-ui/icons"
+import { AttachMoney, MoneyOff, People } from "@material-ui/icons"
 import { DataGrid, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 
 // eslint-disable-next-line
 export const useStyles = makeStyles((theme) => ({
@@ -31,6 +28,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     justifyContent: "center",
     alignItems: "center",
+    minHeight: 200,
   },
   cardHeader: {
     display: "flex",
@@ -65,19 +63,14 @@ export const useStyles = makeStyles((theme) => ({
 
 const HomeInfo: React.FC = () => {
   const classes = useStyles()
-  const navigate = useNavigate()
   const user = useAppSelector(selectCurrentUser)
 
-  const { data, isError, isFetching } = useGetDashboardInfoQuery(null, {
-    // pollingInterval: 15000,
+  const { data, isFetching } = useGetDashboardInfoQuery(null, {
+    pollingInterval: APP_ENV === "production" ? 15000 : undefined,
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
   })
-
-  useEffect(() => {
-    if (isError) return navigate("/error")
-  }, [isError])
 
   const {
     totalSales,
@@ -146,92 +139,94 @@ const HomeInfo: React.FC = () => {
   ]
 
   return (
-    <Grid container className={classes.root} spacing={1} wrap="wrap">
+    <Grid container className={classes.root} spacing={2} wrap="wrap">
       <Grid item xs={12}>
-        <Typography style={{ margin: ".2em", marginLeft: 0 }} variant="h1">
+        <Typography style={{ marginBottom: ".2em" }} variant="h2">
           {t("Hello!", { ns: "message", name: user?.name })}
         </Typography>
       </Grid>
 
       <Grid item xs={12}>
         <Typography
-          style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
-          variant="h4"
+          style={{ marginBottom: ".2em", fontWeight: 500 }}
+          variant="h5"
         >
           {t("Welcome to POS", { ns: "message" })}
         </Typography>
       </Grid>
 
-      <Grid item xs={12} md={4}>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Box className={classes.cardHeader}>
-              <Icon>
-                <AttachMoney />
-              </Icon>
+      <Grid xs={12} container justifyContent="center" spacing={3}>
+        <Grid item xs={12} md={3}>
+          <Card className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Box className={classes.cardHeader}>
+                <Icon>
+                  <AttachMoney />
+                </Icon>
+                <Typography
+                  style={{ margin: ".2em", marginLeft: 0 }}
+                  variant="h2"
+                >
+                  {t("Sales")}
+                </Typography>
+              </Box>
               <Typography
-                style={{ margin: ".2em", marginLeft: 0 }}
+                style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
                 variant="h2"
               >
-                {t("Sales")}
+                {formatRupiah(totalSales)}
               </Typography>
-            </Box>
-            <Typography
-              style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
-              variant="h2"
-            >
-              {formatRupiah(totalSales)}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      <Grid item xs={12} md={4}>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Box className={classes.cardHeader}>
-              <Icon>
-                <MoneyOff />
-              </Icon>
+        <Grid item xs={12} md={3}>
+          <Card className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Box className={classes.cardHeader}>
+                <Icon>
+                  <MoneyOff />
+                </Icon>
+                <Typography
+                  style={{ margin: ".2em", marginLeft: 0 }}
+                  variant="h2"
+                >
+                  {t("Expenses")}
+                </Typography>
+              </Box>
               <Typography
-                style={{ margin: ".2em", marginLeft: 0 }}
+                style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
                 variant="h2"
               >
-                {t("Expenses")}
+                {formatRupiah(totalExpenses)}
               </Typography>
-            </Box>
-            <Typography
-              style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
-              variant="h2"
-            >
-              {formatRupiah(totalExpenses)}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      <Grid item xs={12} md={4}>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Box className={classes.cardHeader}>
-              <Icon>
-                <People />
-              </Icon>
+        <Grid item xs={12} md={3}>
+          <Card className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Box className={classes.cardHeader}>
+                <Icon>
+                  <People />
+                </Icon>
+                <Typography
+                  style={{ margin: ".2em", marginLeft: 0 }}
+                  variant="h2"
+                >
+                  {t("Customers")}
+                </Typography>
+              </Box>
               <Typography
-                style={{ margin: ".2em", marginLeft: 0 }}
+                style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
                 variant="h2"
               >
-                {t("Customers")}
+                {totalCustomers}
               </Typography>
-            </Box>
-            <Typography
-              style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
-              variant="h2"
-            >
-              {totalCustomers}
-            </Typography>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
       <Grid item xs={12} md={6}>

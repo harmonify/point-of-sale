@@ -1,4 +1,4 @@
-import { BarcodeType, Product } from '@prisma/client';
+import { BarcodeType, Prisma } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMinSize,
@@ -13,20 +13,19 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UpdateProductUnitRequestDto } from './update-product-unit-request.dto';
-import { IPrismaBaseFields } from '@/libs/prisma';
 
 export class UpdateProductRequestDto
-  implements Omit<Product, IPrismaBaseFields | 'productUnits'>
+  implements Omit<Prisma.ProductUpdateInput, 'productUnits'>
 {
   @IsDefined()
   @IsInt()
   @ApiProperty()
   categoryId: number;
 
-  @IsDefined()
+  @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  isActive: boolean;
+  isActive?: boolean;
 
   @IsDefined()
   @IsString()
@@ -36,17 +35,17 @@ export class UpdateProductRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description: string;
+  description?: string | null;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  barcode: string | null;
+  barcode?: string | null;
 
   @IsOptional()
   @IsEnum(BarcodeType)
   @ApiProperty({ enum: BarcodeType })
-  barcodeType: BarcodeType | null;
+  barcodeType?: BarcodeType | null;
 
   @IsDefined()
   @IsArray()

@@ -11,6 +11,22 @@ const productUnitQueryField = {
     }) satisfies Prisma.ProductUnitSelectScalar,
 } satisfies Record<string, () => Prisma.ProductUnitSelect>;
 
+const productUnitQueryRelation = {
+  withQuantityRelationData: () =>
+    ({
+      procurementProducts: {
+        select: {
+          quantity: true,
+        },
+      },
+      saledProducts: {
+        select: {
+          quantity: true,
+        },
+      },
+    }) satisfies Prisma.ProductUnitInclude,
+} satisfies Record<string, () => Prisma.ProductUnitInclude>;
+
 const productUnitQueryFilter = {} satisfies Record<
   string,
   (...args: any[]) => Prisma.ProductUnitWhereInput
@@ -18,5 +34,6 @@ const productUnitQueryFilter = {} satisfies Record<
 
 export class ProductUnitQuery {
   static readonly Field = productUnitQueryField;
+  static readonly Relation = productUnitQueryRelation;
   static readonly Filter = productUnitQueryFilter;
 }

@@ -1,10 +1,7 @@
+import { logger } from "@/services/logger"
+import { useDebounce } from "@uidotdev/usehooks"
 import Fuse, { FuseResult, IFuseOptions } from "fuse.js"
-import { useEffect, useMemo, useState } from "react"
-
-interface UseFuzzySearchResult<T> {
-  results: FuseResult<T>[]
-  handleSearch: (term: string) => void
-}
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 /**
  * @see {@link https://www.fusejs.io/api/options.html} Options API Reference
@@ -24,7 +21,7 @@ const defaultOptions: IFuseOptions<unknown> = {
   /**
    * Avoid single character match
    */
-  minMatchCharLength: 2,
+  minMatchCharLength: 1,
   /**
    * Useful for searching long texts, but it makes searching shorter texts somewhat less effective (personal opinion)
    */
@@ -37,36 +34,61 @@ const defaultOptions: IFuseOptions<unknown> = {
   shouldSort: true,
 }
 
-const useFuzzySearch = <T>(
-  data: ReadonlyArray<T>,
-  options: IFuseOptions<T>,
-  useDefaultOptions: boolean = true,
-): UseFuzzySearchResult<T> => {
-  const [searchTerm, setSearchTerm] = useState<string>("")
-  const [results, setResults] = useState<FuseResult<T>[]>([])
+const useFuzzySearch = <TModel>({
+  data,
+  options = {},
+  useDefaultOptions = true,
+  debounceMs = 200,
+}: {
+  data: ReadonlyArray<TModel>
+  options?: IFuseOptions<TModel>
+  useDefaultOptions?: boolean
+  debounceMs?: number
+}): {
+  searchTerm: string
+  search: (term: string) => void
+  loading: boolean
+  results: FuseResult<TModel>[]
+  /** Result items */
+  items: TModel[]
+} => {
+  const [searchTerm, search] = useState<string>("")
+  const debouncedSearchTerm = useDebounce<string>(searchTerm, debounceMs)
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState<FuseResult<TModel>[]>([])
 
   const fuse = useMemo(() => {
     const finalOptions = (
-      useDefaultOptions
-        ? { ...defaultOptions, ...options, includeMatches: true }
-        : options
-    ) satisfies IFuseOptions<T>
+      useDefaultOptions ? { ...defaultOptions, ...options } : options
+    ) satisfies IFuseOptions<TModel>
     return new Fuse(data, finalOptions)
-  }, [data, options])
+  }, [data, options, useDefaultOptions])
 
   useEffect(() => {
-    if (Array.isArray(data)) {
-      setResults(fuse.search(searchTerm))
+    setLoading(true)
+    if (debouncedSearchTerm) {
+      const results = fuse.search(debouncedSearchTerm)
+      logger.debug(
+        `🚀 ~ useFuzzySearch ~ { data[0], results } ~ ${JSON.stringify(
+          { "data[0]": data[0], results },
+          null,
+          2,
+        )}`,
+      )
+      setResults(results)
     } else {
       setResults([])
     }
-  }, [data, fuse, searchTerm])
+    setLoading(false)
+  }, [data, debouncedSearchTerm])
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term)
+  return {
+    searchTerm: debouncedSearchTerm,
+    search,
+    loading,
+    results,
+    items: results.map((result) => result.item),
   }
-
-  return { results, handleSearch }
 }
 
 export default useFuzzySearch

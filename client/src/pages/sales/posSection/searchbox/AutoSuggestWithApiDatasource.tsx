@@ -1,9 +1,8 @@
+import TextInput from "@/components/forms/TextInput"
 import { List, ListItem, ListItemText } from "@material-ui/core"
 import Paper from "@material-ui/core/Paper"
 import { withStyles } from "@material-ui/core/styles"
 import React, { Component } from "react"
-
-import CustomTextField from "../../../../components/controls/textfields/CustomTextField"
 
 // eslint-disable-next-line
 const styles = (theme) => ({
@@ -96,7 +95,7 @@ class AutoSuggestWithApiDatasource extends Component {
 
     return (
       <div>
-        <CustomTextField
+        <TextInput
           onKeyDown={onKeyDown}
           value={searchText}
           onChange={onChange}

@@ -1,8 +1,8 @@
-import i18n, { TFunction } from "i18next"
+import { APP_DEFAULT_LANG } from "@/environment"
+import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 
 import { defaultNS, idResource } from "."
-import { setLocale } from "yup"
 import setupYupLocale from "./setupYupLocale"
 
 i18n
@@ -13,7 +13,7 @@ i18n
       resources: {
         id: idResource,
       },
-      lng: "id", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
+      lng: APP_DEFAULT_LANG, // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
       // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
       // if you're using a language detector, do not define the lng option
       interpolation: {
@@ -51,5 +51,12 @@ i18n.services.formatter?.addCached("removeIfUndefined", () => (value) => {
 i18n.services.formatter?.addCached("default", (lng, options) => (value) => {
   return value ? value : options.value
 })
+
+i18n.services.formatter?.addCached(
+  "unslugify",
+  (lng, options) => (value: string) => {
+    return value ? value.replaceAll("-", " ") : value
+  },
+)
 
 export default i18n

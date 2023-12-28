@@ -2,7 +2,7 @@ import { BarcodeType, Product } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserResponseDto } from '@/modules/user';
 import { CategoryResponseDto } from '@/modules/category';
-import { ProductUnitResponseDto } from './product-unit-response.dto';
+import { ProductUnitInfoResponseDto } from './product-unit-info-response.dto';
 
 class ProductDto implements Product {
   @ApiProperty()
@@ -50,7 +50,7 @@ export class ProductResponseDto extends ProductDto {
   category: CategoryResponseDto | null;
 
   @ApiProperty()
-  productUnits: ProductUnitResponseDto[];
+  productUnits: ProductUnitInfoResponseDto[];
 
   @ApiProperty()
   createdBy: UserResponseDto;

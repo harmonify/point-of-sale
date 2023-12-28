@@ -47,10 +47,10 @@ export default function renderUnitDataGridColumns({
           </>
         )
       },
-      flex: 1,
-      minWidth: 100,
       sortable: false,
       disableColumnMenu: true,
+      disableExport: true,
+      disableReorder: true,
     },
     {
       field: "name",
@@ -68,7 +68,7 @@ export default function renderUnitDataGridColumns({
       field: "createdByName",
       headerName: t("Created By"),
       flex: 2,
-      minWidth: 180,
+      minWidth: 220,
     },
     {
       field: "createdAt",

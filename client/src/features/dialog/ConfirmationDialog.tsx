@@ -1,4 +1,3 @@
-import palette from "@/theme/palette"
 import {
   Box,
   Button,
@@ -15,7 +14,7 @@ import {
   Typography,
 } from "@material-ui/core"
 import MuiDialog from "@material-ui/core/Dialog"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles, useTheme } from "@material-ui/core/styles"
 import React, {
   MouseEventHandler,
   ReactElement,
@@ -55,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const Transition = (props: FadeProps) => <Fade {...props} />
 
 const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
+  const theme = useTheme()
   const classes = useStyles()
   const ref = useRef()
 
@@ -104,10 +104,10 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
             style={{
               color:
                 props.variant === "destructive"
-                  ? palette.error.main
+                  ? theme.palette.error.main
                   : props.variant === "constructive"
                   ? colors.green[500]
-                  : palette.primary.main,
+                  : theme.palette.primary.main,
             }}
           >
             {props.isLoading ? (

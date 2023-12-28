@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     height: "64px",
-    background: "#3f51b5",
+    background: theme.palette.primary.main,
   },
   logoContainer: {
     padding: '1em .5em',

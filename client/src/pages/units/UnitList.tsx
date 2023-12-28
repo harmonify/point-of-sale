@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/app/hooks"
-import Container from "@/components/controls/layout/Container/Container"
+import Container from "@/components/layout/Container/Container"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {

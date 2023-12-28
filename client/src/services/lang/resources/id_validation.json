@@ -4,5 +4,8 @@
   "string": {
     "email": "harus berupa email yang valid",
     "min": "harus memiliki minimal {{x}} jumlah karakter"
+  },
+  "array": {
+    "unique": "harus berupa data yang unik"
   }
 }

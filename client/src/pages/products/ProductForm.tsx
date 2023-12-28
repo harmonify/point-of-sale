@@ -1,35 +1,82 @@
-import Container from "@/components/controls/layout/Container/Container"
-import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
+import { useAppDispatch } from "@/app/hooks"
+import Container from "@/components/layout/Container/Container"
+import { FormikSubmissionHandler } from "@/components/forms"
 import Form from "@/components/forms/Form"
+import FormikNumberInput from "@/components/forms/FormikNumberInput"
+import FormikSelectInput from "@/components/forms/FormikSelectInput"
+import FormikTextInput from "@/components/forms/FormikTextInput"
+import { APP_DEFAULT_CURRENCY, APP_DEFAULT_LANG } from "@/environment"
+import { useConfirmationDialog } from "@/features/dialog"
 import {
   useCreateProductApiMutation,
+  useDeleteProductUnitApiMutation,
+  useFindAllCategoryApiQuery,
+  useFindAllUnitApiQuery,
   useLazyFindOneProductApiQuery,
   useUpdateProductApiMutation,
 } from "@/services/api"
-import { Grid } from "@material-ui/core"
-import { Formik } from "formik"
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  Typography,
+  useTheme,
+} from "@material-ui/core"
+import { Add, Delete } from "@material-ui/icons"
+import { ErrorMessage, FieldArray, Formik } from "formik"
 import { t } from "i18next"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
 import createProductValidationSchema, {
+  barcodeTypeOptions,
+  barcodeTypes,
   ProductState,
+  ProductUnitState,
 } from "./validationSchema"
 
 const initialValues = {
-  name: null,
-  gender: "NOT_DEFINED",
-  address: null,
-  phoneNumber: null,
-  description: null,
-  email: null,
+  isActive: true,
+  name: "",
+  description: undefined,
+  productUnits: [],
+  barcode: undefined,
+  barcodeType: barcodeTypes.EAN_8,
+  categoryId: 1,
 } as unknown as ProductState
 
+const defaultProductUnit = {
+  unitId: undefined,
+  price: undefined,
+} as unknown as ProductUnitState
+
 const ProductForm: React.FC = () => {
+  const theme = useTheme()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const [createProductApiMutation] = useCreateProductApiMutation()
   const [updateProductApiMutation] = useUpdateProductApiMutation()
+
+  const { data: categoryApiQueryResponse, isLoading: isLoadingFetchCategory } =
+    useFindAllCategoryApiQuery({ all: true })
+  const categoryOptions = categoryApiQueryResponse
+    ? categoryApiQueryResponse.data.map((category) => ({
+        label: category.name,
+        value: category.id,
+      }))
+    : []
+
+  const { data: unitApiQueryResponse, isLoading: isLoadingFetchUnit } =
+    useFindAllUnitApiQuery({ all: true })
+  const unitOptions = unitApiQueryResponse
+    ? unitApiQueryResponse.data.map((unit) => ({
+        label: unit.name,
+        value: unit.id,
+      }))
+    : []
 
   const { id } = useParams()
   const [findOneProductApiQuery, { data: productApiQueryResponse }] =
@@ -37,6 +84,7 @@ const ProductForm: React.FC = () => {
       refetchOnFocus: true,
       refetchOnReconnect: true,
     })
+
   useEffect(() => {
     if (!id) return
     findOneProductApiQuery({ id })
@@ -55,6 +103,39 @@ const ProductForm: React.FC = () => {
     navigate(-1)
   }
 
+  const [
+    deleteProductUnitApiMutation,
+    { isLoading: isLoadingDeleteProductUnit },
+  ] = useDeleteProductUnitApiMutation()
+
+  const { show } = useConfirmationDialog({
+    content: `${t(
+      "Deleting this product unit will remove the related procured stock. Do you want to proceed?",
+      {
+        ns: "message",
+      },
+    )}`,
+    title: t("Delete Product Unit", { ns: "action" }),
+    confirmText: "Delete",
+    variant: "destructive",
+    isLoading: isLoadingDeleteProductUnit,
+  })
+
+  const onClickDelete = (
+    row: Partial<Monorepo.Api.Response.ProductUnitResponseDto>,
+    cb: () => void,
+  ) => {
+    if (!row.id) {
+      return cb()
+    }
+    show({
+      onConfirm: async () => {
+        await deleteProductUnitApiMutation({ id: row.id! }).unwrap()
+        cb()
+      },
+    })
+  }
+
   return (
     <Container
       title={
@@ -67,7 +148,7 @@ const ProductForm: React.FC = () => {
         enableReinitialize={true}
         initialValues={
           productApiQueryResponse
-            ? productApiQueryResponse.data
+            ? (productApiQueryResponse.data as ProductState)
             : initialValues
         }
         validationSchema={createProductValidationSchema}
@@ -75,29 +156,166 @@ const ProductForm: React.FC = () => {
         validateOnBlur={true}
         onSubmit={onSubmit}
       >
-        <Form onCancel={onCancel}>
-          <Grid container spacing={1}>
-            <Grid item xs={9} md={8}>
-              <FormikTextInput name="name" label={t("Name")} />
+        {(formik) => (
+          <Form onCancel={onCancel}>
+            <Typography variant="h5" style={{ marginBottom: theme.spacing(1) }}>
+              {t("Product")}
+            </Typography>
+
+            <Grid
+              container
+              spacing={1}
+              style={{ marginBottom: theme.spacing(3) }}
+            >
+              <Grid item xs={12} md={6}>
+                <FormikTextInput
+                  name="name"
+                  label={t("Name")}
+                  style={{ marginTop: 0 }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormikSelectInput
+                  name="categoryId"
+                  label={t("Category Name")}
+                  type="number"
+                  options={categoryOptions}
+                  style={{ marginTop: 0 }}
+                  disabled={isLoadingFetchCategory}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormikTextInput
+                  name="description"
+                  label={t("Description")}
+                  multiline
+                  minRows={3}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={8}>
+                <FormikTextInput name="barcode" label={t("Barcode")} />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <FormikSelectInput
+                  name="barcodeType"
+                  label={t("Barcode Type")}
+                  options={barcodeTypeOptions}
+                />
+              </Grid>
             </Grid>
 
-            <Grid item xs={12}>
-              <FormikTextInput name="description" label={t("Description")} />
-            </Grid>
+            <Typography variant="h5" style={{ marginBottom: theme.spacing(1) }}>
+              {t("Product Unit")}
+            </Typography>
 
-            <Grid item xs={12}>
-              <FormikTextInput name="address" label={t("Address")} />
-            </Grid>
+            <Button
+              variant="outlined"
+              color={"primary"}
+              size="small"
+              onClick={() =>
+                formik.setValues({
+                  ...formik.values,
+                  productUnits: [
+                    ...formik.values.productUnits,
+                    defaultProductUnit as ProductUnitState,
+                  ],
+                })
+              }
+              startIcon={<Add />}
+              disabled={isLoadingFetchUnit}
+              style={{ marginBottom: theme.spacing(1) }}
+            >
+              {t("Add Product Unit", { ns: "action" })}
+            </Button>
 
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="phoneNumber" label={t("Phone Number")} />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormikTextInput name="email" label={t("Email")} />
-            </Grid>
-          </Grid>
-        </Form>
+            <FieldArray
+              name="productUnits"
+              render={(arrayHelpers) => (
+                <Grid container spacing={1}>
+                  {formik.values.productUnits.map((productUnit, index) => (
+                    <Grid item xs={12} md={6} key={index}>
+                      <Card variant="outlined" style={{ outlineColor: "blue" }}>
+                        <CardContent>
+                          <Typography variant="h6">
+                            {`${t("Available Quantity")}: ${
+                              (productApiQueryResponse &&
+                                productApiQueryResponse.data.productUnits.find(
+                                  (existingPu) =>
+                                    existingPu.unitId === productUnit.unitId,
+                                )?.availableQuantity) ||
+                              0
+                            }`}
+                          </Typography>
+                          <FormikSelectInput
+                            name={`productUnits[${index}].unitId`}
+                            label={t("Unit Name")}
+                            type="number"
+                            options={unitOptions}
+                            enableDefaultValue
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          {/* <FormikTextInput
+                            label={t("Price")}
+                            type="number"
+                            name={`productUnits[${index}].price`}
+                            fullWidth
+                            margin="normal"
+                            InputLabelProps={{ shrink: true }}
+                            helperText={t("Define the selling price", {
+                              ns: "message",
+                            })}
+                          /> */}
+                          <FormikNumberInput
+                            intlConfig={{
+                              locale: APP_DEFAULT_LANG,
+                              currency: APP_DEFAULT_CURRENCY,
+                            }}
+                            label={t("Price")}
+                            name={`productUnits[${index}].price`}
+                            InputLabelProps={{ shrink: true }}
+                            helperText={t("Define the selling price", {
+                              ns: "message",
+                            })}
+                          />
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<Delete />}
+                            onClick={() => {
+                              onClickDelete(productUnit, () =>
+                                arrayHelpers.remove(index),
+                              )
+                            }}
+                          >
+                            {t("Delete", { ns: "action" })}
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            />
+            <ErrorMessage
+              name="productUnits"
+              render={(msg) => {
+                // Don't display nested error messages
+                return (
+                  msg.toString().includes("[object Object]") || (
+                    <Typography color="error">{msg.toString()}</Typography>
+                  )
+                )
+              }}
+            />
+          </Form>
+        )}
       </Formik>
     </Container>
   )

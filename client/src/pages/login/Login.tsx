@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { Form, FormikTextInput } from "@/components/forms"
+import Form from "@/components/forms/Form"
+import FormikTextInput from "@/components/forms/FormikTextInput"
 import { selectAuthCredentials, setCredentials } from "@/features/auth"
 import { usePostLoginMutation } from "@/services/api"
 import Paper from "@material-ui/core/Paper"

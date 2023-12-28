@@ -12,6 +12,8 @@ import {
   GroupAdd,
   HourglassFull,
   LocalAtm,
+  LocalMall,
+  LocalShipping,
   More,
   NoteAdd,
   ShoppingCart,
@@ -85,10 +87,17 @@ const Menu: React.FC = () => {
         />
 
         <MenuItem
-          isSelected={isSelected("products") || isSelected("producttypes")}
+          isSelected={isSelected("products")}
           onClick={() => navigate("/products")}
           text={t("Products")}
-          icon={<More />}
+          icon={<LocalMall />}
+        />
+
+        <MenuItem
+          isSelected={isSelected("procurements")}
+          onClick={() => navigate("/procurements")}
+          text={t("Procurements")}
+          icon={<LocalShipping />}
         />
 
         <MenuItem

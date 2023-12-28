@@ -1,9 +1,8 @@
 import React, { Component } from "react"
 import currency from "currency.js"
 import { connect } from "react-redux"
-import { Switch, withStyles } from "@material-ui/core"
+import { Switch, TextField, withStyles } from "@material-ui/core"
 import FormDialog from "../../../../../components/forms/FormDialog"
-import NumberTextField from "../../../../../components/forms/FormikNumberInput/NumberTextField"
 import { updateDiscountOnItems, updateDiscountOnTotal } from "@/features/cart"
 
 const styles = () => ({
@@ -115,9 +114,10 @@ class DiscountPopup extends Component {
         open={open}
         title="Discount"
       >
-        <NumberTextField
+        <TextField
           style={{ width: "250px" }}
           error={!!error}
+          type="number"
           name="discount"
           value={discount}
           label="Amount"

@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/app/hooks"
-import Container from "@/components/controls/layout/Container/Container"
+import Container from "@/components/layout/Container/Container"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
@@ -50,7 +50,9 @@ const CategoryList: React.FC = () => {
     isLoading: isLoadingDeleteCategory,
   })
 
-  const onClickDelete = (row: Monorepo.Api.Response.CategoryInfoResponseDto) => {
+  const onClickDelete = (
+    row: Monorepo.Api.Response.CategoryInfoResponseDto,
+  ) => {
     show({
       onConfirm: async () => {
         try {

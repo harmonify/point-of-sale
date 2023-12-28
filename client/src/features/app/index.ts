@@ -2,27 +2,40 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export interface AppUIState {
   title: string
-  shouldOpenMobileDrawer: boolean
+  openMobileDrawer: boolean
+  darkMode: boolean
 }
 
+export const appSliceName = "app"
+
+/**
+ * Manage global app UI state
+ */
 const slice = createSlice({
-  name: "app",
+  name: appSliceName,
   initialState: {
     title: "Point of Sales",
-    shouldOpenMobileDrawer: false,
+    openMobileDrawer: false,
+    darkMode: window.matchMedia?.("(prefers-color-scheme: dark)").matches,
   } as AppUIState,
   reducers: {
     setPageTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload
     },
     showMobileDrawer: (state) => {
-      state.shouldOpenMobileDrawer = true
+      state.openMobileDrawer = true
     },
     hideMobileDrawer: (state) => {
-      state.shouldOpenMobileDrawer = false
+      state.openMobileDrawer = false
     },
     toggleMobileDrawer: (state) => {
-      state.shouldOpenMobileDrawer = !state.shouldOpenMobileDrawer
+      state.openMobileDrawer = !state.openMobileDrawer
+    },
+    toggleDarkMode: (state) => {
+      state.darkMode = !state.darkMode
+    },
+    setDarkMode: (state, action: PayloadAction<boolean>) => {
+      state.darkMode = action.payload
     },
   },
 })
@@ -34,9 +47,13 @@ export const {
   showMobileDrawer,
   hideMobileDrawer,
   toggleMobileDrawer,
+  toggleDarkMode,
+  setDarkMode,
 } = slice.actions
 
 export const selectPageTitle = (state: RootState) => state.app.title
 
 export const selectShouldOpenMobileDrawer = (state: RootState) =>
-  state.app.shouldOpenMobileDrawer
+  state.app.openMobileDrawer
+
+export const selectDarkMode = (state: RootState) => state.app.darkMode

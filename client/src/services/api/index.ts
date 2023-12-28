@@ -79,6 +79,12 @@ const api = createApi({
       Monorepo.Api.Request.UpdateProductRequestDto
     >(builder, "products")
 
+    const productUnitApi = apiBuilder<
+      Monorepo.Api.Response.ProductResponseDto,
+      Monorepo.Api.Request.CreateProductRequestDto,
+      Monorepo.Api.Request.UpdateProductRequestDto
+    >(builder, "product-units")
+
     const expenseCategoryApi = apiBuilder<
       Monorepo.Api.Response.ExpenseCategoryResponseDto,
       Monorepo.Api.Request.CreateExpenseCategoryRequestDto,
@@ -151,6 +157,8 @@ const api = createApi({
       findOneProductApi: productApi.findOne,
       updateProductApi: productApi.update,
       deleteProductApi: productApi.delete,
+
+      deleteProductUnitApi: productUnitApi.delete,
 
       createExpenseCategoryApi: expenseCategoryApi.create,
       findAllExpenseCategoryApi: expenseCategoryApi.findAll,
@@ -247,6 +255,8 @@ export const {
   useLazyFindOneProductApiQuery,
   useUpdateProductApiMutation,
   useDeleteProductApiMutation,
+
+  useDeleteProductUnitApiMutation,
 
   useCreateExpenseCategoryApiMutation,
   useLazyFindAllExpenseCategoryApiQuery,

@@ -1,6 +1,7 @@
-import Container from "@/components/controls/layout/Container/Container"
-import { FormikSubmissionHandler, FormikTextInput } from "@/components/forms"
+import Container from "@/components/layout/Container/Container"
+import { FormikSubmissionHandler } from "@/components/forms"
 import Form from "@/components/forms/Form"
+import FormikTextInput from "@/components/forms/FormikTextInput"
 import {
   useCreateSupplierApiMutation,
   useLazyFindOneSupplierApiQuery,
@@ -82,7 +83,12 @@ const SupplierForm: React.FC = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <FormikTextInput name="description" label={t("Description")} />
+              <FormikTextInput
+                name="description"
+                label={t("Description")}
+                multiline
+                minRows={3}
+              />
             </Grid>
 
             <Grid item xs={12}>

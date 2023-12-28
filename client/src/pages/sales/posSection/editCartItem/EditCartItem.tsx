@@ -1,62 +1,62 @@
-import React, { Component } from 'react';
-import currency from 'currency.js';
-import FormDialog from '../../../../components/forms/FormDialog';
-import CustomTextField from '../../../../components/controls/textfields/CustomTextField';
-import NumberTextField from '../../../../components/forms/FormikNumberInput/NumberTextField';
-import Footer from './Footer';
+import React, { Component } from "react"
+import currency from "currency.js"
+import FormDialog from "../../../../components/forms/FormDialog"
+import Footer from "./Footer"
+import { TextField } from "@material-ui/core"
+import TextInput from "@/components/forms/TextInput"
 
 class EditCartItem extends Component {
   state = {
     errors: {},
-  };
+  }
 
   onChange = (e) => {
     this.setState({
-      errors: { ...this.state.errors, [e.target.name]: '' },
-    });
+      errors: { ...this.state.errors, [e.target.name]: "" },
+    })
 
-    this.props.onChange(e);
-  };
+    this.props.onChange(e)
+  }
 
   onSave = () => {
-    const { item } = this.props;
+    const { item } = this.props
 
     if (currency(item.discount).value > currency(item.price).value) {
       this.setState({
         errors: {
           ...this.state.errors,
-          discount: 'Enter the discount value lesser than cost price.',
+          discount: "Enter the discount value lesser than cost price.",
         },
-      });
-      return;
+      })
+      return
     }
 
     if (item.quantity === 0) {
       this.setState({
         errors: {
           ...this.state.errors,
-          quantity: 'quantity should be greater than 0.',
+          quantity: "quantity should be greater than 0.",
         },
-      });
-      return;
+      })
+      return
     }
 
-    this.setState({ errors: {} });
-    this.props.onSave();
-  };
+    this.setState({ errors: {} })
+    this.props.onSave()
+  }
 
   onCancel = () => {
-    this.setState({ errors: {} });
-    this.props.onCancel();
-  };
+    this.setState({ errors: {} })
+    this.props.onCancel()
+  }
 
   render() {
-    const { errors } = this.state;
-    const { open, item } = this.props;
+    const { errors } = this.state
+    const { open, item } = this.props
 
     return (
       <FormDialog onSave={this.onSave} onCancel={this.onCancel} open={open}>
-        <CustomTextField
+        <TextInput
           error={!!errors.id}
           name="id"
           value={item.id}
@@ -65,7 +65,7 @@ class EditCartItem extends Component {
           disabled
         />
 
-        <CustomTextField
+        <TextInput
           error={!!errors.name}
           name="name"
           value={item.name}
@@ -74,8 +74,9 @@ class EditCartItem extends Component {
           disabled
         />
 
-        <div style={{ display: 'flex' }}>
-          <NumberTextField
+        <div style={{ display: "flex" }}>
+          <TextField
+            type="number"
             error={!!errors.quantity}
             name="quantity"
             value={item.quantity}
@@ -84,7 +85,8 @@ class EditCartItem extends Component {
             helperText={errors.quantity}
           />
 
-          <NumberTextField
+          <TextField
+            type="number"
             error={!!errors.price}
             name="price"
             value={item.price}
@@ -93,7 +95,8 @@ class EditCartItem extends Component {
             disabled
           />
 
-          <NumberTextField
+          <TextField
+            type="number"
             error={!!errors.discount}
             name="discount"
             value={item.discount}
@@ -105,8 +108,8 @@ class EditCartItem extends Component {
 
         <Footer item={item} />
       </FormDialog>
-    );
+    )
   }
 }
 
-export default EditCartItem;
+export default EditCartItem

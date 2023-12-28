@@ -1,10 +1,14 @@
 import { colors } from "@material-ui/core"
 import { PaletteOptions } from "@material-ui/core/styles/createPalette"
 
+const darkGrey = "#424242"
 const offBlack = "#0e1111"
 const offWhite = "#FAF9F6"
+const softBlack = "#303030"
+const white = "#FFF"
 
-export default {
+export const darkTheme = {
+  type: "dark",
   primary: {
     contrastText: offWhite,
     dark: colors.indigo[900],
@@ -14,8 +18,45 @@ export default {
   secondary: {
     contrastText: offWhite,
     dark: colors.blue[900],
-    main: colors.blue.A700,
-    light: colors.blue.A400,
+    main: colors.blue.A400,
+    light: colors.blue.A200,
+  },
+  error: {
+    contrastText: offWhite,
+    dark: colors.red[900],
+    main: colors.red[600],
+    light: colors.red[400],
+  },
+  text: {
+    primary: offWhite,
+    secondary: colors.grey[100],
+    disabled: colors.grey[600],
+    hint: colors.grey[500],
+  },
+  background: {
+    default: darkGrey,
+    paper: softBlack,
+  },
+  divider: colors.grey[600],
+  common: {
+    black: offBlack,
+    white: offWhite,
+  },
+} satisfies PaletteOptions
+
+export const lightTheme = {
+  type: "light",
+  primary: {
+    contrastText: offWhite,
+    dark: colors.indigo[900],
+    main: colors.indigo[500],
+    light: colors.indigo[100],
+  },
+  secondary: {
+    contrastText: offWhite,
+    dark: colors.blue[900],
+    main: colors.blue.A400,
+    light: colors.blue.A200,
   },
   error: {
     contrastText: offWhite,
@@ -26,14 +67,14 @@ export default {
   text: {
     primary: colors.indigo[900],
     secondary: offBlack,
-    disabled: colors.blueGrey[500],
+    disabled: colors.grey[500],
     hint: colors.indigo[600],
   },
   background: {
-    default: offWhite,
+    default: white,
     paper: offWhite,
   },
-  divider: colors.grey[200],
+  divider: colors.grey[900],
   common: {
     black: offBlack,
     white: offWhite,

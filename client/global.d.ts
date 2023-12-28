@@ -79,6 +79,8 @@ declare global {
           import("../server/src/modules/unit").UnitInfoResponseDto
         type ProductResponseDto =
           import("../server/src/modules/product").ProductResponseDto
+        type ProductUnitResponseDto =
+          import("../server/src/modules/product").ProductUnitResponseDto
         type ProcurementResponseDto =
           import("../server/src/modules/procurement").ProcurementResponseDto
         type SaleResponseDto =
