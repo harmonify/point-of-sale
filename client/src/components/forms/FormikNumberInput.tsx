@@ -11,18 +11,18 @@ interface IChangeEvent {
 }
 
 type INumberFormatCustomProps = {
-  inputRef: (instance: typeof NumericFormat | null) => void
+  getInputRef: (instance: typeof NumericFormat | null) => void
   onChange?: (event: IChangeEvent) => void
   name: string
 } & NumericFormatProps
 
 const NumberFormatCustom = (props: INumberFormatCustomProps) => {
-  const { inputRef, onChange, name, ...rest } = props
+  const { getInputRef, onChange, name, ...rest } = props
 
   return (
     <NumericFormat
       {...rest}
-      getInputRef={props.inputRef}
+      getInputRef={props.getInputRef}
       onValueChange={(values) => {
         if (!props.onChange) return
         props.onChange({
@@ -38,7 +38,7 @@ const NumberFormatCustom = (props: INumberFormatCustomProps) => {
 
 type IFormikNumberInputProps = Omit<
   INumberFormatCustomProps,
-  "inputRef" | "onChange"
+  "getInputRef" | "onChange"
 > &
   ITextInputProps & {
     intlConfig: IntlConfig
@@ -80,7 +80,6 @@ const FormikNumberInput = (props: IFormikNumberInputProps) => {
       onChange={handleChange}
       InputProps={{
         inputComponent: NumberFormatCustom as any,
-        // @ts-ignore
         inputProps: {
           name: props.name,
           thousandSeparator,
@@ -93,7 +92,7 @@ const FormikNumberInput = (props: IFormikNumberInputProps) => {
           allowLeadingZeros,
           suffix,
           prefix,
-          inputRef: () => inputRef,
+          getInputRef: () => inputRef,
         } satisfies INumberFormatCustomProps,
       }}
     />

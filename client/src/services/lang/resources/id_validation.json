@@ -3,7 +3,14 @@
   "required": "harus diisi",
   "string": {
     "email": "harus berupa email yang valid",
-    "min": "harus memiliki minimal {{x}} jumlah karakter"
+    "min": "harus lebih besar atau sama dengan {{x}} jumlah karakter",
+    "max": "harus lebih kecil atau sama dengan {{x}} jumlah karakter"
+  },
+  "number": {
+    "min": "harus lebih besar atau sama dengan {{x}}",
+    "max": "harus lebih kecil atau sama dengan {{x}}",
+    "lessThan": "harus lebih kecil dari {{x}}",
+    "moreThan": "harus lebih besar dari {{x}}"
   },
   "array": {
     "unique": "harus berupa data yang unik"

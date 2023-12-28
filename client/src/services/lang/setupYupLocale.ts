@@ -9,21 +9,21 @@ function setupYupLocale(t: TFunction) {
       required: t("required", { ns: "validation" }),
     },
     number: {
-      min: ({ min }) => ({
-        key: "number.min",
-        values: { min },
-      }),
-      max: ({ max }) => ({
-        key: "number.min",
-        values: { max },
-      }),
+      min: ({ min }) => t("number.min", { ns: "validation", x: min }),
+      max: ({ max }) => t("number.min", { ns: "validation", x: max }),
     },
     string: {
       email: t("string.email", { ns: "validation" }),
-      min: (params) => {
+      min: ({ min }) => {
         return t("string.min", {
           ns: "validation",
-          x: params.min.toString(),
+          x: min,
+        })
+      },
+      max: ({ max }) => {
+        return t("string.max", {
+          ns: "validation",
+          x: max,
         })
       },
     },
