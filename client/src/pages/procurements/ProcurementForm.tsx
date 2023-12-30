@@ -103,11 +103,24 @@ const ProcurementForm: React.FC = () => {
         : [],
     [productApiQueryResponse],
   )
+  /** To support when creating procurement products */
   const productMap = useMemo(
     () =>
       new Map(
         productApiQueryResponse
           ? productApiQueryResponse.data.map((product) => [product.id, product])
+          : [],
+      ),
+    [productApiQueryResponse],
+  )
+  /** To support when updating procurement products */
+  const productUnitToProductMap = useMemo(
+    () =>
+      new Map(
+        productApiQueryResponse
+          ? productApiQueryResponse.data.flatMap((product) =>
+              product.productUnits.map((pu) => [pu.id, product]),
+            )
           : [],
       ),
     [productApiQueryResponse],
@@ -323,12 +336,16 @@ const ProcurementForm: React.FC = () => {
                         ).map((_, index) => {
                           const currentRowProcurementProduct: ProcurementProductState | null =
                             formik.values.procurementProducts[index]
-                          logger.debug(currentRowProcurementProduct)
+                          // logger.debug(currentRowProcurementProduct)
 
-                          const matchingProduct = productMap.get(
-                            currentRowProcurementProduct?.productId,
-                          )
-                          logger.debug(matchingProduct)
+                          const matchingProduct =
+                            productMap.get(
+                              currentRowProcurementProduct?.productId,
+                            ) ||
+                            productUnitToProductMap.get(
+                              currentRowProcurementProduct?.productUnitId,
+                            )
+                          // logger.debug(matchingProduct)
 
                           return (
                             <TableRow>
@@ -421,7 +438,7 @@ const ProcurementForm: React.FC = () => {
               <ErrorMessage
                 name="procurementProducts"
                 render={(msg) => {
-                  logger.debug(msg)
+                  // logger.debug(msg)
                   const strMsg = msg.toString()
                   return strMsg.includes("[object Object]") ? (
                     <Typography color="error">
