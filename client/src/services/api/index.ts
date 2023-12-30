@@ -103,6 +103,12 @@ const api = createApi({
       Monorepo.Api.Request.UpdateProcurementRequestDto
     >(builder, "procurements")
 
+    const procurementProductApi = apiBuilder<
+      Monorepo.Api.Response.ProcurementResponseDto,
+      Monorepo.Api.Request.CreateProcurementRequestDto,
+      Monorepo.Api.Request.UpdateProcurementRequestDto
+    >(builder, "procurement-products")
+
     const saleApi = apiBuilder<
       Monorepo.Api.Response.SaleResponseDto,
       Monorepo.Api.Request.CreateSaleRequestDto,
@@ -158,6 +164,7 @@ const api = createApi({
       updateProductApi: productApi.update,
       deleteProductApi: productApi.delete,
 
+      findAllProductUnitApi: productUnitApi.findAll,
       deleteProductUnitApi: productUnitApi.delete,
 
       createExpenseCategoryApi: expenseCategoryApi.create,
@@ -177,6 +184,9 @@ const api = createApi({
       findOneProcurementApi: procurementApi.findOne,
       updateProcurementApi: procurementApi.update,
       deleteProcurementApi: procurementApi.delete,
+
+      findAllProcurementProductApi: procurementProductApi.findAll,
+      deleteProcurementProductApi: procurementProductApi.delete,
 
       createSaleApi: saleApi.create,
       findAllSaleApi: saleApi.findAll,
@@ -256,6 +266,7 @@ export const {
   useUpdateProductApiMutation,
   useDeleteProductApiMutation,
 
+  useLazyFindAllProductUnitApiQuery,
   useDeleteProductUnitApiMutation,
 
   useCreateExpenseCategoryApiMutation,
@@ -277,6 +288,8 @@ export const {
   useLazyFindOneProcurementApiQuery,
   useUpdateProcurementApiMutation,
   useDeleteProcurementApiMutation,
+
+  useDeleteProcurementProductApiMutation,
 
   useCreateSaleApiMutation,
   useLazyFindAllSaleApiQuery,

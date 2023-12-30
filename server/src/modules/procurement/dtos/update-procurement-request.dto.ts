@@ -8,13 +8,13 @@ import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
-  IsBoolean,
   IsDateString,
   IsEnum,
   IsInt,
   IsDefined,
   IsString,
   ValidateNested,
+  IsOptional,
 } from 'class-validator';
 import { UpdateProcurementProductRequestDto } from './update-procurement-product-request.dto';
 
@@ -26,49 +26,44 @@ export class UpdateProcurementRequestDto
     >
 {
   @IsDefined()
-  @IsBoolean()
-  @ApiProperty()
-  isActive: boolean;
-
-  @IsDefined()
   @IsString()
   @ApiProperty()
   name: string;
 
-  @IsDefined()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  description: string;
+  description?: string | null;
 
-  @IsDefined()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  invoiceNumber: string;
+  invoiceNumber?: string | null;
 
-  @IsDefined()
+  @IsOptional()
   @IsString()
   @ApiProperty()
-  invoiceDate: string | Date;
+  invoiceDate?: string | Date | null;
 
   @IsDefined()
   @IsEnum(ProcurementDeliveryStatus)
   @ApiProperty()
   deliveryStatus: ProcurementDeliveryStatus;
 
-  @IsDefined()
+  @IsOptional()
   @IsDateString()
   @ApiProperty()
-  deliveredAt: string | Date;
+  deliveredAt?: string | Date | null;
 
   @IsDefined()
   @IsEnum(ProcurementPaymentStatus)
   @ApiProperty()
   paymentStatus: ProcurementPaymentStatus;
 
-  @IsDefined()
+  @IsOptional()
   @IsDateString()
   @ApiProperty()
-  payedAt: string | Date;
+  payedAt?: string | Date | null;
 
   @IsDefined()
   @IsInt()

@@ -14,5 +14,6 @@
   },
   "array": {
     "unique": "harus berupa data yang unik"
-  }
+  },
+  "some fields are invalid": "ada beberapa kolom yang tidak valid"
 }

@@ -3,8 +3,12 @@ import React, { ChangeEventHandler, forwardRef, Ref, useMemo } from "react"
 import { NumericFormat, NumericFormatProps } from "react-number-format"
 
 import FormikTextInput from "./FormikTextInput"
-import { ITextInputProps } from "./TextInput"
-import { getLocaleConfig, IntlConfig } from "./utils/getLocaleConfig"
+import { IFormikTextInputProps } from "./FormikTextInput"
+import {
+  getLocaleConfig,
+  IntlConfig,
+  LocaleConfig,
+} from "./utils/getLocaleConfig"
 
 interface IChangeEvent {
   target: { name: string; value: string }
@@ -38,15 +42,18 @@ const NumberFormatCustom = (props: INumberFormatCustomProps) => {
 
 type IFormikNumberInputProps = Omit<
   INumberFormatCustomProps,
-  "getInputRef" | "onChange"
+  "getInputRef" | "onChange" | "size"
 > &
-  ITextInputProps & {
-    intlConfig: IntlConfig
+  IFormikTextInputProps & {
+    intlConfig?: IntlConfig
   }
 
 const FormikNumberInput = (props: IFormikNumberInputProps) => {
-  const localeConfig = useMemo(
-    () => getLocaleConfig(props.intlConfig),
+  const localeConfig: LocaleConfig = useMemo(
+    () =>
+      props.intlConfig
+        ? getLocaleConfig(props.intlConfig)
+        : ({} as LocaleConfig),
     [props.intlConfig],
   )
   const {

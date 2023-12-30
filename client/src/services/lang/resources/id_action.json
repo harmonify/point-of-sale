@@ -1,5 +1,7 @@
 {
   "OK": "OK",
+  "Save": "Simpan",
+  "Submit": "Kirim",
   "Cancel": "Batal",
   "Back": "Kembali",
   "Reload": "Muat ulang",
@@ -33,5 +35,8 @@
   "Delete Product Unit": "Hapus Unit Produk",
   "Create Procurement": "Tambah Pengadaan",
   "Edit Procurement": "Ubah Data Pengadaan",
-  "Delete Procurement": "Hapus Pengadaan"
+  "Delete Procurement": "Hapus Pengadaan",
+  "Delete Procurement Product": "Hapus Pengadaan Produk",
+  "Add Procurement Product": "Tambah Pengadaan Produk",
+  "Add Product": "Tambah Produk"
 }

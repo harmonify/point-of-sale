@@ -79,7 +79,7 @@ const useFuzzySearch = <TModel>({
     } else {
       setResults([])
     }
-    setLoading(false)
+    return setLoading(false)
   }, [data, debouncedSearchTerm])
 
   return {

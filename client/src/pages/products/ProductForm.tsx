@@ -27,7 +27,7 @@ import {
 import { Add, Delete } from "@material-ui/icons"
 import { ErrorMessage, FieldArray, Formik } from "formik"
 import { t } from "i18next"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
 import createProductValidationSchema, {
@@ -55,28 +55,36 @@ const defaultProductUnit = {
 const ProductForm: React.FC = () => {
   const theme = useTheme()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
 
   const [createProductApiMutation] = useCreateProductApiMutation()
   const [updateProductApiMutation] = useUpdateProductApiMutation()
 
   const { data: categoryApiQueryResponse, isLoading: isLoadingFetchCategory } =
     useFindAllCategoryApiQuery({ all: true })
-  const categoryOptions = categoryApiQueryResponse
-    ? categoryApiQueryResponse.data.map((category) => ({
-        label: category.name,
-        value: category.id,
-      }))
-    : []
+
+  const categoryOptions = useMemo(
+    () =>
+      categoryApiQueryResponse
+        ? categoryApiQueryResponse.data.map((category) => ({
+            label: category.name,
+            value: category.id,
+          }))
+        : [],
+    [categoryApiQueryResponse],
+  )
 
   const { data: unitApiQueryResponse, isLoading: isLoadingFetchUnit } =
     useFindAllUnitApiQuery({ all: true })
-  const unitOptions = unitApiQueryResponse
-    ? unitApiQueryResponse.data.map((unit) => ({
-        label: unit.name,
-        value: unit.id,
-      }))
-    : []
+  const unitOptions = useMemo(
+    () =>
+      unitApiQueryResponse
+        ? unitApiQueryResponse.data.map((unit) => ({
+            label: unit.name,
+            value: unit.id,
+          }))
+        : [],
+    [unitApiQueryResponse],
+  )
 
   const { id } = useParams()
   const [findOneProductApiQuery, { data: productApiQueryResponse }] =
@@ -125,14 +133,13 @@ const ProductForm: React.FC = () => {
     row: Partial<Monorepo.Api.Response.ProductUnitResponseDto>,
     cb: () => void,
   ) => {
-    if (!row.id) {
-      return cb()
-    }
     show({
-      onConfirm: async () => {
-        await deleteProductUnitApiMutation({ id: row.id! }).unwrap()
-        cb()
-      },
+      onConfirm: row.id
+        ? async () => {
+            await deleteProductUnitApiMutation({ id: row.id! }).unwrap()
+            cb()
+          }
+        : cb,
     })
   }
 
@@ -191,7 +198,7 @@ const ProductForm: React.FC = () => {
                   name="description"
                   label={t("Description")}
                   multiline
-                  minRows={3}
+                  minRows={5}
                 />
               </Grid>
 
@@ -237,7 +244,7 @@ const ProductForm: React.FC = () => {
               render={(arrayHelpers) => (
                 <Grid container spacing={1}>
                   {formik.values.productUnits.map((productUnit, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                    <Grid item xs={12} md={4} key={index}>
                       <Card variant="outlined" style={{ outlineColor: "blue" }}>
                         <CardContent>
                           <Typography variant="h6">
@@ -274,12 +281,9 @@ const ProductForm: React.FC = () => {
                               locale: APP_DEFAULT_LANG,
                               currency: APP_DEFAULT_CURRENCY,
                             }}
-                            label={t("Price")}
+                            label={t("Selling Price")}
                             name={`productUnits[${index}].price`}
                             InputLabelProps={{ shrink: true }}
-                            helperText={t("Define the selling price", {
-                              ns: "message",
-                            })}
                           />
                         </CardContent>
                         <CardActions>

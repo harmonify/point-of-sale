@@ -12,7 +12,7 @@ const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     if (!(credentials.accessToken || credentials.refreshToken)) {
       persistor.purge()
-      navigate("/login")
+      return navigate("/login")
     }
   }, [])
 

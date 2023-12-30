@@ -34,11 +34,6 @@ export class CreateProcurementRequestDto
   @ApiProperty()
   supplierId: number;
 
-  @IsOptional()
-  @IsBoolean()
-  @ApiProperty()
-  isActive?: boolean;
-
   @IsDefined()
   @IsString()
   @ApiProperty()
@@ -55,7 +50,7 @@ export class CreateProcurementRequestDto
   invoiceNumber?: string | null;
 
   @IsOptional()
-  @IsString()
+  @IsDateString()
   @ApiProperty()
   invoiceDate?: string | Date | null;
 

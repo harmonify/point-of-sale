@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom"
 import { object, string } from "yup"
 
 import useStyles from "./styles"
+import { IconButton, InputAdornment } from "@material-ui/core"
+import { Visibility, VisibilityOff } from "@material-ui/icons"
 
 const validationSchema = object({
   email: string().required().email(),
@@ -18,11 +20,10 @@ const validationSchema = object({
 })
 
 const Login: React.FC = () => {
+  const classes = useStyles()
+  const navigate = useNavigate()
   const [postLogin, { isLoading }] = usePostLoginMutation()
   const { t } = useTranslation(["translation", "message"])
-  const navigate = useNavigate()
-  const classes = useStyles()
-  const dispatch = useAppDispatch()
 
   const auth = useAppSelector(selectAuthCredentials)
 
@@ -31,6 +32,16 @@ const Login: React.FC = () => {
       navigate("/")
     }
   }, [auth])
+
+  const [showPassword, setShowPassword] = React.useState(false)
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault()
+  }
 
   return (
     <div className={classes.root}>
@@ -45,7 +56,7 @@ const Login: React.FC = () => {
             validateOnChange={true}
             validateOnBlur={true}
             onSubmit={async (values) => {
-              const response = await postLogin({
+              await postLogin({
                 email: values.email,
                 password: values.password,
               }).unwrap()
@@ -72,8 +83,22 @@ const Login: React.FC = () => {
                 fullWidth
                 label={t("Password")}
                 placeholder={t("Password")}
-                type="password"
                 margin="normal"
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Form>
           </Formik>

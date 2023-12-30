@@ -3,20 +3,25 @@ import React from "react"
 
 import TextInput, { ITextInputProps } from "./TextInput"
 
-const FormikTextInput: React.FC<ITextInputProps> = (props) => {
+export type IFormikTextInputProps = ITextInputProps & {
+  /** decide whether to disable error text */
+  disableErrorText?: boolean
+}
+
+const FormikTextInput: React.FC<IFormikTextInputProps> = (props) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
   // message if the field is invalid and it has been touched (i.e. visited)
   // @ts-ignore
   const [field, meta] = useField(props)
 
-  let helperText = props.helperText
+  let errorText = props.helperText
   if (meta.touched && meta.error) {
     const errorMessage = meta.error.toString()
     if (errorMessage.includes("[object Object]")) {
-      helperText = JSON.stringify(meta.error)
+      errorText = JSON.stringify(meta.error)
     } else {
-      helperText = errorMessage
+      errorText = errorMessage
     }
   }
 
@@ -25,9 +30,10 @@ const FormikTextInput: React.FC<ITextInputProps> = (props) => {
       {...field}
       {...props}
       error={meta.touched && Boolean(meta.error)}
-      helperText={helperText}
+      helperText={props.disableErrorText ? props.helperText : errorText}
       InputLabelProps={{
         shrink: !!field.value,
+        ...props.InputLabelProps,
       }}
     />
   )

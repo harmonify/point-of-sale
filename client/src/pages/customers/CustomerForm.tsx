@@ -103,7 +103,7 @@ const CustomerForm: React.FC = () => {
                 name="description"
                 label={t("Description")}
                 multiline
-                minRows={3}
+                minRows={5}
               />
             </Grid>
 

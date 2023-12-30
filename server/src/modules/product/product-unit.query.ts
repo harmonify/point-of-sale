@@ -24,6 +24,11 @@ const productUnitQueryRelation = {
           quantity: true,
         },
       },
+      unit: {
+        select: {
+          name: true,
+        },
+      },
     }) satisfies Prisma.ProductUnitInclude,
 } satisfies Record<string, () => Prisma.ProductUnitInclude>;
 

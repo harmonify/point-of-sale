@@ -2,6 +2,7 @@ import { Box, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import { Save } from "@material-ui/icons"
 import { Form as FormikForm } from "formik"
+import { t } from "i18next"
 import React, { useEffect } from "react"
 
 // eslint-disable-next-line
@@ -53,7 +54,7 @@ const Form: React.FC<{
           variant="contained"
           disabled={props.submitDisabled}
         >
-          {props.submitText || "Submit"}
+          {props.submitText || t("Save", { ns: "action" })}
         </Button>
 
         {props.onCancel && (
@@ -62,7 +63,7 @@ const Form: React.FC<{
             onClick={props.onCancel}
             disabled={props.cancelDisabled}
           >
-            {props.cancelText || "Cancel"}
+            {props.cancelText || t("Cancel", { ns: "action" })}
           </Button>
         )}
       </Box>

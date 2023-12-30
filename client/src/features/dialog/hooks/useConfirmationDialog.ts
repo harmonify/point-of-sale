@@ -10,7 +10,7 @@ const useConfirmationDialog = (
   const { setState, show, close } = useContext(ConfirmationDialogContext)!
 
   useEffect(() => {
-    setState({ ...props, open: false })
+    return setState({ ...props, open: false })
   }, [])
 
   return {

@@ -1,35 +1,27 @@
 import FormikTextInput from "@/components/forms/FormikTextInput"
 import { useFormikContext } from "formik"
-import React from "react"
+import React, { useEffect } from "react"
 
-import { ITextInputProps } from "./TextInput"
+import { IFormikTextInputProps } from "./FormikTextInput"
 
 /** If true, will add a default value in the beginning */
-type SelectDefaultValue =
-  | {
-      enableDefaultValue?: undefined
-    }
-  | {
-      enableDefaultValue: false
-    }
-  | {
-      enableDefaultValue: true
-      defaultLabel?: string
-      defaultValue?: string | number
-    }
+type SelectDefaultValue = {
+  enableDefaultValue?: boolean
+  defaultLabel?: string
+  defaultValue?: string | number
+}
 
 type IFormikSelectInputProps = SelectDefaultValue & {
   options: {
     label: string
     value: string | number
   }[]
-} & ITextInputProps
+} & IFormikTextInputProps
 
 const FormikSelectInput: React.FC<IFormikSelectInputProps> = (props) => {
   const {
     enableDefaultValue,
     defaultValue,
-    // @ts-ignore
     defaultLabel,
     options,
     ...textInputProps
@@ -42,6 +34,7 @@ const FormikSelectInput: React.FC<IFormikSelectInputProps> = (props) => {
       {...textInputProps}
       defaultValue={defaultValue}
       select
+      InputLabelProps={{ shrink: true }}
       SelectProps={{
         native: true,
         variant: props.variant || "outlined",

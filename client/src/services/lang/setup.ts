@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next"
 
 import { defaultNS, idResource } from "."
 import setupYupLocale from "./setupYupLocale"
+import { sentenceCase } from "@/utils"
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -34,11 +35,10 @@ i18n.services.formatter?.addCached("titlecase", () => (value) => {
     .join(" ")
 })
 
-i18n.services.formatter?.addCached("sentencecase", () => (value) => {
-  if (!value) return value
-  const normalized: string = value.toString ? value.toString() : value
-  return normalized[0].toUpperCase() + normalized.slice(1)
-})
+i18n.services.formatter?.addCached(
+  "sentencecase",
+  () => (value) => sentenceCase({ text: value, normalize: false }),
+)
 
 i18n.services.formatter?.addCached("spaceBeforeIfDefined", () => (value) => {
   return value ? " " + value : value

@@ -31,6 +31,12 @@ declare global {
           import("../server/src/modules/product").CreateProductRequestDto
         type CreateProcurementRequestDto =
           import("../server/src/modules/procurement").CreateProcurementRequestDto
+        type CreateProcurementProductRequestDto =
+          import("../server/src/modules/procurement").CreateProcurementProductRequestDto
+        type CreateExpenseCategoryRequestDto =
+          import("../server/src/modules/expense-category").CreateExpenseCategoryRequestDto
+        type CreateExpenseRequestDto =
+          import("../server/src/modules/expense").CreateExpenseRequestDto
         type CreateSaleRequestDto =
           import("../server/src/modules/sale").CreateSaleRequestDto
 
@@ -48,8 +54,14 @@ declare global {
           import("../server/src/modules/product").UpdateProductRequestDto
         type UpdateProcurementRequestDto =
           import("../server/src/modules/procurement").UpdateProcurementRequestDto
+        type UpdateProcurementProductRequestDto =
+          import("../server/src/modules/procurement").UpdateProcurementProductRequestDto
         type UpdateSaleRequestDto =
           import("../server/src/modules/sale").UpdateSaleRequestDto
+        type UpdateExpenseCategoryRequestDto =
+          import("../server/src/modules/expense-category").UpdateExpenseCategoryRequestDto
+        type UpdateExpenseRequestDto =
+          import("../server/src/modules/expense").UpdateExpenseRequestDto
       }
 
       namespace Response {
@@ -83,6 +95,12 @@ declare global {
           import("../server/src/modules/product").ProductUnitResponseDto
         type ProcurementResponseDto =
           import("../server/src/modules/procurement").ProcurementResponseDto
+        type ProcurementProductResponseDto =
+          import("../server/src/modules/procurement").ProcurementProductResponseDto
+        type ExpenseCategoryResponseDto =
+          import("../server/src/modules/expense-category").ExpenseCategoryResponseDto
+        type ExpenseResponseDto =
+          import("../server/src/modules/expense").ExpenseResponseDto
         type SaleResponseDto =
           import("../server/src/modules/sale").SaleResponseDto
         type DashboardResponseDto =

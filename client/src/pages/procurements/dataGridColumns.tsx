@@ -1,4 +1,4 @@
-import { formatISOToLocale } from "@/utils"
+import { formatISOToLocale, sentenceCase } from "@/utils"
 import { IconButton } from "@material-ui/core"
 import { Delete, Edit } from "@material-ui/icons"
 import { GridColumns, GridRenderCellParams } from "@mui/x-data-grid"
@@ -78,35 +78,37 @@ export default function renderProcurementDataGridColumns({
       field: "deliveryStatus",
       headerName: t("Delivery Status"),
       flex: 1,
-      minWidth: 160,
+      minWidth: 180,
       sortable: false,
       resizable: false,
-      valueGetter: (params) =>
-        t(params.value as any, { defaultValue: params.value || "-" }),
+      valueGetter: (params) => {
+        const value = sentenceCase({ text: params.value, normalize: true })
+        return t(value as any, { defaultValue: value || "-" })
+      },
     },
     {
       field: "deliveredAt",
       headerName: t("Delivered At"),
       flex: 2,
       minWidth: 220,
-      sortable: false,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
     {
       field: "paymentStatus",
       headerName: t("Payment Status"),
       flex: 1,
-      minWidth: 160,
+      minWidth: 180,
       sortable: false,
-      valueGetter: (params) =>
-        t(params.value as any, { defaultValue: params.value || "-" }),
+      valueGetter: (params) => {
+        const value = sentenceCase({ text: params.value, normalize: true })
+        return t(value as any, { defaultValue: value || "-" })
+      },
     },
     {
       field: "payedAt",
       headerName: t("Payed At"),
       flex: 2,
       minWidth: 220,
-      sortable: false,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
     {
