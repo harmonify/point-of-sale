@@ -19,9 +19,6 @@ import React, { useEffect } from "react"
 
 // eslint-disable-next-line
 export const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(1),
-  },
   card: {
     display: "flex",
     flexDirection: "column",
@@ -155,7 +152,7 @@ const HomeInfo: React.FC = () => {
         </Typography>
       </Grid>
 
-      <Grid xs={12} container justifyContent="center" spacing={3}>
+      <Grid item container xs={12} justifyContent="center" spacing={3}>
         <Grid item xs={12} md={3}>
           <Card className={classes.card}>
             <CardContent className={classes.cardContent}>

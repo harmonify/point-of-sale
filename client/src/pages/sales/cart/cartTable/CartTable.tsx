@@ -1,34 +1,26 @@
-import React, { Component } from "react"
-import currency from "currency.js"
-import { connect } from "react-redux"
-import { makeStyles, withStyles } from "@material-ui/core/styles"
-import { Paper } from "@material-ui/core"
-import Table from "@material-ui/core/Table"
-import YesNo from "../../../../features/dialog/YesNo"
-import EditCartItem from "../editCartItem/EditCartItem"
-import CartHeader from "./cartHeader"
-import CartBody from "./cartBody"
-import CartFooter from "./cartFooter"
+import { useAppSelector } from "@/app/hooks"
 import {
   emptyCart,
   removeItemFromCart,
   selectCartState,
   updateCartItem,
 } from "@/features/cart"
-import { createSelector } from "@reduxjs/toolkit"
-import { useAppSelector } from "@/app/hooks"
+import { Paper } from "@material-ui/core"
+import Table from "@material-ui/core/Table"
+import currency from "currency.js"
+import React, { Component } from "react"
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    marginTop: theme.spacing(3),
-  },
-}))
+import YesNo from "../../../../features/dialog/YesNo"
+import EditCartItem from "../editCartItem/EditCartItem"
+import CartBody from "./cartBody/CartBody"
+import CartFooter from "./cartFooter/CartFooter"
+import CartHeader from "./CartHeader"
 
 const CartTable: React.FC = () => {
-  const classes = useStyles()
   const cartObj = useAppSelector(selectCartState)
-  const cartArray = Object.values(cartObj)
+  const cartArray = Object.values(cartObj.items)
+  console.log(`🚀 ~ cartObj ~ ${JSON.stringify(cartObj, null, 2)}`);
+  console.log(`🚀 ~ cartArray ~ ${JSON.stringify(cartArray, null, 2)}`);
 
   const initialCartItem = {
     id: "",
@@ -111,7 +103,7 @@ const CartTable: React.FC = () => {
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper>
       <YesNo
         open={showConfirmDeleteDialog}
         message="Are you sure wan't to empty the cart?"

@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button"
 import { Add } from "@material-ui/icons"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { t } from "i18next"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import renderProductDataGridColumns from "./dataGridColumns"
@@ -53,7 +53,10 @@ const ProductList: React.FC = () => {
       },
     )
 
-  const productList = productResponseQuery ? productResponseQuery.data : []
+  const productList = useMemo(
+    () => (productResponseQuery ? productResponseQuery.data : []),
+    [productResponseQuery],
+  )
 
   const onClickCreate = () => {
     return navigate("/products/create")

@@ -275,8 +275,9 @@ const updateTaxReducer = (
   return state
 }
 
-const emptyCartReducer = () => {
-  return initialState
+const emptyCartReducer = (oldState: CartState) => {
+  oldState.items = Object.assign({}, initialState.items)
+  oldState.summary = Object.assign({}, initialState.summary)
 }
 
 const slice = createSlice({

@@ -102,3 +102,15 @@ export const removeEmptyStrings = <T extends Record<string, any>>(
   }
   return newObj
 }
+
+export const nameInitials = (name: string) => {
+  const MAX_INITIALS_LENGTH = 2
+  const nameArr = name.split(" ")
+  return nameArr
+    .slice(0, Math.min(nameArr.length, MAX_INITIALS_LENGTH))
+    .map((word) => {
+      const trimmed = word.trimStart()
+      return trimmed && trimmed[0] ? trimmed[0].toUpperCase() : ""
+    })
+    .join("")
+}

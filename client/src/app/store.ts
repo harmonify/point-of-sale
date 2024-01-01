@@ -1,5 +1,5 @@
 import { appSliceName } from "@/features/app"
-import { authSliceName } from "@/features/auth"
+import { authSliceName, setLogout } from "@/features/auth"
 import api from "@/services/api"
 import { rtkQueryErrorLogger } from "@/services/api/middlewares/rtkQueryErrorLogger"
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit"

@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
+  Grid,
   IconButton,
   List,
   ListSubheader,
   Typography,
+  makeStyles,
 } from "@material-ui/core"
 import {
   Assessment,
@@ -24,11 +26,22 @@ import { t } from "i18next"
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import useHomeStyles from "../styles"
 import MenuItem from "./MenuItem"
 
+const useStyles = makeStyles((theme) => ({
+  logo: {
+    height: "64px",
+    background: theme.palette.primary.main,
+  },
+  logoContainer: {
+    padding: "1em .5em",
+    display: "flex",
+    color: "white",
+  },
+}))
+
 const Menu: React.FC = () => {
-  const classes = useHomeStyles()
+  const classes = useStyles()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -37,14 +50,20 @@ const Menu: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.logo}>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="center"
+        alignContent="center"
+        className={classes.logo}
+      >
         <Button onClick={() => navigate("/")} className={classes.logoContainer}>
           <ShoppingCart />
-          <Typography color="inherit" variant="button">
+          <Typography color="inherit" variant="h5">
             {t("Point of Sales")}
           </Typography>
         </Button>
-      </Box>
+      </Grid>
 
       <List>
         <MenuItem

@@ -11,7 +11,7 @@ import React from "react"
 import Menu from "./Menu"
 import { useLocation } from "react-router-dom"
 
-const drawerWidth = 200
+const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
     height: "calc(100vh - 1px)",
     borderBottom: "1px solid #e0e0e0",
   },
-  drawerPaper2: {
-    width: drawerWidth,
-    height: "calc(100vh - 1px)",
+  // drawerPaper2: {
+  //   width: drawerWidth,
+  //   height: "calc(100vh - 1px)",
     // borderBottom: "1px solid #e0e0e0",
-  },
+  // },
 }))
 
 const Sidebar: React.FC = () => {
@@ -69,7 +69,7 @@ const Sidebar: React.FC = () => {
           open={openMobileDrawer}
           onClose={handleDrawerToggle}
           classes={{
-            paper: classes.drawerPaper2,
+            paper: classes.drawerPaper,
           }}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.

@@ -68,13 +68,6 @@ const useFuzzySearch = <TModel>({
     setLoading(true)
     if (debouncedSearchTerm) {
       const results = fuse.search(debouncedSearchTerm)
-      logger.debug(
-        `🚀 ~ useFuzzySearch ~ { data[0], results } ~ ${JSON.stringify(
-          { "data[0]": data[0], results },
-          null,
-          2,
-        )}`,
-      )
       setResults(results)
     } else {
       setResults([])

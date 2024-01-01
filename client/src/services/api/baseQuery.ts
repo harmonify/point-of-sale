@@ -5,6 +5,7 @@ import {
   setCredentials,
   setLogout,
 } from "@/features/auth"
+import { purgeStoreAndNavigate } from "@/features/auth/util"
 import {
   BaseQueryFn,
   FetchArgs,
@@ -77,8 +78,7 @@ const baseQueryWithReauth: BaseQueryFn<
           logger.debug(
             "Failed to execute refresh token auth flow. Refresh token is empty",
           )
-          api.dispatch(setLogout())
-          await persistor.purge()
+          purgeStoreAndNavigate()
           return result
         }
 
@@ -102,8 +102,7 @@ const baseQueryWithReauth: BaseQueryFn<
           result = await baseQuery(args, api, extraOptions)
         } else {
           logger.debug("Error when executing refresh token auth flow.")
-          api.dispatch(setLogout())
-          await persistor.purge()
+          purgeStoreAndNavigate()
         }
       } finally {
         // release must be called once the mutex should be released again.

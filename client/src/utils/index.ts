@@ -7,6 +7,7 @@ export {
   parseApiErrorMessage,
   removeEmptyStrings,
   sentenceCase,
+  nameInitials,
 } from "./string"
 
 export { isValueExists, yupTestUnique } from "./validation"

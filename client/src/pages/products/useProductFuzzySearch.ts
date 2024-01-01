@@ -6,6 +6,7 @@ const useProductFuzzySearch = (
 ) => {
   return useFuzzySearch({
     data,
+    debounceMs: 0,
     options: {
       includeMatches: false,
       keys: [

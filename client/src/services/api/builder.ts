@@ -25,9 +25,9 @@ const builder = <
       body,
     }),
     invalidatesTags: cacher.invalidatesList(resourceName),
-    onQueryStarted: async (arg, { queryFulfilled, getState, requestId }) => {
-      await queryFulfilled
-      store.dispatch(
+    onQueryStarted: async (arg, api) => {
+      await api.queryFulfilled
+      api.dispatch(
         showSnackbar({
           message: t(`Data created successfully`, {
             ns: "message",
@@ -93,9 +93,9 @@ const builder = <
       body: data,
     }),
     invalidatesTags: cacher.cacheByIdArgProperty(resourceName),
-    onQueryStarted: async (arg, { queryFulfilled }) => {
-      await queryFulfilled
-      store.dispatch(
+    onQueryStarted: async (arg, api) => {
+      await api.queryFulfilled
+      api.dispatch(
         showSnackbar({
           message: t(`Data updated successfully`, {
             ns: "message",
@@ -116,9 +116,9 @@ const builder = <
       method: "DELETE",
     }),
     invalidatesTags: cacher.cacheByIdArgProperty(resourceName),
-    onQueryStarted: async (arg, { queryFulfilled, getState }) => {
-      await queryFulfilled
-      store.dispatch(
+    onQueryStarted: async (arg, api) => {
+      await api.queryFulfilled
+      api.dispatch(
         showSnackbar({
           message: t(`Data deleted successfully`, {
             ns: "message",

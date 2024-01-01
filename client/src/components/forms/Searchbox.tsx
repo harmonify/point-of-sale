@@ -1,40 +1,56 @@
 import { InputAdornment } from "@material-ui/core"
 import Search from "@material-ui/icons/Search"
 import { t } from "i18next"
-import React from "react"
+import React, { forwardRef, useEffect, useState } from "react"
 
 import TextInput, { ITextInputProps } from "./TextInput"
+import { useDebounce } from "@uidotdev/usehooks"
 
-type ISearchBoxProps = {
-  onValueChange: (search: string) => void
+export type ISearchBoxProps = {
+  /** With debounce */
+  onValueChange: (searchTerm: string) => void
+  /** Default: 200 */
+  debounceMs?: number
 } & ITextInputProps
 
-const Searchbox: React.FC<ISearchBoxProps> = (props) => {
-  return (
-    <TextInput
-      {...props}
-      onChange={(e) => {
-        if (props.onChange) props.onChange(e)
-        props.onValueChange(e.target.value)
-      }}
-      placeholder={
-        props.placeholder
-          ? props.placeholder
-          : t("Enter your query", { ns: "action" })
-      }
-      fullWidth={typeof props.fullWidth === "boolean" ? props.fullWidth : false}
-      margin={props.margin || "dense"}
-      size={props.size || "small"}
-      style={{ minWidth: 320 }}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <Search fontSize={props.size || "small"} />
-          </InputAdornment>
-        ),
-      }}
-    />
-  )
-}
+const Searchbox = forwardRef<HTMLDivElement, ISearchBoxProps>(
+  ({ onValueChange, debounceMs = 200, ...restProps }, ref) => {
+    const [searchTerm, setSearchTerm] = useState<string>("")
+    const debouncedSearchTerm = useDebounce<string>(searchTerm, debounceMs)
+
+    useEffect(() => {
+      onValueChange(debouncedSearchTerm)
+    }, [debouncedSearchTerm])
+
+    return (
+      <TextInput
+        {...restProps}
+        ref={ref}
+        onChange={(e) => {
+          if (restProps.onChange) restProps.onChange(e)
+          setSearchTerm(e.target.value)
+        }}
+        placeholder={
+          restProps.placeholder
+            ? restProps.placeholder
+            : t("Enter your query", { ns: "action" })
+        }
+        fullWidth={
+          typeof restProps.fullWidth === "boolean" ? restProps.fullWidth : false
+        }
+        margin={restProps.margin || "dense"}
+        size={restProps.size || "small"}
+        style={{ minWidth: 320 }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search fontSize={restProps.size || "small"} />
+            </InputAdornment>
+          ),
+        }}
+      />
+    )
+  },
+)
 
 export default Searchbox

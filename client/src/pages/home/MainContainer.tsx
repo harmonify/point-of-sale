@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core"
+import { Box, makeStyles } from "@material-ui/core"
 import Paper from "@material-ui/core/Paper"
 import classNames from "classnames"
 import React, { Component, ReactElement, ReactNode } from "react"
@@ -7,7 +7,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     padding: "70px 10px 15px 10px",
-    background: theme.palette.background.default,
   },
   paper: {
     [theme.breakpoints.up("xs")]: {

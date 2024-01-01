@@ -1,5 +1,5 @@
 import { TextField, TextFieldProps } from "@material-ui/core"
-import React, { HTMLInputTypeAttribute, useRef } from "react"
+import React, { HTMLInputTypeAttribute, forwardRef, useRef } from "react"
 
 export type ITextInputProps = {
   label?: string
@@ -11,12 +11,10 @@ export type ITextInputProps = {
   placeholder?: string
 } & TextFieldProps
 
-const TextInput: React.FC<ITextInputProps> = (props) => {
-  const inputRef = useRef<HTMLDivElement | null>(null)
-
+const TextInput = forwardRef<HTMLDivElement, ITextInputProps>((props, ref) => {
   return (
     <TextField
-      ref={inputRef}
+      ref={ref}
       {...props}
       label={props.label ? props.label.toString() : undefined}
       variant={props.variant || "outlined"}
@@ -29,6 +27,6 @@ const TextInput: React.FC<ITextInputProps> = (props) => {
       margin={props.margin || "normal"}
     />
   )
-}
+})
 
 export default TextInput

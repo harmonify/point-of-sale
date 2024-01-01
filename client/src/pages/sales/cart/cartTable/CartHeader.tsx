@@ -1,9 +1,10 @@
 import React from "react"
 import { TableRow, TableHead } from "@material-ui/core"
-import CustomTableCell from "../controls/CustomTableCell"
-import DeleteButton from "../controls/DeleteButton"
+import CustomTableCell from "./controls/CustomTableCell"
+import DeleteButton from "./controls/DeleteButton"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { emptyCart, selectCartState } from "@/features/cart"
+import { t } from "i18next"
 
 const CartHeader: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -20,12 +21,15 @@ const CartHeader: React.FC = () => {
   return (
     <TableHead>
       <TableRow>
-        <CustomTableCell style={{ width: 150, textAlign: "center" }}>
-          Product
+        <CustomTableCell style={{ textAlign: "center" }}>
+          {t("Num")}
         </CustomTableCell>
-        <CustomTableCell numeric>Price</CustomTableCell>
-        <CustomTableCell numeric>quantity</CustomTableCell>
-        <CustomTableCell numeric>Total</CustomTableCell>
+        <CustomTableCell style={{ width: 150, textAlign: "center" }}>
+          {t("Product Name")}
+        </CustomTableCell>
+        <CustomTableCell numeric>{t("Price")}</CustomTableCell>
+        <CustomTableCell numeric>{t("Quantity")}</CustomTableCell>
+        <CustomTableCell numeric>{t("Total")}</CustomTableCell>
         <CustomTableCell numeric style={{ width: 30, paddingRight: "5px" }}>
           {!isCartEmpty && <DeleteButton onDelete={onDeleteAll} />}
         </CustomTableCell>

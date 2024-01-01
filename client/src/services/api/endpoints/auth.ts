@@ -1,6 +1,6 @@
 import { setCredentials, setLogout } from "@/features/auth"
+import { purgeStoreAndNavigate } from "@/features/auth/util"
 import type { ApiEndpointBuilder } from ".."
-import store from "@/app/store"
 import { cacher } from "../rtkQueryCacheUtils"
 
 export const postLoginMutationName = "postLogin"
@@ -22,10 +22,17 @@ export const postLoginBuilder = (builder: ApiEndpointBuilder) => {
       body,
     }),
     invalidatesTags: cacher.invalidatesUnauthorized(),
-    async onQueryStarted(arg, { dispatch, queryFulfilled, getCacheEntry }) {
-      const { data } = await queryFulfilled
-      if (getCacheEntry().isSuccess && data) {
-        store.dispatch(setCredentials(data.data))
+    async onQueryStarted(arg, api) {
+      try {
+        const { data } = await api.queryFulfilled
+        const cacheEntry = api.getCacheEntry()
+        if (cacheEntry.isSuccess && data) {
+          api.dispatch(setCredentials(data.data))
+        } else if (cacheEntry.isError) {
+          await purgeStoreAndNavigate()
+        }
+      } catch (error) {
+        await purgeStoreAndNavigate()
       }
     },
   })
@@ -42,11 +49,18 @@ export const postRefreshTokenBuilder = (builder: ApiEndpointBuilder) => {
       body,
     }),
     invalidatesTags: cacher.invalidatesUnauthorized(),
-    async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-      const { data } = await queryFulfilled
-      store.dispatch(
-        setCredentials({ refreshToken: arg.refreshToken, ...data.data }),
-      )
+    async onQueryStarted(arg, api) {
+      try {
+        const { data } = await api.queryFulfilled
+        const cacheEntry = api.getCacheEntry()
+        if (cacheEntry.isSuccess && data) {
+          api.dispatch(setCredentials(data.data))
+        } else if (cacheEntry.isError) {
+          await purgeStoreAndNavigate()
+        }
+      } catch (error) {
+        await purgeStoreAndNavigate()
+      }
     },
   })
 }
@@ -58,10 +72,12 @@ export const postLogoutBuilder = (builder: ApiEndpointBuilder) => {
       method: "POST",
       body,
     }),
-    async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-      await queryFulfilled
-
-      store.dispatch(setLogout())
+    async onQueryStarted(arg, api) {
+      try {
+        await api.queryFulfilled
+      } finally {
+        await purgeStoreAndNavigate()
+      }
     },
   })
 }

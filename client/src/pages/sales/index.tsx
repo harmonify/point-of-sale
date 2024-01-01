@@ -1,27 +1,24 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import styles from './styles';
-import PosSection from './posSection/PosSection';
-import GridItem from './displaySection/GridItem';
+import { Grid, useTheme } from "@material-ui/core"
+import React from "react"
 
-class Sale extends Component {
-  render() {
-    const { classes } = this.props;
+import Cart from "./cart/Cart"
+import ProductSection from "./productSection/ProductSection"
 
-    return (
-      <div className={classes.flexContainer}>
-        {/* Left side carts grid and barcode/search text box  */}
-        <div className={classes.pos}>
-          <PosSection />
-        </div>
+const Sale: React.FC = (props) => {
+  const theme = useTheme()
 
-        {/* Right side products display grid */}
-        <div className={classes.items}>
-          <GridItem />
-        </div>
-      </div>
-    );
-  }
+  return (
+    <Grid container spacing={2} style={{ padding: theme.spacing(2) }}>
+      {/* Left side display cart */}
+      <Grid item xs={12} md={6}>
+        <Cart />
+      </Grid>
+      {/* Right side display barcode/search box and grid of products */}
+      <Grid item xs={12} md={6}>
+        <ProductSection />
+      </Grid>
+    </Grid>
+  )
 }
 
-export default withStyles(styles, { withTheme: true })(Sale);
+export default Sale
