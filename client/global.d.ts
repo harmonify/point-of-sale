@@ -56,8 +56,6 @@ declare global {
           import("../server/src/modules/procurement").UpdateProcurementRequestDto
         type UpdateProcurementProductRequestDto =
           import("../server/src/modules/procurement").UpdateProcurementProductRequestDto
-        type UpdateSaleRequestDto =
-          import("../server/src/modules/sale").UpdateSaleRequestDto
         type UpdateExpenseCategoryRequestDto =
           import("../server/src/modules/expense-category").UpdateExpenseCategoryRequestDto
         type UpdateExpenseRequestDto =
@@ -85,6 +83,8 @@ declare global {
           import("../server/src/modules/category").CategoryResponseDto
         type CategoryInfoResponseDto =
           import("../server/src/modules/category").CategoryInfoResponseDto
+        type CategoryProductResponseDto =
+          import("../server/src/modules/category").CategoryProductResponseDto
         type UnitResponseDto =
           import("../server/src/modules/unit").UnitResponseDto
         type UnitInfoResponseDto =
@@ -93,6 +93,8 @@ declare global {
           import("../server/src/modules/product").ProductResponseDto
         type ProductUnitResponseDto =
           import("../server/src/modules/product").ProductUnitResponseDto
+        type ProductUnitInfoResponseDto =
+          import("../server/src/modules/product").ProductUnitInfoResponseDto
         type ProcurementResponseDto =
           import("../server/src/modules/procurement").ProcurementResponseDto
         type ProcurementProductResponseDto =

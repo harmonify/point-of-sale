@@ -66,11 +66,17 @@ export class ProductController {
     return {
       data: {
         ...newProduct,
-        productUnits: newProduct.productUnits.map((pu) => ({
-          ...pu,
-          availableQuantity:
-            this.productUnitService.countProductUnitAvailableQuantity(pu),
-        })),
+        productUnits: newProduct.productUnits.map(
+          ({ procurementProducts, saledProducts, ...pu }) => ({
+            ...pu,
+            availableQuantity:
+              this.productUnitService.countProductUnitAvailableQuantity({
+                procurementProducts,
+                saledProducts,
+                ...pu,
+              }),
+          }),
+        ),
       },
     };
   }

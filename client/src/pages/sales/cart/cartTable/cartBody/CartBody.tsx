@@ -14,11 +14,11 @@ const CartBody = ({ cartArray, onDeleteCartItem, onProductItemSelect }) => {
     <TableBody>
       {cartArray.map((n, index) => (
         <TableRow key={n.id}>
-          <CustomTableCell numeric>{index}</CustomTableCell>
+          <CustomTableCell numeric>{index+1}</CustomTableCell>
           <CustomTableCell style={{ width: 150 }}>
             <LightButton text={n.name} onClick={() => onProductItemSelect(n)} />
           </CustomTableCell>
-          <CustomTableCell numeric>{n.sellingPrice}</CustomTableCell>
+          <CustomTableCell numeric>{n.price}</CustomTableCell>
           <CustomTableCell numeric>{n.quantity}</CustomTableCell>
           <CustomTableCell numeric>{n.totalPrice}</CustomTableCell>
           <CustomTableCell numeric style={{ width: 30, paddingRight: '5px' }}>

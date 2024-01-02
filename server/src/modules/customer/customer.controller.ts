@@ -71,7 +71,7 @@ export class CustomerController {
         : BaseQuery.Filter.available(),
       include: {
         createdBy: { select: { name: true } },
-        sales: { select: { netAmount: true } },
+        sales: { select: { total: true } },
       },
       orderBy: BaseQuery.OrderBy.latest(),
     });
@@ -79,7 +79,7 @@ export class CustomerController {
       data: customers.map((customer) => ({
         ...customer,
         createdByName: customer.createdBy.name,
-        purchasedAmount: _.sumBy(customer.sales, (sale) => sale.netAmount),
+        purchasedAmount: _.sumBy(customer.sales, (sale) => sale.total || 0),
       })),
     };
   }

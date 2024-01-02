@@ -1,5 +1,5 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
-import { logger } from "../logger"
+import { logger } from "../../logger"
 
 /**
  * Default tags used by the cacher helpers

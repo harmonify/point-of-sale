@@ -74,7 +74,7 @@ export class CashFlowService {
 
     const baseDto = {
       name: `Sale: ${sale.name}`,
-      amount: sale.billAmount,
+      amount: sale.total || 0,
       operation: CashFlowOperation.CREDIT,
       updatedById: authorId,
       saleId: sale.id,

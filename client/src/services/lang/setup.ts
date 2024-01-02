@@ -5,6 +5,7 @@ import { initReactI18next } from "react-i18next"
 import { defaultNS, idResource } from "."
 import setupYupLocale from "./setupYupLocale"
 import { sentenceCase } from "@/utils"
+import { unslugify } from "@/utils/string"
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -54,9 +55,7 @@ i18n.services.formatter?.addCached("default", (lng, options) => (value) => {
 
 i18n.services.formatter?.addCached(
   "unslugify",
-  (lng, options) => (value: string) => {
-    return value ? value.replaceAll("-", " ") : value
-  },
+  (lng, options) => (value: string) => unslugify(value),
 )
 
 export default i18n

@@ -194,13 +194,11 @@ model ProcurementProduct {
   updatedById   Int
   deletedById   Int?
   procurementId Int
-  productId     Int
-  unitId        Int
+  productUnitId Int
   price         Float
   quantity      Int
   procurement   Procurement @relation(fields: [procurementId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  unit          Unit        @relation(fields: [unitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productUnit   ProductUnit @relation(fields: [productUnitId], references: [id])
   createdBy     User        @relation(name: "procurementProduct_createdBy_user", fields: [createdById], references: [id])
   updatedBy     User        @relation(name: "procurementProduct_updatedBy_user", fields: [updatedById], references: [id])
   deletedBy     User?       @relation(name: "procurementProduct_deletedBy_user", fields: [deletedById], references: [id])
@@ -220,50 +218,50 @@ enum BarcodeType {
 }
 
 model Product {
-  id                  Int                  @id @default(autoincrement())
-  isActive            Boolean              @default(true)
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @default(now()) @updatedAt
-  deletedAt           DateTime?
-  createdById         Int
-  updatedById         Int
-  deletedById         Int?
-  categoryId          Int
-  name                String
-  description         String?
-  barcode             String?
-  barcodeType         BarcodeType?
-  createdBy           User                 @relation(name: "product_createdBy_user", map: "product_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  updatedBy           User                 @relation(name: "product_updatedBy_user", map: "product_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  deletedBy           User?                @relation(name: "product_deletedBy_user", map: "product_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  category            Category             @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
-  productUnits        ProductUnit[]        @relation()
-  procurementProducts ProcurementProduct[]
+  id           Int           @id @default(autoincrement())
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  deletedAt    DateTime?
+  createdById  Int
+  updatedById  Int
+  deletedById  Int?
+  categoryId   Int
+  name         String
+  description  String?
+  barcode      String?
+  barcodeType  BarcodeType?
+  createdBy    User          @relation(name: "product_createdBy_user", map: "product_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  updatedBy    User          @relation(name: "product_updatedBy_user", map: "product_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  deletedBy    User?         @relation(name: "product_deletedBy_user", map: "product_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  category     Category      @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Restrict)
+  productUnits ProductUnit[] @relation()
 
   @@map("product")
 }
 
 model ProductUnit {
-  id            Int           @id @default(autoincrement())
-  isActive      Boolean       @default(true)
-  createdById   Int
-  updatedById   Int
-  deletedById   Int?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @default(now()) @updatedAt
-  deletedAt     DateTime?
-  productId     Int
-  unitId        Int
-  price         Float
+  id                  Int                  @id @default(autoincrement())
+  isActive            Boolean              @default(true)
+  createdById         Int
+  updatedById         Int
+  deletedById         Int?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now()) @updatedAt
+  deletedAt           DateTime?
+  productId           Int
+  unitId              Int
+  price               Float
   // wholesalePrice      Float
   // stockAlertEnabled   Boolean?             @default(false)
   // lowQuantity         Int?                 @default(0)
-  createdBy     User          @relation(name: "productUnit_createdBy_user", map: "productUnit_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  updatedBy     User          @relation(name: "productUnit_updatedBy_user", map: "productUnit_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  deletedBy     User?         @relation(name: "productUnit_deletedBy_user", map: "productUnit_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  unit          Unit          @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  saledProducts SaleProduct[] @relation()
+  createdBy           User                 @relation(name: "productUnit_createdBy_user", map: "productUnit_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  updatedBy           User                 @relation(name: "productUnit_updatedBy_user", map: "productUnit_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  deletedBy           User?                @relation(name: "productUnit_deletedBy_user", map: "productUnit_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  product             Product              @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  unit                Unit                 @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  procurementProducts ProcurementProduct[] @relation()
+  saledProducts       SaleProduct[]        @relation()
 
   @@unique([productId, unitId])
   @@map("product_unit")
@@ -291,55 +289,71 @@ model Supplier {
   @@map("supplier")
 }
 
+enum FlatOrPercentage {
+  FLAT
+  PERCENTAGE
+}
+
 model Sale {
-  id              Int           @id @default(autoincrement())
-  isActive        Boolean       @default(true)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @default(now()) @updatedAt
-  deletedAt       DateTime?
-  createdById     Int
-  updatedById     Int
-  deletedById     Int?
-  customerId      Int?
-  name            String?
-  description     String?
-  note            String?
-  isNoteVisible   Boolean       @default(false)
-  discountOnTotal Float
-  taxOnTotal      Float
-  billAmount      Float         @default(0)
-  netAmount       Float
-  saleProducts    SaleProduct[] @relation()
-  customer        Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  createdBy       User          @relation(name: "sale_createdBy_user", map: "sale_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  updatedBy       User          @relation(name: "sale_updatedBy_user", map: "sale_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  deletedBy       User?         @relation(name: "sale_deletedBy_user", map: "sale_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  cashFlow        CashFlow[]    @relation()
+  id                 Int              @id @default(autoincrement())
+  isActive           Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @default(now()) @updatedAt
+  deletedAt          DateTime?
+  createdById        Int
+  updatedById        Int
+  deletedById        Int?
+  customerId         Int?
+  name               String?
+  description        String?
+  note               String?
+  isNoteVisible      Boolean          @default(false)
+  subTotal           Float            @default(0)
+  inputDiscountTotal Float            @default(0)
+  discountTotalType  FlatOrPercentage @default(FLAT)
+  discountTotal      Float            @default(0)
+  inputTaxTotal      Float            @default(0)
+  taxTotalType       FlatOrPercentage @default(FLAT)
+  taxTotal           Float            @default(0)
+  total              Float            @default(0)
+  paid               Float            @default(0)
+  change             Float            @default(0)
+  saleProducts       SaleProduct[]    @relation()
+  customer           Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdBy          User             @relation(name: "sale_createdBy_user", map: "sale_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  updatedBy          User             @relation(name: "sale_updatedBy_user", map: "sale_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  deletedBy          User?            @relation(name: "sale_deletedBy_user", map: "sale_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  cashFlow           CashFlow[]       @relation()
 
   @@map("sale")
 }
 
 model SaleProduct {
-  id            Int         @id @default(autoincrement())
-  isActive      Boolean     @default(true)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now()) @updatedAt
+  id            Int              @id @default(autoincrement())
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
   deletedAt     DateTime?
   createdById   Int
   updatedById   Int
   deletedById   Int?
   saleId        Int
   productUnitId Int
+  price         Float
   quantity      Int
-  costPrice     Float
-  sellingPrice  Float
-  discount      Float
-  tax           Float
-  sale          Sale        @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  productUnit   ProductUnit @relation(fields: [productUnitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  createdBy     User        @relation(name: "saleProduct_createdBy_user", map: "saleProduct_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  updatedBy     User        @relation(name: "saleProduct_updatedBy_user", map: "saleProduct_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  deletedBy     User?       @relation(name: "saleProduct_deletedBy_user", map: "saleProduct_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  subTotal      Float            @default(0)
+  inputDiscount Float            @default(0)
+  discountType  FlatOrPercentage @default(FLAT)
+  discount      Float            @default(0)
+  inputTax      Float            @default(0)
+  taxType       FlatOrPercentage @default(FLAT)
+  tax           Float            @default(0)
+  total         Float            @default(0)
+  sale          Sale             @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productUnit   ProductUnit      @relation(fields: [productUnitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  createdBy     User             @relation(name: "saleProduct_createdBy_user", map: "saleProduct_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  updatedBy     User             @relation(name: "saleProduct_updatedBy_user", map: "saleProduct_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  deletedBy     User?            @relation(name: "saleProduct_deletedBy_user", map: "saleProduct_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
 
   @@map("sale_product")
 }
@@ -358,21 +372,20 @@ model RefreshToken {
 }
 
 model Unit {
-  id                  Int                  @id @default(autoincrement())
-  isActive            Boolean              @default(true)
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @default(now()) @updatedAt
-  deletedAt           DateTime?
-  createdById         Int
-  updatedById         Int
-  deletedById         Int?
-  name                String // @unique()
-  description         String?
-  createdBy           User                 @relation(name: "unit_createdBy_user", map: "unit_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  updatedBy           User                 @relation(name: "unit_updatedBy_user", map: "unit_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  deletedBy           User?                @relation(name: "unit_deletedBy_user", map: "unit_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  productUnits        ProductUnit[]        @relation()
-  procurementProducts ProcurementProduct[]
+  id           Int           @id @default(autoincrement())
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  deletedAt    DateTime?
+  createdById  Int
+  updatedById  Int
+  deletedById  Int?
+  name         String // @unique()
+  description  String?
+  createdBy    User          @relation(name: "unit_createdBy_user", map: "unit_createdBy_user_fk", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  updatedBy    User          @relation(name: "unit_updatedBy_user", map: "unit_updatedBy_user_fk", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  deletedBy    User?         @relation(name: "unit_deletedBy_user", map: "unit_deletedBy_user_fk", fields: [deletedById], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  productUnits ProductUnit[] @relation()
 
   @@map("unit")
 }

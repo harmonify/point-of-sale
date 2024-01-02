@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Sale } from '@prisma/client';
+import { FlatOrPercentage, Sale } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -15,6 +15,8 @@ import {
 } from 'class-validator';
 
 import { SaleProductResponseDto } from './sale-product-response.dto';
+import { UserResponseDto } from '@/modules/user';
+import { CustomerResponseDto } from '@/modules/customer';
 
 export class SaleResponseDto implements Sale {
   @IsDefined()
@@ -86,26 +88,62 @@ export class SaleResponseDto implements Sale {
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  discountOnTotal: number;
+  subTotal: number;
 
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  taxOnTotal: number;
+  inputDiscountTotal: number;
 
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  billAmount: number;
+  discountTotalType: FlatOrPercentage;
 
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  netAmount: number;
+  discountTotal: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  inputTaxTotal: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  taxTotalType: FlatOrPercentage;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  taxTotal: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  total: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  paid: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  change: number;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SaleProductResponseDto)
   @ApiProperty()
   saleProducts: SaleProductResponseDto[];
+
+  @ApiProperty()
+  customer: CustomerResponseDto | null;
+
+  @ApiProperty()
+  createdBy: Pick<UserResponseDto, 'name'>;
 }

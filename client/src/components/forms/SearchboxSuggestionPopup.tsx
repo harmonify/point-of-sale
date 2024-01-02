@@ -1,4 +1,11 @@
-import { Box, List, ListItem, ListItemText } from "@material-ui/core"
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  useTheme,
+} from "@material-ui/core"
 import Paper from "@material-ui/core/Paper"
 import { t } from "i18next"
 import React, {
@@ -16,6 +23,7 @@ type IAutoSuggestionPopUpParams<T> = {
   data: T[]
   onSelected: (d: T) => void
   onValueChange: (searchTerm: string) => void
+  renderListItem?: (d: T) => React.ReactNode
 } & ISearchBoxProps
 
 const SearchboxSuggestionPopup = <
@@ -24,8 +32,10 @@ const SearchboxSuggestionPopup = <
   data,
   onSelected,
   onValueChange,
+  renderListItem,
   ...restProps
 }: IAutoSuggestionPopUpParams<T>): React.ReactNode => {
+  const theme = useTheme()
   const [hideSuggestion, setHideSuggestion] = useState(true)
   const [ref, bounds] = useMeasure()
 
@@ -33,9 +43,9 @@ const SearchboxSuggestionPopup = <
     return (
       <ListItem>
         <ListItemText>
-          <span style={{ fontSize: "0.95rem" }}>
+          <Typography style={{ fontSize: "0.95rem" }}>
             {t("No records found", { ns: "message" })}
-          </span>
+          </Typography>
         </ListItemText>
       </ListItem>
     )
@@ -54,9 +64,13 @@ const SearchboxSuggestionPopup = <
           setHideSuggestion(true)
         }}
       >
-        <ListItemText>
-          <span style={{ fontSize: "0.95rem" }}>{d.name}</span>
-        </ListItemText>
+        {typeof renderListItem === "function" ? (
+          renderListItem(d)
+        ) : (
+          <ListItemText>
+            <Typography style={{ fontSize: "0.95rem" }}>{d.name}</Typography>
+          </ListItemText>
+        )}
       </ListItem>
     ))
   }
@@ -69,7 +83,12 @@ const SearchboxSuggestionPopup = <
     return (
       <Paper
         elevation={4}
-        style={{ position: "absolute", width: bounds.width, zIndex: 1000 }}
+        style={{
+          position: "absolute",
+          width: bounds.width,
+          zIndex: 1000,
+          backgroundColor: theme.palette.background.default,
+        }}
       >
         <List component="nav">
           {data && data.length > 0 ? renderOptions() : renderNoData()}
@@ -82,12 +101,23 @@ const SearchboxSuggestionPopup = <
     setHideSuggestion(false)
   }
 
+  const onBlur = () => {
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(null)
+      }, 120)
+    }).then(() => {
+      setHideSuggestion(true)
+    })
+  }
+
   return (
     <Box>
       <Searchbox
         {...restProps}
         onValueChange={onValueChange}
         onFocus={onFocus}
+        onBlur={onBlur}
         size="medium"
         style={{ width: bounds.width }}
         ref={ref}

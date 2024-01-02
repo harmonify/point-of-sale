@@ -1,13 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
-import {
-  IsBoolean,
-  IsDefined,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  Min,
-} from 'class-validator';
+import { FlatOrPercentage, Prisma } from '@prisma/client';
+import { IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class CreateSaleProductRequestDto
   implements
@@ -16,17 +9,6 @@ export class CreateSaleProductRequestDto
       'createdBy' | 'updatedBy' | 'sale' | 'productUnit'
     >
 {
-  @IsOptional()
-  @IsBoolean()
-  @ApiProperty()
-  isActive?: boolean;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @Min(1)
-  @ApiProperty()
-  saleId: number;
-
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
@@ -35,31 +17,53 @@ export class CreateSaleProductRequestDto
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
+  @ApiProperty()
+  price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
   @Min(1)
   @ApiProperty()
   quantity: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
   @ApiProperty()
-  costPrice: number;
+  subTotal?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
   @ApiProperty()
-  sellingPrice: number;
+  inputDiscount?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
   @ApiProperty()
-  discount: number;
+  discountType?: FlatOrPercentage;
 
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
   @ApiProperty()
-  tax: number;
+  discount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  inputTax?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  taxType?: FlatOrPercentage;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  tax?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  total?: number;
 }

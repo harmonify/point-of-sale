@@ -160,7 +160,7 @@ CREATE TABLE `product_unit` (
     `productId` INTEGER NOT NULL,
     `unitId` INTEGER NOT NULL,
     `wholesalePrice` DOUBLE NOT NULL,
-    `sellingPrice` DOUBLE NOT NULL,
+    `price` DOUBLE NOT NULL,
     `stockAlertEnabled` BOOLEAN NULL DEFAULT false,
     `lowQuantity` INTEGER NULL DEFAULT 0,
 
@@ -221,7 +221,7 @@ CREATE TABLE `sale_product` (
     `productId` INTEGER NOT NULL,
     `quantity` INTEGER NOT NULL,
     `costPrice` DOUBLE NOT NULL,
-    `sellingPrice` DOUBLE NOT NULL,
+    `price` DOUBLE NOT NULL,
     `discount` DOUBLE NOT NULL,
     `tax` DOUBLE NOT NULL,
 

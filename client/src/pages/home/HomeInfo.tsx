@@ -11,21 +11,24 @@ import {
   Icon,
   Typography,
 } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles, useTheme } from "@material-ui/core/styles"
 import { AttachMoney, MoneyOff, People } from "@material-ui/icons"
-import { DataGrid, GridColumns } from "@mui/x-data-grid"
+import { DataGrid, GridColDef, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useEffect } from "react"
 
 // eslint-disable-next-line
 export const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: theme.spacing(1),
+  },
   card: {
     display: "flex",
     flexDirection: "column",
     padding: theme.spacing(1),
     justifyContent: "center",
     alignItems: "center",
-    minHeight: 200,
+    minHeight: 160,
   },
   cardHeader: {
     display: "flex",
@@ -51,15 +54,18 @@ export const useStyles = makeStyles((theme) => ({
       alignItems: "center",
       paddingBottom: theme.spacing(1),
       "& > div": {
-        minWidth: 100,
+        // minWidth: 100,
         margin: theme.spacing(2, 2, 2, 0),
       },
     },
   },
 }))
 
+type Unpacked<T> = T extends (infer U)[] ? U : T
+
 const HomeInfo: React.FC = () => {
   const classes = useStyles()
+  const theme = useTheme()
   const user = useAppSelector(selectCurrentUser)
 
   const { data, isFetching } = useGetDashboardInfoQuery(null, {
@@ -77,31 +83,46 @@ const HomeInfo: React.FC = () => {
     recentOrders = [],
   } = data?.data || {}
 
+  const defaultGridColumnOptions: Omit<GridColDef, "field"> = {
+    disableColumnMenu: true,
+    disableExport: true,
+    resizable: false,
+    filterable: false,
+    editable: false,
+    align: "center",
+    headerAlign: "center",
+  }
+
   const topCustomersDataGridColumns: GridColumns = [
     {
       field: "name",
       headerName: t("Name"),
       flex: 2,
-      minWidth: 160,
+      // minWidth: 160,
+      ...defaultGridColumnOptions,
     },
     {
       field: "phoneNumber",
       headerName: t("Phone Number"),
       flex: 2,
-      minWidth: 200,
+      // minWidth: 160,
+      ...defaultGridColumnOptions,
     },
     {
       field: "purchasedAmount",
       headerName: t("Purchased Amount"),
       flex: 2,
-      minWidth: 220,
+      // minWidth: 180,
+      ...defaultGridColumnOptions,
+      align: "right",
       valueGetter: (params) => formatRupiah(params.value as number),
     },
     {
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 220,
+      // minWidth: 180,
+      ...defaultGridColumnOptions,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]
@@ -111,26 +132,37 @@ const HomeInfo: React.FC = () => {
       field: "customerName",
       headerName: t("Customer Name"),
       flex: 2,
-      minWidth: 160,
+      // minWidth: 160,
+      ...defaultGridColumnOptions,
+      valueGetter: (params) => {
+        const order = params.row as Unpacked<
+          Monorepo.Api.Response.DashboardResponseDto["recentOrders"]
+        >
+        return order?.customer?.name || "-"
+      },
     },
     {
       field: "description",
       headerName: t("Description"),
       flex: 2,
-      minWidth: 200,
+      // minWidth: 160,
+      ...defaultGridColumnOptions,
     },
     {
       field: "netAmount",
       headerName: t("Net Amount"),
       flex: 2,
-      minWidth: 220,
+      // minWidth: 180,
+      ...defaultGridColumnOptions,
+      align: "right",
       valueGetter: (params) => formatRupiah(params.value as number),
     },
     {
       field: "createdAt",
       headerName: t("Created At"),
       flex: 2,
-      minWidth: 220,
+      // minWidth: 180,
+      ...defaultGridColumnOptions,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
   ]
@@ -138,37 +170,41 @@ const HomeInfo: React.FC = () => {
   return (
     <Grid container className={classes.root} spacing={2} wrap="wrap">
       <Grid item xs={12}>
-        <Typography style={{ marginBottom: ".2em" }} variant="h2">
+        <Typography style={{ marginBottom: theme.spacing(1) }} variant="h2">
           {t("Hello!", { ns: "message", name: user?.name })}
         </Typography>
       </Grid>
 
       <Grid item xs={12}>
         <Typography
-          style={{ marginBottom: ".2em", fontWeight: 500 }}
+          style={{ marginBottom: theme.spacing(1), fontWeight: 500 }}
           variant="h5"
         >
           {t("Welcome to POS", { ns: "message" })}
         </Typography>
       </Grid>
 
-      <Grid item container xs={12} justifyContent="center" spacing={3}>
+      <Grid item container xs={12} justifyContent="center" spacing={5}>
         <Grid item xs={12} md={3}>
-          <Card className={classes.card}>
+          <Card className={classes.card} color={theme.palette.primary.main}>
             <CardContent className={classes.cardContent}>
               <Box className={classes.cardHeader}>
                 <Icon>
                   <AttachMoney />
                 </Icon>
                 <Typography
-                  style={{ margin: ".2em", marginLeft: 0 }}
+                  style={{ margin: theme.spacing(1), marginLeft: 0 }}
                   variant="h2"
                 >
                   {t("Sales")}
                 </Typography>
               </Box>
               <Typography
-                style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+                style={{
+                  margin: theme.spacing(1),
+                  marginLeft: 0,
+                  fontWeight: 500,
+                }}
                 variant="h2"
               >
                 {formatRupiah(totalSales)}
@@ -185,14 +221,18 @@ const HomeInfo: React.FC = () => {
                   <MoneyOff />
                 </Icon>
                 <Typography
-                  style={{ margin: ".2em", marginLeft: 0 }}
+                  style={{ margin: theme.spacing(1), marginLeft: 0 }}
                   variant="h2"
                 >
                   {t("Expenses")}
                 </Typography>
               </Box>
               <Typography
-                style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+                style={{
+                  margin: theme.spacing(1),
+                  marginLeft: 0,
+                  fontWeight: 500,
+                }}
                 variant="h2"
               >
                 {formatRupiah(totalExpenses)}
@@ -209,14 +249,18 @@ const HomeInfo: React.FC = () => {
                   <People />
                 </Icon>
                 <Typography
-                  style={{ margin: ".2em", marginLeft: 0 }}
+                  style={{ margin: theme.spacing(1), marginLeft: 0 }}
                   variant="h2"
                 >
                   {t("Customers")}
                 </Typography>
               </Box>
               <Typography
-                style={{ margin: ".2em", marginLeft: 0, fontWeight: 500 }}
+                style={{
+                  margin: theme.spacing(1),
+                  marginLeft: 0,
+                  fontWeight: 500,
+                }}
                 variant="h2"
               >
                 {totalCustomers}
@@ -227,6 +271,13 @@ const HomeInfo: React.FC = () => {
       </Grid>
 
       <Grid item xs={12} md={6}>
+        <Typography
+          variant="h5"
+          align="center"
+          style={{ marginBottom: theme.spacing(1) }}
+        >
+          5 {t("Top Customers")}
+        </Typography>
         <DataGrid
           className={classes.datagrid}
           columns={topCustomersDataGridColumns}
@@ -235,10 +286,18 @@ const HomeInfo: React.FC = () => {
           disableSelectionOnClick
           disableDensitySelector
           pageSize={5}
+          density="compact"
         />
       </Grid>
 
       <Grid item xs={12} md={6}>
+        <Typography
+          variant="h5"
+          align="center"
+          style={{ marginBottom: theme.spacing(1) }}
+        >
+          5 {t("Recent Orders")}
+        </Typography>
         <DataGrid
           className={classes.datagrid}
           columns={recentOrdersDataGridColumns}
@@ -247,6 +306,7 @@ const HomeInfo: React.FC = () => {
           disableSelectionOnClick
           disableDensitySelector
           pageSize={5}
+          density="compact"
         />
       </Grid>
     </Grid>

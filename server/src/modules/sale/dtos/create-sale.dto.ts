@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
+import { FlatOrPercentage, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDefined,
   IsInt,
   IsNumber,
   IsOptional,
@@ -27,27 +26,62 @@ export class CreateSaleRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
+  name: string | null;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
   description: string | null;
 
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
   @ApiProperty()
-  discountOnTotal: number;
+  subTotal?: number;
 
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
   @ApiProperty()
-  taxOnTotal: number;
+  inputDiscountTotal?: number;
 
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
   @ApiProperty()
-  billAmount: number;
+  discountTotalType?: FlatOrPercentage;
 
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
   @ApiProperty()
-  netAmount: number;
+  discountTotal?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  inputTaxTotal?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  taxTotalType?: FlatOrPercentage;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  taxTotal?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  total?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  paid?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  change?: number;
 
   @IsArray()
   @ValidateNested({ each: true })

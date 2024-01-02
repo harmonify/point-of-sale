@@ -2,7 +2,8 @@ import store from "@/app/store"
 import type { ApiEndpointBuilder } from "."
 import { showSnackbar } from "@/features/snackbar"
 import { t } from "i18next"
-import { cacher } from "./rtkQueryCacheUtils"
+import { cacher } from "./utils/rtkQueryCacheUtils"
+import { constructQueryPaginationInfo } from "./utils"
 
 const builder = <
   TGet extends { id: number | string },
@@ -43,31 +44,8 @@ const builder = <
     Monorepo.Api.Response.ResponseBodyDto<TGet[]>,
     Partial<Monorepo.Api.Request.RequestPaginationInfoDto> | void
   >({
-    query: (paginationInfoDto) => {
-      const { page, perPage, search, all = false } = paginationInfoDto || {}
-
-      const url = `/${version}/${resourceName}`
-
-      const searchParams = new URLSearchParams()
-      if (all) {
-        searchParams.set("all", "true")
-      } else {
-        if (page && perPage) {
-          searchParams.set("page", page.toString())
-          searchParams.set("per_page", perPage.toString())
-        }
-        if (search) {
-          searchParams.set("search", search)
-        }
-      }
-
-      const finalUrl = `${url}?${searchParams.toString()}`
-
-      return {
-        url: finalUrl,
-        method: "GET",
-      }
-    },
+    query: (paginationInfoDto) =>
+      constructQueryPaginationInfo(paginationInfoDto, `/${version}/${resourceName}`),
     providesTags: (results, error) =>
       cacher.providesList(resourceName)(results?.data, error),
   }),

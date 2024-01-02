@@ -8,8 +8,8 @@ import { APP_ENV } from "./environment"
 import { Error500 } from "./pages/errors"
 import Home from "./pages/home/Home"
 import HomeInfo from "./pages/home/HomeInfo"
-import { Login } from "./pages/login"
-import sales from "./pages/sales"
+import Login from "./pages/login/Login"
+import Sale from "./pages/sales/Sale"
 import CustomerList from "./pages/customers/CustomerList"
 import SupplierList from "./pages/suppliers/SupplierList"
 import CategoryList from "./pages/categories/CategoryList"
@@ -60,7 +60,7 @@ const routeObjects: IRoute[] = [
         title: t("Point of Sales"),
       },
       {
-        Component: sales,
+        Component: Sale,
         title: t("Sale"),
         path: "sale",
       },

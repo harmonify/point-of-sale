@@ -1,15 +1,20 @@
-import { useAppSelector } from "@/app/hooks"
-import { selectAuthCredentials } from "@/features/auth"
-import { purgeStoreAndNavigate } from "@/features/auth/util"
+import { selectAuthCredentials, setLogout } from "@/features/auth"
 import PropTypes from "prop-types"
 import React, { ReactNode, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 const AuthGuard: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const credentials = useAppSelector(selectAuthCredentials)
+  const dispatch = useDispatch()
+  const credentials = useSelector(selectAuthCredentials)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!(credentials.accessToken || credentials.refreshToken)) {
-      purgeStoreAndNavigate()
+      ;(async () => {
+        dispatch(setLogout())
+        return navigate("/login")
+      })()
     }
   }, [])
 

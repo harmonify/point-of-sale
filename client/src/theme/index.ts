@@ -1,6 +1,6 @@
 import { ThemeOptions, createTheme } from "@material-ui/core"
 import { darkTheme, lightTheme } from "./palette"
-import typography from "./typography"
+import { typography } from "./typography"
 
 export const getThemeToken = ({ darkMode }: { darkMode: boolean }) =>
   ({

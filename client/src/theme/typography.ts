@@ -1,7 +1,7 @@
 import { TypographyOptions } from "@material-ui/core/styles/createTypography"
 import { Palette } from "@material-ui/core/styles/createPalette"
 
-export default (palette: Palette): TypographyOptions => ({
+export const typography = (palette: Palette): TypographyOptions => ({
   h1: {
     color: palette.text.primary,
     fontFamily: "Roboto",

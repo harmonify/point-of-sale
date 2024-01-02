@@ -1,9 +1,9 @@
 import { useAppSelector } from "@/app/hooks"
 import {
   emptyCart,
-  removeItemFromCart,
-  selectCartState,
-  updateCartItem,
+  removeCartItem,
+  selectCart,
+  upsertCartItem,
 } from "@/features/cart"
 import { Paper } from "@material-ui/core"
 import Table from "@material-ui/core/Table"
@@ -15,25 +15,33 @@ import EditCartItem from "../editCartItem/EditCartItem"
 import CartBody from "./cartBody/CartBody"
 import CartFooter from "./cartFooter/CartFooter"
 import CartHeader from "./CartHeader"
+import { logger } from "@/services/logger"
+
+const initialCartItem = {
+  id: "",
+  name: "",
+  quantity: 0,
+  price: 0.0,
+  discount: 0.0,
+}
+const initialCartItem2 = {
+  id: "",
+  name: "",
+  quantity: 0,
+  price: 0.0,
+  discount: 0.0,
+}
 
 const CartTable: React.FC = () => {
-  const cartObj = useAppSelector(selectCartState)
+  const cartObj = useAppSelector(selectCart)
   const cartArray = Object.values(cartObj.items)
-  console.log(`🚀 ~ cartObj ~ ${JSON.stringify(cartObj, null, 2)}`);
-  console.log(`🚀 ~ cartArray ~ ${JSON.stringify(cartArray, null, 2)}`);
-
-  const initialCartItem = {
-    id: "",
-    name: "",
-    quantity: 0,
-    price: 0.0,
-    discount: 0.0,
-  }
+  logger.debug(`🚀 ~ cartObj ~ ${JSON.stringify(cartObj, null, 2)}`)
+  logger.debug(`🚀 ~ cartArray ~ ${JSON.stringify(cartArray, null, 2)}`)
 
   const state = {
     showConfirmDeleteDialog: false,
     showEditDialog: false,
-    itemToEdit: initialCartItem,
+    itemToEdit: initialCartItem2,
   }
 
   const { showConfirmDeleteDialog, showEditDialog, itemToEdit } = state
@@ -52,22 +60,16 @@ const CartTable: React.FC = () => {
       quantity = e.target.value
     }
 
-    const sellingPrice = currency(clone.price).subtract(discount)
-    const totalPrice = currency(sellingPrice).multiply(quantity)
+    const price = currency(clone.price).subtract(discount)
+    const totalPrice = currency(price).multiply(quantity)
 
     clone.quantity = Number(quantity)
     clone.discount = discount
 
-    clone.sellingPrice = sellingPrice.toString()
+    clone.price = price.toString()
     clone.totalPrice = totalPrice.toString()
 
     setState({ itemToEdit: clone })
-  }
-
-  // Empty cart dialog
-  const onConfirmDeleteClick = () => {
-    emptyCart()
-    setState({ showConfirmDeleteDialog: false })
   }
 
   const onDeleteAllClick = () => {
@@ -75,11 +77,7 @@ const CartTable: React.FC = () => {
   }
 
   const onDeleteCartItemClick = (row) => {
-    removeItemFromCart(row)
-  }
-
-  const onCancelConfirmDeleteClick = () => {
-    setState({ showConfirmDeleteDialog: false })
+    removeCartItem(row)
   }
 
   // Edit cart item dialog
@@ -88,7 +86,7 @@ const CartTable: React.FC = () => {
   }
 
   const onCancelEditItemClick = () => {
-    setState({ showEditDialog: false, itemToEdit: initialCartItem })
+    setState({ showEditDialog: false, itemToEdit: initialCartItem2 })
   }
 
   const onSaveItemClick = () => {
@@ -98,19 +96,12 @@ const CartTable: React.FC = () => {
 
     Object.assign(clone, itemToEdit)
 
-    updateCartItem(itemToEdit)
-    setState({ showEditDialog: false, itemToEdit: initialCartItem })
+    upsertCartItem(itemToEdit)
+    setState({ showEditDialog: false, itemToEdit: initialCartItem2 })
   }
 
   return (
     <Paper>
-      <YesNo
-        open={showConfirmDeleteDialog}
-        message="Are you sure wan't to empty the cart?"
-        onOk={onConfirmDeleteClick}
-        onCancel={onCancelConfirmDeleteClick}
-      />
-
       <EditCartItem
         cartObj={cartObj}
         open={showEditDialog}
@@ -128,7 +119,7 @@ const CartTable: React.FC = () => {
           onProductItemSelect={onProductItemClick}
         />
       </Table>
-      <CartFooter summary={cartObj.summary} cartArray={cartArray} />
+      {/* <CartFooter summary={cartObj.summary} cartArray={cartArray} /> */}
     </Paper>
   )
 }

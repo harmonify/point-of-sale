@@ -1,7 +1,7 @@
 import { Box, Button, Grid } from "@material-ui/core"
 import React, { Component, useState } from "react"
 
-import NormalSale from "../productSection/sale/NormalSale"
+import NormalSale from "./sale/NormalSale"
 
 const CartFooter: React.FC = (props) => {
   const [showNormalPopup, setNormalPopup] = useState(false)

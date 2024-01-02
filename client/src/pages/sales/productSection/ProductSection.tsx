@@ -1,29 +1,19 @@
-import {
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@material-ui/core"
+import { useAppDispatch } from "@/app/hooks"
+import SearchboxSuggestionPopup from "@/components/forms/SearchboxSuggestionPopup"
+import { upsertCartItem } from "@/features/cart"
+import useProductFuzzySearch from "@/pages/products/useProductFuzzySearch"
+import { useFindCategoriesProductsQuery } from "@/services/api"
+import { Box, Grid, Paper, useTheme } from "@material-ui/core"
 import React, { Component, useMemo, useState } from "react"
 
-import SearchboxSuggestionPopup from "@/components/forms/SearchboxSuggestionPopup"
-import { useFindAllProductApiQuery } from "@/services/api"
-import useProductFuzzySearch from "@/pages/products/useProductFuzzySearch"
-import { useAppDispatch } from "@/app/hooks"
-import { addItemToCart } from "@/features/cart"
-import { t } from "i18next"
-import { useConfirmationDialog } from "@/features/dialog"
-import { DataGrid } from "@mui/x-data-grid"
-import renderCartDataGridColumns from "./dataGridColumns"
 import Breadcrumb from "./Breadcrumb"
-import { logger } from "@/services/logger"
+import CategoryTab from "./CategoryTab/CategoryTab"
+import ProductTab from "./ProductTab/ProductTab"
+import ProductUnitTab from "./ProductUnitTab/ProductUnitTab"
 
 export interface IBreadcrumbState {
-  selectedCategory?: string | null
-  selectedProduct?: string | null
+  selectedCategory?: Monorepo.Api.Response.CategoryResponseDto | null
+  selectedProduct?: Monorepo.Api.Response.ProductResponseDto | null
 }
 
 const initialBreadcrumbState = {
@@ -31,48 +21,63 @@ const initialBreadcrumbState = {
   selectedProduct: null,
 } satisfies IBreadcrumbState
 
-const initialBreadcrumbStateV2 = {
-  selectedCategory: "Makanan & Minuman",
-  selectedProduct: "Chitato 80gr",
+export type ModifiedProductUnitType =
+  Monorepo.Api.Response.ProductUnitInfoResponseDto & {
+    product: Monorepo.Api.Response.ProductResponseDto
+  }
+
+export type ModifiedProductType = Monorepo.Api.Response.ProductResponseDto & {
+  idx: number
+  productUnits: ModifiedProductUnitType[]
 }
 
 const ProductSection: React.FC = () => {
   const dispatch = useAppDispatch()
+  const theme = useTheme()
 
-  const { isLoading: isLoadingFetchProduct, data: productResponseQuery } =
-    useFindAllProductApiQuery(
-      { all: true },
-      {
-        refetchOnMountOrArgChange: true,
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-      },
-    )
+  const {
+    isLoading: isLoadingFetchCategoriesProducts,
+    data: categoriesProductsResponseQuery,
+  } = useFindCategoriesProductsQuery(
+    { all: true },
+    {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  )
+  const categoryList = useMemo(() => {
+    return categoriesProductsResponseQuery
+      ? categoriesProductsResponseQuery.data
+      : []
+  }, [categoriesProductsResponseQuery])
   const productList = useMemo(
-    () => (productResponseQuery ? productResponseQuery.data : []),
-    [productResponseQuery],
+    () =>
+      categoriesProductsResponseQuery
+        ? categoriesProductsResponseQuery.data.flatMap(
+            (category, categoryIdx) =>
+              category.products.map<ModifiedProductType>((product, idx) => {
+                return {
+                  ...product,
+                  idx: categoryIdx * idx + 1,
+                  productUnits: (
+                    product as Monorepo.Api.Response.ProductResponseDto
+                  ).productUnits.map((pu) => ({
+                    ...pu,
+                    product,
+                  })),
+                }
+              }),
+          )
+        : [],
+    [categoriesProductsResponseQuery],
   )
 
-  const dataGridColumns = renderCartDataGridColumns({
-    onClickDelete: () => ({}),
-  })
-
-  const { show } = useConfirmationDialog({
-    content: t("Do you want to delete this data?", {
-      ns: "message",
-      model: t("product"),
-    }),
-    title: t("Delete Product", { ns: "action" }),
-    confirmText: "Delete",
-    variant: "destructive",
-  })
-
   const [breadcrumbState, setBreadcrumbState] = useState<IBreadcrumbState>(
-    initialBreadcrumbStateV2,
+    initialBreadcrumbState,
   )
 
   const {
-    searchTerm,
     search,
     loading: searchLoading,
     items: searchResults,
@@ -82,42 +87,66 @@ const ProductSection: React.FC = () => {
     product: Monorepo.Api.Response.ProductResponseDto,
   ) => {
     setBreadcrumbState({
-      selectedCategory: product.category.name,
-      selectedProduct: product.name,
+      selectedCategory: product.category,
+      selectedProduct: product,
     })
+  }
+
+  const handleSelectCategory = (
+    category: Monorepo.Api.Response.CategoryResponseDto,
+  ) => {
+    setBreadcrumbState({
+      selectedCategory: category,
+      selectedProduct: null,
+    })
+  }
+
+  const handleSelectProduct = (
+    product: Monorepo.Api.Response.ProductResponseDto,
+  ) => {
+    setBreadcrumbState({
+      selectedCategory: product.category,
+      selectedProduct: product,
+    })
+  }
+
+  const handleAddUnit = (productUnit: ModifiedProductUnitType) => {
     dispatch(
-      addItemToCart({
-        id: product.id,
-        name: product.name,
-        price: 100000000000, // TODO
-        sellingPrice: 100000000000,
-        qty: 1,
-        discount: 0,
-        discountTotal: 0,
-        totalPrice: 100000000000,
+      upsertCartItem({
+        productUnitId: productUnit.id,
+        name: productUnit.product.name,
+        price: productUnit.price,
+        quantity: 1,
+        inputDiscount: 0,
+        discountType: "percentage",
+        inputTax: 0,
+        taxType: "percentage",
       }),
     )
   }
 
   return (
-    <Grid item container spacing={1}>
+    <Grid container spacing={1} alignItems="stretch">
       <Grid item xs={12}>
         <SearchboxSuggestionPopup
+          // autoFocus
           name="search-product"
           margin="none"
           fullWidth
           data={searchResults}
           onSelected={handleSelectSuggestion}
           onValueChange={(term) => search(term)}
+          // renderListItem={(d) => ()}
         />
       </Grid>
+
       <Grid item xs={12}>
         <Breadcrumb
-          selectedCategory={breadcrumbState.selectedCategory}
-          selectedProduct={breadcrumbState.selectedProduct}
+          selectedCategoryName={breadcrumbState.selectedCategory?.name}
+          selectedProductName={breadcrumbState.selectedProduct?.name}
           onClickHome={() => {
             setBreadcrumbState({
-              selectedProduct: breadcrumbState.selectedProduct,
+              selectedProduct: null,
               selectedCategory: null,
             })
           }}
@@ -129,15 +158,26 @@ const ProductSection: React.FC = () => {
           }}
         />
       </Grid>
-      <Grid item xs={12}>
-        <DataGrid
-          columns={dataGridColumns}
-          rows={searchTerm.length >= 1 ? searchResults : productList}
-          loading={isLoadingFetchProduct || searchLoading}
-          autoHeight
-          disableSelectionOnClick
-          disableDensitySelector
-        />
+
+      <Grid
+        item
+        xs={12}
+        component={Paper}
+        style={{
+          backgroundColor: theme.palette.background.default,
+          padding: theme.spacing(2),
+        }}
+      >
+        {breadcrumbState.selectedProduct ? (
+          <ProductUnitTab
+            rows={breadcrumbState.selectedProduct.productUnits}
+            onAddUnit={handleAddUnit}
+          />
+        ) : breadcrumbState.selectedCategory ? (
+          <ProductTab rows={productList} onSelect={handleSelectProduct} />
+        ) : (
+          <CategoryTab rows={categoryList} onSelect={handleSelectCategory} />
+        )}
       </Grid>
     </Grid>
   )

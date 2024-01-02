@@ -12,7 +12,11 @@ import {
   postRefreshTokenMutationName,
 } from "./endpoints/auth"
 import { getDashboardInfoBuilder } from "./endpoints/dashboard"
-import { cacher } from "./rtkQueryCacheUtils"
+import { cacher } from "./utils/rtkQueryCacheUtils"
+import {
+  findCategoriesProductsBuilder,
+  findCategoriesProductsMutationName,
+} from "./endpoints/sales"
 
 const reducerPath = "api"
 
@@ -112,7 +116,7 @@ const api = createApi({
     const saleApi = apiBuilder<
       Monorepo.Api.Response.SaleResponseDto,
       Monorepo.Api.Request.CreateSaleRequestDto,
-      Monorepo.Api.Request.UpdateSaleRequestDto
+      Monorepo.Api.Request.CreateSaleRequestDto
     >(builder, "sales")
 
     return {
@@ -121,6 +125,9 @@ const api = createApi({
       [postLogoutMutationName]: postLogoutBuilder(builder),
 
       getDashboardInfo: getDashboardInfoBuilder(builder),
+
+      [findCategoriesProductsMutationName]:
+        findCategoriesProductsBuilder(builder),
 
       createUserApi: userApi.create,
       findAllUserApi: userApi.findAll,
@@ -213,6 +220,8 @@ export const {
   usePostLogoutMutation,
 
   useGetDashboardInfoQuery,
+
+  useFindCategoriesProductsQuery,
 
   useCreateUserApiMutation,
   useLazyFindAllUserApiQuery,

@@ -24,12 +24,17 @@ import {
   CategoryInfoResponseDto,
   CreateCategoryRequestDto,
   UpdateCategoryRequestDto,
+  CategoryProductResponseDto,
 } from './dtos';
+import { ProductUnitQuery, ProductUnitService } from '../product';
 
 @ApiTags('Categories')
 @Controller({ path: '/categories', version: '1' })
 export class CategoryController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly productUnitService: ProductUnitService,
+  ) {}
 
   @Post()
   async create(
@@ -74,6 +79,58 @@ export class CategoryController {
       data: productCategories.map((category) => ({
         ...category,
         createdByName: category.createdBy.name,
+      })),
+    };
+  }
+
+  @Get('/all/products')
+  async findAllWithProducts(
+    @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
+  ): Promise<IResponseBody<CategoryProductResponseDto[]>> {
+    const productCategories = await this.prismaService.category.findMany({
+      ...(!paginationInfo.all && {
+        skip: paginationInfo.skip,
+        take: paginationInfo.take,
+      }),
+      where: paginationInfo.search
+        ? {
+            AND: [
+              BaseQuery.Filter.available(),
+              CategoryQuery.Filter.search(paginationInfo.search),
+            ],
+          }
+        : BaseQuery.Filter.available(),
+      include: {
+        products: {
+          include: {
+            createdBy: { select: { name: true } },
+            productUnits: {
+              include: ProductUnitQuery.Relation.withQuantityRelationData(),
+            },
+          },
+          where: BaseQuery.Filter.available(),
+        },
+      },
+      orderBy: BaseQuery.OrderBy.latest(),
+    });
+    return {
+      data: productCategories.map((category) => ({
+        ...category,
+        products: category.products.map((product) => ({
+          ...product,
+          category,
+          productUnits: product.productUnits.map(
+            ({ procurementProducts, saledProducts, ...pu }) => ({
+              ...pu,
+              availableQuantity:
+                this.productUnitService.countProductUnitAvailableQuantity({
+                  procurementProducts,
+                  saledProducts,
+                  ...pu,
+                }),
+            }),
+          ),
+        })),
       })),
     };
   }

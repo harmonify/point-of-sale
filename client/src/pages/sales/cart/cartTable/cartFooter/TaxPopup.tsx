@@ -21,7 +21,7 @@ class TaxPopup extends Component {
       return
     }
 
-    this.props.updateTax(tax)
+    this.props.tax
     this.setState({ tax: "", error: "" })
     this.props.close()
   }

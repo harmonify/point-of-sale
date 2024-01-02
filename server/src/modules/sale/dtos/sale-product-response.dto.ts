@@ -1,7 +1,7 @@
 import { BaseResponseDto } from '@/libs/prisma';
 import { ApiProperty } from '@nestjs/swagger';
-import { SaleProduct } from '@prisma/client';
-import { IsInt, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { FlatOrPercentage, SaleProduct } from '@prisma/client';
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class SaleProductResponseDto
   extends BaseResponseDto
@@ -21,31 +21,53 @@ export class SaleProductResponseDto
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
+  @ApiProperty()
+  price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
   @Min(1)
   @ApiProperty()
   quantity: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
   @ApiProperty()
-  costPrice: number;
+  subTotal: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
   @ApiProperty()
-  sellingPrice: number;
+  inputDiscount: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
+  @ApiProperty()
+  discountType: FlatOrPercentage;
+
+  @IsOptional()
+  @IsNumber()
   @ApiProperty()
   discount: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(0)
+  @ApiProperty()
+  inputTax: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  taxType: FlatOrPercentage;
+
+  @IsOptional()
+  @IsNumber()
   @ApiProperty()
   tax: number;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty()
+  total: number;
 }

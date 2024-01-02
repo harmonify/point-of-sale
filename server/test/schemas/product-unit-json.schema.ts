@@ -11,7 +11,7 @@ export const productUnitJSONSchema = {
     'productId',
     'unitId',
     'wholesalePrice',
-    'sellingPrice',
+    'price',
   ],
   properties: {
     id: {
@@ -49,7 +49,7 @@ export const productUnitJSONSchema = {
     wholesalePrice: {
       type: 'number',
     },
-    sellingPrice: {
+    price: {
       type: 'number',
     },
     stockAlertEnabled: {

@@ -19,11 +19,7 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { SaleQuery } from './sale.query';
-import {
-  CreateSaleRequestDto,
-  SaleResponseDto,
-  UpdateSaleRequestDto,
-} from './dtos';
+import { CreateSaleRequestDto, SaleResponseDto } from './dtos';
 
 @ApiTags('Sales')
 @Controller({ path: '/sales', version: '1' })

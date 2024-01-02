@@ -1,14 +1,17 @@
-import { Box, makeStyles } from "@material-ui/core"
+import { Box, Grid, makeStyles } from "@material-ui/core"
 import Paper from "@material-ui/core/Paper"
 import classNames from "classnames"
 import React, { Component, ReactElement, ReactNode } from "react"
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    display: "flex",
     flexGrow: 1,
     padding: "70px 10px 15px 10px",
+    height: "100%",
   },
   paper: {
+    width: "100%",
     [theme.breakpoints.up("xs")]: {
       width: "calc(100vw - 20px)",
     },
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "0px",
   },
   fullWidthContainer: {
-    width: "100%",
+    // width: "100%",
   },
 }))
 
@@ -40,9 +43,9 @@ const MainContainer: React.FC<{
 
   return (
     <main className={classes.container}>
-      <Paper className={containerClass} elevation={4}>
+      <Box className={containerClass}>
         {props.children}
-      </Paper>
+      </Box>
     </main>
   )
 }

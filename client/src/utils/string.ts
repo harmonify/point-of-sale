@@ -88,6 +88,10 @@ export const sentenceCase = ({
   )
 }
 
+export const unslugify = (text?: string | null): string => {
+  return text ? text.replaceAll("-", " ") : text as string
+}
+
 /**
  * It currently do not handle nested object
  */

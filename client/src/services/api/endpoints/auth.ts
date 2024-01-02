@@ -1,7 +1,7 @@
 import { setCredentials, setLogout } from "@/features/auth"
 import { purgeStoreAndNavigate } from "@/features/auth/util"
 import type { ApiEndpointBuilder } from ".."
-import { cacher } from "../rtkQueryCacheUtils"
+import { cacher } from "../utils/rtkQueryCacheUtils"
 
 export const postLoginMutationName = "postLogin"
 export const postRefreshTokenMutationName = "postRefreshToken"

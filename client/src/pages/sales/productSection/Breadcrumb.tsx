@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export interface IPOSBreadcrumbProps {
-  selectedCategory?: string | null
-  selectedProduct?: string | null
+  selectedCategoryName?: string | null
+  selectedProductName?: string | null
   onClickHome: () => void
   onClickCategory: () => void
 }
 
 const Breadcrumb: React.FC<IPOSBreadcrumbProps> = ({
-  selectedCategory,
-  selectedProduct,
+  selectedCategoryName: selectedCategory,
+  selectedProductName: selectedProduct,
   onClickHome,
   onClickCategory,
 }) => {

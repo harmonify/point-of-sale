@@ -11,7 +11,7 @@ export class DashboardService {
   async getDashboardInfo(): Promise<DashboardResponseDto> {
     try {
       const totalSalesAggregate = await this.prisma.sale.aggregate({
-        _sum: { netAmount: true },
+        _sum: { total: true },
         where: BaseQuery.Filter.available(),
       });
       const totalExpensesAggregate = await this.prisma.expense.aggregate({
@@ -45,6 +45,7 @@ export class DashboardService {
           createdBy: {
             select: { name: true },
           },
+          customer: true,
           saleProducts: true,
         },
         orderBy: {
@@ -54,7 +55,7 @@ export class DashboardService {
       });
 
       return {
-        totalSales: totalSalesAggregate._sum.netAmount || 0,
+        totalSales: totalSalesAggregate._sum.total || 0,
         totalExpenses: totalExpensesAggregate._sum.amount || 0,
         totalCustomers,
         topCustomers,

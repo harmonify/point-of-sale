@@ -16,11 +16,8 @@ export default function renderCartDataGridColumns({
 }): GridColumns {
   return [
     {
-      field: "id",
+      field: "idx",
       headerName: t("Num"),
-      valueGetter(params) {
-        return params.id
-      },
       sortable: false,
       disableColumnMenu: true,
       resizable: false,
@@ -41,7 +38,7 @@ export default function renderCartDataGridColumns({
       editable: false,
     },
     {
-      field: "sellingPrice",
+      field: "price",
       headerName: t("Selling Price"),
       flex: 2,
       minWidth: 160,
@@ -52,7 +49,7 @@ export default function renderCartDataGridColumns({
       editable: false,
     },
     {
-      field: "qty",
+      field: "availableQuantity",
       headerName: t("Qty"),
       flex: 2,
       minWidth: 160,

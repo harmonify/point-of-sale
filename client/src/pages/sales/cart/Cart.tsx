@@ -20,6 +20,13 @@ const Cart: React.FC = (props) => {
 
   return (
     <Grid container spacing={1}>
+      <Grid item xs={12}>
+        <CartTable />
+      </Grid>
+      <Grid item xs={12}></Grid>
+      <Grid item xs={12}>
+        <CartFooter />
+      </Grid>
       <Grid item xs={12} container spacing={1} alignItems="center">
         <Grid item>
           <Avatar alt="Britania Tiger" className={classes.avatar}>
@@ -29,13 +36,6 @@ const Cart: React.FC = (props) => {
         <Grid item>
           <Typography variant="h5">Britania Tiger</Typography>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <CartTable />
-      </Grid>
-      <Grid item xs={12}></Grid>
-      <Grid item xs={12}>
-        <CartFooter />
       </Grid>
     </Grid>
   )
