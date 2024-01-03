@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FlatOrPercentage, Prisma } from '@prisma/client';
-import { IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class CreateSaleProductRequestDto
   implements
@@ -38,7 +38,7 @@ export class CreateSaleProductRequestDto
   inputDiscount?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   discountType?: FlatOrPercentage;
 
@@ -53,7 +53,7 @@ export class CreateSaleProductRequestDto
   inputTax?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   taxType?: FlatOrPercentage;
 

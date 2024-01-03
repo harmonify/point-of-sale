@@ -3,23 +3,14 @@ import SearchboxSuggestionPopup from "@/components/forms/SearchboxSuggestionPopu
 import { upsertCartItem } from "@/features/cart"
 import useProductFuzzySearch from "@/pages/products/useProductFuzzySearch"
 import { useFindCategoriesProductsQuery } from "@/services/api"
-import { Box, Grid, Paper, useTheme } from "@material-ui/core"
+import { Box, CircularProgress, Grid, Paper, useTheme } from "@material-ui/core"
 import React, { Component, useMemo, useState } from "react"
 
 import Breadcrumb from "./Breadcrumb"
 import CategoryTab from "./CategoryTab/CategoryTab"
 import ProductTab from "./ProductTab/ProductTab"
 import ProductUnitTab from "./ProductUnitTab/ProductUnitTab"
-
-export interface IBreadcrumbState {
-  selectedCategory?: Monorepo.Api.Response.CategoryResponseDto | null
-  selectedProduct?: Monorepo.Api.Response.ProductResponseDto | null
-}
-
-const initialBreadcrumbState = {
-  selectedCategory: null,
-  selectedProduct: null,
-} satisfies IBreadcrumbState
+import { APP_ENV } from "@/environment"
 
 export type ModifiedProductUnitType =
   Monorepo.Api.Response.ProductUnitInfoResponseDto & {
@@ -27,20 +18,30 @@ export type ModifiedProductUnitType =
   }
 
 export type ModifiedProductType = Monorepo.Api.Response.ProductResponseDto & {
-  idx: number
   productUnits: ModifiedProductUnitType[]
 }
+
+export interface IBreadcrumbState {
+  selectedCategory?: Monorepo.Api.Response.CategoryResponseDto | null
+  selectedProduct?: ModifiedProductType | null
+}
+
+const initialBreadcrumbState = {
+  selectedCategory: null,
+  selectedProduct: null,
+} satisfies IBreadcrumbState
 
 const ProductSection: React.FC = () => {
   const dispatch = useAppDispatch()
   const theme = useTheme()
 
   const {
-    isLoading: isLoadingFetchCategoriesProducts,
+    isLoading: isFetchCategoryProductLoading,
     data: categoriesProductsResponseQuery,
   } = useFindCategoriesProductsQuery(
     { all: true },
     {
+      // pollingInterval: APP_ENV === "production" ? 60000 : undefined, // TODO: make this configurable
       refetchOnMountOrArgChange: true,
       refetchOnFocus: true,
       refetchOnReconnect: true,
@@ -83,9 +84,7 @@ const ProductSection: React.FC = () => {
     items: searchResults,
   } = useProductFuzzySearch(productList)
 
-  const handleSelectSuggestion = (
-    product: Monorepo.Api.Response.ProductResponseDto,
-  ) => {
+  const handleSelectSuggestion = (product: ModifiedProductType) => {
     setBreadcrumbState({
       selectedCategory: product.category,
       selectedProduct: product,
@@ -101,26 +100,28 @@ const ProductSection: React.FC = () => {
     })
   }
 
-  const handleSelectProduct = (
-    product: Monorepo.Api.Response.ProductResponseDto,
-  ) => {
+  const handleSelectProduct = (product: ModifiedProductType) => {
     setBreadcrumbState({
       selectedCategory: product.category,
       selectedProduct: product,
     })
   }
 
-  const handleAddUnit = (productUnit: ModifiedProductUnitType) => {
+  const handleAddUnit = (
+    productUnit: ModifiedProductUnitType,
+    inputQuantity: number,
+  ) => {
     dispatch(
       upsertCartItem({
         productUnitId: productUnit.id,
         name: productUnit.product.name,
+        unitName: productUnit.unit.name,
         price: productUnit.price,
-        quantity: 1,
+        quantity: inputQuantity,
         inputDiscount: 0,
-        discountType: "percentage",
+        discountType: "PERCENTAGE",
         inputTax: 0,
-        taxType: "percentage",
+        taxType: "PERCENTAGE",
       }),
     )
   }
@@ -137,6 +138,7 @@ const ProductSection: React.FC = () => {
           onSelected={handleSelectSuggestion}
           onValueChange={(term) => search(term)}
           // renderListItem={(d) => ()}
+          loading={isFetchCategoryProductLoading || searchLoading}
         />
       </Grid>
 
@@ -166,9 +168,21 @@ const ProductSection: React.FC = () => {
         style={{
           backgroundColor: theme.palette.background.default,
           padding: theme.spacing(2),
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {breadcrumbState.selectedProduct ? (
+        {isFetchCategoryProductLoading ? (
+          <Box
+            minHeight={300}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Box>
+        ) : breadcrumbState.selectedProduct ? (
           <ProductUnitTab
             rows={breadcrumbState.selectedProduct.productUnits}
             onAddUnit={handleAddUnit}

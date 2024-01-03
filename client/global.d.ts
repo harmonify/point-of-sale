@@ -39,6 +39,8 @@ declare global {
           import("../server/src/modules/expense").CreateExpenseRequestDto
         type CreateSaleRequestDto =
           import("../server/src/modules/sale").CreateSaleRequestDto
+        type CreateSaleProductRequestDto =
+          import("../server/src/modules/sale").CreateSaleProductRequestDto
 
         type UpdateUserRequestDto =
           import("../server/src/modules/user").UpdateUserRequestDto
@@ -105,6 +107,8 @@ declare global {
           import("../server/src/modules/expense").ExpenseResponseDto
         type SaleResponseDto =
           import("../server/src/modules/sale").SaleResponseDto
+        type SaleProductResponseDto =
+          import("../server/src/modules/sale").SaleProductResponseDto
         type DashboardResponseDto =
           import("../server/src/modules/dashboard").DashboardResponseDto
       }

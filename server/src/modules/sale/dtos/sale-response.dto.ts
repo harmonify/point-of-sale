@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsDate,
   IsDefined,
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
@@ -96,7 +97,7 @@ export class SaleResponseDto implements Sale {
   inputDiscountTotal: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   discountTotalType: FlatOrPercentage;
 
@@ -111,7 +112,7 @@ export class SaleResponseDto implements Sale {
   inputTaxTotal: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   taxTotalType: FlatOrPercentage;
 

@@ -11,7 +11,7 @@ import React from "react"
 
 import Menus from "./HeaderMenu"
 import { Brightness4, Brightness7 } from "@material-ui/icons"
-import { Box } from "@material-ui/core"
+import { Box, Grid, Typography } from "@material-ui/core"
 
 const drawerWidth = 200
 
@@ -46,13 +46,6 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     background: theme.palette.primary.main,
   },
-  logoContainer: {
-    color: "white",
-    "&:only-child > span": {
-      padding: "4px 0px 0px 10px",
-      fontWeight: "lighter",
-    },
-  },
 }))
 
 const Header: React.FC<{
@@ -73,18 +66,30 @@ const Header: React.FC<{
       <Toolbar>
         {/* Collapse button. Clicking this opens the drawer */}
         <Box className={classNames(classes.logo, navIconClass)}>
-          <Box className={classes.logoContainer}>
-            <IconButton
-              style={{ margin: 0 }}
-              color="inherit"
-              aria-label="open drawer"
-              onClick={() => dispatch(toggleMobileDrawer())}
-            >
-              <MenuIcon />
-            </IconButton>
-            <span>{t("Point of Sales")}</span>
-          </Box>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            style={{ color: theme.palette.primary.contrastText }}
+          >
+            <Grid item>
+              <IconButton
+                style={{ margin: 0 }}
+                color="inherit"
+                aria-label="open drawer"
+                onClick={() => dispatch(toggleMobileDrawer())}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <Typography variant="h5" color="inherit">
+                {t("Point of Sales")}
+              </Typography>
+            </Grid>
+          </Grid>
         </Box>
+
         <Box className={classes.flex}>
           {/* This is the right side menu - Logout, My Profile */}
           <Box className={classes.menuRight}>

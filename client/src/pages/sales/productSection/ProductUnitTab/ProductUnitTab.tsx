@@ -12,6 +12,7 @@ import {
 import { Add } from "@material-ui/icons"
 import { t } from "i18next"
 import { ModifiedProductUnitType } from "../ProductSection"
+import { useState } from "react"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,14 +29,17 @@ const ProductUnitTab: React.FC<{
   rows: ModifiedProductUnitType[]
   onAddUnit: (
     productUnit: ModifiedProductUnitType,
+    inputQuantity: number,
   ) => void
 }> = ({ rows, onAddUnit }) => {
   const classes = useStyles()
 
+  const [inputQuantity, setInputQuantity] = useState(1)
+
   return (
     <Grid container spacing={2} direction="column">
       {rows.map((row) => (
-        <Grid item>
+        <Grid item key={row.id}>
           <Card className={classes.root}>
             <CardContent>
               <Typography
@@ -52,13 +56,20 @@ const ProductUnitTab: React.FC<{
               <Grid container alignItems="center" spacing={1}>
                 <Grid item xs={6} md={4}>
                   <TextInput
-                    name={`input-product-${row.unit.name}`}
+                    name={`input-product-unit-${row.id}`}
                     type="number"
                     label={t("Quantity")}
                     variant="outlined"
                     margin="none"
                     size="small"
                     InputLabelProps={{ shrink: true }}
+                    value={inputQuantity}
+                    onChange={(e) => {
+                      const quantity = parseInt(e.target.value)
+                      setInputQuantity(
+                        Number.isInteger(quantity) ? quantity : 1,
+                      )
+                    }}
                   />
                 </Grid>
                 <Grid
@@ -72,10 +83,7 @@ const ProductUnitTab: React.FC<{
                     color="primary"
                     variant="contained"
                     type="button"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onAddUnit(row)
-                    }}
+                    onClick={() => onAddUnit(row, inputQuantity)}
                     startIcon={<Add />}
                   >
                     {t("Add", { ns: "action" })}

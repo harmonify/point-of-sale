@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core"
 import { DoubleArrow } from "@material-ui/icons"
 import { t } from "i18next"
+import { ModifiedProductType } from "../ProductSection"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,15 +31,15 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ProductTab: React.FC<{
-  rows: Monorepo.Api.Response.ProductResponseDto[]
-  onSelect: (product: Monorepo.Api.Response.ProductResponseDto) => void
+  rows: ModifiedProductType[]
+  onSelect: (product: ModifiedProductType) => void
 }> = ({ rows, onSelect }) => {
   const classes = useStyles()
 
   return (
     <Grid container spacing={2} direction="column">
       {rows.map((row) => (
-        <Grid item>
+        <Grid item key={row.id}>
           <Card className={classes.root} onClick={() => onSelect(row)}>
             <CardContent>
               <Typography color="inherit" variant="h4" gutterBottom>

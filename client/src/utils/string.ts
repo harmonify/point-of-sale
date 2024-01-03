@@ -23,16 +23,28 @@ export const parseApiErrorMessage = (error: any) => {
     : defaultValue
 }
 
+interface IFormatRupiahOptions {
+  fallbackValue?: any
+  precision?: number
+}
+
 export const formatRupiah = (
   amount?: number | null,
-  fallbackValue: number | string = "0,00",
+  options?: IFormatRupiahOptions,
 ) => {
-  if (!amount) return `IDR${fallbackValue}`
-  return currency(amount, {
-    symbol: "IDR",
-    separator: ".",
-    decimal: ",",
-  }).format()
+  const finalOptions = {
+    fallbackValue: "0",
+    precision: 2,
+    ...options,
+  }
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: finalOptions.precision,
+    minimumFractionDigits: 0,
+  }).format(
+    amount && typeof amount === "number" ? amount : finalOptions.fallbackValue,
+  )
 }
 
 export const formatISOToLocale = (
@@ -89,7 +101,7 @@ export const sentenceCase = ({
 }
 
 export const unslugify = (text?: string | null): string => {
-  return text ? text.replaceAll("-", " ") : text as string
+  return text ? text.replaceAll("-", " ") : (text as string)
 }
 
 /**
@@ -107,7 +119,8 @@ export const removeEmptyStrings = <T extends Record<string, any>>(
   return newObj
 }
 
-export const nameInitials = (name: string) => {
+export const nameInitials = (name?: string) => {
+  if (!name || typeof name !== "string") return name
   const MAX_INITIALS_LENGTH = 2
   const nameArr = name.split(" ")
   return nameArr
@@ -117,4 +130,8 @@ export const nameInitials = (name: string) => {
       return trimmed && trimmed[0] ? trimmed[0].toUpperCase() : ""
     })
     .join("")
+}
+
+export const truncate = (text: string, maxLength: number = 60) => {
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text
 }

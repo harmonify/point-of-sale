@@ -1,8 +1,8 @@
 import { useFuzzySearch } from "@/features/fuzzySearch"
 import { FuseOptionKeyObject } from "fuse.js"
 
-const useProductFuzzySearch = (
-  data: Monorepo.Api.Response.ProductResponseDto[],
+const useProductFuzzySearch = <T extends Monorepo.Api.Response.ProductResponseDto>(
+  data: T[],
 ) => {
   return useFuzzySearch({
     data,

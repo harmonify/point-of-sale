@@ -1,17 +1,16 @@
 import currency from "currency.js"
-import {
+import type {
   CartItemStateSummary,
   CartItemState,
   CartState,
   FlatOrPercentage,
+  CartStateSummary,
 } from "."
 
 export interface CartItemSummary {
-  subTotalObj: currency
   subTotal: number
   discount: number
   tax: number
-  totalObj: currency
   total: number
 }
 
@@ -26,30 +25,45 @@ export interface CartSummary {
 
 /** @private */
 const countTaxOrDiscount = (
-  subTotal: currency,
+  subTotal: number,
   amount: number,
   type: FlatOrPercentage,
 ): number => {
-  return type === "flat" ? amount : subTotal.multiply(amount).value
+  if (type === "PERCENTAGE") {
+    return currency(subTotal).multiply(amount).divide(100).value
+  } else {
+    return amount
+  }
 }
 
 export const getItemSummary = (cartItem: CartItemState): CartItemSummary => {
-  const subTotal = currency(cartItem.price).multiply(cartItem.quantity)
-  const discount = countTaxOrDiscount(
-    subTotal,
-    cartItem.inputDiscount,
-    cartItem.discountType,
-  )
-  const tax = countTaxOrDiscount(subTotal, cartItem.inputTax, cartItem.taxType)
-  const total = subTotal.subtract(discount).add(tax)
+  const subTotal =
+    Math.max(currency(cartItem.price).multiply(cartItem.quantity).value, 0) || 0
+
+  const discount =
+    Math.max(
+      countTaxOrDiscount(
+        subTotal,
+        cartItem.inputDiscount,
+        cartItem.discountType,
+      ),
+      0,
+    ) || 0
+
+  const tax =
+    Math.max(
+      countTaxOrDiscount(subTotal, cartItem.inputTax, cartItem.taxType),
+      0,
+    ) || 0
+
+  const total =
+    Math.max(currency(subTotal).subtract(discount).add(tax).value, 0) || 0
 
   return {
-    subTotalObj: subTotal,
-    subTotal: Math.max(subTotal.value, 0),
-    discount: Math.max(discount, 0),
-    tax: Math.max(tax, 0),
-    totalObj: total,
-    total: Math.max(total.value, 0),
+    subTotal,
+    discount,
+    tax,
+    total,
   }
 }
 
@@ -64,29 +78,31 @@ export const getCartSummary = (cart: CartState): CartSummary => {
   const subTotal = cartItems.reduce((acc, cartItem) => {
     const itemSummary = getItemSummary(cartItem)
     cartItemSummary[cartItem.productUnitId] = itemSummary
-    return acc.add(itemSummary.totalObj)
+    return acc.add(itemSummary.total)
   }, currency(0.0))
-  const subTotalValue = Math.max(subTotal.value, 0)
+  const subTotalValue = Math.max(subTotal.value, 0) || 0
 
   const discountTotal = countTaxOrDiscount(
-    subTotal,
+    subTotalValue,
     cart.inputDiscountTotal,
     cart.discountTotalType,
   )
-  const discountTotalValue = Math.max(discountTotal, 0)
+  const discountTotalValue = Math.max(discountTotal, 0) || 0
 
   const taxTotal = countTaxOrDiscount(
-    subTotal,
+    subTotalValue,
     cart.inputTaxTotal,
     cart.taxTotalType,
   )
-  const taxTotalValue = Math.max(taxTotal, 0)
+  const taxTotalValue = Math.max(taxTotal, 0) || 0
 
-  const total = currency(subTotal).subtract(discountTotal).add(taxTotal)
-  const totalValue = Math.max(total.value, 0)
+  const total = currency(subTotalValue)
+    .subtract(discountTotalValue)
+    .add(taxTotalValue)
+  const totalValue = Math.max(total.value, 0) || 0
 
-  const change = currency(cart.paid).subtract(total)
-  const changeValue = Math.max(change.value, 0)
+  const change = currency(cart.paid).subtract(totalValue)
+  const changeValue = change.value || 0
 
   return {
     items: cartItemSummary,
@@ -96,4 +112,24 @@ export const getCartSummary = (cart: CartState): CartSummary => {
     total: totalValue,
     change: changeValue,
   }
+}
+
+export const getCartStateWithSummary = (
+  cartState: CartState,
+): CartStateSummary => {
+  const summary = getCartSummary(cartState)
+  const result = {
+    ...cartState,
+    ...summary,
+    items: Object.values(cartState.items).reduce((acc, item) => {
+      if (item) {
+        acc[item.productUnitId] = {
+          ...item,
+          ...summary.items[item.productUnitId],
+        }
+      }
+      return acc
+    }, {} as CartStateSummary["items"]),
+  } satisfies CartStateSummary
+  return result
 }

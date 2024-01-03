@@ -1,18 +1,21 @@
-import { useFormikContext } from "formik"
 import React, { ChangeEventHandler, forwardRef, Ref, useMemo } from "react"
 import { NumericFormat, NumericFormatProps } from "react-number-format"
 
-import FormikTextInput from "./FormikTextInput"
-import { IFormikTextInputProps } from "./FormikTextInput"
+import { ITextInputProps } from "./TextInput"
 import {
   getLocaleConfig,
   IntlConfig,
   LocaleConfig,
 } from "./utils/getLocaleConfig"
+import TextInput from "./TextInput"
+
+interface IChangeEvent {
+  target: { name: string; value: string }
+}
 
 type INumberFormatCustomProps = {
   getInputRef: (instance: typeof NumericFormat | null) => void
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (event: IChangeEvent) => void
   name: string
 } & NumericFormatProps
 
@@ -30,21 +33,21 @@ const NumberFormatCustom = (props: INumberFormatCustomProps) => {
             name: props.name,
             value: values.value,
           },
-        } as React.ChangeEvent<HTMLInputElement>)
+        } satisfies IChangeEvent)
       }}
     />
   )
 }
 
-type IFormikNumberInputProps = Omit<
+type INumberInputProps = Omit<
   INumberFormatCustomProps,
   "getInputRef" | "onChange" | "size"
 > &
-  IFormikTextInputProps & {
+  ITextInputProps & {
     intlConfig?: IntlConfig
   }
 
-const FormikNumberInput = (props: IFormikNumberInputProps) => {
+const NumberInput = (props: INumberInputProps) => {
   const localeConfig: LocaleConfig = useMemo(
     () =>
       props.intlConfig
@@ -71,19 +74,10 @@ const FormikNumberInput = (props: IFormikNumberInputProps) => {
     ...rest
   } = props
 
-  const { setFieldValue } = useFormikContext()
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(props.name, parseFloat(e.target.value))
-    if (typeof onChange === "function") {
-      onChange(e)
-    }
-  }
-
   return (
-    <FormikTextInput
+    <TextInput
       {...rest}
-      onChange={handleChange}
+      onChange={onChange}
       InputProps={{
         inputComponent: NumberFormatCustom as any,
         inputProps: {
@@ -105,4 +99,4 @@ const FormikNumberInput = (props: IFormikNumberInputProps) => {
   )
 }
 
-export default FormikNumberInput
+export default NumberInput

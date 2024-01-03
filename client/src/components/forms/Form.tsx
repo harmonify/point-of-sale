@@ -25,6 +25,7 @@ const Form: React.FC<{
   className?: string
   style?: React.CSSProperties
 
+  disableSubmitButton?: boolean
   // onSubmit: React.FormEventHandler
   submitText?: string
   submitDisabled?: boolean
@@ -46,18 +47,20 @@ const Form: React.FC<{
       {props.children}
 
       <Box>
-        <Button
-          type="submit"
-          startIcon={<Save />}
-          className={classes.buttonSubmit}
-          color="primary"
-          variant="contained"
-          disabled={props.submitDisabled}
-        >
-          {props.submitText || t("Save", { ns: "action" })}
-        </Button>
+        {props.disableSubmitButton ? null : (
+          <Button
+            type="submit"
+            startIcon={<Save />}
+            className={classes.buttonSubmit}
+            color="primary"
+            variant="contained"
+            disabled={props.submitDisabled}
+          >
+            {props.submitText || t("Save", { ns: "action" })}
+          </Button>
+        )}
 
-        {props.onCancel && (
+        {props.onCancel ? (
           <Button
             className={classes.buttonCancel}
             onClick={props.onCancel}
@@ -65,7 +68,7 @@ const Form: React.FC<{
           >
             {props.cancelText || t("Cancel", { ns: "action" })}
           </Button>
-        )}
+        ) : null}
       </Box>
     </FormikForm>
   )

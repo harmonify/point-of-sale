@@ -1,43 +1,82 @@
-import { nameInitials } from "@/utils"
-import { Avatar, Box, Grid, Paper, Typography } from "@material-ui/core"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
-import React from "react"
-import CartFooter from "./CartFooter"
-import CartTable from "./cartTable/CartTable"
+import { useAppDispatch, useAppSelector } from "@/app/hooks"
+import { FormikSubmissionHandler } from "@/components/forms"
+import Form from "@/components/forms/Form"
+import { CartState, selectCart } from "@/features/cart"
+import { useCreateSaleApiMutation } from "@/services/api"
+import { Box, Button } from "@material-ui/core"
+import { createStyles, makeStyles } from "@material-ui/core/styles"
+import { Save } from "@material-ui/icons"
+import { Formik } from "formik"
+import { t } from "i18next"
+import React, { useMemo } from "react"
 
-const useStyles = makeStyles((theme) => ({
-  avatar: {
-    color: "#fff",
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    fontSize: theme.spacing(3),
-    backgroundColor: theme.palette.primary.dark,
-  },
-}))
+import CartTable from "./cartTable/CartTable"
+import { buildCreateSaleRequestDto } from "./util"
+import createSaleValidationSchema from "./validationSchema"
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      backgroundColor: theme.palette.background.default,
+      "& .MuiTableCell-root": {
+        border: `1px solid ${theme.palette.divider}`,
+      },
+      "& .MuiTypography-h6": {
+        fontWeight: 500,
+      },
+      "& .MuiTypography-body1": {
+        fontSize: "14px",
+      },
+      "& .MuiInputBase-input": {
+        // fontSize: "14px",
+        fontWeight: 600,
+      },
+    },
+  }),
+)
 
 const Cart: React.FC = (props) => {
   const classes = useStyles()
 
+  const cart = useAppSelector(selectCart)
+  const cartItemsLength = Object.keys(cart.items).length
+
+  const [createSaleApiMutation, { isLoading }] = useCreateSaleApiMutation()
+
+  const onSubmit: FormikSubmissionHandler<CartState> = async (data) => {
+    const dto = buildCreateSaleRequestDto(data)
+    return createSaleApiMutation(dto).unwrap()
+  }
+
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <CartTable />
-      </Grid>
-      <Grid item xs={12}></Grid>
-      <Grid item xs={12}>
-        <CartFooter />
-      </Grid>
-      <Grid item xs={12} container spacing={1} alignItems="center">
-        <Grid item>
-          <Avatar alt="Britania Tiger" className={classes.avatar}>
-            {nameInitials("Britania Tiger")}
-          </Avatar>
-        </Grid>
-        <Grid item>
-          <Typography variant="h5">Britania Tiger</Typography>
-        </Grid>
-      </Grid>
-    </Grid>
+    <Box className={classes.root}>
+      <Formik
+        enableReinitialize={true}
+        initialValues={cart satisfies CartState as CartState}
+        validationSchema={createSaleValidationSchema}
+        validateOnChange={true}
+        validateOnBlur={true}
+        onSubmit={onSubmit}
+      >
+        {(formik) => (
+          <>
+            <Form disableSubmitButton>
+              <CartTable />
+              <Button
+                type="submit"
+                startIcon={<Save />}
+                color="primary"
+                variant="contained"
+                disabled={cartItemsLength === 0}
+                fullWidth
+              >
+                {t("Save", { ns: "action" })}
+              </Button>
+            </Form>
+          </>
+        )}
+      </Formik>
+    </Box>
   )
 }
 

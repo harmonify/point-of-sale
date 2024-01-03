@@ -69,7 +69,7 @@ const HomeInfo: React.FC = () => {
   const user = useAppSelector(selectCurrentUser)
 
   const { data, isFetching } = useGetDashboardInfoQuery(null, {
-    pollingInterval: APP_ENV === "production" ? 15000 : undefined,
+    pollingInterval: APP_ENV === "production" ? 60000 : undefined,
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,

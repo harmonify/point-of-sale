@@ -1,19 +1,21 @@
-import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit"
-import currency from "currency.js"
-import { getCartSummary } from "./util"
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-export type FlatOrPercentage = "flat" | "percentage"
+import { getCartStateWithSummary, getCartSummary } from "./util"
+import { mockCartState } from "./mock"
+
+export type FlatOrPercentage = "FLAT" | "PERCENTAGE"
 
 export interface CartCustomerState {
-  id: string | number | null
+  id: number | null
   name: string | null
 }
 
 export interface CartItemState {
-  productUnitId: number | string
+  productUnitId: number
   name: string
-  quantity: number
+  unitName: string
   price: number
+  quantity: number
   inputDiscount: number
   discountType: FlatOrPercentage
   inputTax: number
@@ -24,6 +26,7 @@ export interface CartState {
   items: {
     [productUnitId: number | string]: CartItemState | null | undefined
   }
+  name: string | null
   customer: CartCustomerState | null
   inputDiscountTotal: number
   discountTotalType: FlatOrPercentage
@@ -45,7 +48,7 @@ export interface CartItemStateSummary extends CartItemState {
 /** Cart state with summary */
 export interface CartStateSummary extends Omit<CartState, "items"> {
   items: {
-    [productUnitId: number | string]: CartItemStateSummary | null | undefined
+    [productUnitId: number | string]: CartItemStateSummary
   }
   subTotal: number
   /** Final discount of the cart */
@@ -60,11 +63,12 @@ export interface CartStateSummary extends Omit<CartState, "items"> {
 
 const initialState: CartState = {
   items: {},
+  name: null,
   customer: null,
   inputDiscountTotal: 0.0,
-  discountTotalType: "percentage",
+  discountTotalType: "PERCENTAGE",
   inputTaxTotal: 0.0,
-  taxTotalType: "percentage",
+  taxTotalType: "PERCENTAGE",
   paid: 0.0,
 } satisfies CartState
 
@@ -72,15 +76,30 @@ const upsertCartItemReducer = (
   state: CartState,
   { payload: cartItem }: PayloadAction<CartItemState>,
 ) => {
-  const isNewUniqueCartItem = Boolean(state.items[cartItem.productUnitId])
+  const isNewUniqueCartItem = !Boolean(state.items[cartItem.productUnitId])
   const quantity = isNewUniqueCartItem
     ? cartItem.quantity
-    : state.items[cartItem.productUnitId]!.quantity + cartItem.quantity
+    : state.items[cartItem.productUnitId]
+    ? state.items[cartItem.productUnitId]!.quantity + cartItem.quantity
+    : cartItem.quantity
   const updatedCartItem = {
     ...state.items[cartItem.productUnitId],
     ...cartItem,
     quantity,
   }
+  // logger.debug(
+  //   `🚀 ~ {isNewUniqueCartItem, quantity, updatedCartItem, state.items[cartItem.productUnitId]} ~ ${JSON.stringify(
+  //     {
+  //       isNewUniqueCartItem,
+  //       quantity,
+  //       updatedCartItem,
+  //       "state.items[cartItem.productUnitId]":
+  //         state.items[cartItem.productUnitId],
+  //     },
+  //     null,
+  //     2,
+  //   )}`,
+  // )
   state.items[cartItem.productUnitId] = updatedCartItem
 }
 
@@ -93,9 +112,7 @@ const setCartCustomerReducer = (
 
 const updateCartItemPriceReducer = (
   state: CartState,
-  {
-    payload,
-  }: PayloadAction<{ productUnitId: number | string; price: number }>,
+  { payload }: PayloadAction<{ productUnitId: number | string; price: number }>,
 ) => {
   if (state.items[payload.productUnitId]) {
     state.items[payload.productUnitId]!.price = payload.price
@@ -177,6 +194,13 @@ const updateCartTaxTotalReducer = (
   state.taxTotalType = payload.taxTotalType
 }
 
+const updateCartPaidAmountReducer = (
+  state: CartState,
+  { payload: amount }: PayloadAction<number>,
+) => {
+  state.paid = amount
+}
+
 const emptyCartReducer = (oldState: CartState) => {
   oldState = Object.assign({}, initialState)
   oldState.items = Object.assign({}, initialState.items)
@@ -184,7 +208,7 @@ const emptyCartReducer = (oldState: CartState) => {
 
 const slice = createSlice({
   name: "cart",
-  initialState,
+  initialState: mockCartState,
   reducers: {
     setCartCustomer: setCartCustomerReducer,
     upsertCartItem: upsertCartItemReducer,
@@ -195,6 +219,7 @@ const slice = createSlice({
     removeCartItem: removeCartItemReducer,
     updateCartDiscountTotal: updateCartDiscountTotalReducer,
     updateCartTaxTotal: updateCartTaxTotalReducer,
+    updateCartPaidAmount: updateCartPaidAmountReducer,
     emptyCart: emptyCartReducer,
   },
 })
@@ -209,26 +234,19 @@ export const {
   removeCartItem,
   updateCartDiscountTotal,
   updateCartTaxTotal,
+  updateCartPaidAmount,
   emptyCart,
 } = slice.actions
 
-export const selectCart = (state: RootState): CartStateSummary => {
-  const cartState = state.cart
-  const summary = getCartSummary(cartState)
-  const result = {
-    ...cartState,
-    ...summary,
-    items: Object.values(cartState.items).reduce((acc, item) => {
-      if (item) {
-        acc[item.productUnitId] = {
-          ...item,
-          ...summary.items[item.productUnitId],
-        }
-      }
-      return acc
-    }, {} as CartStateSummary["items"]),
-  } satisfies CartStateSummary
-  return result
+export const selectRawCart = (state: RootState): CartState => {
+  return state.cart
 }
+
+export const selectCart = createSelector(
+  [selectRawCart],
+  (cartState: CartState): CartStateSummary => {
+    return getCartStateWithSummary(cartState)
+  },
+)
 
 export default slice.reducer

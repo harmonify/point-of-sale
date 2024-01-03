@@ -82,14 +82,18 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
       )}
 
       <DialogContent className={classes.dialogContent}>
-        <Typography
-          variant="h5"
-          color="textPrimary"
-          className={classes.content}
-          gutterBottom
-        >
-          {props.content}
-        </Typography>
+        {props.render ? (
+          props.render
+        ) : (
+          <Typography
+            variant="h5"
+            color="textPrimary"
+            className={classes.content}
+            gutterBottom
+          >
+            {props.content}
+          </Typography>
+        )}
         <Divider />
       </DialogContent>
 

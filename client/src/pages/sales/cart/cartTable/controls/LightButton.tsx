@@ -1,19 +1,31 @@
-import React from 'react';
-import { Button } from '@material-ui/core';
+import React from "react"
+import { Button, ButtonProps, Typography } from "@material-ui/core"
 
-const LightButton = ({ text, onClick }) => (
-  <Button style={{ textTransform: 'none', padding: 0 }} onClick={onClick}>
-    <p
+const LightButton: React.FC<
+  {
+    text: string | React.ReactNode
+    onClick: React.MouseEventHandler
+  } & ButtonProps
+> = ({ text, ...props }) => (
+  <Button
+    {...props}
+    onClick={props.onClick}
+    style={{
+      textTransform: "none",
+      textAlign: "inherit",
+      padding: 0,
+    }}
+  >
+    <Typography
+      variant="h6"
       style={{
-        textAlign: 'left',
-        paddingLeft: '8px',
-        width: 150,
-        overflowWrap: 'break-word',
+        width: "100%",
+        overflowWrap: "break-word",
       }}
     >
       {text}
-    </p>
+    </Typography>
   </Button>
-);
+)
 
-export default LightButton;
+export default LightButton

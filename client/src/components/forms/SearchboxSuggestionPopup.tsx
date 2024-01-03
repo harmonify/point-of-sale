@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   List,
   ListItem,
   ListItemText,
@@ -24,6 +25,7 @@ type IAutoSuggestionPopUpParams<T> = {
   onSelected: (d: T) => void
   onValueChange: (searchTerm: string) => void
   renderListItem?: (d: T) => React.ReactNode
+  loading?: boolean
 } & ISearchBoxProps
 
 const SearchboxSuggestionPopup = <
@@ -33,11 +35,27 @@ const SearchboxSuggestionPopup = <
   onSelected,
   onValueChange,
   renderListItem,
+  loading,
   ...restProps
 }: IAutoSuggestionPopUpParams<T>): React.ReactNode => {
   const theme = useTheme()
   const [hideSuggestion, setHideSuggestion] = useState(true)
   const [ref, bounds] = useMeasure()
+
+  const renderLoading = () => {
+    return (
+      <ListItem>
+        <Box
+          width="100%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <CircularProgress />
+        </Box>
+      </ListItem>
+    )
+  }
 
   const renderNoData = () => {
     return (
@@ -91,7 +109,11 @@ const SearchboxSuggestionPopup = <
         }}
       >
         <List component="nav">
-          {data && data.length > 0 ? renderOptions() : renderNoData()}
+          {loading
+            ? renderLoading()
+            : data && data.length > 0
+            ? renderOptions()
+            : renderNoData()}
         </List>
       </Paper>
     )

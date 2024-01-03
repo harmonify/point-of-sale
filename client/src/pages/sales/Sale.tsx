@@ -21,7 +21,7 @@ const Sale: React.FC = (props) => {
       <Grid
         item
         xs={12}
-        md={6}
+        md={7}
         style={{
           height: "100%",
           // backgroundColor: theme.palette.success["light"], // DEBUG
@@ -33,7 +33,7 @@ const Sale: React.FC = (props) => {
       <Grid
         item
         xs={12}
-        md={6}
+        md={5}
         style={{
           minHeight: "100%",
           // backgroundColor: theme.palette.warning["light"], // DEBUG

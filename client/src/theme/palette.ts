@@ -6,6 +6,7 @@ const offBlack = "#0e1111"
 const offWhite = "#FAF9F6"
 const softBlack = "#303030"
 const white = "#FFF"
+const softWhite = "#FEFEFE"
 
 export const darkTheme = {
   type: "dark",
@@ -37,14 +38,14 @@ export const darkTheme = {
     default: darkGrey,
     paper: softBlack,
   },
-  divider: colors.grey[600],
+  // divider: colors.grey[600],
   common: {
     black: offBlack,
     white: offWhite,
   },
 } satisfies PaletteOptions
 
-export const lightTheme = {
+export const lightTheme: PaletteOptions = {
   type: "light",
   primary: {
     contrastText: offWhite,
@@ -72,7 +73,7 @@ export const lightTheme = {
   },
   background: {
     default: white,
-    paper: offWhite,
+    paper: softWhite,
   },
   divider: colors.grey[900],
   common: {

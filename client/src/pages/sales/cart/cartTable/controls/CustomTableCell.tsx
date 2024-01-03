@@ -1,18 +1,25 @@
-import { TableCell } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { TableCell } from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
 
-const CustomTableCell = withStyles((theme) => ({
-  head: {
-    // backgroundColor: theme.palette.primary.main,
-    // color: theme.palette.common.white,
-    padding: '5px',
-    fontSize: 14,
-  },
-  body: {
-    fontSize: 13,
-    padding: '5px',
-    overflowWrap: 'break-word',
-  },
-}))(TableCell);
+const CustomTableCell = withStyles(
+  (theme) => ({
+    head: {
+      padding: theme.spacing(1),
+      fontSize: "14px",
+      lineHeight: "18px",
+    },
+    body: {
+      padding: theme.spacing(1),
+      width: 150,
+      overflowWrap: "break-word",
+      fontSize: "14px",
+    },
+    footer: {
+      padding: theme.spacing(1),
+      fontSize: "104px",
+    },
+  }),
+  { withTheme: true },
+)(TableCell)
 
-export default CustomTableCell;
+export default CustomTableCell

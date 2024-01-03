@@ -34,10 +34,11 @@ const FormikSelectInput: React.FC<IFormikSelectInputProps> = (props) => {
       {...textInputProps}
       defaultValue={defaultValue}
       select
-      InputLabelProps={{ shrink: true }}
+      InputLabelProps={{ shrink: true, ...textInputProps.InputLabelProps }}
       SelectProps={{
         native: true,
         variant: props.variant || "outlined",
+        ...textInputProps.SelectProps,
       }}
       onChange={(e) => {
         setFieldValue(

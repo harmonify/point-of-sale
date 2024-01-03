@@ -3,6 +3,7 @@ import { FlatOrPercentage, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
@@ -21,7 +22,7 @@ export class CreateSaleRequestDto
   @IsInt()
   @Min(1)
   @ApiProperty()
-  customerId: number | null;
+  customerId?: number | null;
 
   @IsOptional()
   @IsString()
@@ -31,7 +32,7 @@ export class CreateSaleRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  description: string | null;
+  description?: string | null;
 
   @IsOptional()
   @IsNumber()
@@ -44,7 +45,7 @@ export class CreateSaleRequestDto
   inputDiscountTotal?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   discountTotalType?: FlatOrPercentage;
 
@@ -59,7 +60,7 @@ export class CreateSaleRequestDto
   inputTaxTotal?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   taxTotalType?: FlatOrPercentage;
 

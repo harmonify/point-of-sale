@@ -28,15 +28,21 @@ type IDialogCancellationProps =
       onCancel: () => void
     }
 
+type IDialogContentProps = {
+  content?: string
+  /** If provided, will be prioritized over `content` */
+  render?: React.ReactNode
+}
+
 export type IConfirmationDialogState = {
   open: boolean
-  content: string
   title?: string
   variant?: "destructive" | "constructive" | "neutral" | null
   isLoading?: boolean
   fullWidthBtn?: boolean
   disableCancelButton?: boolean
-} & IDialogConfirmationProps &
+} & IDialogContentProps &
+  IDialogConfirmationProps &
   IDialogCancellationProps
 
 type IShowDialogConfirmationParams = Omit<
@@ -44,6 +50,8 @@ type IShowDialogConfirmationParams = Omit<
   "open" | "content"
 > & {
   content?: string
+  /** If provided, will be prioritized over `content` */
+  render?: React.ReactNode
 }
 
 const defaultState: IConfirmationDialogState = {

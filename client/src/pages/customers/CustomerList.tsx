@@ -20,15 +20,18 @@ const CustomerList: React.FC = () => {
   const navigate = useNavigate()
   const [deleteCustomerApiMutation, { isLoading: isLoadingDeleteCustomer }] =
     useDeleteCustomerApiMutation()
-  const { isLoading: isLoadingFetchCustomer, isError, data: customerResponseQuery } =
-    useFindAllCustomerApiQuery(
-      { all: true },
-      {
-        refetchOnMountOrArgChange: true,
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-      },
-    )
+  const {
+    isLoading: isLoadingFetchCustomer,
+    isError,
+    data: customerResponseQuery,
+  } = useFindAllCustomerApiQuery(
+    { all: true },
+    {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  )
 
   const customerList = customerResponseQuery ? customerResponseQuery.data : []
 

@@ -1,7 +1,14 @@
 import { BaseResponseDto } from '@/libs/prisma';
 import { ApiProperty } from '@nestjs/swagger';
 import { FlatOrPercentage, SaleProduct } from '@prisma/client';
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Min,
+} from 'class-validator';
 
 export class SaleProductResponseDto
   extends BaseResponseDto
@@ -42,7 +49,7 @@ export class SaleProductResponseDto
   inputDiscount: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   discountType: FlatOrPercentage;
 
@@ -57,7 +64,7 @@ export class SaleProductResponseDto
   inputTax: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsEnum(FlatOrPercentage)
   @ApiProperty()
   taxType: FlatOrPercentage;
 

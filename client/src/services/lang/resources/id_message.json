@@ -8,5 +8,6 @@
   "Welcome to POS": "Selamat datang di POS Toko Dinamis",
   "Define the selling price": "Tentukan harga jual",
   "Deleting this product unit will remove the related procured stock. Do you want to proceed?": "Menghapus unit produk ini akan menghapus pengadaan stok terkait. Apakah Anda ingin melanjutkan?",
-  "No records found": "Tidak ada data yang ditemukan"
+  "No records found": "Tidak ada data yang ditemukan",
+  "No items in the cart": "Tidak ada item di keranjang ini"
 }
