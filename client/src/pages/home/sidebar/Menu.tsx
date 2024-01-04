@@ -127,9 +127,9 @@ const Menu: React.FC = () => {
         </ListSubheader>
 
         <MenuItem
-          isSelected={isSelected("reports/sales/today")}
-          onClick={() => navigate("/reports/sales/today")}
-          text={t("Today Sales")}
+          isSelected={isSelected("reports/sales/daily")}
+          onClick={() => navigate("/reports/sales/daily")}
+          text={t("Daily Sales")}
           icon={<Today />}
         />
 

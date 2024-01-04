@@ -1,7 +1,7 @@
 import { APP_DEFAULT_LANG } from "@/environment"
 import currency from "currency.js"
 import { t } from "i18next"
-import { DateTime, FixedOffsetZone } from "luxon"
+import { DateTime, DateTimeFormatOptions, FixedOffsetZone } from "luxon"
 
 /**
  * Parse and translate API error message from:
@@ -47,24 +47,31 @@ export const formatRupiah = (
   )
 }
 
+export const formatDateTimeToLocale = (
+  dateTime: DateTime,
+  options?: DateTimeFormatOptions,
+): string => {
+  return dateTime
+    .setLocale(APP_DEFAULT_LANG)
+    .setZone(FixedOffsetZone.instance(7 * 60)) // TODO: hardcoded
+    .toLocaleString({
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: false,
+      ...options,
+    })
+}
+
 export const formatISOToLocale = (
   isoString?: string | null,
   fallbackValue: string = "-",
 ): string => {
   return isoString
-    ? DateTime.fromISO(isoString, { zone: "utc" })
-        .setLocale(APP_DEFAULT_LANG)
-        .setZone(FixedOffsetZone.instance(7 * 60))
-        .toLocaleString({
-          weekday: "short",
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          second: "numeric",
-          hour12: false,
-        })
+    ? formatDateTimeToLocale(DateTime.fromISO(isoString, { zone: "utc" }))
     : fallbackValue
 }
 

@@ -16,7 +16,9 @@ import CategoryList from "./pages/categories/CategoryList"
 import UnitList from "./pages/units/UnitList"
 import ProductList from "./pages/products/ProductList"
 import ProcurementList from "./pages/procurements/ProcurementList"
-import TodaySaleReport from "./pages/reports/TodaySaleReport"
+import DailySaleReport from "./pages/reports/DailySaleReport"
+import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
+import YearlySaleReport from "./pages/reports/YearlySaleReport"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -162,16 +164,19 @@ const routeObjects: IRoute[] = [
         path: "procurements/:id",
       },
       {
-        Component: TodaySaleReport,
-        path: "/reports",
-        title: t("Reports"),
-        children: [
-          {
-            path: "sales/today",
-            title: t("Today Sales"),
-            Component: TodaySaleReport,
-          },
-        ],
+        Component: DailySaleReport,
+        title: t("Daily Sales"),
+        path: "/reports/sales/daily",
+      },
+      {
+        Component: MonthlySaleReport,
+        title: t("Monthly Sales"),
+        path: "/reports/sales/monthly",
+      },
+      {
+        Component: YearlySaleReport,
+        title: t("Yearly Sales"),
+        path: "/reports/sales/yearly",
       },
     ],
   },
@@ -179,6 +184,7 @@ const routeObjects: IRoute[] = [
     path: "*",
     skipAuth: true,
     title: t("Page not found", { ns: "error" }),
+
     Component: lazy(() => import("./pages/errors/Error404")),
   },
 ]

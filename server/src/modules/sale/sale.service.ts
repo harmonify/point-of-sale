@@ -1,9 +1,8 @@
+import { SaleProductRecord, SaleReport } from '@/modules/reports/dtos';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
-
-import { SaleProductRecord, SaleReport } from '../reports/dtos';
 import { DateTime } from 'luxon';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class SaleService {
@@ -16,7 +15,11 @@ export class SaleService {
           include: {
             productUnit: {
               include: {
-                product: true,
+                product: {
+                  include: {
+                    category: { select: { name: true } },
+                  },
+                },
                 unit: {
                   select: { name: true },
                 },
@@ -43,6 +46,7 @@ export class SaleService {
           ...s.saleProducts.map(
             (sp) =>
               ({
+                categoryName: sp.productUnit.product.category.name,
                 barcode: sp.productUnit.product.barcode || '-',
                 productName: sp.productUnit.product.name,
                 unitName: sp.productUnit.unit.name,
@@ -62,22 +66,22 @@ export class SaleService {
         taxTotal: 0.0,
         total: 0.0,
         saleProducts: [] as SaleProductRecord[],
-      } satisfies SaleReport,
-    );
+      } as any,
+    ) as any;
   }
 
-  async getTodaySalesReport(): Promise<SaleReport> {
+  async getDailySalesReport(): Promise<SaleReport> {
     const now = DateTime.now();
-    const startOfDay = now.startOf('day');
-    const endOfDay = now.endOf('day');
+    const startOfDay = now.startOf('day').toJSDate();
+    const endOfDay = now.endOf('day').toJSDate();
 
     // eslint-disable-next-line prisma-soft-delete/use-deleted-null
     const sales = await this.prismaService.sale.findMany({
       ...this.getSalePayloadToken(),
       where: {
         createdAt: {
-          gte: startOfDay.toJSDate(),
-          lte: endOfDay.toJSDate(),
+          gte: startOfDay,
+          lte: endOfDay,
         },
         deletedAt: null,
       },

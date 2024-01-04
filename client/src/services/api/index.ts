@@ -20,8 +20,8 @@ import {
 import {
   getMonthlySalesApiMutationName,
   getMonthlySalesBuilder,
-  getTodaySalesApiMutationName,
-  getTodaySalesBuilder,
+  getDailySalesApiMutationName,
+  getDailySalesBuilder,
   getYearlySalesApiMutationName,
   getYearlySalesBuilder,
 } from "./endpoints/reports"
@@ -137,7 +137,7 @@ const api = createApi({
       [findCategoriesProductsMutationName]:
         findCategoriesProductsBuilder(builder),
 
-      [getTodaySalesApiMutationName]: getTodaySalesBuilder(builder),
+      [getDailySalesApiMutationName]: getDailySalesBuilder(builder),
       [getMonthlySalesApiMutationName]: getMonthlySalesBuilder(builder),
       [getYearlySalesApiMutationName]: getYearlySalesBuilder(builder),
 
@@ -235,7 +235,7 @@ export const {
 
   useFindCategoriesProductsQuery,
 
-  useGetTodaySalesQuery,
+  useGetDailySalesQuery,
   useGetMonthlySalesQuery,
   useGetYearlySalesQuery,
 

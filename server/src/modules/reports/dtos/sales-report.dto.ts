@@ -1,12 +1,13 @@
 export interface SaleProductRecord {
-  barcode: string;
+  categoryName: string;
+  barcode?: string;
   productName: string;
   unitName: string;
   salePrice: number;
   quantity: number;
   discount: number;
   total: number;
-  createdAt: Date | string;
+  createdAt: string | Date;
 }
 
 export interface SaleReport {

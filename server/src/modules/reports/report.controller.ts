@@ -14,9 +14,9 @@ export class ReportController {
     private readonly saleService: SaleService,
   ) {}
 
-  @Get('sales/today')
-  async getTodaySales(): Promise<IResponseBody<SaleReport>> {
-    const result = await this.saleService.getTodaySalesReport();
+  @Get('sales/daily')
+  async getDailySales(): Promise<IResponseBody<SaleReport>> {
+    const result = await this.saleService.getDailySalesReport();
     return {
       data: result,
     };
