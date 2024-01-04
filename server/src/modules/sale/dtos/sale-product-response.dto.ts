@@ -30,7 +30,13 @@ export class SaleProductResponseDto
   @IsNumber()
   @Min(0)
   @ApiProperty()
-  price: number;
+  costPrice: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0)
+  @ApiProperty()
+  salePrice: number;
 
   @IsNotEmpty()
   @IsNumber()

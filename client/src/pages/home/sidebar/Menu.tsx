@@ -10,7 +10,9 @@ import {
 } from "@material-ui/core"
 import {
   Assessment,
+  CalendarToday,
   Category,
+  DateRange,
   GroupAdd,
   HourglassFull,
   LocalAtm,
@@ -20,6 +22,7 @@ import {
   NoteAdd,
   ShoppingCart,
   SupervisorAccount,
+  Today,
   ViewModule,
 } from "@material-ui/icons"
 import { t } from "i18next"
@@ -122,8 +125,34 @@ const Menu: React.FC = () => {
         <ListSubheader>
           <Typography variant="button">{t("Reports")}</Typography>
         </ListSubheader>
-        <MenuItem text={t("Today Sales")} icon={<Assessment />} />
-        <MenuItem text={t("Expense")} icon={<LocalAtm />} />
+
+        <MenuItem
+          isSelected={isSelected("reports/sales/today")}
+          onClick={() => navigate("/reports/sales/today")}
+          text={t("Today Sales")}
+          icon={<Today />}
+        />
+
+        <MenuItem
+          isSelected={isSelected("reports/sales/monthly")}
+          onClick={() => navigate("/reports/sales/monthly")}
+          text={t("Monthly Sales")}
+          icon={<DateRange />}
+        />
+
+        <MenuItem
+          isSelected={isSelected("reports/sales/yearly")}
+          onClick={() => navigate("/reports/sales/yearly")}
+          text={t("Yearly Sales")}
+          icon={<CalendarToday />}
+        />
+
+        <MenuItem
+          isSelected={isSelected("reports/profit-loss")}
+          onClick={() => navigate("/reports/profit-loss")}
+          text={t("Profit Loss")}
+          icon={<LocalAtm />}
+        />
       </List>
     </>
   )

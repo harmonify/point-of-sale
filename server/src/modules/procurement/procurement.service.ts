@@ -224,6 +224,10 @@ export class ProcurementService {
         data: BaseQuery.softDelete(authorId),
         where: { id },
       });
+      await prisma.procurementProduct.updateMany({
+        data: BaseQuery.softDelete(authorId),
+        where: { procurementId: id },
+      });
       await this.cashFlowService.softDeleteProcurementCashFlow(
         procurement.id,
         authorId,

@@ -41,6 +41,10 @@ i18n.services.formatter?.addCached(
   () => (value) => sentenceCase({ text: value, normalize: false }),
 )
 
+i18n.services.formatter?.addCached("spaceAfterIfDefined", () => (value) => {
+  return value ? value + " " : value
+})
+
 i18n.services.formatter?.addCached("spaceBeforeIfDefined", () => (value) => {
   return value ? " " + value : value
 })

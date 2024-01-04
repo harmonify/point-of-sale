@@ -1,19 +1,22 @@
 {
-  "default": "{{label}} tidak valid",
-  "required": "harus diisi",
+  "default": "{{label, spaceAfterIfDefined}}tidak valid",
+  "required": "{{label, spaceAfterIfDefined}}harus diisi",
   "string": {
-    "email": "harus berupa email yang valid",
-    "min": "harus lebih besar atau sama dengan {{x}} jumlah karakter",
-    "max": "harus lebih kecil atau sama dengan {{x}} jumlah karakter"
+    "email": "{{label, spaceAfterIfDefined}}harus berupa email yang valid",
+    "min": "{{label, spaceAfterIfDefined}}harus lebih besar atau sama dengan {{x}} jumlah karakter",
+    "max": "{{label, spaceAfterIfDefined}}harus lebih kecil atau sama dengan {{x}} jumlah karakter"
   },
+  "must be number": "{{label, spaceAfterIfDefined}}harus berupa angka",
   "number": {
-    "min": "harus lebih besar atau sama dengan {{x}}",
-    "max": "harus lebih kecil atau sama dengan {{x}}",
-    "lessThan": "harus lebih kecil dari {{x}}",
-    "moreThan": "harus lebih besar dari {{x}}"
+    "min": "{{label, spaceAfterIfDefined}}harus lebih besar atau sama dengan {{x}}",
+    "max": "{{label, spaceAfterIfDefined}}harus lebih kecil atau sama dengan {{x}}",
+    "lessThan": "{{label, spaceAfterIfDefined}}harus lebih kecil dari {{x}}",
+    "moreThan": "{{label, spaceAfterIfDefined}}harus lebih besar dari {{x}}"
   },
   "array": {
-    "unique": "harus berupa data yang unik"
+    "unique": "{{field, spaceAfterIfDefined}}harus berupa data yang unik"
   },
-  "some fields are invalid": "ada beberapa kolom yang tidak valid"
+  "some fields are invalid": "ada beberapa kolom yang tidak valid",
+  "The inputted quantity should not exceed the product unit available quantity": "Kuantitas yang diinputkan tidak boleh melebihi kuantitas unit produk yang tersedia",
+  "The change amount must not be less than 0": "Jumlah kembalian tidak boleh kurang dari 0"
 }

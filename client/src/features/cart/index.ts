@@ -14,7 +14,7 @@ export interface CartItemState {
   productUnitId: number
   name: string
   unitName: string
-  price: number
+  salePrice: number
   quantity: number
   inputDiscount: number
   discountType: FlatOrPercentage
@@ -112,10 +112,10 @@ const setCartCustomerReducer = (
 
 const updateCartItemPriceReducer = (
   state: CartState,
-  { payload }: PayloadAction<{ productUnitId: number | string; price: number }>,
+  { payload }: PayloadAction<{ productUnitId: number | string; salePrice: number }>,
 ) => {
   if (state.items[payload.productUnitId]) {
-    state.items[payload.productUnitId]!.price = payload.price
+    state.items[payload.productUnitId]!.salePrice = payload.salePrice
   }
 }
 

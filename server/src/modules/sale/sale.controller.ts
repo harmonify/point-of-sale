@@ -6,6 +6,7 @@ import {
 import { BaseQuery } from '@/libs/prisma';
 import { CurrentUser } from '@/modules/auth';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -19,7 +20,11 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { SaleQuery } from './sale.query';
-import { CreateSaleRequestDto, SaleResponseDto } from './dtos';
+import {
+  CreateSaleRequestDto,
+  SaleResponseDto,
+  UpdateSaleRequestDto,
+} from './dtos';
 
 @ApiTags('Sales')
 @Controller({ path: '/sales', version: '1' })
@@ -31,26 +36,61 @@ export class SaleController {
     @Body() sale: CreateSaleRequestDto,
     @CurrentUser() user: User,
   ): Promise<IResponseBody<SaleResponseDto>> {
-    const newSale = await this.prismaService.sale.create({
-      data: {
-        ...sale,
-        createdById: user.id,
-        updatedById: user.id,
-        saleProducts: {
-          createMany: {
-            data: sale.saleProducts.map((sp) => ({
-              ...sp,
-              createdById: user.id,
-              updatedById: user.id,
-            })),
+    const newSale = await this.prismaService.$transaction(async (prisma) => {
+      const productUnits = await prisma.productUnit.findMany({
+        select: {
+          id: true,
+          price: true,
+        },
+        where: {
+          AND: [
+            {
+              id: {
+                in: sale.saleProducts.map((sp) => sp.productUnitId),
+              },
+            },
+            BaseQuery.Filter.available(),
+          ],
+        },
+      });
+
+      const productUnitPriceMap = new Map(
+        productUnits.map((pu) => [pu.id, pu]),
+      );
+
+      const newSale = await prisma.sale.create({
+        data: {
+          ...sale,
+          createdById: user.id,
+          updatedById: user.id,
+          saleProducts: {
+            createMany: {
+              data: sale.saleProducts.map((sp) => {
+                const costPrice = productUnitPriceMap.get(sp.productUnitId)
+                  ?.price;
+                if (!costPrice) {
+                  throw new BadRequestException({
+                    message: 'Product unit is not valid',
+                  });
+                }
+                return {
+                  ...sp,
+                  costPrice,
+                  createdById: user.id,
+                  updatedById: user.id,
+                };
+              }),
+            },
           },
         },
-      },
-      include: {
-        customer: true,
-        createdBy: { select: { name: true } },
-        saleProducts: true,
-      },
+        include: {
+          customer: true,
+          createdBy: { select: { name: true } },
+          saleProducts: true,
+        },
+      });
+
+      return newSale;
     });
     return {
       data: newSale,
@@ -108,25 +148,73 @@ export class SaleController {
     };
   }
 
+  /** @deprecated TODO: Not implemented correctly yet */
   @Put('/:id')
   async update(
     @Param('id') id: number,
-    @Body() data: CreateSaleRequestDto,
+    @Body() data: UpdateSaleRequestDto,
     @CurrentUser() user: User,
   ): Promise<IResponseBody<SaleResponseDto>> {
-    const updatedSale = await this.prismaService.sale.update({
-      data: {
-        ...data,
-        updatedById: user.id,
-        saleProducts: BaseQuery.nestedUpsertMany(data.saleProducts, user.id),
+    const updatedSale = await this.prismaService.$transaction(
+      async (prisma) => {
+        const productUnits = await prisma.productUnit.findMany({
+          select: {
+            id: true,
+            price: true,
+          },
+          where: {
+            AND: [
+              {
+                id: {
+                  in: data.saleProducts.map((sp) => sp.productUnitId),
+                },
+              },
+              BaseQuery.Filter.available(),
+            ],
+          },
+        });
+
+        const productUnitPriceMap = new Map(
+          productUnits.map((pu) => [pu.id, pu]),
+        );
+
+        const updatedSale = await prisma.sale.update({
+          data: {
+            ...data,
+            updatedById: user.id,
+            saleProducts: {
+              upsert: data.saleProducts.map((sp) => {
+                const costPrice = productUnitPriceMap.get(sp.productUnitId)
+                  ?.price;
+                if (!costPrice) {
+                  throw new BadRequestException({
+                    message: 'Product unit is not valid',
+                  });
+                }
+                return {
+                  create: {
+                    ...sp,
+                    costPrice,
+                    createdById: user.id,
+                    updatedById: user.id,
+                  },
+                  update: { ...sp, costPrice, updatedById: user.id },
+                  where: { id: sp.id },
+                };
+              }),
+            },
+          },
+          where: BaseQuery.Filter.byId(id),
+          include: {
+            customer: true,
+            createdBy: { select: { name: true } },
+            saleProducts: true,
+          },
+        });
+
+        return updatedSale;
       },
-      where: BaseQuery.Filter.byId(id),
-      include: {
-        customer: true,
-        createdBy: { select: { name: true } },
-        saleProducts: true,
-      },
-    });
+    );
     return {
       data: updatedSale,
     };
@@ -140,6 +228,12 @@ export class SaleController {
     await this.prismaService.sale.update({
       data: BaseQuery.softDelete(user.id),
       where: BaseQuery.Filter.byId(id),
+    });
+    await this.prismaService.saleProduct.updateMany({
+      data: BaseQuery.softDelete(user.id),
+      where: {
+        saleId: id,
+      },
     });
   }
 }

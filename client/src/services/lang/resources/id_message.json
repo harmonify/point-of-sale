@@ -9,5 +9,6 @@
   "Define the selling price": "Tentukan harga jual",
   "Deleting this product unit will remove the related procured stock. Do you want to proceed?": "Menghapus unit produk ini akan menghapus pengadaan stok terkait. Apakah Anda ingin melanjutkan?",
   "No records found": "Tidak ada data yang ditemukan",
-  "No items in the cart": "Tidak ada item di keranjang ini"
+  "No items in the cart": "Tidak ada item di keranjang ini",
+  "Do you want to proceed to save this sale transaction? You will be able to print the invoice after the transaction is saved.": "Apakah kamu mau melanjutkan untuk menyimpan data transaksi penjualan ini? Anda akan dapat mencetak invoice setelah transaksi ini berhasil disimpan."
 }

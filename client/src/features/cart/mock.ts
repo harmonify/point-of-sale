@@ -9,14 +9,14 @@ export const mockCartState: CartState = {
   paid: 100000,
   customer: {
     id: 1,
-    name: "Wendy Surya Wijaya",
+    name: "Customer 1",
   },
   items: {
     "1": {
       productUnitId: 1,
       name: "Egg",
       unitName: "Piece",
-      price: 1500,
+      salePrice: 1500,
       quantity: 10,
       inputDiscount: 500,
       discountType: "FLAT",
@@ -27,7 +27,7 @@ export const mockCartState: CartState = {
       productUnitId: 2,
       name: "Garnier UV White Egg egggggggg",
       unitName: "Dozen",
-      price: 15000,
+      salePrice: 15000,
       quantity: 1,
       inputDiscount: 20,
       discountType: "PERCENTAGE",

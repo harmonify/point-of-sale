@@ -12,11 +12,11 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { CreateSaleProductRequestDto } from './create-sale-product.dto';
+import { UpdateSaleProductRequestDto } from './update-sale-product.dto';
 
-export class CreateSaleRequestDto
+export class UpdateSaleRequestDto
   implements
-    Omit<Prisma.SaleCreateInput, 'createdBy' | 'updatedBy' | 'saleProducts'>
+    Omit<Prisma.SaleUpdateInput, 'createdBy' | 'updatedBy' | 'saleProducts'>
 {
   @IsOptional()
   @IsInt()
@@ -94,6 +94,6 @@ export class CreateSaleRequestDto
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateSaleProductRequestDto)
-  saleProducts: CreateSaleProductRequestDto[];
+  @Type(() => UpdateSaleProductRequestDto)
+  saleProducts: UpdateSaleProductRequestDto[];
 }

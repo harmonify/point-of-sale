@@ -1,18 +1,19 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { FormikSubmissionHandler } from "@/components/forms"
 import Form from "@/components/forms/Form"
 import { CartState, selectCart } from "@/features/cart"
 import { useCreateSaleApiMutation } from "@/services/api"
 import { Box, Button } from "@material-ui/core"
 import { createStyles, makeStyles } from "@material-ui/core/styles"
 import { Save } from "@material-ui/icons"
-import { Formik } from "formik"
+import { Formik, FormikProps } from "formik"
 import { t } from "i18next"
 import React, { useMemo } from "react"
 
 import CartTable from "./cartTable/CartTable"
 import { buildCreateSaleRequestDto } from "./util"
 import createSaleValidationSchema from "./validationSchema"
+import { useConfirmationDialog } from "@/features/dialog"
+import { showSnackbar } from "@/features/snackbar"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) =>
 )
 
 const Cart: React.FC = (props) => {
+  const dispatch = useAppDispatch()
   const classes = useStyles()
 
   const cart = useAppSelector(selectCart)
@@ -43,9 +45,43 @@ const Cart: React.FC = (props) => {
 
   const [createSaleApiMutation, { isLoading }] = useCreateSaleApiMutation()
 
-  const onSubmit: FormikSubmissionHandler<CartState> = async (data) => {
+  // TODO: fix this, currently it bypass formik validation, the required property in the validation schema `saleProducts` is stored differently in the cart state property `items`
+  const onConfirmSubmit = async (formik: FormikProps<CartState>) => {
+    const data = formik.values
+
+    const errors = await formik.validateForm()
+    if (errors.change) {
+      return dispatch(
+        showSnackbar({
+          message: t("The change amount must not be less than 0", {
+            ns: "validation",
+          }),
+          variant: "error",
+        }),
+      )
+    }
+
     const dto = buildCreateSaleRequestDto(data)
-    return createSaleApiMutation(dto).unwrap()
+    await createSaleApiMutation(dto).unwrap()
+    formik.resetForm()
+  }
+
+  const { show } = useConfirmationDialog({
+    title: t("Confirm Transaction Data", { ns: "action" }),
+    content: `${t(
+      "Do you want to proceed to save this sale transaction? You will be able to print the invoice after the transaction is saved.",
+      {
+        ns: "message",
+      },
+    )}`,
+    confirmText: t("Save", { ns: "action" }),
+    variant: "neutral",
+  })
+
+  const onClickSubmit = (formik: FormikProps<CartState>) => {
+    show({
+      onConfirm: () => onConfirmSubmit(formik),
+    })
   }
 
   return (
@@ -56,7 +92,6 @@ const Cart: React.FC = (props) => {
         validationSchema={createSaleValidationSchema}
         validateOnChange={true}
         validateOnBlur={true}
-        onSubmit={onSubmit}
       >
         {(formik) => (
           <>
@@ -68,6 +103,7 @@ const Cart: React.FC = (props) => {
                 color="primary"
                 variant="contained"
                 disabled={cartItemsLength === 0}
+                onClick={() => onClickSubmit(formik)}
                 fullWidth
               >
                 {t("Save", { ns: "action" })}

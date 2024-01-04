@@ -167,7 +167,7 @@ const routeObjects: IRoute[] = [
         title: t("Reports"),
         children: [
           {
-            path: "today-sales",
+            path: "sales/today",
             title: t("Today Sales"),
             Component: TodaySaleReport,
           },

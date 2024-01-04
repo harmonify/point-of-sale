@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomerCell: React.FC<{
   name: string
-  onClick: React.MouseEventHandler
 }> = (props) => {
   const classes = useStyles()
 
@@ -51,13 +50,7 @@ const CustomerCell: React.FC<{
   )
 
   return (
-    <Grid
-      container
-      className={classes.root}
-      alignItems="center"
-      component={Button}
-      onClick={props.onClick}
-    >
+    <Grid container className={classes.root} alignItems="center">
       <Grid item>
         <Avatar alt={selectedCustomer?.name} className={classes.avatar}>
           {nameInitials(selectedCustomer?.name)}
@@ -68,8 +61,13 @@ const CustomerCell: React.FC<{
           name="customerId"
           margin="none"
           size="small"
+          type="number"
+          onBlur={formik.getFieldProps('customerId').onBlur}
+          onChange={formik.getFieldProps('customerId').onChange}
           options={customerList.map((c) => ({ label: c.name, value: c.id }))}
-          SelectProps={{ native: false }}
+          enableDefaultValue
+          SelectProps={{ native: true }}
+          style={{ minWidth: 160 }}
         />
       </Grid>
     </Grid>

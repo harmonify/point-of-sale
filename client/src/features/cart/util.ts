@@ -38,7 +38,7 @@ const countTaxOrDiscount = (
 
 export const getItemSummary = (cartItem: CartItemState): CartItemSummary => {
   const subTotal =
-    Math.max(currency(cartItem.price).multiply(cartItem.quantity).value, 0) || 0
+    Math.max(currency(cartItem.salePrice).multiply(cartItem.quantity).value, 0) || 0
 
   const discount =
     Math.max(

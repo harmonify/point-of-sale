@@ -49,7 +49,7 @@ const MenuItem: React.FC<{
       <ListItemText
         style={{ padding: 2 }}
         primary={
-          <Typography style={{ fontSize: 14 }} color="inherit" variant="button">
+          <Typography style={{ fontSize: 12 }} color="inherit" variant="button">
             {props.text}
           </Typography>
         }

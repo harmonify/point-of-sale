@@ -10,7 +10,7 @@ export const buildCreateSaleRequestDto = (
     saleProducts: Object.values(cart.items).map((cartItem) => {
       return {
         productUnitId: cartItem.productUnitId,
-        price: cartItem.price,
+        salePrice: cartItem.salePrice,
         quantity: cartItem.quantity,
         subTotal: cartItem.subTotal,
         inputDiscount: cartItem.inputDiscount,

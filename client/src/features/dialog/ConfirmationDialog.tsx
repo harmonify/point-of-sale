@@ -51,12 +51,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Transition = (props: FadeProps) => <Fade {...props} />
+const Transition = React.forwardRef(
+  (props: FadeProps, ref: React.Ref<unknown>) => {
+    return <Fade ref={ref} {...props} />
+  },
+)
 
 const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
   const theme = useTheme()
   const classes = useStyles()
-  const ref = useRef()
+  // const use
 
   return (
     <MuiDialog
@@ -67,34 +71,31 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
       TransitionComponent={Transition}
       fullWidth
     >
-      {!!props.title && (
+      {props.title ? (
         <DialogTitle disableTypography color="textPrimary">
-          <Typography
-            innerRef={ref}
-            variant="h4"
-            color="textPrimary"
-            gutterBottom
-          >
+          <Typography variant="h4" color="textPrimary" gutterBottom>
             {props.title}
           </Typography>
           <Divider />
         </DialogTitle>
-      )}
+      ) : null}
 
       <DialogContent className={classes.dialogContent}>
-        {props.render ? (
-          props.render
-        ) : (
-          <Typography
-            variant="h5"
-            color="textPrimary"
-            className={classes.content}
-            gutterBottom
-          >
-            {props.content}
-          </Typography>
-        )}
-        <Divider />
+        <>
+          {props.render ? (
+            props.render
+          ) : (
+            <Typography
+              variant="h5"
+              color="textPrimary"
+              className={classes.content}
+              gutterBottom
+            >
+              {props.content}
+            </Typography>
+          )}
+          <Divider />
+        </>
       </DialogContent>
 
       <DialogActions className={classes.dialogActions}>
@@ -122,7 +123,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
           </Button>
         </Box>
 
-        {!props.disableCancelButton && (
+        {props.disableCancelButton ? null : (
           <Box className={classes.buttonContainer}>
             <Button
               variant="text"

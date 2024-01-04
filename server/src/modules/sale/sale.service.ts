@@ -1,41 +1,128 @@
-import currency from 'currency.js';
-import * as responseMessages from './constants/response-messages';
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
+import { SaleProductRecord, SaleReport } from '../reports/dtos';
 import { DateTime } from 'luxon';
-import { Sale, SaleProduct, Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class SaleService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public async checkoutSale(
-    user: User,
-    // saleDetails: CheckoutSale,
-  ): Promise<any> {
-    // await this.prismaService.$transaction(async (tx) => {
-    //   totalPrice = currency(totalPrice).value;
-    //   netTotalPrice = currency(netTotalPrice).value;
-    //   totalDiscount = currency(totalDiscount).value;
+  getSalePayloadToken() {
+    return {
+      include: {
+        saleProducts: {
+          include: {
+            productUnit: {
+              include: {
+                product: true,
+                unit: {
+                  select: { name: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    } satisfies Prisma.SaleDefaultArgs;
+  }
 
-    //   transactionHeader.transactionStatus = TransactionStatus.Done;
-    //   transactionHeader.taxPercentageString = saleDetails.taxPercentageString;
-    //   transactionHeader.tax = saleDetails.tax;
-    //   transactionHeader.discountOnTotal = currency(
-    //     saleDetails.totalDiscount,
-    //   ).value;
-    //   transactionHeader.discountOnItems = totalDiscount;
-    //   // Total of all products without any discount or tax.
-    //   transactionHeader.netAmount = currency(netTotalPrice).value;
-    //   // Total of netAmount + tax + discount.
-    //   transactionHeader.billAmount = currency(totalPrice)
-    //     .add(saleDetails.tax)
-    //     .subtract(saleDetails.totalDiscount).value;
+  createSaleReport(
+    sales: Prisma.SaleGetPayload<
+      ReturnType<SaleService['getSalePayloadToken']>
+    >[],
+  ): SaleReport {
+    return sales.reduce(
+      (acc, s) => {
+        acc.subTotal += s.subTotal;
+        acc.discountTotal += s.discountTotal;
+        acc.taxTotal += s.taxTotal;
+        acc.total += s.total;
+        acc.saleProducts.push(
+          ...s.saleProducts.map(
+            (sp) =>
+              ({
+                barcode: sp.productUnit.product.barcode || '-',
+                productName: sp.productUnit.product.name,
+                unitName: sp.productUnit.unit.name,
+                salePrice: sp.salePrice,
+                quantity: sp.quantity,
+                discount: sp.discount,
+                total: sp.total,
+                createdAt: sp.createdAt,
+              }) satisfies SaleProductRecord,
+          ),
+        );
+        return acc;
+      },
+      {
+        subTotal: 0.0,
+        discountTotal: 0.0,
+        taxTotal: 0.0,
+        total: 0.0,
+        saleProducts: [] as SaleProductRecord[],
+      } satisfies SaleReport,
+    );
+  }
 
-    //   transactionHeader.amountPaid = currency(saleDetails.amountPaid).value;
-    //   transactionHeader.updatedBy = userId;
-    //   transactionHeader.salesType = saleDetails.saleType;
-    // });
-    return responseMessages.SALE_COMPLETED_SUCCESS;
+  async getTodaySalesReport(): Promise<SaleReport> {
+    const now = DateTime.now();
+    const startOfDay = now.startOf('day');
+    const endOfDay = now.endOf('day');
+
+    // eslint-disable-next-line prisma-soft-delete/use-deleted-null
+    const sales = await this.prismaService.sale.findMany({
+      ...this.getSalePayloadToken(),
+      where: {
+        createdAt: {
+          gte: startOfDay.toJSDate(),
+          lte: endOfDay.toJSDate(),
+        },
+        deletedAt: null,
+      },
+    });
+
+    return this.createSaleReport(sales);
+  }
+
+  async getMonthlySalesReport(): Promise<SaleReport> {
+    const now = DateTime.now();
+    const startOfMonth = now.startOf('month');
+    const endOfMonth = now.endOf('month');
+
+    // eslint-disable-next-line prisma-soft-delete/use-deleted-null
+    const sales = await this.prismaService.sale.findMany({
+      ...this.getSalePayloadToken(),
+      where: {
+        createdAt: {
+          gte: startOfMonth.toJSDate(),
+          lte: endOfMonth.toJSDate(),
+        },
+        deletedAt: null,
+      },
+    });
+
+    return this.createSaleReport(sales);
+  }
+
+  async getYearlySalesReport(): Promise<SaleReport> {
+    const now = DateTime.now();
+    const startOfYear = now.startOf('year');
+    const endOfYear = now.endOf('year');
+
+    // eslint-disable-next-line prisma-soft-delete/use-deleted-null
+    const sales = await this.prismaService.sale.findMany({
+      ...this.getSalePayloadToken(),
+      where: {
+        createdAt: {
+          gte: startOfYear.toJSDate(),
+          lte: endOfYear.toJSDate(),
+        },
+        deletedAt: null,
+      },
+    });
+
+    return this.createSaleReport(sales);
   }
 }

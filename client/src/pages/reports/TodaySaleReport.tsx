@@ -1,45 +1,64 @@
-import { Button } from "@material-ui/core"
 import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  PDFDownloadLink,
-} from "@react-pdf/renderer"
+  Button,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from "@material-ui/core"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
+import { TodaySaleReportPDF } from "./TodaySaleReportPDF"
+import { useGetTodaySalesQuery } from "@/services/api"
 
-// Create styles
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E400",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-})
+const pdfElementId = "today-sale-report"
 
-// Create Document Component
 const TodaySaleReport = () => {
-  const document = (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text>Section #1</Text>
-        </View>
-        <View style={styles.section}>
-          <Text>Section #2</Text>
-        </View>
-      </Page>
-    </Document>
-  )
+  const theme = useTheme()
+  const { data, isLoading } = useGetTodaySalesQuery()
+
+  const onClickDownload = () => {
+    const doc = new jsPDF()
+
+    // It can parse html:
+    // <table id="my-table"><!-- ... --></table>
+    autoTable(doc, { html: `#${pdfElementId}` })
+
+    // Or use javascript directly:
+    autoTable(doc, {
+      head: [["Name", "Email", "Country"]],
+      body: [
+        ["David", "david@example.com", "Sweden"],
+        ["Castille", "castille@example.com", "Spain"],
+        // ...
+      ],
+    })
+
+    doc.save("table.pdf")
+  }
 
   return (
-    <PDFDownloadLink document={document} fileName={"document.pdf"}>
-      <Button size="small">Download</Button>
-    </PDFDownloadLink>
+    <>
+      <Button
+        size="small"
+        onClick={onClickDownload}
+        disabled={isLoading}
+        startIcon={
+          isLoading ? (
+            <CircularProgress
+              size={theme.typography.body1.fontSize}
+              color="inherit"
+            />
+          ) : null
+        }
+        variant="contained"
+        color="primary"
+      >
+        Download
+      </Button>
+      <TodaySaleReportPDF
+        data={data?.data}
+        isLoading={isLoading}
+      ></TodaySaleReportPDF>
+    </>
   )
 }
 

@@ -339,7 +339,8 @@ model SaleProduct {
   deletedById   Int?
   saleId        Int
   productUnitId Int
-  price         Float
+  costPrice     Float
+  salePrice     Float
   quantity      Int
   subTotal      Float            @default(0)
   inputDiscount Float            @default(0)

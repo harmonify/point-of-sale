@@ -16,12 +16,11 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core"
-import { useFormikContext } from "formik"
+import { Delete } from "@material-ui/icons"
 import { t } from "i18next"
 import React, { useMemo } from "react"
 
 import CustomTableCell from "./controls/CustomTableCell"
-import { Delete } from "@material-ui/icons"
 
 const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
   const dispatch = useAppDispatch()
@@ -53,12 +52,7 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
       {cartItems.map((row, index) => (
         <TableRow key={index}>
           {/* Num */}
-          <CustomTableCell
-            align="center"
-            padding="none"
-            variant="body"
-            style={{ width: "5%" }}
-          >
+          <CustomTableCell align="center" padding="none" variant="body">
             <Typography>{index + 1}</Typography>
           </CustomTableCell>
 
@@ -67,7 +61,7 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
             colSpan={2}
             padding="none"
             variant="body"
-            style={{ overflowWrap: "anywhere", width: "30%" }}
+            style={{ overflowWrap: "anywhere" }}
           >
             <Grid container>
               <Grid item>
@@ -82,18 +76,14 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
                 <Typography>
                   {t("Price")}
                   {": "}
-                  {formatRupiah(row.price)}
+                  {formatRupiah(row.salePrice)}
                 </Typography>
               </Grid>
             </Grid>
           </CustomTableCell>
 
           {/* Quantity */}
-          <CustomTableCell
-            align="center"
-            variant="body"
-            style={{ width: "15%" }}
-          >
+          <CustomTableCell align="center" variant="body">
             <FormikNumberInput
               name={`items[${row.productUnitId}].quantity`}
               margin="none"
@@ -112,7 +102,7 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
           </CustomTableCell>
 
           {/* Discount */}
-          <CustomTableCell variant="body" style={{ width: "25%" }}>
+          <CustomTableCell variant="body">
             <FormikNumberInput
               intlConfig={{
                 locale: APP_DEFAULT_LANG,
@@ -137,20 +127,12 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
           </CustomTableCell>
 
           {/* Total */}
-          <CustomTableCell
-            variant="body"
-            style={{ overflowWrap: "anywhere", width: "40%" }}
-          >
+          <CustomTableCell variant="body" style={{ overflowWrap: "anywhere" }}>
             <Typography variant="h6">{formatRupiah(row.total)}</Typography>
           </CustomTableCell>
 
           {/* Actions */}
-          <CustomTableCell
-            align="center"
-            variant="body"
-            padding="none"
-            style={{ width: "5%" }}
-          >
+          <CustomTableCell align="center" variant="body" padding="none">
             <IconButton
               onClick={() => dispatch(removeCartItem(row.productUnitId))}
               size="small"

@@ -17,6 +17,14 @@ import {
   findCategoriesProductsBuilder,
   findCategoriesProductsMutationName,
 } from "./endpoints/sales"
+import {
+  getMonthlySalesApiMutationName,
+  getMonthlySalesBuilder,
+  getTodaySalesApiMutationName,
+  getTodaySalesBuilder,
+  getYearlySalesApiMutationName,
+  getYearlySalesBuilder,
+} from "./endpoints/reports"
 
 const reducerPath = "api"
 
@@ -129,6 +137,10 @@ const api = createApi({
       [findCategoriesProductsMutationName]:
         findCategoriesProductsBuilder(builder),
 
+      [getTodaySalesApiMutationName]: getTodaySalesBuilder(builder),
+      [getMonthlySalesApiMutationName]: getMonthlySalesBuilder(builder),
+      [getYearlySalesApiMutationName]: getYearlySalesBuilder(builder),
+
       createUserApi: userApi.create,
       findAllUserApi: userApi.findAll,
       findOneUserApi: userApi.findOne,
@@ -222,6 +234,10 @@ export const {
   useGetDashboardInfoQuery,
 
   useFindCategoriesProductsQuery,
+
+  useGetTodaySalesQuery,
+  useGetMonthlySalesQuery,
+  useGetYearlySalesQuery,
 
   useCreateUserApiMutation,
   useLazyFindAllUserApiQuery,

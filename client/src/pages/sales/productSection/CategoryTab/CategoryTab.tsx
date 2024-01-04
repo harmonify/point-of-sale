@@ -38,7 +38,7 @@ const CategoryTab: React.FC<{
   return (
     <Grid container spacing={1} alignItems="stretch">
       {rows.map((row) => (
-        <Grid key={row.id} item xs={6} md={4} style={{ display: "flex" }}>
+        <Grid key={row.id} item xs={6} style={{ display: "flex" }}>
           <Card
             className={classes.root}
             style={{

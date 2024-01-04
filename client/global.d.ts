@@ -111,6 +111,9 @@ declare global {
           import("../server/src/modules/sale").SaleProductResponseDto
         type DashboardResponseDto =
           import("../server/src/modules/dashboard").DashboardResponseDto
+        type SaleReport = import("../server/src/modules/reports").SaleReport
+        type SaleProductRecord =
+          import("../server/src/modules/reports").SaleProductRecord
       }
     }
   }

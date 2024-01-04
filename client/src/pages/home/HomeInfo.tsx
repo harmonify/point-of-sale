@@ -12,7 +12,12 @@ import {
   Typography,
 } from "@material-ui/core"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
-import { AttachMoney, MoneyOff, People } from "@material-ui/icons"
+import {
+  AttachMoney,
+  MonetizationOn,
+  MoneyOff,
+  People,
+} from "@material-ui/icons"
 import { DataGrid, GridColDef, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useEffect } from "react"
@@ -28,7 +33,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     justifyContent: "center",
     alignItems: "center",
-    minHeight: 160,
+    minHeight: 200,
   },
   cardHeader: {
     display: "flex",
@@ -48,7 +53,7 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     position: "relative",
     width: "100%",
-    minHeight: "380px",
+    minHeight: "240px",
     flexDirection: "column",
     "& .MuiFormGroup-options": {
       alignItems: "center",
@@ -147,10 +152,11 @@ const HomeInfo: React.FC = () => {
       flex: 2,
       // minWidth: 160,
       ...defaultGridColumnOptions,
+      valueGetter: (params) => params.value || "-",
     },
     {
-      field: "netAmount",
-      headerName: t("Net Amount"),
+      field: "total",
+      headerName: t("Total"),
       flex: 2,
       // minWidth: 180,
       ...defaultGridColumnOptions,
@@ -184,7 +190,7 @@ const HomeInfo: React.FC = () => {
         </Typography>
       </Grid>
 
-      <Grid item container xs={12} justifyContent="center" spacing={5}>
+      <Grid item container xs={12} justifyContent="center" spacing={2}>
         <Grid item xs={12} md={3}>
           <Card className={classes.card} color={theme.palette.primary.main}>
             <CardContent className={classes.cardContent}>
@@ -194,16 +200,17 @@ const HomeInfo: React.FC = () => {
                 </Icon>
                 <Typography
                   style={{ margin: theme.spacing(1), marginLeft: 0 }}
-                  variant="h2"
+                  align="center"
+                  variant="h3"
                 >
-                  {t("Sales")}
+                  {t("Total Sales")}
                 </Typography>
               </Box>
               <Typography
                 style={{
                   margin: theme.spacing(1),
                   marginLeft: 0,
-                  fontWeight: 500,
+                  fontWeight: 600,
                 }}
                 variant="h2"
               >
@@ -222,16 +229,17 @@ const HomeInfo: React.FC = () => {
                 </Icon>
                 <Typography
                   style={{ margin: theme.spacing(1), marginLeft: 0 }}
-                  variant="h2"
+                  align="center"
+                  variant="h3"
                 >
-                  {t("Expenses")}
+                  {t("Total Expenses")}
                 </Typography>
               </Box>
               <Typography
                 style={{
                   margin: theme.spacing(1),
                   marginLeft: 0,
-                  fontWeight: 500,
+                  fontWeight: 600,
                 }}
                 variant="h2"
               >
@@ -246,20 +254,57 @@ const HomeInfo: React.FC = () => {
             <CardContent className={classes.cardContent}>
               <Box className={classes.cardHeader}>
                 <Icon>
-                  <People />
+                  <MonetizationOn />
                 </Icon>
                 <Typography
                   style={{ margin: theme.spacing(1), marginLeft: 0 }}
-                  variant="h2"
+                  align="center"
+                  variant="h3"
                 >
-                  {t("Customers")}
+                  {t("Total Profit")}
                 </Typography>
               </Box>
               <Typography
                 style={{
                   margin: theme.spacing(1),
                   marginLeft: 0,
-                  fontWeight: 500,
+                  fontWeight: 600,
+                }}
+                variant="h2"
+              >
+                {formatRupiah(
+                  totalSales &&
+                    typeof totalSales === "number" &&
+                    totalExpenses &&
+                    typeof totalExpenses === "number"
+                    ? totalSales - totalExpenses
+                    : 0,
+                )}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={3}>
+          <Card className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Box className={classes.cardHeader}>
+                <Icon>
+                  <People />
+                </Icon>
+                <Typography
+                  style={{ margin: theme.spacing(1), marginLeft: 0 }}
+                  align="center"
+                  variant="h3"
+                >
+                  {t("Total Customers")}
+                </Typography>
+              </Box>
+              <Typography
+                style={{
+                  margin: theme.spacing(1),
+                  marginLeft: 0,
+                  fontWeight: 600,
                 }}
                 variant="h2"
               >
@@ -286,6 +331,7 @@ const HomeInfo: React.FC = () => {
           disableSelectionOnClick
           disableDensitySelector
           pageSize={5}
+          hideFooter
           density="compact"
         />
       </Grid>
@@ -306,6 +352,7 @@ const HomeInfo: React.FC = () => {
           disableSelectionOnClick
           disableDensitySelector
           pageSize={5}
+          hideFooter
           density="compact"
         />
       </Grid>

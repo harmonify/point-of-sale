@@ -6,7 +6,7 @@ export class CreateSaleProductRequestDto
   implements
     Omit<
       Prisma.SaleProductCreateInput,
-      'createdBy' | 'updatedBy' | 'sale' | 'productUnit'
+      'createdBy' | 'updatedBy' | 'sale' | 'productUnit' | 'costPrice'
     >
 {
   @IsNotEmpty()
@@ -19,7 +19,7 @@ export class CreateSaleProductRequestDto
   @IsNumber()
   @Min(0)
   @ApiProperty()
-  price: number;
+  salePrice: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -29,11 +29,13 @@ export class CreateSaleProductRequestDto
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   @ApiProperty()
   subTotal?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   @ApiProperty()
   inputDiscount?: number;
 
@@ -44,11 +46,13 @@ export class CreateSaleProductRequestDto
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   @ApiProperty()
   discount?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   @ApiProperty()
   inputTax?: number;
 
@@ -59,11 +63,13 @@ export class CreateSaleProductRequestDto
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   @ApiProperty()
   tax?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   @ApiProperty()
   total?: number;
 }

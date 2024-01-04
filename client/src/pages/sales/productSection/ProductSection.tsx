@@ -116,7 +116,7 @@ const ProductSection: React.FC = () => {
         productUnitId: productUnit.id,
         name: productUnit.product.name,
         unitName: productUnit.unit.name,
-        price: productUnit.price,
+        salePrice: productUnit.price,
         quantity: inputQuantity,
         inputDiscount: 0,
         discountType: "PERCENTAGE",

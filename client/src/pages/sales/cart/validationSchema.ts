@@ -13,7 +13,7 @@ const flatOrPercentage: FlatOrPercentage[] = ["FLAT", "PERCENTAGE"]
 
 const createSaleProductValidationSchema = object({
   productUnitId: number().required(),
-  price: number().required().min(0),
+  salePrice: number().required().min(0),
   quantity: number().required().min(1),
   subTotal: number().optional(),
   inputDiscount: number().optional(),
@@ -37,8 +37,8 @@ const createSaleValidationSchema = object({
   taxTotalType: string().optional().oneOf(flatOrPercentage),
   taxTotal: number().optional(),
   total: number().optional(),
-  paid: number().optional(),
-  change: number().optional(),
+  paid: number().optional().min(0),
+  change: number().optional().min(0),
   saleProducts: array().required().of(createSaleProductValidationSchema),
 } satisfies Record<keyof Monorepo.Api.Request.CreateSaleRequestDto, Schema>) satisfies ObjectSchema<Monorepo.Api.Request.CreateSaleRequestDto>
 
