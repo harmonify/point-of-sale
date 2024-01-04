@@ -1,13 +1,13 @@
 import Container from "@/components/layout/Container/Container"
-import { useGetMonthlySalesQuery } from "@/services/api"
+import { useGetMonthlySalesReportQuery } from "@/services/api"
 import { formatDateTimeToLocale } from "@/utils/string"
+import { Print } from "@mui/icons-material"
 import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
-import { GetApp } from "@mui/icons-material"
 import { t } from "i18next"
 import { DateTime } from "luxon"
 
-import { SaleReportPDF } from "./SaleReportPDF"
-import { generateSaleReportPDF } from "./util"
+import { SaleReportPDF } from "./SaleReportPDF/SaleReportPDF"
+import { generateSaleReportPDF } from "./SaleReportPDF/util"
 
 const today = formatDateTimeToLocale(DateTime.now(), {
   month: "long",
@@ -27,7 +27,7 @@ const fileName = `POS - ${t(
 const MonthlySaleReport = () => {
   const theme = useTheme()
 
-  const { data, isLoading } = useGetMonthlySalesQuery(null, {
+  const { data, isLoading } = useGetMonthlySalesReportQuery(null, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -45,9 +45,9 @@ const MonthlySaleReport = () => {
   return (
     <Container title={t("Monthly Sales Report")}>
       <Grid container spacing={3}>
-        <Grid item>
+        <Grid item xs={12}>
           <Button
-            size="small"
+            size="medium"
             onClick={onClickDownload}
             disabled={isLoading}
             startIcon={
@@ -57,17 +57,17 @@ const MonthlySaleReport = () => {
                   color="inherit"
                 />
               ) : (
-                <GetApp color="inherit" />
+                <Print color="inherit" />
               )
             }
             variant="contained"
             color="primary"
           >
-            Download
+            {t("Print", { ns: "action" })}
           </Button>
         </Grid>
 
-        <Grid item>
+        <Grid item xs={12}>
           <SaleReportPDF
             saleSummaryTableId={saleSummaryTableId}
             saleProductTableId={saleProductTableId}

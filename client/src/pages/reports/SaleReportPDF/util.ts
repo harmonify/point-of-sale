@@ -1,6 +1,9 @@
 import jsPDF from "jspdf"
 import autoTable, { Styles, UserOptions } from "jspdf-autotable"
-import { saleReportPDFColumns } from "./saleReportPDFColumns"
+import {
+  saleProductReportPDFColumns,
+  saleReportPDFColumns,
+} from "./saleReportPDFColumns"
 
 export const defaultPdfTableStyles: UserOptions = {
   styles: {
@@ -27,13 +30,14 @@ export const generateSaleReportPDF = (params: {
   doc.text(params.title, 28, 10)
   autoTable(doc, {
     ...defaultPdfTableStyles,
+    styles: { fontStyle: "bold" },
     html: `#${params.saleSummaryTableId}`,
   })
   autoTable(doc, {
     ...defaultPdfTableStyles,
     html: `#${params.saleProductTableId}`,
-    columns: saleReportPDFColumns,
-    columnStyles: saleReportPDFColumns.reduce((acc, column, index) => {
+    columns: saleProductReportPDFColumns,
+    columnStyles: saleProductReportPDFColumns.reduce((acc, column, index) => {
       acc[index] = column
       return acc
     }, {} as Record<number, Partial<Styles>>),

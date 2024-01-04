@@ -9,14 +9,15 @@ import {
   updateCartItemQuantity,
 } from "@/features/cart"
 import { formatRupiah } from "@/utils"
+import { Delete } from "@mui/icons-material"
 import {
   Grid,
   IconButton,
   TableBody,
   TableRow,
   Typography,
+  useTheme,
 } from "@mui/material"
-import { Delete } from "@mui/icons-material"
 import { t } from "i18next"
 import React, { useMemo } from "react"
 
@@ -24,6 +25,8 @@ import CustomTableCell from "./controls/CustomTableCell"
 
 const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
   const dispatch = useAppDispatch()
+
+  const theme = useTheme()
 
   const cartItems = useMemo(
     () => Object.values(cartState.items) as CartItemStateSummary[],
@@ -136,6 +139,7 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
             <IconButton
               onClick={() => dispatch(removeCartItem(row.productUnitId))}
               size="small"
+              color="error"
             >
               <Delete />
             </IconButton>

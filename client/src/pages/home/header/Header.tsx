@@ -10,8 +10,9 @@ import { t } from "i18next"
 import React from "react"
 
 import Menus from "./HeaderMenu"
-import { Brightness4, Brightness7 } from "@mui/icons-material"
-import { Box, Grid, Typography } from "@mui/material"
+import { Brightness4, Brightness7, ShoppingCart } from "@mui/icons-material"
+import { Box, Button, Grid, Typography } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
 const drawerWidth = 240
 
@@ -55,6 +56,8 @@ const Header: React.FC<{
   const classes = useStyles()
   const theme = useTheme()
 
+  const navigate = useNavigate()
+
   const navIconClass =
     shouldRenderMobileMenu === true ? classes.navIconShow : classes.navIconHide
 
@@ -78,14 +81,28 @@ const Header: React.FC<{
                 color="inherit"
                 aria-label="open drawer"
                 onClick={() => dispatch(toggleMobileDrawer())}
-                size="large">
+                size="large"
+              >
                 <MenuIcon />
               </IconButton>
             </Grid>
             <Grid item>
-              <Typography variant="h5" color="inherit">
-                {t("Point of Sales")}
-              </Typography>
+              <Button
+                onClick={() => navigate("/")}
+                size="large"
+                startIcon={
+                  <ShoppingCart
+                    style={{ color: theme.palette.primary.contrastText }}
+                  />
+                }
+              >
+                <Typography
+                  variant="h5"
+                  color={theme.palette.primary.contrastText}
+                >
+                  {t("Point of Sales")}
+                </Typography>
+              </Button>
             </Grid>
           </Grid>
         </Box>
@@ -93,7 +110,11 @@ const Header: React.FC<{
         <Box className={classes.flex}>
           {/* This is the right side menu - Logout, My Profile */}
           <Box className={classes.menuRight}>
-            <IconButton onClick={() => dispatch(toggleDarkMode())} color="inherit" size="large">
+            <IconButton
+              onClick={() => dispatch(toggleDarkMode())}
+              color="inherit"
+              size="large"
+            >
               {theme.palette.mode === "dark" ? (
                 <Brightness7 />
               ) : (
@@ -105,7 +126,7 @@ const Header: React.FC<{
         </Box>
       </Toolbar>
     </AppBar>
-  );
+  )
 }
 
 export default Header

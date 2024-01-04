@@ -1,15 +1,14 @@
 import Container from "@/components/layout/Container/Container"
-import { useGetDailySalesQuery } from "@/services/api"
+import { useGetDailySalesReportQuery } from "@/services/api"
 import { formatDateTimeToLocale } from "@/utils/string"
 import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
-import { GetApp } from "@mui/icons-material"
 import { t } from "i18next"
 import { DateTime } from "luxon"
-
-import { SaleReportPDF } from "./SaleReportPDF"
-import { generateSaleReportPDF } from "./util"
-// import { DatePicker } from "@mui/pickers"
 import { useState } from "react"
+
+import { SaleReportPDF } from "./SaleReportPDF/SaleReportPDF"
+import { generateSaleReportPDF } from "./SaleReportPDF/util"
+import { GetApp, Print } from "@mui/icons-material"
 
 const now = DateTime.now()
 const today = formatDateTimeToLocale(now, {
@@ -29,7 +28,7 @@ const fileName = `POS - ${t("Daily Sales Report")} - ${now.toFormat(
 const DailySaleReport = () => {
   const theme = useTheme()
 
-  const { data, isLoading } = useGetDailySalesQuery(null, {
+  const { data, isLoading } = useGetDailySalesReportQuery(null, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -48,12 +47,8 @@ const DailySaleReport = () => {
     <Container title={t("Daily Sales Report")}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          {/* <DatePicker></DatePicker> */}
-        </Grid>
-
-        <Grid item>
           <Button
-            size="small"
+            size="medium"
             onClick={onClickDownload}
             disabled={isLoading}
             startIcon={
@@ -63,17 +58,17 @@ const DailySaleReport = () => {
                   color="inherit"
                 />
               ) : (
-                <GetApp color="inherit" />
+                <Print color="inherit" />
               )
             }
             variant="contained"
             color="primary"
           >
-            Download
+            {t("Print", { ns: "action" })}
           </Button>
         </Grid>
 
-        <Grid item>
+        <Grid item xs={12}>
           <SaleReportPDF
             saleSummaryTableId={saleSummaryTableId}
             saleProductTableId={saleProductTableId}

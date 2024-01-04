@@ -18,14 +18,16 @@ import {
   findCategoriesProductsMutationName,
 } from "./endpoints/sales"
 import {
-  getMonthlySalesApiMutationName,
+  getMonthlySalesReportApiMutationName,
   getMonthlySalesBuilder,
-  getDailySalesApiMutationName,
+  getDailySalesReportApiMutationName,
   getDailySalesBuilder,
-  getYearlySalesApiMutationName,
+  getYearlySalesReportApiMutationName,
   getYearlySalesBuilder,
-  getProfitLossApiMutationName,
+  getProfitLossReportApiMutationName,
   getProfitLossBuilder,
+  getSalesReportApiMutationName,
+  getSalesReportBuilder,
 } from "./endpoints/reports"
 
 const reducerPath = "api"
@@ -139,10 +141,11 @@ const api = createApi({
       [findCategoriesProductsMutationName]:
         findCategoriesProductsBuilder(builder),
 
-      [getDailySalesApiMutationName]: getDailySalesBuilder(builder),
-      [getMonthlySalesApiMutationName]: getMonthlySalesBuilder(builder),
-      [getYearlySalesApiMutationName]: getYearlySalesBuilder(builder),
-      [getProfitLossApiMutationName]: getProfitLossBuilder(builder),
+      [getSalesReportApiMutationName]: getSalesReportBuilder(builder),
+      [getDailySalesReportApiMutationName]: getDailySalesBuilder(builder),
+      [getMonthlySalesReportApiMutationName]: getMonthlySalesBuilder(builder),
+      [getYearlySalesReportApiMutationName]: getYearlySalesBuilder(builder),
+      [getProfitLossReportApiMutationName]: getProfitLossBuilder(builder),
 
       createUserApi: userApi.create,
       findAllUserApi: userApi.findAll,
@@ -238,10 +241,12 @@ export const {
 
   useFindCategoriesProductsQuery,
 
-  useGetDailySalesQuery,
-  useGetMonthlySalesQuery,
-  useGetYearlySalesQuery,
-  useGetProfitLossQuery,
+  useLazyGetSalesReportQuery,
+  useGetSalesReportQuery,
+  useGetDailySalesReportQuery,
+  useGetMonthlySalesReportQuery,
+  useGetYearlySalesReportQuery,
+  useGetProfitLossReportQuery,
 
   useCreateUserApiMutation,
   useLazyFindAllUserApiQuery,

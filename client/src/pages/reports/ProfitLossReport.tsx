@@ -1,13 +1,13 @@
 import Container from "@/components/layout/Container/Container"
-import { useGetProfitLossQuery } from "@/services/api"
+import { useGetProfitLossReportQuery } from "@/services/api"
 import { formatDateTimeToLocale } from "@/utils/string"
-import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
 import { GetApp } from "@mui/icons-material"
+import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
 import { t } from "i18next"
 import { DateTime } from "luxon"
 
-import { SaleReportPDF } from "./SaleReportPDF"
-import { generateSaleReportPDF } from "./util"
+import { SaleReportPDF } from "./SaleReportPDF/SaleReportPDF"
+import { generateSaleReportPDF } from "./SaleReportPDF/util"
 
 const today = formatDateTimeToLocale(DateTime.now(), {
   weekday: "long",
@@ -26,7 +26,7 @@ const fileName = `POS - ${t("Profit Loss Report")} - ${DateTime.now().toFormat(
 const ProfitLossReport = () => {
   const theme = useTheme()
 
-  const { data, isLoading } = useGetProfitLossQuery(null, {
+  const { data, isLoading } = useGetProfitLossReportQuery(null, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -46,7 +46,7 @@ const ProfitLossReport = () => {
       <Grid container spacing={3}>
         <Grid item>
           <Button
-            size="small"
+            size="medium"
             onClick={onClickDownload}
             disabled={isLoading}
             startIcon={

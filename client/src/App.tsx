@@ -1,7 +1,6 @@
 import SnackbarWrapper from "@/features/snackbar/SnackbarWrapper"
 import { router } from "@/router"
 import { getThemeToken } from "@/theme"
-import LuxonUtils from "@date-io/luxon"
 import {
   CircularProgress,
   createTheme,
@@ -18,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { selectDarkMode, setDarkMode } from "./features/app"
 import ConfirmationDialogProvider from "./features/dialog/ConfirmationDialogProvider"
 import { LocalizationProvider } from "@mui/x-date-pickers"
+import { APP_DEFAULT_LANG } from "./environment"
 
 declare module "@mui/styles" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -41,7 +41,10 @@ function App() {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <LocalizationProvider
+          dateAdapter={AdapterLuxon}
+          adapterLocale={APP_DEFAULT_LANG}
+        >
           <Suspense
             fallback={
               <div

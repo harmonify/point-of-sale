@@ -1,5 +1,5 @@
 import { IResponseBody } from '@/libs/http';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ReportService } from '../sale';
@@ -10,8 +10,19 @@ import { ProfitLossReport, SaleReport } from './dtos';
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
+  @Get('sales')
+  async getSalesReport(
+    @Query('from') from: string,
+    @Query('to') to: string,
+  ): Promise<IResponseBody<SaleReport>> {
+    const result = await this.reportService.getSalesReport(from, to);
+    return {
+      data: result,
+    };
+  }
+
   @Get('sales/daily')
-  async getDailySales(): Promise<IResponseBody<SaleReport>> {
+  async getDailySalesReport(): Promise<IResponseBody<SaleReport>> {
     const result = await this.reportService.getDailySalesReport();
     return {
       data: result,
@@ -19,7 +30,7 @@ export class ReportController {
   }
 
   @Get('sales/monthly')
-  async getMonthlySales(): Promise<IResponseBody<SaleReport>> {
+  async getMonthlySalesReport(): Promise<IResponseBody<SaleReport>> {
     const result = await this.reportService.getMonthlySalesReport();
     return {
       data: result,
@@ -27,7 +38,7 @@ export class ReportController {
   }
 
   @Get('sales/yearly')
-  async getYearlySales(): Promise<IResponseBody<SaleReport>> {
+  async getYearlySalesReport(): Promise<IResponseBody<SaleReport>> {
     const result = await this.reportService.getYearlySalesReport();
     return {
       data: result,
@@ -35,7 +46,7 @@ export class ReportController {
   }
 
   @Get('profit-loss')
-  async getProfitLoss(): Promise<IResponseBody<ProfitLossReport>> {
+  async getProfitLossReport(): Promise<IResponseBody<ProfitLossReport>> {
     const result = await this.reportService.getProfitLossReport();
     return {
       data: result,

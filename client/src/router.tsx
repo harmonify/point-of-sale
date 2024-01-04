@@ -16,6 +16,7 @@ import CategoryList from "./pages/categories/CategoryList"
 import UnitList from "./pages/units/UnitList"
 import ProductList from "./pages/products/ProductList"
 import ProcurementList from "./pages/procurements/ProcurementList"
+import SaleReport from "./pages/reports/SaleReport"
 import DailySaleReport from "./pages/reports/DailySaleReport"
 import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
 import YearlySaleReport from "./pages/reports/YearlySaleReport"
@@ -163,6 +164,11 @@ const routeObjects: IRoute[] = [
         Component: lazy(() => import("./pages/procurements/ProcurementForm")),
         title: t("Edit Procurement", { ns: "action" }),
         path: "procurements/:id",
+      },
+      {
+        Component: SaleReport,
+        title: t("Sales"),
+        path: "/reports/sales",
       },
       {
         Component: DailySaleReport,
