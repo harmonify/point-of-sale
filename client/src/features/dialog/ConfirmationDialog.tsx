@@ -12,9 +12,9 @@ import {
   Slide,
   SlideProps,
   Typography,
-} from "@material-ui/core"
-import MuiDialog from "@material-ui/core/Dialog"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
+} from "@mui/material"
+import MuiDialog from "@mui/material/Dialog"
+import { makeStyles, useTheme } from "@mui/styles"
 import React, {
   MouseEventHandler,
   ReactElement,
@@ -72,7 +72,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
       fullWidth
     >
       {props.title ? (
-        <DialogTitle disableTypography color="textPrimary">
+        <DialogTitle color="textPrimary">
           <Typography variant="h4" color="textPrimary" gutterBottom>
             {props.title}
           </Typography>
@@ -137,7 +137,7 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
         )}
       </DialogActions>
     </MuiDialog>
-  )
+  );
 }
 
 export default ConfirmationDialog

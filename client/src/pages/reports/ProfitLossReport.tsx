@@ -1,5 +1,5 @@
 import Container from "@/components/layout/Container/Container"
-import { useGetDailySalesQuery } from "@/services/api"
+import { useGetProfitLossQuery } from "@/services/api"
 import { formatDateTimeToLocale } from "@/utils/string"
 import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
 import { GetApp } from "@mui/icons-material"
@@ -8,28 +8,25 @@ import { DateTime } from "luxon"
 
 import { SaleReportPDF } from "./SaleReportPDF"
 import { generateSaleReportPDF } from "./util"
-// import { DatePicker } from "@mui/pickers"
-import { useState } from "react"
 
-const now = DateTime.now()
-const today = formatDateTimeToLocale(now, {
+const today = formatDateTimeToLocale(DateTime.now(), {
   weekday: "long",
   month: "long",
   hour: undefined,
   minute: undefined,
   second: undefined,
 })
-const title = `${t("Daily Sales Report")} - ${today}`
-const saleSummaryTableId = "daily-sale-summary-table"
-const saleProductTableId = "daily-sale-product-table"
-const fileName = `POS - ${t("Daily Sales Report")} - ${now.toFormat(
+const title = `${t("Profit Loss Report")} - ${today}`
+const saleSummaryTableId = "profit-loss-summary-table"
+const saleProductTableId = "profit-loss-product-table"
+const fileName = `POS - ${t("Profit Loss Report")} - ${DateTime.now().toFormat(
   "dd-MM-yyyy",
 )}.pdf`
 
-const DailySaleReport = () => {
+const ProfitLossReport = () => {
   const theme = useTheme()
 
-  const { data, isLoading } = useGetDailySalesQuery(null, {
+  const { data, isLoading } = useGetProfitLossQuery(null, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -45,12 +42,8 @@ const DailySaleReport = () => {
   }
 
   return (
-    <Container title={t("Daily Sales Report")}>
+    <Container title={t("Profit Loss Report")}>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
-          {/* <DatePicker></DatePicker> */}
-        </Grid>
-
         <Grid item>
           <Button
             size="small"
@@ -87,4 +80,4 @@ const DailySaleReport = () => {
   )
 }
 
-export default DailySaleReport
+export default ProfitLossReport

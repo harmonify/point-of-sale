@@ -1,4 +1,4 @@
-import { SnackbarOrigin } from "@material-ui/core"
+import { SnackbarOrigin } from "@mui/material"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { IAlertVariant } from "./Alert"

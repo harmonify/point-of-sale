@@ -1,12 +1,12 @@
 import React, { MouseEventHandler } from "react"
-import Button from "@material-ui/core/Button"
+import Button from "@mui/material/Button"
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   useTheme,
-} from "@material-ui/core"
+} from "@mui/material"
 
 const FormDialog: React.FC<{
   open: boolean

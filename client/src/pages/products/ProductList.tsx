@@ -7,9 +7,9 @@ import api, {
   useDeleteProductApiMutation,
   useFindAllProductApiQuery,
 } from "@/services/api"
-import { Box, Grid } from "@material-ui/core"
-import Button from "@material-ui/core/Button"
-import { Add } from "@material-ui/icons"
+import { Box, Grid } from "@mui/material"
+import Button from "@mui/material/Button"
+import { Add } from "@mui/icons-material"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useCallback, useEffect, useMemo, useState } from "react"

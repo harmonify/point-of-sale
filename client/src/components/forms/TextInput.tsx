@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from "@material-ui/core"
+import { TextField, TextFieldProps } from "@mui/material"
 import React, { HTMLInputTypeAttribute, forwardRef, useRef } from "react"
 
 export type ITextInputProps = {

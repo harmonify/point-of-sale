@@ -10,14 +10,14 @@ import {
   Grid,
   Icon,
   Typography,
-} from "@material-ui/core"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
+} from "@mui/material"
+import { makeStyles, useTheme } from "@mui/styles"
 import {
   AttachMoney,
   MonetizationOn,
   MoneyOff,
   People,
-} from "@material-ui/icons"
+} from "@mui/icons-material"
 import { DataGrid, GridColDef, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useEffect } from "react"

@@ -8,11 +8,8 @@ import { DateTime } from "luxon"
 
 import { SaleReportPDF } from "./SaleReportPDF"
 import { generateSaleReportPDF } from "./util"
-// import { DatePicker } from "@mui/pickers"
-import { useState } from "react"
 
-const now = DateTime.now()
-const today = formatDateTimeToLocale(now, {
+const today = formatDateTimeToLocale(DateTime.now(), {
   weekday: "long",
   month: "long",
   hour: undefined,
@@ -22,7 +19,7 @@ const today = formatDateTimeToLocale(now, {
 const title = `${t("Daily Sales Report")} - ${today}`
 const saleSummaryTableId = "daily-sale-summary-table"
 const saleProductTableId = "daily-sale-product-table"
-const fileName = `POS - ${t("Daily Sales Report")} - ${now.toFormat(
+const fileName = `POS - ${t("Daily Sales Report")} - ${DateTime.now().toFormat(
   "dd-MM-yyyy",
 )}.pdf`
 
@@ -47,10 +44,6 @@ const DailySaleReport = () => {
   return (
     <Container title={t("Daily Sales Report")}>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
-          {/* <DatePicker></DatePicker> */}
-        </Grid>
-
         <Grid item>
           <Button
             size="small"

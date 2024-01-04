@@ -5,10 +5,10 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
   Typography,
-} from "@material-ui/core"
-import { DoubleArrow } from "@material-ui/icons"
+} from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import { DoubleArrow } from "@mui/icons-material"
 import { t } from "i18next"
 
 const useStyles = makeStyles((theme) => ({

@@ -6,8 +6,8 @@ import {
   ListItemText,
   Typography,
   useTheme,
-} from "@material-ui/core"
-import Paper from "@material-ui/core/Paper"
+} from "@mui/material"
+import Paper from "@mui/material/Paper"
 import { t } from "i18next"
 import React, {
   ChangeEventHandler,

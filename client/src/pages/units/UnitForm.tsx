@@ -7,7 +7,7 @@ import {
   useLazyFindOneUnitApiQuery,
   useUpdateUnitApiMutation,
 } from "@/services/api"
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { Formik } from "formik"
 import { t } from "i18next"
 import React, { useEffect, useState } from "react"

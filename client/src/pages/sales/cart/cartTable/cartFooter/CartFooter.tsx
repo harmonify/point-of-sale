@@ -14,7 +14,7 @@ import {
   TableRow,
   Typography,
   useTheme,
-} from "@material-ui/core"
+} from "@mui/material"
 import { t } from "i18next"
 import React, { Component } from "react"
 
@@ -34,13 +34,7 @@ const CartFooter: React.FC<{
             <Typography variant="h6" style={{ marginRight: theme.spacing(1) }}>
               {t("Customer")}:
             </Typography>
-            {Boolean(cartState.customer?.name) ? (
-              <CustomerCell name={truncate(cartState.customer!.name!, 25)} />
-            ) : (
-              <Typography variant="h6" component="span">
-                -
-              </Typography>
-            )}
+            <CustomerCell />
           </Box>
         </TableCell>
         <TableCell align="right">

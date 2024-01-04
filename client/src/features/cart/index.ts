@@ -112,7 +112,9 @@ const setCartCustomerReducer = (
 
 const updateCartItemPriceReducer = (
   state: CartState,
-  { payload }: PayloadAction<{ productUnitId: number | string; salePrice: number }>,
+  {
+    payload,
+  }: PayloadAction<{ productUnitId: number | string; salePrice: number }>,
 ) => {
   if (state.items[payload.productUnitId]) {
     state.items[payload.productUnitId]!.salePrice = payload.salePrice
@@ -208,7 +210,7 @@ const emptyCartReducer = (oldState: CartState) => {
 
 const slice = createSlice({
   name: "cart",
-  initialState: mockCartState,
+  initialState: initialState,
   reducers: {
     setCartCustomer: setCartCustomerReducer,
     upsertCartItem: upsertCartItemReducer,

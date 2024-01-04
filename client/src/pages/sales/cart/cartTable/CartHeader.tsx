@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { emptyCart, selectCart } from "@/features/cart"
-import { Padding, TableHead, TableRow } from "@material-ui/core"
+import { Padding, TableHead, TableRow } from "@mui/material"
 import { t } from "i18next"
 import React from "react"
 

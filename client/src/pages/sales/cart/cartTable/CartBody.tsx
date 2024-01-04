@@ -15,8 +15,8 @@ import {
   TableBody,
   TableRow,
   Typography,
-} from "@material-ui/core"
-import { Delete } from "@material-ui/icons"
+} from "@mui/material"
+import { Delete } from "@mui/icons-material"
 import { t } from "i18next"
 import React, { useMemo } from "react"
 

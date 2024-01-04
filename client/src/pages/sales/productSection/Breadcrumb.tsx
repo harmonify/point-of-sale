@@ -1,25 +1,23 @@
-import { Button } from "@material-ui/core"
-import Breadcrumbs from "@material-ui/core/Breadcrumbs"
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-import Typography from "@material-ui/core/Typography"
-import { Category, LocalMall, NavigateNext } from "@material-ui/icons"
-import HomeIcon from "@material-ui/icons/Home"
+import { Category, LocalMall, NavigateNext } from "@mui/icons-material"
+import HomeIcon from "@mui/icons-material/Home"
+import { Button } from "@mui/material"
+import Breadcrumbs from "@mui/material/Breadcrumbs"
+import Typography from "@mui/material/Typography"
+import { makeStyles } from "@mui/styles"
 import { t } from "i18next"
 import React from "react"
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    link: {
-      display: "flex",
-      textTransform: "none",
-    },
-    icon: {
-      marginRight: theme.spacing(0.5),
-      width: 20,
-      height: 20,
-    },
-  }),
-)
+const useStyles = makeStyles((theme) => ({
+  link: {
+    display: "flex",
+    textTransform: "none",
+  },
+  icon: {
+    marginRight: theme.spacing(0.5),
+    width: 20,
+    height: 20,
+  },
+}))
 
 export interface IPOSBreadcrumbProps {
   selectedCategoryName?: string | null

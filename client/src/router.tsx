@@ -19,6 +19,7 @@ import ProcurementList from "./pages/procurements/ProcurementList"
 import DailySaleReport from "./pages/reports/DailySaleReport"
 import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
 import YearlySaleReport from "./pages/reports/YearlySaleReport"
+import ProfitLossReport from "./pages/reports/ProfitLossReport"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -177,6 +178,11 @@ const routeObjects: IRoute[] = [
         Component: YearlySaleReport,
         title: t("Yearly Sales"),
         path: "/reports/sales/yearly",
+      },
+      {
+        Component: ProfitLossReport,
+        title: t("Profit Loss"),
+        path: "/reports/profit-loss",
       },
     ],
   },

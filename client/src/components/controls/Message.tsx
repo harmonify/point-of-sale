@@ -1,8 +1,8 @@
 import React, { Component, Fragment, MouseEventHandler } from "react"
-import { withStyles } from "@material-ui/core/styles"
-import { Clear } from "@material-ui/icons"
+import { withStyles } from "@mui/styles"
+import { Clear } from "@mui/icons-material"
 import classNames from "classnames"
-import { ClassNameMap } from "@material-ui/core/styles/withStyles"
+import { ClassNameMap } from "@mui/styles/withStyles"
 
 const styles = (theme) => ({
   root: {

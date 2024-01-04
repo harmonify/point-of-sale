@@ -6,8 +6,8 @@ import api, {
   useDeleteUnitApiMutation,
   useFindAllUnitApiQuery,
 } from "@/services/api"
-import Button from "@material-ui/core/Button"
-import { Add } from "@material-ui/icons"
+import Button from "@mui/material/Button"
+import { Add } from "@mui/icons-material"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useState } from "react"

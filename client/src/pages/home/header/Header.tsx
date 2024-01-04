@@ -1,19 +1,19 @@
 import { useAppDispatch } from "@/app/hooks"
 import { toggleDarkMode, toggleMobileDrawer } from "@/features/app"
-import AppBar from "@material-ui/core/AppBar"
-import IconButton from "@material-ui/core/IconButton"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
-import Toolbar from "@material-ui/core/Toolbar"
-import MenuIcon from "@material-ui/icons/Menu"
+import AppBar from "@mui/material/AppBar"
+import IconButton from "@mui/material/IconButton"
+import { makeStyles, useTheme } from "@mui/styles"
+import Toolbar from "@mui/material/Toolbar"
+import MenuIcon from "@mui/icons-material/Menu"
 import classNames from "classnames"
 import { t } from "i18next"
 import React from "react"
 
 import Menus from "./HeaderMenu"
-import { Brightness4, Brightness7 } from "@material-ui/icons"
-import { Box, Grid, Typography } from "@material-ui/core"
+import { Brightness4, Brightness7 } from "@mui/icons-material"
+import { Box, Grid, Typography } from "@mui/material"
 
-const drawerWidth = 200
+const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -78,7 +78,7 @@ const Header: React.FC<{
                 color="inherit"
                 aria-label="open drawer"
                 onClick={() => dispatch(toggleMobileDrawer())}
-              >
+                size="large">
                 <MenuIcon />
               </IconButton>
             </Grid>
@@ -93,11 +93,8 @@ const Header: React.FC<{
         <Box className={classes.flex}>
           {/* This is the right side menu - Logout, My Profile */}
           <Box className={classes.menuRight}>
-            <IconButton
-              onClick={() => dispatch(toggleDarkMode())}
-              color="inherit"
-            >
-              {theme.palette.type === "dark" ? (
+            <IconButton onClick={() => dispatch(toggleDarkMode())} color="inherit" size="large">
+              {theme.palette.mode === "dark" ? (
                 <Brightness7 />
               ) : (
                 <Brightness4 />
@@ -108,7 +105,7 @@ const Header: React.FC<{
         </Box>
       </Toolbar>
     </AppBar>
-  )
+  );
 }
 
 export default Header

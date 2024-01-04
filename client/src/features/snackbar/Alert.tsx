@@ -1,10 +1,10 @@
-import { colors, IconButton, Paper } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import CloseIcon from "@material-ui/icons/CloseOutlined"
-import ErrorIcon from "@material-ui/icons/ErrorOutlined"
-import InfoIcon from "@material-ui/icons/InfoOutlined"
-import WarningIcon from "@material-ui/icons/WarningOutlined"
+import { colors, IconButton, Paper } from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import CloseIcon from "@mui/icons-material/CloseOutlined"
+import ErrorIcon from "@mui/icons-material/ErrorOutlined"
+import InfoIcon from "@mui/icons-material/InfoOutlined"
+import WarningIcon from "@mui/icons-material/WarningOutlined"
 import clsx from "clsx"
 import React, { forwardRef } from "react"
 
@@ -103,12 +103,12 @@ const Alert = forwardRef<
           color="inherit"
           key="close"
           onClick={onClose}
-        >
+          size="large">
           <CloseIcon />
         </IconButton>
       )}
     </Paper>
-  )
+  );
 })
 
 Alert.displayName = "Alert"

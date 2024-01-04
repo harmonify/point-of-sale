@@ -1,4 +1,4 @@
-import { Grid, useTheme } from "@material-ui/core"
+import { Grid, useTheme } from "@mui/material"
 import React from "react"
 
 import Cart from "./cart/Cart"

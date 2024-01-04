@@ -6,8 +6,8 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from "@material-ui/core"
-import { Home, KeyboardBackspace, Replay } from "@material-ui/icons"
+} from "@mui/material"
+import { Home, KeyboardBackspace, Replay } from "@mui/icons-material"
 import { t } from "i18next"
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom"
 
@@ -18,7 +18,7 @@ function Error404() {
   const theme = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
-  const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"))
+  const mobileDevice = useMediaQuery(theme.breakpoints.down('md'))
 
   const subtitle = t("An error occured", { ns: "error" })
 

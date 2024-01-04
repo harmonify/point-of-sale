@@ -1,33 +1,14 @@
-import { Box, Grid, makeStyles } from "@material-ui/core"
-import Paper from "@material-ui/core/Paper"
-import classNames from "classnames"
+import { makeStyles } from "@mui/styles"
 import React, { Component, ReactElement, ReactNode } from "react"
 
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexGrow: 1,
-    padding: "70px 10px 15px 10px",
-    height: "100%",
-  },
-  paper: {
-    width: "100%",
-    [theme.breakpoints.up("xs")]: {
-      width: "calc(100vw - 20px)",
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "calc(100vw)",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "100%",
-    },
-    height: `calc(100vh - 80px)`,
+    paddingTop: "72px",
+    paddingBottom: "16px",
     overflowX: "auto",
     overflowY: "auto",
-    borderRadius: "0px",
-  },
-  fullWidthContainer: {
-    // width: "100%",
   },
 }))
 
@@ -36,18 +17,7 @@ const MainContainer: React.FC<{
   shouldRenderMobileMenu: boolean
 }> = (props) => {
   const classes = useStyles()
-  const containerClass =
-    props.shouldRenderMobileMenu === true
-      ? classNames(classes.paper, classes.fullWidthContainer)
-      : classes.paper
-
-  return (
-    <main className={classes.container}>
-      <Box className={containerClass}>
-        {props.children}
-      </Box>
-    </main>
-  )
+  return <main className={classes.container}>{props.children}</main>
 }
 
 export default MainContainer

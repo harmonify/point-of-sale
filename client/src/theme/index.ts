@@ -1,4 +1,4 @@
-import { ThemeOptions, createTheme } from "@material-ui/core"
+import { ThemeOptions, createTheme } from "@mui/material"
 import { darkTheme, lightTheme } from "./palette"
 import { typography } from "./typography"
 

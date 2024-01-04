@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react"
-import { makeStyles, withStyles } from "@material-ui/core/styles"
+import { makeStyles, withStyles } from "@mui/styles"
 import Title from "./Title"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     paddingLeft: theme.spacing(2),
     position: "relative",
+    flexGrow: 1,
   },
   title: {
     marginBottom: theme.spacing(2),

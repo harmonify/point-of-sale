@@ -1,15 +1,4 @@
 import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  List,
-  ListSubheader,
-  Typography,
-  makeStyles,
-} from "@material-ui/core"
-import {
-  Assessment,
   CalendarToday,
   Category,
   DateRange,
@@ -18,13 +7,13 @@ import {
   LocalAtm,
   LocalMall,
   LocalShipping,
-  More,
-  NoteAdd,
   ShoppingCart,
   SupervisorAccount,
   Today,
   ViewModule,
-} from "@material-ui/icons"
+} from "@mui/icons-material"
+import { Button, Grid, List, ListSubheader, Typography } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 import { t } from "i18next"
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -39,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
   logoContainer: {
     padding: "1em .5em",
     display: "flex",
-    color: "white",
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
   },
 }))
 
@@ -60,9 +50,9 @@ const Menu: React.FC = () => {
         alignContent="center"
         className={classes.logo}
       >
-        <Button onClick={() => navigate("/")} className={classes.logoContainer}>
+        <Button onClick={() => navigate("/")} className={classes.logoContainer} variant="text">
           <ShoppingCart />
-          <Typography color="inherit" variant="h5">
+          <Typography color="inherit">
             {t("Point of Sales")}
           </Typography>
         </Button>
@@ -73,7 +63,7 @@ const Menu: React.FC = () => {
           isSelected={isSelected("sale")}
           onClick={() => navigate("/sale")}
           text={t("Sale")}
-          icon={<ViewModule />}
+          icon={<ViewModule color="inherit"/>}
         />
 
         <ListSubheader>
@@ -84,42 +74,42 @@ const Menu: React.FC = () => {
           isSelected={isSelected("customers")}
           onClick={() => navigate("/customers")}
           text={t("Customers")}
-          icon={<GroupAdd />}
+          icon={<GroupAdd color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("suppliers")}
           onClick={() => navigate("/suppliers")}
           text={t("Suppliers")}
-          icon={<SupervisorAccount />}
+          icon={<SupervisorAccount color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("categories")}
           onClick={() => navigate("/categories")}
           text={t("Categories")}
-          icon={<Category />}
+          icon={<Category color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("units")}
           onClick={() => navigate("/units")}
           text={t("Units")}
-          icon={<HourglassFull />}
+          icon={<HourglassFull color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("products")}
           onClick={() => navigate("/products")}
           text={t("Products")}
-          icon={<LocalMall />}
+          icon={<LocalMall color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("procurements")}
           onClick={() => navigate("/procurements")}
           text={t("Procurements")}
-          icon={<LocalShipping />}
+          icon={<LocalShipping color="inherit"/>}
         />
 
         <ListSubheader>
@@ -130,28 +120,28 @@ const Menu: React.FC = () => {
           isSelected={isSelected("reports/sales/daily")}
           onClick={() => navigate("/reports/sales/daily")}
           text={t("Daily Sales")}
-          icon={<Today />}
+          icon={<Today color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("reports/sales/monthly")}
           onClick={() => navigate("/reports/sales/monthly")}
           text={t("Monthly Sales")}
-          icon={<DateRange />}
+          icon={<DateRange color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("reports/sales/yearly")}
           onClick={() => navigate("/reports/sales/yearly")}
           text={t("Yearly Sales")}
-          icon={<CalendarToday />}
+          icon={<CalendarToday color="inherit"/>}
         />
 
         <MenuItem
           isSelected={isSelected("reports/profit-loss")}
           onClick={() => navigate("/reports/profit-loss")}
           text={t("Profit Loss")}
-          icon={<LocalAtm />}
+          icon={<LocalAtm color="inherit"/>}
         />
       </List>
     </>

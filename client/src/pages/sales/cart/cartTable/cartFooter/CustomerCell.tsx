@@ -1,7 +1,8 @@
 import FormikSelectInput from "@/components/forms/FormikSelectInput"
 import { useFindAllCustomerApiQuery } from "@/services/api"
 import { nameInitials } from "@/utils"
-import { Avatar, Button, Grid, makeStyles, Typography } from "@material-ui/core"
+import { Avatar, Grid } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 import { useFormikContext } from "formik"
 import React, { useMemo, useState } from "react"
 
@@ -21,9 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const CustomerCell: React.FC<{
-  name: string
-}> = (props) => {
+const CustomerCell: React.FC = () => {
   const classes = useStyles()
 
   const { isLoading: isFetchCustomerLoading, data: customerResponseQuery } =
@@ -62,10 +61,9 @@ const CustomerCell: React.FC<{
           margin="none"
           size="small"
           type="number"
-          onBlur={formik.getFieldProps('customerId').onBlur}
-          onChange={formik.getFieldProps('customerId').onChange}
           options={customerList.map((c) => ({ label: c.name, value: c.id }))}
           enableDefaultValue
+          // defaultValue={undefined}
           SelectProps={{ native: true }}
           style={{ minWidth: 160 }}
         />

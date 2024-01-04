@@ -3,7 +3,7 @@ import Form from "@/components/forms/Form"
 import FormikTextInput from "@/components/forms/FormikTextInput"
 import { selectAuthCredentials, setCredentials } from "@/features/auth"
 import { usePostLoginMutation } from "@/services/api"
-import Paper from "@material-ui/core/Paper"
+import Paper from "@mui/material/Paper"
 import { Formik } from "formik"
 import React, { useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -11,8 +11,8 @@ import { useNavigate } from "react-router-dom"
 import { object, string } from "yup"
 
 import useStyles from "./styles"
-import { IconButton, InputAdornment } from "@material-ui/core"
-import { Visibility, VisibilityOff } from "@material-ui/icons"
+import { IconButton, InputAdornment } from "@mui/material"
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 
 const validationSchema = object({
   email: string().required().email(),
@@ -93,7 +93,7 @@ const Login: React.FC = () => {
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
-                      >
+                        size="large">
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
@@ -105,7 +105,7 @@ const Login: React.FC = () => {
         </Paper>
       </div>
     </div>
-  )
+  );
 }
 
 export default Login

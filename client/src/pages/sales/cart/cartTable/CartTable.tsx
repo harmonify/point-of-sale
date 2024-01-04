@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/app/hooks"
 import { selectCart } from "@/features/cart"
-import { Paper } from "@material-ui/core"
-import Table from "@material-ui/core/Table"
+import { Paper } from "@mui/material"
+import Table from "@mui/material/Table"
 import React, { Component } from "react"
 
 import CartBody from "./CartBody"

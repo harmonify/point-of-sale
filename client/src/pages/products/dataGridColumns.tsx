@@ -1,6 +1,6 @@
 import { formatISOToLocale } from "@/utils"
-import { IconButton } from "@material-ui/core"
-import { Delete, Edit } from "@material-ui/icons"
+import { IconButton } from "@mui/material"
+import { Delete, Edit } from "@mui/icons-material"
 import { GridColumns, GridRenderCellParams } from "@mui/x-data-grid"
 import { t } from "i18next"
 

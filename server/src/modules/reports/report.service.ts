@@ -1,11 +1,17 @@
-import { SaleProductRecord, SaleReport } from '@/modules/reports/dtos';
+import {
+  ProfitLossRecord,
+  ProfitLossReport,
+  SaleProductRecord,
+  SaleReport,
+} from '@/modules/reports/dtos';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import currency from 'currency.js';
 import { DateTime } from 'luxon';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
-export class SaleService {
+export class ReportService {
   constructor(private readonly prismaService: PrismaService) {}
 
   getSalePayloadToken() {
@@ -33,7 +39,7 @@ export class SaleService {
 
   createSaleReport(
     sales: Prisma.SaleGetPayload<
-      ReturnType<SaleService['getSalePayloadToken']>
+      ReturnType<ReportService['getSalePayloadToken']>
     >[],
   ): SaleReport {
     return sales.reduce(
@@ -66,8 +72,30 @@ export class SaleService {
         taxTotal: 0.0,
         total: 0.0,
         saleProducts: [] as SaleProductRecord[],
-      } as any,
-    ) as any;
+      },
+    ) satisfies SaleReport;
+  }
+
+  createProfitLossReport(
+    sales: Prisma.SaleGetPayload<
+      ReturnType<ReportService['getSalePayloadToken']>
+    >[],
+  ): ProfitLossReport {
+    return sales.flatMap((s) =>
+      s.saleProducts.map(
+        (sp) =>
+          ({
+            productName: sp.productUnit.product.name,
+            unitName: sp.productUnit.unit.name,
+            quantity: sp.quantity,
+            costPrice: sp.costPrice,
+            salePrice: sp.salePrice,
+            discount: sp.discount,
+            profit: currency(sp.total).subtract(sp.costPrice).value,
+            createdAt: sp.createdAt,
+          }) satisfies ProfitLossRecord,
+      ),
+    );
   }
 
   async getDailySalesReport(): Promise<SaleReport> {
@@ -128,5 +156,16 @@ export class SaleService {
     });
 
     return this.createSaleReport(sales);
+  }
+
+  async getProfitLossReport(): Promise<ProfitLossReport> {
+    // eslint-disable-next-line prisma-soft-delete/use-deleted-null
+    const sales = await this.prismaService.sale.findMany({
+      ...this.getSalePayloadToken(),
+      where: {
+        deletedAt: null,
+      },
+    });
+    return this.createProfitLossReport(sales);
   }
 }

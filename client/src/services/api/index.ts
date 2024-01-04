@@ -24,6 +24,8 @@ import {
   getDailySalesBuilder,
   getYearlySalesApiMutationName,
   getYearlySalesBuilder,
+  getProfitLossApiMutationName,
+  getProfitLossBuilder,
 } from "./endpoints/reports"
 
 const reducerPath = "api"
@@ -140,6 +142,7 @@ const api = createApi({
       [getDailySalesApiMutationName]: getDailySalesBuilder(builder),
       [getMonthlySalesApiMutationName]: getMonthlySalesBuilder(builder),
       [getYearlySalesApiMutationName]: getYearlySalesBuilder(builder),
+      [getProfitLossApiMutationName]: getProfitLossBuilder(builder),
 
       createUserApi: userApi.create,
       findAllUserApi: userApi.findAll,
@@ -238,6 +241,7 @@ export const {
   useGetDailySalesQuery,
   useGetMonthlySalesQuery,
   useGetYearlySalesQuery,
+  useGetProfitLossQuery,
 
   useCreateUserApiMutation,
   useLazyFindAllUserApiQuery,

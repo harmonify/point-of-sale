@@ -1,8 +1,8 @@
 import Container from "@/components/layout/Container/Container"
 import { useGetMonthlySalesQuery } from "@/services/api"
 import { formatDateTimeToLocale } from "@/utils/string"
-import { Button, CircularProgress, Grid, useTheme } from "@material-ui/core"
-import { GetApp } from "@material-ui/icons"
+import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
+import { GetApp } from "@mui/icons-material"
 import { t } from "i18next"
 import { DateTime } from "luxon"
 

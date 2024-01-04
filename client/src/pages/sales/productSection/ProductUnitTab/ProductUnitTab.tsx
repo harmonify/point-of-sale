@@ -6,10 +6,10 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
   Typography,
-} from "@material-ui/core"
-import { Add } from "@material-ui/icons"
+} from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import { Add } from "@mui/icons-material"
 import { t } from "i18next"
 import { ModifiedProductUnitType } from "../ProductSection"
 import { useMemo, useState } from "react"

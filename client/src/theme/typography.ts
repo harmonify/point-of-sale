@@ -1,5 +1,5 @@
-import { TypographyOptions } from "@material-ui/core/styles/createTypography"
-import { Palette } from "@material-ui/core/styles/createPalette"
+import { TypographyOptions } from "@mui/styles/createTypography"
+import { Palette } from "@mui/styles/createPalette"
 
 export const typography = (palette: Palette): TypographyOptions => ({
   h1: {

@@ -5,17 +5,24 @@ import LuxonUtils from "@date-io/luxon"
 import {
   CircularProgress,
   createTheme,
-  StylesProvider,
   ThemeProvider,
-} from "@material-ui/core"
-import { MuiPickersUtilsProvider } from "@material-ui/pickers"
+  Theme,
+  StyledEngineProvider,
+} from "@mui/material"
 import { Suspense, useMemo } from "react"
 import { RouterProvider } from "react-router-dom"
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon"
 
-import CssBaseline from "@material-ui/core/CssBaseline"
+import CssBaseline from "@mui/material/CssBaseline"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { selectDarkMode, setDarkMode } from "./features/app"
 import ConfirmationDialogProvider from "./features/dialog/ConfirmationDialogProvider"
+import { LocalizationProvider } from "@mui/x-date-pickers"
+
+declare module "@mui/styles" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 function App() {
   const dispatch = useAppDispatch()
@@ -31,10 +38,10 @@ function App() {
   )
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <StylesProvider>
-        <MuiPickersUtilsProvider utils={LuxonUtils}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
           <Suspense
             fallback={
               <div
@@ -53,9 +60,9 @@ function App() {
             </ConfirmationDialogProvider>
             <SnackbarWrapper />
           </Suspense>
-        </MuiPickersUtilsProvider>
-      </StylesProvider>
-    </ThemeProvider>
+        </LocalizationProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   )
 }
 

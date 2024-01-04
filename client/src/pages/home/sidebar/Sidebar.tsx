@@ -3,9 +3,9 @@ import {
   selectShouldOpenMobileDrawer,
   toggleMobileDrawer,
 } from "@/features/app"
-import Drawer from "@material-ui/core/Drawer"
-import Hidden from "@material-ui/core/Hidden"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
+import Drawer from "@mui/material/Drawer"
+import Hidden from "@mui/material/Hidden"
+import { makeStyles, useTheme } from "@mui/styles"
 import React from "react"
 
 import Menu from "./Menu"
@@ -22,11 +22,6 @@ const useStyles = makeStyles((theme) => ({
     height: "calc(100vh - 1px)",
     borderBottom: "1px solid #e0e0e0",
   },
-  // drawerPaper2: {
-  //   width: drawerWidth,
-  //   height: "calc(100vh - 1px)",
-    // borderBottom: "1px solid #e0e0e0",
-  // },
 }))
 
 const Sidebar: React.FC = () => {
@@ -62,7 +57,7 @@ const Sidebar: React.FC = () => {
       </Hidden>
 
       {/* For sale */}
-      {isSale && (
+      {isSale ? (
         <Drawer
           variant="temporary"
           anchor={theme.direction === "rtl" ? "right" : "left"}
@@ -77,15 +72,15 @@ const Sidebar: React.FC = () => {
         >
           <Menu />
         </Drawer>
-      )}
+      ) : null}
 
       {/* Default - LARGER SCREENS */}
       {/* @ts-ignore - 3rd party library fault */}
-      <Hidden smDown implementation="css">
+      <Hidden mdDown implementation="css">
         {!isSale && (
           <Drawer
             variant="permanent"
-            open={false}
+            open={openMobileDrawer}
             onClose={handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,

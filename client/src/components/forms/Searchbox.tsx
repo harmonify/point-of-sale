@@ -1,5 +1,5 @@
-import { InputAdornment } from "@material-ui/core"
-import Search from "@material-ui/icons/Search"
+import { InputAdornment } from "@mui/material"
+import Search from "@mui/icons-material/Search"
 import { t } from "i18next"
 import React, { forwardRef, useEffect, useState } from "react"
 

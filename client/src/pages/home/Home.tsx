@@ -4,7 +4,8 @@ import { Outlet, useLocation } from "react-router-dom"
 import MainContainer from "./MainContainer"
 import Header from "./header/Header"
 import Sidebar from "./sidebar/Sidebar"
-import { Box, Grid, makeStyles } from "@material-ui/core"
+import { Box, Grid } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 
 const useStyles = makeStyles((theme) => ({
   root: {

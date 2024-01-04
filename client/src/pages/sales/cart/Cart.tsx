@@ -1,10 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import Form from "@/components/forms/Form"
-import { CartState, selectCart } from "@/features/cart"
+import { CartState, emptyCart, selectCart } from "@/features/cart"
+import { useConfirmationDialog } from "@/features/dialog"
+import { showSnackbar } from "@/features/snackbar"
 import { useCreateSaleApiMutation } from "@/services/api"
-import { Box, Button } from "@material-ui/core"
-import { createStyles, makeStyles } from "@material-ui/core/styles"
-import { Save } from "@material-ui/icons"
+import { Save } from "@mui/icons-material"
+import { Box, Button } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 import { Formik, FormikProps } from "formik"
 import { t } from "i18next"
 import React, { useMemo } from "react"
@@ -12,29 +14,25 @@ import React, { useMemo } from "react"
 import CartTable from "./cartTable/CartTable"
 import { buildCreateSaleRequestDto } from "./util"
 import createSaleValidationSchema from "./validationSchema"
-import { useConfirmationDialog } from "@/features/dialog"
-import { showSnackbar } from "@/features/snackbar"
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.palette.background.default,
-      "& .MuiTableCell-root": {
-        border: `1px solid ${theme.palette.divider}`,
-      },
-      "& .MuiTypography-h6": {
-        fontWeight: 500,
-      },
-      "& .MuiTypography-body1": {
-        fontSize: "14px",
-      },
-      "& .MuiInputBase-input": {
-        // fontSize: "14px",
-        fontWeight: 600,
-      },
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.default,
+    "& .MuiTableCell-root": {
+      border: `1px solid ${theme.palette.divider}`,
     },
-  }),
-)
+    "& .MuiTypography-h6": {
+      fontWeight: 500,
+    },
+    "& .MuiTypography-body1": {
+      fontSize: "14px",
+    },
+    "& .MuiInputBase-input": {
+      // fontSize: "14px",
+      fontWeight: 600,
+    },
+  },
+}))
 
 const Cart: React.FC = (props) => {
   const dispatch = useAppDispatch()
@@ -62,8 +60,12 @@ const Cart: React.FC = (props) => {
     }
 
     const dto = buildCreateSaleRequestDto(data)
-    await createSaleApiMutation(dto).unwrap()
-    formik.resetForm()
+    await createSaleApiMutation(dto)
+      .unwrap()
+      .then((response) => {
+        formik.resetForm()
+        dispatch(emptyCart())
+      })
   }
 
   const { show } = useConfirmationDialog({

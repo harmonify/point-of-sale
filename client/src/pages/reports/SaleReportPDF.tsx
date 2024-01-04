@@ -1,8 +1,6 @@
-import { formatISOToLocale, formatRupiah } from "@/utils"
+import { formatRupiah } from "@/utils"
 import {
-  createStyles,
   Grid,
-  makeStyles,
   Table,
   TableBody,
   TableCell,
@@ -11,32 +9,32 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@material-ui/core"
+} from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import currency from "currency.js"
 import { t } from "i18next"
 import React, { ReactNode } from "react"
-import { saleReportPDFColumns } from "./saleReportPDFColumns"
-import currency from "currency.js"
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.palette.background.default,
-      "& .MuiTableCell-root": {
-        border: `1px solid ${theme.palette.divider}`,
-      },
-      "& .MuiTypography-h6": {
-        fontWeight: 500,
-      },
-      "& .MuiTypography-body1": {
-        fontSize: "14px",
-      },
-      "& .MuiInputBase-input": {
-        // fontSize: "14px",
-        fontWeight: 600,
-      },
+import { saleReportPDFColumns } from "./saleReportPDFColumns"
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.default,
+    "& .MuiTableCell-root": {
+      border: `1px solid ${theme.palette.divider}`,
     },
-  }),
-)
+    "& .MuiTypography-h6": {
+      fontWeight: 500,
+    },
+    "& .MuiTypography-body1": {
+      fontSize: "14px",
+    },
+    "& .MuiInputBase-input": {
+      // fontSize: "14px",
+      fontWeight: 600,
+    },
+  },
+}))
 
 const SaleSummaryTable: React.FC<{
   id: string

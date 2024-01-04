@@ -1,10 +1,11 @@
 import {
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography,
-} from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+} from "@mui/material"
+import { makeStyles } from "@mui/styles"
 import classNames from "classnames"
 import React, { Component } from "react"
 
@@ -17,15 +18,15 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.common.white,
       },
     },
-  },
-  icon: {
-    width: 20,
+    width: "100%",
+    padding: theme.spacing(1),
+    textTransform: "none",
   },
   selected: {
     backgroundColor: "#00000014",
     borderColor: theme.palette.primary.main,
     borderLeft: "5px solid",
-    paddingLeft: 20,
+    paddingLeft: theme.spacing(1),
   },
 }))
 
@@ -44,17 +45,16 @@ const MenuItem: React.FC<{
     return classNames(classes.listItem)
   }
   return (
-    <ListItem button dense onClick={props.onClick} className={getClassName()}>
-      <ListItemIcon className={classes.icon}>{props.icon}</ListItemIcon>
+    <ListItemButton dense onClick={props.onClick} className={getClassName()}>
+      <ListItemIcon color="inherit">{props.icon}</ListItemIcon>
       <ListItemText
-        style={{ padding: 2 }}
         primary={
-          <Typography style={{ fontSize: 12 }} color="inherit" variant="button">
+          <Typography color="inherit" variant="button">
             {props.text}
           </Typography>
         }
       />
-    </ListItem>
+    </ListItemButton>
   )
 }
 

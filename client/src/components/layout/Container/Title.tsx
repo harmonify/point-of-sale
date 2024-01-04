@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
-import Divider from "@material-ui/core/Divider"
-import { Typography, makeStyles, withStyles } from "@material-ui/core"
+import Divider from "@mui/material/Divider"
+import { Typography } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 
 // eslint-disable-next-line
 const useStyles = makeStyles((theme) => ({

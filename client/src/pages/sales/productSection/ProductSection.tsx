@@ -3,7 +3,7 @@ import SearchboxSuggestionPopup from "@/components/forms/SearchboxSuggestionPopu
 import { upsertCartItem } from "@/features/cart"
 import useProductFuzzySearch from "@/pages/products/useProductFuzzySearch"
 import { useFindCategoriesProductsQuery } from "@/services/api"
-import { Box, CircularProgress, Grid, Paper, useTheme } from "@material-ui/core"
+import { Box, CircularProgress, Grid, Paper, useTheme } from "@mui/material"
 import React, { Component, useMemo, useState } from "react"
 
 import Breadcrumb from "./Breadcrumb"

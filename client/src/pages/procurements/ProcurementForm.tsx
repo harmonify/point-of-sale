@@ -28,8 +28,8 @@ import {
   TableRow,
   Typography,
   useTheme,
-} from "@material-ui/core"
-import { Add, Delete } from "@material-ui/icons"
+} from "@mui/material"
+import { Add, Delete } from "@mui/icons-material"
 import { ErrorMessage, FieldArray, Formik } from "formik"
 import { t } from "i18next"
 import React, { useEffect, useMemo, useState } from "react"

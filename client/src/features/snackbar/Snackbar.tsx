@@ -1,8 +1,8 @@
-import { Fade } from "@material-ui/core"
+import { Fade } from "@mui/material"
 import MuiSnackbar, {
   SnackbarCloseReason,
   SnackbarOrigin,
-} from "@material-ui/core/Snackbar"
+} from "@mui/material/Snackbar"
 import React from "react"
 
 import Alert from "./Alert"

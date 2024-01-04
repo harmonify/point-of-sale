@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, ButtonProps, Typography } from "@material-ui/core"
+import { Button, ButtonProps, Typography } from "@mui/material"
 
 const LightButton: React.FC<
   {

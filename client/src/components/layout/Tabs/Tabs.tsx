@@ -1,7 +1,7 @@
 import React, { Component } from "react"
-import { withStyles } from "@material-ui/core"
-import AppBar from "@material-ui/core/AppBar"
-import { Tab, Tabs } from "@material-ui/core"
+import { withStyles } from "@mui/material"
+import AppBar from "@mui/material/AppBar"
+import { Tab, Tabs } from "@mui/material"
 
 class CustomTabs extends Component {
   state = {}

@@ -6,9 +6,9 @@ import api, {
   useDeleteProcurementApiMutation,
   useFindAllProcurementApiQuery,
 } from "@/services/api"
-import { Grid } from "@material-ui/core"
-import Button from "@material-ui/core/Button"
-import { Add } from "@material-ui/icons"
+import { Grid } from "@mui/material"
+import Button from "@mui/material/Button"
+import { Add } from "@mui/icons-material"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React from "react"

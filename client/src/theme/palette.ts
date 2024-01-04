@@ -1,5 +1,5 @@
-import { colors } from "@material-ui/core"
-import { PaletteOptions } from "@material-ui/core/styles/createPalette"
+import { colors } from "@mui/material"
+import { PaletteOptions } from "@mui/styles/createPalette"
 
 const darkGrey = "#424242"
 const offBlack = "#0e1111"

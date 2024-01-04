@@ -10,8 +10,9 @@ import {
   selectCount,
 } from "./counterSlice"
 import styles from "./Counter.module.css"
-import { Box, Button, Paper, Typography, makeStyles } from "@material-ui/core"
-import { Money, MoneyOff } from "@material-ui/icons"
+import { Box, Button, Paper, Typography } from "@mui/material"
+import { Money, MoneyOff } from "@mui/icons-material"
+import { makeStyles } from "@mui/styles"
 
 // Custom styles for the component
 const useStyles = makeStyles((theme) => ({
