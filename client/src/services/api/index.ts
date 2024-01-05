@@ -246,6 +246,7 @@ export const {
   useGetDailySalesReportQuery,
   useGetMonthlySalesReportQuery,
   useGetYearlySalesReportQuery,
+  useLazyGetProfitLossReportQuery,
   useGetProfitLossReportQuery,
 
   useCreateUserApiMutation,
@@ -327,6 +328,7 @@ export const {
 
   useCreateSaleApiMutation,
   useLazyFindAllSaleApiQuery,
+  useFindAllSaleApiQuery,
   useLazyFindOneSaleApiQuery,
   useUpdateSaleApiMutation,
   useDeleteSaleApiMutation,

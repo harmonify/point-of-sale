@@ -6,7 +6,8 @@ function setupYupLocale(t: TFunction) {
     mixed: {
       default: (params) =>
         t("default", { ns: "validation", label: params.label }),
-      required: t("required", { ns: "validation" }),
+      required: (params) =>
+        t("required", { ns: "validation", label: params.label }),
     },
     number: {
       min: ({ min }) => t("number.min", { ns: "validation", x: min }),

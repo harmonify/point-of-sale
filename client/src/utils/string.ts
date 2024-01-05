@@ -47,6 +47,18 @@ export const formatRupiah = (
   )
 }
 
+export const formatISOToLocaleDate = (
+  isoString?: string | null,
+  fallbackValue: string = "-",
+): string | null => {
+  return isoString
+    ? DateTime.fromISO(isoString, { zone: "utc" })
+        .setLocale(APP_DEFAULT_LANG)
+        .setZone(FixedOffsetZone.instance(7 * 60)) // TODO: hardcoded
+        .toISODate()
+    : fallbackValue
+}
+
 export const formatDateTimeToLocale = (
   dateTime: DateTime,
   options?: DateTimeFormatOptions,

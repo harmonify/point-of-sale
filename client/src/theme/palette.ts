@@ -1,38 +1,37 @@
-import { colors } from "@mui/material"
-import { PaletteOptions } from "@mui/styles/createPalette"
+import { PaletteOptions, colors } from '@mui/material';
 
 const darkGrey = "#424242"
 const offBlack = "#0e1111"
+const softBlack = "#383838"
+
 const offWhite = "#FAF9F6"
-const softBlack = "#303030"
-const white = "#FFF"
 const softWhite = "#FEFEFE"
+const white = "#FFF"
 
 export const darkTheme = {
-  type: "dark",
+  mode: "dark",
   primary: {
     contrastText: offWhite,
-    dark: colors.indigo[900],
-    main: colors.indigo[500],
-    light: colors.indigo[100],
+    dark: colors.indigo[600],
+    main: colors.indigo[400],
+    light: colors.indigo[200],
   },
   secondary: {
     contrastText: offWhite,
-    dark: colors.blue[900],
+    dark: colors.blue[700],
     main: colors.blue.A400,
     light: colors.blue.A200,
   },
   error: {
     contrastText: offWhite,
-    dark: colors.red[900],
-    main: colors.red[600],
-    light: colors.red[400],
+    dark: colors.red[700],
+    main: colors.red[500],
+    light: colors.red[300],
   },
   text: {
     primary: offWhite,
     secondary: colors.grey[100],
     disabled: colors.grey[600],
-    hint: colors.grey[500],
   },
   background: {
     default: darkGrey,
@@ -46,10 +45,10 @@ export const darkTheme = {
 } satisfies PaletteOptions
 
 export const lightTheme: PaletteOptions = {
-  type: "light",
+  mode: "light",
   primary: {
     contrastText: offWhite,
-    dark: colors.indigo[900],
+    dark: colors.indigo[800],
     main: colors.indigo[500],
     light: colors.indigo[100],
   },
@@ -69,7 +68,6 @@ export const lightTheme: PaletteOptions = {
     primary: colors.indigo[900],
     secondary: offBlack,
     disabled: colors.grey[500],
-    hint: colors.indigo[600],
   },
   background: {
     default: white,

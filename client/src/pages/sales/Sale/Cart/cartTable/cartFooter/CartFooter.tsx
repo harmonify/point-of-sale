@@ -3,7 +3,9 @@ import FormikNumberInput from "@/components/forms/FormikNumberInput"
 import { APP_DEFAULT_CURRENCY, APP_DEFAULT_LANG } from "@/environment"
 import {
   CartStateSummary,
+  updateCartDescription,
   updateCartDiscountTotal,
+  updateCartName,
   updateCartPaidAmount,
 } from "@/features/cart"
 import { formatRupiah, truncate } from "@/utils/string"
@@ -19,6 +21,7 @@ import { t } from "i18next"
 import React, { Component } from "react"
 
 import CustomerCell from "./CustomerCell"
+import FormikTextInput from "@/components/forms/FormikTextInput"
 
 const CartFooter: React.FC<{
   cartState: CartStateSummary
@@ -30,16 +33,13 @@ const CartFooter: React.FC<{
     <TableFooter>
       <TableRow>
         <TableCell colSpan={4}>
-          <Box display="flex" alignItems="center">
-            <Typography variant="h6" style={{ marginRight: theme.spacing(1) }}>
-              {t("Customer")}:
-            </Typography>
-            <CustomerCell />
-          </Box>
+          <CustomerCell />
         </TableCell>
+
         <TableCell align="right">
           <Typography variant="h6">{t("Subtotal")}: </Typography>
         </TableCell>
+
         <TableCell colSpan={2}>
           <Typography variant="h6">
             {formatRupiah(cartState.subTotal)}
@@ -48,13 +48,32 @@ const CartFooter: React.FC<{
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={5} align="right">
+        <TableCell colSpan={4}>
+          <FormikTextInput
+            name="name"
+            margin="none"
+            label={t("Order Name")}
+            InputLabelProps={{ shrink: true }}
+            helperText={t(
+              "Providing a name might help you to identify the order more quickly.",
+              { ns: "message" },
+            )}
+            onChange={(e) => {
+              dispatch(updateCartName(e.target.value))
+            }}
+            size="small"
+            style={{ margin: 0 }}
+          />
+        </TableCell>
+
+        <TableCell align="right">
           <Typography variant="h6">
             {t("Discount Total")}
             {": "}
             {""}
           </Typography>
         </TableCell>
+
         <TableCell style={{ padding: theme.spacing(1) }} colSpan={2}>
           <FormikNumberInput
             intlConfig={{
@@ -80,18 +99,37 @@ const CartFooter: React.FC<{
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={5} align="right">
+        <TableCell colSpan={4} rowSpan={3}>
+          <FormikTextInput
+            name="description"
+            margin="none"
+            label={t("Description")}
+            InputLabelProps={{ shrink: true }}
+            helperText={t("More details about this order.", { ns: "message" })}
+            size="small"
+            multiline
+            minRows={5}
+            maxRows={5}
+            onChange={(e) => {
+              dispatch(updateCartDescription(e.target.value))
+            }}
+          />
+        </TableCell>
+
+        <TableCell align="right">
           <Typography variant="h6">{t("Total")}: </Typography>
         </TableCell>
+
         <TableCell colSpan={2}>
           <Typography variant="h6">{formatRupiah(cartState.total)}</Typography>
         </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={5} align="right">
+        <TableCell align="right">
           <Typography variant="h6">{t("Paid")}: </Typography>
         </TableCell>
+
         <TableCell colSpan={2} style={{ padding: theme.spacing(1) }}>
           <FormikNumberInput
             intlConfig={{
@@ -115,9 +153,10 @@ const CartFooter: React.FC<{
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={5} align="right">
+        <TableCell align="right">
           <Typography variant="h6">{t("Change")}: </Typography>
         </TableCell>
+
         <TableCell colSpan={2}>
           <Typography
             variant="h6"

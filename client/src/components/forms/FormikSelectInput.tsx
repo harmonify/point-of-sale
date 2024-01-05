@@ -14,7 +14,7 @@ type SelectDefaultValue = {
 type IFormikSelectInputProps = SelectDefaultValue & {
   options: {
     label: string
-    value: string | number
+    value: string | number | undefined
   }[]
 } & IFormikTextInputProps
 
@@ -45,6 +45,9 @@ const FormikSelectInput: React.FC<IFormikSelectInputProps> = (props) => {
           props.name,
           props.type === "number" ? parseInt(e.target.value) : e.target.value,
         )
+        if (props.onChange) {
+          props.onChange(e)
+        }
       }}
     >
       {enableDefaultValue && (

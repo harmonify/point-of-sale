@@ -23,8 +23,8 @@ export const buildCreateSaleRequestDto = (
       }
     }),
     name: cart.name || null,
-    description: null,
-    customerId: cart.customer ? cart.customer.id : null,
+    description: cart.description || null,
+    customerId: cart.customerId || null,
     subTotal: cart.subTotal,
     inputDiscountTotal: cart.inputDiscountTotal,
     discountTotalType: cart.discountTotalType,

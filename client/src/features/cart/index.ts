@@ -1,14 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { getCartStateWithSummary, getCartSummary } from "./util"
-import { mockCartState } from "./mock"
+import { getCartStateWithSummary } from "./util"
 
 export type FlatOrPercentage = "FLAT" | "PERCENTAGE"
-
-export interface CartCustomerState {
-  id: number | null
-  name: string | null
-}
 
 export interface CartItemState {
   productUnitId: number
@@ -27,7 +21,8 @@ export interface CartState {
     [productUnitId: number | string]: CartItemState | null | undefined
   }
   name: string | null
-  customer: CartCustomerState | null
+  description: string | null
+  customerId: number | null
   inputDiscountTotal: number
   discountTotalType: FlatOrPercentage
   inputTaxTotal: number
@@ -64,7 +59,8 @@ export interface CartStateSummary extends Omit<CartState, "items"> {
 const initialState: CartState = {
   items: {},
   name: null,
-  customer: null,
+  description: null,
+  customerId: null,
   inputDiscountTotal: 0.0,
   discountTotalType: "PERCENTAGE",
   inputTaxTotal: 0.0,
@@ -103,11 +99,25 @@ const upsertCartItemReducer = (
   state.items[cartItem.productUnitId] = updatedCartItem
 }
 
-const setCartCustomerReducer = (
+const updateCartCustomerReducer = (
   state: CartState,
-  { payload: customer }: PayloadAction<CartCustomerState>,
+  { payload: customerId }: PayloadAction<number>,
 ) => {
-  state.customer = customer
+  state.customerId = customerId
+}
+
+const updateCartNameReducer = (
+  state: CartState,
+  { payload: name }: PayloadAction<string>,
+) => {
+  state.name = name
+}
+
+const updateCartDescriptionReducer = (
+  state: CartState,
+  { payload: description }: PayloadAction<string>,
+) => {
+  state.description = description
 }
 
 const updateCartItemPriceReducer = (
@@ -212,7 +222,9 @@ const slice = createSlice({
   name: "cart",
   initialState: initialState,
   reducers: {
-    setCartCustomer: setCartCustomerReducer,
+    updateCartCustomer: updateCartCustomerReducer,
+    updateCartName: updateCartNameReducer,
+    updateCartDescription: updateCartDescriptionReducer,
     upsertCartItem: upsertCartItemReducer,
     updateCartItemPrice: updateCartItemPriceReducer,
     updateCartItemQuantity: updateCartItemQuantityReducer,
@@ -227,7 +239,9 @@ const slice = createSlice({
 })
 
 export const {
-  setCartCustomer,
+  updateCartCustomer,
+  updateCartName,
+  updateCartDescription,
   upsertCartItem,
   updateCartItemPrice,
   updateCartItemQuantity,

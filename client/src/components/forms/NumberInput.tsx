@@ -19,25 +19,27 @@ type INumberFormatCustomProps = {
   name: string
 } & NumericFormatProps
 
-const NumberFormatCustom = (props: INumberFormatCustomProps) => {
-  const { getInputRef, onChange, name, ...rest } = props
+const NumberFormatCustom = forwardRef(
+  (props: INumberFormatCustomProps, ref) => {
+    const { getInputRef, onChange, name, ...rest } = props
 
-  return (
-    <NumericFormat
-      {...rest}
-      getInputRef={props.getInputRef}
-      onValueChange={(values) => {
-        if (!props.onChange) return
-        props.onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        } satisfies IChangeEvent)
-      }}
-    />
-  )
-}
+    return (
+      <NumericFormat
+        {...rest}
+        getInputRef={props.getInputRef}
+        onValueChange={(values) => {
+          if (!props.onChange) return
+          props.onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          } satisfies IChangeEvent)
+        }}
+      />
+    )
+  },
+)
 
 type INumberInputProps = Omit<
   INumberFormatCustomProps,

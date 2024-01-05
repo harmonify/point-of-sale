@@ -1,8 +1,8 @@
 import { Grid, useTheme } from "@mui/material"
 import React from "react"
 
-import Cart from "./cart/Cart"
-import ProductSection from "./productSection/ProductSection"
+import Cart from "./Cart/Cart"
+import ProductSection from "./ProductSection/ProductSection"
 
 const Sale: React.FC = (props) => {
   const theme = useTheme()

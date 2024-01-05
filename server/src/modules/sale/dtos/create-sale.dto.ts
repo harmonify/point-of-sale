@@ -27,7 +27,7 @@ export class CreateSaleRequestDto
   @IsOptional()
   @IsString()
   @ApiProperty()
-  name: string | null;
+  name?: string | null;
 
   @IsOptional()
   @IsString()

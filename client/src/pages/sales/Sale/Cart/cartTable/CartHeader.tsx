@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { emptyCart, selectCart } from "@/features/cart"
-import { Padding, TableHead, TableRow } from "@mui/material"
+import { TableCellProps, TableHead, TableRow } from "@mui/material"
 import { t } from "i18next"
 import React from "react"
 
@@ -10,7 +10,7 @@ const CartHeader: React.FC = () => {
   const headers: {
     label: string
     colSpan: number
-    padding: Padding
+    padding: TableCellProps["padding"]
     widthPercentage: number
   }[] = [
     { label: t("Num"), colSpan: 1, padding: "none", widthPercentage: 5 },

@@ -1,9 +1,12 @@
+import { useAppDispatch } from "@/app/hooks"
 import FormikSelectInput from "@/components/forms/FormikSelectInput"
+import { updateCartCustomer } from "@/features/cart"
 import { useFindAllCustomerApiQuery } from "@/services/api"
 import { nameInitials } from "@/utils"
 import { Avatar, Grid } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import { useFormikContext } from "formik"
+import { t } from "i18next"
 import React, { useMemo, useState } from "react"
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const CustomerCell: React.FC = () => {
+  const dispatch = useAppDispatch()
+
   const classes = useStyles()
 
   const { isLoading: isFetchCustomerLoading, data: customerResponseQuery } =
@@ -36,10 +41,22 @@ const CustomerCell: React.FC = () => {
       },
     )
   const customerList = useMemo(() => {
-    return customerResponseQuery ? customerResponseQuery.data : []
+    const result = []
+    if (customerResponseQuery) {
+      result.push(...customerResponseQuery.data)
+    }
+    return result
   }, [customerResponseQuery])
   const customerMap = useMemo(
     () => new Map(customerList.map((c) => [c.id, c])),
+    [customerList],
+  )
+  const customerOptions = useMemo(
+    () =>
+      [{ name: "", id: undefined }, ...customerList].map((c) => ({
+        label: c.name,
+        value: c.id,
+      })),
     [customerList],
   )
 
@@ -50,22 +67,27 @@ const CustomerCell: React.FC = () => {
 
   return (
     <Grid container className={classes.root} alignItems="center">
-      <Grid item>
+      <Grid item xs={2}>
         <Avatar alt={selectedCustomer?.name} className={classes.avatar}>
           {nameInitials(selectedCustomer?.name)}
         </Avatar>
       </Grid>
-      <Grid item>
+      <Grid item xs={10}>
         <FormikSelectInput
           name="customerId"
           margin="none"
           size="small"
+          label={t("Customer")}
+          InputLabelProps={{ shrink: true }}
           type="number"
-          options={customerList.map((c) => ({ label: c.name, value: c.id }))}
-          enableDefaultValue
-          // defaultValue={undefined}
+          fullWidth
+          options={customerOptions}
           SelectProps={{ native: true }}
           style={{ minWidth: 160 }}
+          onChange={(e) => {
+            const value = parseInt(e.target.value)
+            dispatch(updateCartCustomer(value))
+          }}
         />
       </Grid>
     </Grid>

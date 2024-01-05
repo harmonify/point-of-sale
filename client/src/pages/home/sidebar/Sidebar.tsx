@@ -8,7 +8,7 @@ import Hidden from "@mui/material/Hidden"
 import { makeStyles, useTheme } from "@mui/styles"
 import React from "react"
 
-import Menu from "./Menu"
+import SidebarMenu from "./SidebarMenu"
 import { useLocation } from "react-router-dom"
 
 const drawerWidth = 240
@@ -31,7 +31,7 @@ const Sidebar: React.FC = () => {
   const location = useLocation()
 
   const openMobileDrawer = useAppSelector(selectShouldOpenMobileDrawer)
-  const isSale = location.pathname === "/sale"
+  const isSale = location.pathname === "/sales"
 
   const handleDrawerToggle = () => dispatch(toggleMobileDrawer())
 
@@ -52,7 +52,7 @@ const Sidebar: React.FC = () => {
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          <Menu />
+          <SidebarMenu />
         </Drawer>
       </Hidden>
 
@@ -70,7 +70,7 @@ const Sidebar: React.FC = () => {
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          <Menu />
+          <SidebarMenu />
         </Drawer>
       ) : null}
 
@@ -86,7 +86,7 @@ const Sidebar: React.FC = () => {
               paper: classes.drawerPaper,
             }}
           >
-            <Menu />
+            <SidebarMenu />
           </Drawer>
         )}
       </Hidden>

@@ -1,9 +1,5 @@
 import Container from "@/components/layout/Container/Container"
-import {
-  useGetDailySalesReportQuery,
-  useLazyGetSalesReportQuery,
-} from "@/services/api"
-import { formatDateTimeToLocale } from "@/utils/string"
+import { useLazyGetSalesReportQuery } from "@/services/api"
 import { Print, Search } from "@mui/icons-material"
 import { Button, CircularProgress, Grid, useTheme } from "@mui/material"
 import { makeStyles } from "@mui/styles"
@@ -16,21 +12,14 @@ import { SaleReportPDF } from "./SaleReportPDF/SaleReportPDF"
 import { generateSaleReportPDF } from "./SaleReportPDF/util"
 
 const today = DateTime.now().startOf("day")
-const todayLocale = formatDateTimeToLocale(today, {
-  weekday: "long",
-  month: "long",
-  hour: undefined,
-  minute: undefined,
-  second: undefined,
-})
 const todayISO = today.toISODate()
-const saleSummaryTableId = "daily-sale-summary-table"
-const saleProductTableId = "daily-sale-product-table"
+const saleSummaryTableId = "range-date-sale-summary-table"
+const saleProductTableId = "range-date-sale-product-table"
 const getTitle = (from: string, to: string) => {
   return `${t("Sales Report")} - ${from} - ${to}`
 }
 const getFileName = (from: string, to: string) => {
-  return `POS - ${t("Daily Sales Report")} - ${from} - ${to}.pdf`
+  return `POS - ${t("Sales Report")} - ${from} - ${to}.pdf`
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -81,7 +70,7 @@ const SaleReport = () => {
   }
 
   return (
-    <Container title={t("Daily Sales Report")}>
+    <Container title={t("Sales Report")}>
       <Grid container spacing={3}>
         <Grid
           item

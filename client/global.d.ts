@@ -114,6 +114,10 @@ declare global {
         type SaleReport = import("../server/src/modules/reports").SaleReport
         type SaleProductRecord =
           import("../server/src/modules/reports").SaleProductRecord
+        type ProfitLossRecord =
+          import("../server/src/modules/reports").ProfitLossRecord
+        type ProfitLossReport =
+          import("../server/src/modules/reports").ProfitLossReport
       }
     }
   }

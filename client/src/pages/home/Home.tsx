@@ -1,11 +1,11 @@
-import React from "react"
+import { Box } from "@mui/material"
+import { makeStyles } from "@mui/styles"
+import React, { useRef } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 
-import MainContainer from "./MainContainer"
 import Header from "./header/Header"
+import MainContainer from "./MainContainer"
 import Sidebar from "./sidebar/Sidebar"
-import { Box, Grid } from "@mui/material"
-import { makeStyles } from "@mui/styles"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
   const classes = useStyles()
   const location = useLocation()
 
-  const shouldRenderMobileMenu = location.pathname === "/sale"
+  const shouldRenderMobileMenu = location.pathname === "/sales"
 
   return (
     <Box className={classes.root}>

@@ -73,7 +73,9 @@ export class CustomerController {
         createdBy: { select: { name: true } },
         sales: { select: { total: true } },
       },
-      orderBy: BaseQuery.OrderBy.latest(),
+      orderBy: {
+        name: 'asc',
+      },
     });
     return {
       data: customers.map((customer) => ({

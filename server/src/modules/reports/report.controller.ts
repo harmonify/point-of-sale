@@ -46,8 +46,11 @@ export class ReportController {
   }
 
   @Get('profit-loss')
-  async getProfitLossReport(): Promise<IResponseBody<ProfitLossReport>> {
-    const result = await this.reportService.getProfitLossReport();
+  async getProfitLossReport(
+    @Query('from') from: string,
+    @Query('to') to: string,
+  ): Promise<IResponseBody<ProfitLossReport>> {
+    const result = await this.reportService.getProfitLossReport(from, to);
     return {
       data: result,
     };

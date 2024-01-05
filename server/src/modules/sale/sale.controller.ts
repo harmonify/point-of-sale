@@ -102,8 +102,10 @@ export class SaleController {
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
   ): Promise<IResponseBody<SaleResponseDto[]>> {
     const paginationRequest = {
-      skip: paginationInfo.skip,
-      take: paginationInfo.take,
+      ...(!paginationInfo.all && {
+        skip: paginationInfo.skip,
+        take: paginationInfo.take,
+      }),
       where: paginationInfo.search
         ? {
             AND: [

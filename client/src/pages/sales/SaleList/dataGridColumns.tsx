@@ -1,28 +1,22 @@
-import { formatGender, formatISOToLocale, formatRupiah } from "@/utils"
+import { formatISOToLocale, formatRupiah } from "@/utils"
 import { IconButton } from "@mui/material"
-import { Delete, Edit } from "@mui/icons-material"
+import { Delete, Edit, Receipt } from "@mui/icons-material"
 import {
-  GridColDef,
   GridColumns,
   GridRenderCellParams,
   gridNumberComparator,
 } from "@mui/x-data-grid"
 import { t } from "i18next"
 
-type ICustomerColumns = (GridColDef & {
-  field: keyof Monorepo.Api.Response.CustomerInfoResponseDto
-})[]
-
-export default function renderCustomerDataGridColumns({
-  onClickEdit,
+export default function renderSaleDataGridColumns({
+  onClickReceipt,
   onClickDelete,
 }: {
-  onClickEdit: (row: Monorepo.Api.Response.CustomerInfoResponseDto) => void
-  onClickDelete: (row: Monorepo.Api.Response.CustomerInfoResponseDto) => void
+  onClickReceipt: (row: Monorepo.Api.Response.SaleResponseDto) => void
+  onClickDelete: (row: Monorepo.Api.Response.SaleResponseDto) => void
 }): GridColumns {
   return [
     {
-      // @ts-ignore
       field: "actions",
       headerName: t("Actions"),
       renderCell: (params: GridRenderCellParams) => {
@@ -31,19 +25,19 @@ export default function renderCustomerDataGridColumns({
             <IconButton
               size="small"
               onClick={() =>
-                onClickEdit(
-                  params.row as Monorepo.Api.Response.CustomerInfoResponseDto,
+                onClickReceipt(
+                  params.row as Monorepo.Api.Response.SaleResponseDto,
                 )
               }
             >
-              <Edit fontSize="small" color="secondary" />
+              <Receipt fontSize="small" color="secondary" />
             </IconButton>
 
             <IconButton
               size="small"
               onClick={() =>
                 onClickDelete(
-                  params.row as Monorepo.Api.Response.CustomerInfoResponseDto,
+                  params.row as Monorepo.Api.Response.SaleResponseDto,
                 )
               }
             >
@@ -63,34 +57,22 @@ export default function renderCustomerDataGridColumns({
       align: "center",
     },
     {
-      field: "name",
-      headerName: t("Name"),
-      flex: 2,
-      minWidth: 160,
-    },
-    {
-      field: "description",
-      headerName: t("Description"),
-      flex: 2,
-      minWidth: 160,
-    },
-    {
-      field: "phoneNumber",
-      headerName: t("Phone Number"),
-      flex: 2,
+      field: "customerName",
+      headerName: t("Customer Name"),
+      flex: 3,
       minWidth: 200,
+      valueGetter(params) {
+        return (
+          (params.row as Monorepo.Api.Response.SaleResponseDto).customer
+            ?.name || "-"
+        )
+      },
     },
     {
-      field: "email",
-      headerName: t("Email"),
+      field: "subTotal",
+      headerName: t("Subtotal"),
       flex: 2,
-      minWidth: 240,
-    },
-    {
-      field: "purchasedAmount",
-      headerName: t("Purchased Amount"),
-      flex: 2,
-      minWidth: 220,
+      minWidth: 160,
       valueFormatter(params) {
         return formatRupiah(params.value)
       },
@@ -100,18 +82,40 @@ export default function renderCustomerDataGridColumns({
       sortComparator: gridNumberComparator,
     },
     {
-      field: "gender",
-      headerName: t("Gender"),
+      field: "discountTotal",
+      headerName: t("Discount Total"),
       flex: 2,
       minWidth: 160,
-      valueGetter: (params) => formatGender(params.value as string),
-      sortable: false,
+      valueFormatter(params) {
+        return formatRupiah(params.value)
+      },
+      valueGetter(params) {
+        return params.value
+      },
+      sortComparator: gridNumberComparator,
+    },
+    {
+      field: "total",
+      headerName: t("Total"),
+      flex: 2,
+      minWidth: 160,
+      valueFormatter(params) {
+        return formatRupiah(params.value)
+      },
+      valueGetter(params) {
+        return params.value
+      },
+      sortComparator: gridNumberComparator,
     },
     {
       field: "createdByName",
       headerName: t("Created By"),
-      flex: 2,
+      flex: 1,
       minWidth: 220,
+      valueGetter(params) {
+        return (params.row as Monorepo.Api.Response.SaleResponseDto).createdBy
+          .name
+      },
     },
     {
       field: "createdAt",
@@ -120,5 +124,5 @@ export default function renderCustomerDataGridColumns({
       minWidth: 220,
       valueGetter: (params) => formatISOToLocale(params.value as string),
     },
-  ] satisfies ICustomerColumns
+  ]
 }

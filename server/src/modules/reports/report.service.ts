@@ -177,11 +177,21 @@ export class ReportService {
     return this.createSaleReport(sales);
   }
 
-  async getProfitLossReport(): Promise<ProfitLossReport> {
+  async getProfitLossReport(
+    from: string,
+    to: string,
+  ): Promise<ProfitLossReport> {
+    const startOf = DateTime.fromISO(from).startOf('day').toJSDate();
+    const endOf = DateTime.fromISO(to).endOf('day').toJSDate();
+
     // eslint-disable-next-line prisma-soft-delete/use-deleted-null
     const sales = await this.prismaService.sale.findMany({
       ...this.getSalePayloadToken(),
       where: {
+        createdAt: {
+          gte: startOf,
+          lte: endOf,
+        },
         deletedAt: null,
       },
     });

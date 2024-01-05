@@ -47,14 +47,14 @@ export const saleProductReportPDFColumns: (ITableColumnData<Monorepo.Api.Respons
     width: 10,
   },
   {
-    title: t("Product Name"),
+    title: t("Product"),
     type: "text",
     iteratee: (item) => item.productName,
     width: 25,
     cellWidth: 80,
   },
   {
-    title: t("Unit Name"),
+    title: t("Unit"),
     type: "text",
     iteratee: (item) => item.unitName,
     width: 10,

@@ -1,18 +1,18 @@
 import { useAppDispatch } from "@/app/hooks"
 import { toggleDarkMode, toggleMobileDrawer } from "@/features/app"
+import { Brightness4, Brightness7, ShoppingCart } from "@mui/icons-material"
+import MenuIcon from "@mui/icons-material/Menu"
+import { Box, Button, Grid, Typography } from "@mui/material"
 import AppBar from "@mui/material/AppBar"
 import IconButton from "@mui/material/IconButton"
-import { makeStyles, useTheme } from "@mui/styles"
 import Toolbar from "@mui/material/Toolbar"
-import MenuIcon from "@mui/icons-material/Menu"
+import { makeStyles, useTheme } from "@mui/styles"
 import classNames from "classnames"
 import { t } from "i18next"
-import React from "react"
-
-import Menus from "./HeaderMenu"
-import { Brightness4, Brightness7, ShoppingCart } from "@mui/icons-material"
-import { Box, Button, Grid, Typography } from "@mui/material"
+import React, { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+
+import HeaderMenu from "./HeaderMenu"
 
 const drawerWidth = 240
 
@@ -65,7 +65,10 @@ const Header: React.FC<{
     shouldRenderMobileMenu === true ? classes.appBarFullWidth : classes.appBar
 
   return (
-    <AppBar className={appBarClass}>
+    <AppBar
+      style={{ backgroundColor: theme.palette.primary.main }}
+      className={appBarClass}
+    >
       <Toolbar>
         {/* Collapse button. Clicking this opens the drawer */}
         <Box className={classNames(classes.logo, navIconClass)}>
@@ -86,6 +89,7 @@ const Header: React.FC<{
                 <MenuIcon />
               </IconButton>
             </Grid>
+
             <Grid item>
               <Button
                 onClick={() => navigate("/")}
@@ -121,7 +125,8 @@ const Header: React.FC<{
                 <Brightness4 />
               )}
             </IconButton>
-            <Menus />
+
+            <HeaderMenu />
           </Box>
         </Box>
       </Toolbar>

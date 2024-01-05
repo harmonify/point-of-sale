@@ -26,7 +26,7 @@ const createSaleProductValidationSchema = object({
 } satisfies Record<keyof Monorepo.Api.Request.CreateSaleProductRequestDto, Schema>) satisfies ObjectSchema<Monorepo.Api.Request.CreateSaleProductRequestDto>
 
 const createSaleValidationSchema = object({
-  name: string().required(),
+  name: string().optional().nullable(),
   description: string().optional().nullable(),
   customerId: number().optional().nullable(),
   subTotal: number().optional(),

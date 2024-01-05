@@ -4,20 +4,20 @@ import { getThemeToken } from "@/theme"
 import {
   CircularProgress,
   createTheme,
-  ThemeProvider,
-  Theme,
   StyledEngineProvider,
+  Theme,
+  ThemeProvider,
 } from "@mui/material"
-import { Suspense, useMemo } from "react"
-import { RouterProvider } from "react-router-dom"
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon"
-
 import CssBaseline from "@mui/material/CssBaseline"
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon"
+import { Suspense, useMemo, useRef } from "react"
+import { RouterProvider } from "react-router-dom"
+
 import { useAppDispatch, useAppSelector } from "./app/hooks"
+import { APP_DEFAULT_LANG } from "./environment"
 import { selectDarkMode, setDarkMode } from "./features/app"
 import ConfirmationDialogProvider from "./features/dialog/ConfirmationDialogProvider"
-import { LocalizationProvider } from "@mui/x-date-pickers"
-import { APP_DEFAULT_LANG } from "./environment"
 
 declare module "@mui/styles" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

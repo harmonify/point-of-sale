@@ -89,12 +89,9 @@ export const getYearlySalesBuilder = (builder: ApiEndpointBuilder) => {
 
 export const getProfitLossBuilder = (builder: ApiEndpointBuilder) => {
   return builder.query<
-    Monorepo.Api.Response.ResponseBodyDto<Monorepo.Api.Response.SaleReport>,
-    Date | null | undefined
+    Monorepo.Api.Response.ResponseBodyDto<Monorepo.Api.Response.ProfitLossReport>,
+    DateRangeQuery
   >({
-    query: () => ({
-      url: getYearlySalesReportUrl,
-      method: "GET",
-    }),
+    query: (params) => constructDateRangeQuery(params, getProfitLossReportUrl),
   })
 }
