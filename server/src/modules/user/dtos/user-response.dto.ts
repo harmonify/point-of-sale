@@ -39,6 +39,8 @@ export class UserResponseDto implements Partial<User> {
   @ApiProperty()
   email: string;
 
+  password?: never;
+
   @IsString()
   @ApiProperty()
   phoneNumber: string;

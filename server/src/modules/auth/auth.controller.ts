@@ -7,7 +7,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '@prisma/client';
 
 import { CurrentUser, SkipAuth } from './decorators';
 import {
@@ -19,6 +18,7 @@ import {
   RefreshTokenResponseDto,
 } from './dtos';
 import { AuthService, TokenService } from './services';
+import { UserResponseDto } from '../user';
 
 @ApiTags('Auth')
 @Controller({ path: 'auth', version: '1' })
@@ -28,7 +28,7 @@ export class AuthController {
     private tokenService: TokenService,
   ) {}
 
-  @ApiOperation({ description: 'User authentication' })
+  @ApiOperation({ description: 'UserResponseDto authentication' })
   @ApiOkResponse({ description: 'Successfully authenticated user' })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @ApiInternalServerErrorResponse({ description: 'Server error' })
@@ -53,7 +53,7 @@ export class AuthController {
   @Put('password')
   async changePassword(
     @Body() changePassword: ChangePasswordRequestDto,
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserResponseDto,
   ): Promise<IResponseBody> {
     await this.authService.changePassword(changePassword, user);
   }
@@ -83,7 +83,7 @@ export class AuthController {
   @Post('logout')
   @SkipAuth()
   async logout(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserResponseDto,
     @Body() { fromAll, refreshToken }: LogoutRequestDto,
   ): Promise<IResponseBody> {
     if (fromAll) {

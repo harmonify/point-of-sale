@@ -57,17 +57,70 @@ const Transition = React.forwardRef(
   },
 )
 
-const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
+const DialogConfirmButton: React.FC<
+  Pick<
+    IConfirmationDialogState,
+    "confirmText" | "onConfirm" | "variant" | "isLoading" | "fullWidthBtn"
+  >
+> = (props) => {
   const theme = useTheme()
   const classes = useStyles()
-  // const use
+
+  return (
+    <Box className={classes.buttonContainer}>
+      <Button
+        id="confirmation-button"
+        className={classes.button}
+        onClick={(e) => (props.onConfirm ? props.onConfirm(e) : e)}
+        disabled={props.isLoading}
+        fullWidth={props.fullWidthBtn}
+        style={{
+          color:
+            props.variant === "destructive"
+              ? theme.palette.error.main
+              : props.variant === "constructive"
+              ? colors.green[500]
+              : theme.palette.primary.main,
+        }}
+      >
+        {props.isLoading ? (
+          <CircularProgress size={18} color="inherit" />
+        ) : (
+          props.confirmText || t("OK", { ns: "action" })
+        )}
+      </Button>
+    </Box>
+  )
+}
+
+const DialogCancelButton: React.FC<
+  Pick<IConfirmationDialogState, "onCancel" | "isLoading" | "cancelText">
+> = (props) => {
+  const classes = useStyles()
+
+  return (
+    <Box className={classes.buttonContainer}>
+      <Button
+        variant="text"
+        onClick={(e) => (props.onCancel ? props.onCancel() : null)}
+        className={classes.button}
+        disabled={props.isLoading}
+      >
+        {props.cancelText || t("Cancel", { ns: "action" })}
+      </Button>
+    </Box>
+  )
+}
+
+const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
+  const classes = useStyles()
 
   return (
     <MuiDialog
       open={props.open}
       onClose={(e) => (props.onCancel ? props.onCancel() : null)}
       classes={{ paper: classes.dialogPaper }}
-      maxWidth="xs"
+      maxWidth={props.maxWidth || "xs"}
       TransitionComponent={Transition}
       fullWidth
     >
@@ -94,50 +147,32 @@ const ConfirmationDialog: React.FC<IConfirmationDialogState> = (props) => {
               {props.content}
             </Typography>
           )}
-          <Divider />
         </>
       </DialogContent>
 
-      <DialogActions className={classes.dialogActions}>
-        <Box className={classes.buttonContainer}>
-          <Button
-            id="confirmation-button"
-            className={classes.button}
-            onClick={(e) => (props.onConfirm ? props.onConfirm(e) : e)}
-            disabled={props.isLoading}
-            fullWidth={props.fullWidthBtn}
-            style={{
-              color:
-                props.variant === "destructive"
-                  ? theme.palette.error.main
-                  : props.variant === "constructive"
-                  ? colors.green[500]
-                  : theme.palette.primary.main,
-            }}
-          >
-            {props.isLoading ? (
-              <CircularProgress size={18} color="inherit" />
+      {!props.renderActions &&
+      props.disableConfirmButton &&
+      props.disableCancelButton ? null : (
+        <>
+          <Divider />
+          <DialogActions className={classes.dialogActions}>
+            {props.renderActions ? (
+              props.renderActions
             ) : (
-              props.confirmText || t("OK", { ns: "action" })
+              <>
+                {props.disableConfirmButton ? null : (
+                  <DialogConfirmButton {...props} />
+                )}
+                {props.disableCancelButton ? null : (
+                  <DialogCancelButton {...props} />
+                )}
+              </>
             )}
-          </Button>
-        </Box>
-
-        {props.disableCancelButton ? null : (
-          <Box className={classes.buttonContainer}>
-            <Button
-              variant="text"
-              onClick={(e) => (props.onCancel ? props.onCancel() : null)}
-              className={classes.button}
-              disabled={props.isLoading}
-            >
-              {props.cancelText || t("Cancel", { ns: "action" })}
-            </Button>
-          </Box>
-        )}
-      </DialogActions>
+          </DialogActions>
+        </>
+      )}
     </MuiDialog>
-  );
+  )
 }
 
 export default ConfirmationDialog

@@ -25,6 +25,7 @@ import {
   SaleResponseDto,
   UpdateSaleRequestDto,
 } from './dtos';
+import { DateTime } from 'luxon';
 
 @ApiTags('Sales')
 @Controller({ path: '/sales', version: '1' })
@@ -36,6 +37,10 @@ export class SaleController {
     @Body() sale: CreateSaleRequestDto,
     @CurrentUser() user: User,
   ): Promise<IResponseBody<SaleResponseDto>> {
+    const now = DateTime.now();
+    const startOfDay = now.startOf('day').toJSDate();
+    const endOfDay = now.endOf('day').toJSDate();
+
     const newSale = await this.prismaService.$transaction(async (prisma) => {
       const productUnits = await prisma.productUnit.findMany({
         select: {
@@ -58,9 +63,28 @@ export class SaleController {
         productUnits.map((pu) => [pu.id, pu]),
       );
 
+      const saleCount = await prisma.sale.count({
+        where: {
+          createdAt: {
+            gte: startOfDay,
+            lte: endOfDay,
+          },
+        },
+      });
+
+      // adjust this to how you like
+      const invoiceNumber = `${now.year}${now.month
+        .toString()
+        .padStart(2, '0')}${now.day.toString().padStart(2, '0')}${(
+        saleCount + 101
+      )
+        .toString()
+        .padStart(3, '0')}`;
+
       const newSale = await prisma.sale.create({
         data: {
           ...sale,
+          invoiceNumber,
           createdById: user.id,
           updatedById: user.id,
           saleProducts: {

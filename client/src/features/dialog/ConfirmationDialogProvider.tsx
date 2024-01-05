@@ -7,6 +7,7 @@ import React, {
 } from "react"
 
 import ConfirmationDialog from "./ConfirmationDialog"
+import { Breakpoint } from "@mui/material"
 
 type IDialogConfirmationProps =
   | {
@@ -29,9 +30,14 @@ type IDialogCancellationProps =
     }
 
 type IDialogContentProps = {
+  /** Controls the dialog max width */
+  maxWidth?: false | Breakpoint | undefined
+  /** The body content */
   content?: string
-  /** If provided, will be prioritized over `content` */
+  /** Render the dialog body. If provided, will be prioritized over `content` */
   render?: React.ReactNode
+  /** Render the dialog actions. If provided, both confirm and cancel button will not be rendered*/
+  renderActions?: React.ReactNode
 }
 
 export type IConfirmationDialogState = {
@@ -40,6 +46,7 @@ export type IConfirmationDialogState = {
   variant?: "destructive" | "constructive" | "neutral" | null
   isLoading?: boolean
   fullWidthBtn?: boolean
+  disableConfirmButton?: boolean
   disableCancelButton?: boolean
 } & IDialogContentProps &
   IDialogConfirmationProps &
@@ -50,8 +57,6 @@ type IShowDialogConfirmationParams = Omit<
   "open" | "content"
 > & {
   content?: string
-  /** If provided, will be prioritized over `content` */
-  render?: React.ReactNode
 }
 
 const defaultState: IConfirmationDialogState = {
@@ -62,6 +67,7 @@ const defaultState: IConfirmationDialogState = {
   isLoading: false,
   fullWidthBtn: false,
 
+  disableConfirmButton: false,
   confirmText: null,
   onConfirm: null,
 

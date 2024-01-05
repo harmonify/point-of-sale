@@ -5,7 +5,7 @@ import {
 } from "../ConfirmationDialogProvider"
 
 const useConfirmationDialog = (
-  props: Omit<IConfirmationDialogState, "open">,
+  props?: Omit<IConfirmationDialogState, "open">,
 ) => {
   const { setState, show, close } = useContext(ConfirmationDialogContext)!
 

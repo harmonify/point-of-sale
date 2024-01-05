@@ -5,7 +5,7 @@
   "Do you want to update this data?": "Apakah kamu mau mengubah data{{model, unslugify, spaceBeforeIfDefined, removeIfUndefined}} ini?",
   "Do you want to delete this data?": "Apakah kamu mau menghapus data{{model, unslugify, spaceBeforeIfDefined, removeIfUndefined}} ini?",
   "Hello!": "Halo {{name}}",
-  "Welcome to POS": "Selamat datang di POS Toko Dinamis",
+  "Welcome to POS": "Selamat datang di POS{{title, spaceBeforeIfDefined, removeIfUndefined}}",
   "Define the selling price": "Tentukan harga jual",
   "Deleting this product unit will remove the related procured stock. Do you want to proceed?": "Menghapus unit produk ini akan menghapus pengadaan stok terkait. Apakah Anda ingin melanjutkan?",
   "No records found": "Tidak ada data yang ditemukan",

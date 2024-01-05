@@ -1,38 +1,23 @@
 import { useAppDispatch } from "@/app/hooks"
 import Container from "@/components/layout/Container/Container"
 import { useConfirmationDialog } from "@/features/dialog"
+import { IConfirmationDialogState } from "@/features/dialog/ConfirmationDialogProvider"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
   useDeleteSaleApiMutation,
   useFindAllSaleApiQuery,
 } from "@/services/api"
-import { Grid } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import renderSaleDataGridColumns from "./dataGridColumns"
-import { IConfirmationDialogState } from "@/features/dialog/ConfirmationDialogProvider"
+import InvoicePDFContainer from "./InvoicePDF/InvoicePDFContainer"
 
-const previewSaleDialog: Omit<IConfirmationDialogState, "open"> = {
-  title: t("Preview Sale", { ns: "action" }),
-  disableCancelButton: true,
-}
-
-const deleteSaleDialog: Omit<IConfirmationDialogState, "open"> = {
-  content: t("Do you want to delete this data?", {
-    ns: "message",
-    model: t("sale"),
-  }),
-  title: t("Delete Sale", { ns: "action" }),
-  confirmText: "Delete",
-  variant: "destructive",
-}
-
-const SaleList: React.FC = () => {
+const OrderList: React.FC = () => {
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const [deleteSaleApiMutation, { isLoading: isLoadingDeleteSale }] =
     useDeleteSaleApiMutation()
   const { isLoading: isLoadingFetchSale, data: saleResponseQuery } =
@@ -45,20 +30,34 @@ const SaleList: React.FC = () => {
       },
     )
 
-  const saleList = useMemo(
+  const orderList = useMemo(
     () => (saleResponseQuery ? saleResponseQuery.data : []),
     [saleResponseQuery],
   )
 
-  const onClickReceipt = (row: Monorepo.Api.Response.SaleResponseDto) => {
-    show(previewSaleDialog)
-    // return navigate(`/sales/${row.id}`)
-  }
+  const { show } = useConfirmationDialog()
 
-  const { show } = useConfirmationDialog(deleteSaleDialog)
+  const onClickReceipt = (row: Monorepo.Api.Response.SaleResponseDto) => {
+    show({
+      title: t("View Order", { ns: "action" }),
+      render: (
+        <InvoicePDFContainer data={row} isLoading={isLoadingDeleteSale} />
+      ),
+      maxWidth: "sm",
+      disableCancelButton: true,
+      disableConfirmButton: true,
+    })
+  }
 
   const onClickDelete = (row: Monorepo.Api.Response.SaleResponseDto) => {
     show({
+      title: t("Delete Order", { ns: "action" }),
+      content: t("Do you want to delete this data?", {
+        ns: "message",
+        model: t("order"),
+      }),
+      confirmText: "Delete",
+      variant: "destructive",
       onConfirm: async () => {
         try {
           if (!row.id) {
@@ -88,7 +87,7 @@ const SaleList: React.FC = () => {
         <Grid item xs={12}>
           <DataGrid
             columns={dataGridColumns}
-            rows={saleList}
+            rows={orderList}
             loading={isLoadingFetchSale}
             components={{
               Toolbar: GridToolbar,
@@ -103,4 +102,4 @@ const SaleList: React.FC = () => {
   )
 }
 
-export default SaleList
+export default OrderList

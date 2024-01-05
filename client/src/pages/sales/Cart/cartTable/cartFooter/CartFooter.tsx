@@ -22,6 +22,7 @@ import React, { Component } from "react"
 
 import CustomerCell from "./CustomerCell"
 import FormikTextInput from "@/components/forms/FormikTextInput"
+import { isNumber } from "@/utils/number"
 
 const CartFooter: React.FC<{
   cartState: CartStateSummary
@@ -88,8 +89,7 @@ const CartFooter: React.FC<{
               dispatch(
                 updateCartDiscountTotal({
                   discountTotalType: "FLAT",
-                  inputDiscountTotal:
-                    value && typeof value === "number" ? value : 0,
+                  inputDiscountTotal: isNumber(value) ? value : 0,
                 }),
               )
             }}
@@ -141,11 +141,7 @@ const CartFooter: React.FC<{
             size="small"
             onChange={(e) => {
               const value = parseFloat(e.target.value)
-              dispatch(
-                updateCartPaidAmount(
-                  value && typeof value === "number" ? value : 0,
-                ),
-              )
+              dispatch(updateCartPaidAmount(isNumber(value) ? value : 0))
             }}
             InputLabelProps={{ shrink: true }}
           />

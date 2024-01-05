@@ -1,16 +1,9 @@
 import { useAppSelector } from "@/app/hooks"
-import { APP_ENV } from "@/environment"
+import { APP_ENV, APP_NAME } from "@/environment"
 import { selectCurrentUser } from "@/features/auth"
 import { useGetDashboardInfoQuery } from "@/services/api"
 import { formatISOToLocale, formatRupiah } from "@/utils"
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Icon,
-  Typography,
-} from "@mui/material"
+import { Box, Card, CardContent, Grid, Icon, Typography } from "@mui/material"
 import { makeStyles, useTheme } from "@mui/styles"
 import {
   AttachMoney,
@@ -21,6 +14,11 @@ import {
 import { DataGrid, GridColDef, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useEffect } from "react"
+import {
+  recentOrdersDataGridColumns,
+  topCustomersDataGridColumns,
+} from "./dataGridColumns"
+import { isNumber } from "@/utils/number"
 
 // eslint-disable-next-line
 export const useStyles = makeStyles((theme) => ({
@@ -66,8 +64,6 @@ export const useStyles = makeStyles((theme) => ({
   },
 }))
 
-type Unpacked<T> = T extends (infer U)[] ? U : T
-
 const HomeInfo: React.FC = () => {
   const classes = useStyles()
   const theme = useTheme()
@@ -88,91 +84,6 @@ const HomeInfo: React.FC = () => {
     recentOrders = [],
   } = data?.data || {}
 
-  const defaultGridColumnOptions: Omit<GridColDef, "field"> = {
-    disableColumnMenu: true,
-    disableExport: true,
-    resizable: false,
-    filterable: false,
-    editable: false,
-    align: "center",
-    headerAlign: "center",
-  }
-
-  const topCustomersDataGridColumns: GridColumns = [
-    {
-      field: "name",
-      headerName: t("Name"),
-      flex: 2,
-      // minWidth: 160,
-      ...defaultGridColumnOptions,
-    },
-    {
-      field: "phoneNumber",
-      headerName: t("Phone Number"),
-      flex: 2,
-      // minWidth: 160,
-      ...defaultGridColumnOptions,
-    },
-    {
-      field: "purchasedAmount",
-      headerName: t("Purchased Amount"),
-      flex: 2,
-      // minWidth: 180,
-      ...defaultGridColumnOptions,
-      align: "right",
-      valueGetter: (params) => formatRupiah(params.value as number),
-    },
-    {
-      field: "createdAt",
-      headerName: t("Created At"),
-      flex: 2,
-      // minWidth: 180,
-      ...defaultGridColumnOptions,
-      valueGetter: (params) => formatISOToLocale(params.value as string),
-    },
-  ]
-
-  const recentOrdersDataGridColumns: GridColumns = [
-    {
-      field: "customerName",
-      headerName: t("Customer Name"),
-      flex: 2,
-      // minWidth: 160,
-      ...defaultGridColumnOptions,
-      valueGetter: (params) => {
-        const order = params.row as Unpacked<
-          Monorepo.Api.Response.DashboardResponseDto["recentOrders"]
-        >
-        return order?.customer?.name || "-"
-      },
-    },
-    {
-      field: "description",
-      headerName: t("Description"),
-      flex: 2,
-      // minWidth: 160,
-      ...defaultGridColumnOptions,
-      valueGetter: (params) => params.value || "-",
-    },
-    {
-      field: "total",
-      headerName: t("Total"),
-      flex: 2,
-      // minWidth: 180,
-      ...defaultGridColumnOptions,
-      align: "right",
-      valueGetter: (params) => formatRupiah(params.value as number),
-    },
-    {
-      field: "createdAt",
-      headerName: t("Created At"),
-      flex: 2,
-      // minWidth: 180,
-      ...defaultGridColumnOptions,
-      valueGetter: (params) => formatISOToLocale(params.value as string),
-    },
-  ]
-
   return (
     <Grid container className={classes.root} spacing={2} wrap="wrap">
       <Grid item xs={12}>
@@ -186,7 +97,7 @@ const HomeInfo: React.FC = () => {
           style={{ marginBottom: theme.spacing(1), fontWeight: 500 }}
           variant="h5"
         >
-          {t("Welcome to POS", { ns: "message" })}
+          {t("Welcome to POS", { ns: "message", title: APP_NAME })}
         </Typography>
       </Grid>
 
@@ -273,10 +184,7 @@ const HomeInfo: React.FC = () => {
                 variant="h2"
               >
                 {formatRupiah(
-                  totalSales &&
-                    typeof totalSales === "number" &&
-                    totalExpenses &&
-                    typeof totalExpenses === "number"
+                  isNumber(totalSales) && isNumber(totalExpenses)
                     ? totalSales - totalExpenses
                     : 0,
                 )}

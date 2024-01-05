@@ -9,7 +9,7 @@ import { Box, Button } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import { Formik, FormikProps } from "formik"
 import { t } from "i18next"
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 
 import CartTable from "./cartTable/CartTable"
 import { buildCreateSaleRequestDto } from "./util"
@@ -63,7 +63,7 @@ const Cart: React.FC = (props) => {
     await createSaleApiMutation(dto)
       .unwrap()
       .then((response) => {
-        formik.resetForm()
+        // formik.resetForm()
         dispatch(emptyCart())
       })
   }

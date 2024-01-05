@@ -9,8 +9,8 @@ import { Error500 } from "./pages/errors"
 import Home from "./pages/home/Home"
 import HomeInfo from "./pages/home/HomeInfo"
 import Login from "./pages/login/Login"
-import Sale from "./pages/sales/Sale/Sale"
-import SaleList from "./pages/sales/SaleList/SaleList"
+import Sale from "./pages/sales/Sale"
+import SaleList from "./pages/orders/OrderList"
 import CustomerList from "./pages/customers/CustomerList"
 import SupplierList from "./pages/suppliers/SupplierList"
 import CategoryList from "./pages/categories/CategoryList"
@@ -22,6 +22,7 @@ import DailySaleReport from "./pages/reports/DailySaleReport"
 import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
 import YearlySaleReport from "./pages/reports/YearlySaleReport"
 import ProfitLossReport from "./pages/reports/ProfitLossReport"
+import InvoicePDF from "./pages/orders/InvoicePDF/InvoicePDF"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -69,6 +70,11 @@ const routeObjects: IRoute[] = [
         Component: Sale,
         title: t("Sale"),
         path: "sales",
+      },
+      {
+        Component: InvoicePDF,
+        title: t("Sale"),
+        path: "sales/test",
       },
       {
         Component: SaleList,

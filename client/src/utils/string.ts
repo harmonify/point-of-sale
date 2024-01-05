@@ -2,6 +2,7 @@ import { APP_DEFAULT_LANG } from "@/environment"
 import currency from "currency.js"
 import { t } from "i18next"
 import { DateTime, DateTimeFormatOptions, FixedOffsetZone } from "luxon"
+import { isNumber } from "./number"
 
 /**
  * Parse and translate API error message from:
@@ -42,9 +43,7 @@ export const formatRupiah = (
     currency: "IDR",
     maximumFractionDigits: finalOptions.precision,
     minimumFractionDigits: 0,
-  }).format(
-    amount && typeof amount === "number" ? amount : finalOptions.fallbackValue,
-  )
+  }).format(isNumber(amount) ? amount : finalOptions.fallbackValue)
 }
 
 export const formatISOToLocaleDate = (

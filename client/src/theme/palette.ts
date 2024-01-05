@@ -1,8 +1,9 @@
-import { PaletteOptions, colors } from '@mui/material';
+import { PaletteOptions, colors } from "@mui/material"
 
 const darkGrey = "#424242"
 const offBlack = "#0e1111"
 const softBlack = "#383838"
+const black = "#000"
 
 const offWhite = "#FAF9F6"
 const softWhite = "#FEFEFE"
@@ -38,10 +39,6 @@ export const darkTheme = {
     paper: softBlack,
   },
   // divider: colors.grey[600],
-  common: {
-    black: offBlack,
-    white: offWhite,
-  },
 } satisfies PaletteOptions
 
 export const lightTheme: PaletteOptions = {
@@ -70,12 +67,8 @@ export const lightTheme: PaletteOptions = {
     disabled: colors.grey[500],
   },
   background: {
-    default: white,
-    paper: softWhite,
+    default: softWhite,
+    paper: offWhite,
   },
   divider: colors.grey[900],
-  common: {
-    black: offBlack,
-    white: offWhite,
-  },
 } satisfies PaletteOptions

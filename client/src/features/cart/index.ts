@@ -1,6 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { getCartStateWithSummary } from "./util"
+import { deepClone } from "@/utils/object"
 
 export type FlatOrPercentage = "FLAT" | "PERCENTAGE"
 
@@ -213,14 +214,13 @@ const updateCartPaidAmountReducer = (
   state.paid = amount
 }
 
-const emptyCartReducer = (oldState: CartState) => {
-  oldState = Object.assign({}, initialState)
-  oldState.items = Object.assign({}, initialState.items)
+const emptyCartReducer = () => {
+  return deepClone(initialState)
 }
 
 const slice = createSlice({
   name: "cart",
-  initialState: initialState,
+  initialState: deepClone(initialState),
   reducers: {
     updateCartCustomer: updateCartCustomerReducer,
     updateCartName: updateCartNameReducer,

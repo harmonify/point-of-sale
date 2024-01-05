@@ -1,6 +1,7 @@
 {
   "Actions": "Aksi",
   "Qty": "Qty",
+  "order": "pesanan",
   "Order": "Pesanan",
   "Order List": "Daftar Pesanan",
   "Address": "Alamat",
@@ -10,6 +11,7 @@
   "Barcode": "Barcode",
   "Barcode Type": "Tipe Barcode",
   "Buying Price": "Harga Beli",
+  "Order Invoice": "Faktur Pesanan",
   "categories": "kategori",
   "Categories": "Kategori",
   "category": "kategori",

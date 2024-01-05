@@ -13,6 +13,7 @@ import { Add } from "@mui/icons-material"
 import { t } from "i18next"
 import { ModifiedProductUnitType } from "../ProductSection"
 import { useMemo, useState } from "react"
+import { isNumber } from "@/utils/number"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,12 +110,7 @@ const ProductUnitTab: React.FC<{
                       variant="contained"
                       type="button"
                       onClick={() => {
-                        if (
-                          !(
-                            rowInputQuantity &&
-                            typeof rowInputQuantity === "number"
-                          )
-                        ) {
+                        if (!isNumber(rowInputQuantity)) {
                           return setErrors({
                             ...errors,
                             [row.id]: t("must be number", { ns: "validation" }),

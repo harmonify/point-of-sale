@@ -8,13 +8,13 @@ import { ChangePasswordRequestDto } from '@/modules/auth/dtos';
 import { UserResponseDto } from '@/modules/user/dtos';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { User } from '@prisma/client';
 import { I18nService } from 'nestjs-i18n';
 import { PrismaService } from 'nestjs-prisma';
 import { lastValueFrom, map, zip } from 'rxjs';
 
 import { LoginRequestDto, LoginResponseDto } from '../dtos';
 import { TokenService } from './token.service';
+import { UserQuery } from '@/modules/user';
 
 @Injectable()
 export class AuthService {
@@ -47,22 +47,24 @@ export class AuthService {
       );
     }
 
-    if (!(await HashUtil.compare(loginDto.password, user.password))) {
-      throw new InvalidCredentialsException();
-    }
-
     if (!user.isActive) {
       throw new ForbiddenException(
         this.i18nService.translate('exception.userBlocked'),
       );
     }
 
-    const userDto = new UserResponseDto(user);
+    const { password, ...safeUser } = user;
+
+    if (!(await HashUtil.compare(loginDto.password, user.password))) {
+      throw new InvalidCredentialsException();
+    }
+
+    const userDto = new UserResponseDto(safeUser);
 
     return lastValueFrom(
       zip(
-        this.tokenService.generateAccessToken(user),
-        this.tokenService.generateRefreshToken(user),
+        this.tokenService.generateAccessToken(userDto),
+        this.tokenService.generateRefreshToken(userDto),
       ).pipe(
         map(([accessToken, refreshToken]) => ({
           user: userDto,
@@ -78,11 +80,11 @@ export class AuthService {
    * It takes a user and a DTO, then it checks if the current password is valid, if it is, it updates the
    * password and returns the user
    * @param dto - ChangePasswordDto - This is the DTO that we created earlier.
-   * @param user - User - The user object that is currently logged in.
+   * @param user - UserResponseDto - The user object that is currently logged in.
    */
   async changePassword(
     dto: ChangePasswordRequestDto,
-    user: User,
+    user: UserResponseDto,
   ): Promise<UserResponseDto> {
     const { newPassword, currentPassword } = dto;
 
@@ -98,6 +100,7 @@ export class AuthService {
     }
 
     const newUserDetails = await this.prismaService.user.update({
+      select: UserQuery.Field.default(),
       data: {
         password: newPassword,
       },
@@ -111,9 +114,9 @@ export class AuthService {
 
   /**
    * It deletes all refresh tokens for a given user
-   * @param user - User - The user object that you want to logout from.
+   * @param user - UserResponseDto - The user object that you want to logout from.
    */
-  async logoutFromAll(user: User): Promise<UserResponseDto> {
+  async logoutFromAll(user: UserResponseDto): Promise<UserResponseDto> {
     await this.tokenService.deleteRefreshTokenForUser(user);
     return new UserResponseDto(user);
   }
@@ -123,7 +126,10 @@ export class AuthService {
    * @param user - The user object that was returned from the login method.
    * @param refreshToken - The refresh token that was sent to the client.
    */
-  async logout(user: User, refreshToken: string): Promise<UserResponseDto> {
+  async logout(
+    user: UserResponseDto,
+    refreshToken: string,
+  ): Promise<UserResponseDto> {
     const payload = await this.tokenService.decodeRefreshToken(refreshToken);
     await this.tokenService.deleteRefreshToken(user, payload);
     return new UserResponseDto(user);

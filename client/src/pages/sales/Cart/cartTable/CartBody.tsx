@@ -22,6 +22,7 @@ import { t } from "i18next"
 import React, { useMemo } from "react"
 
 import CustomTableCell from "./controls/CustomTableCell"
+import { isNumber } from "@/utils/number"
 
 const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
   const dispatch = useAppDispatch()
@@ -96,7 +97,7 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
                 dispatch(
                   updateCartItemQuantity({
                     productUnitId: row.productUnitId,
-                    quantity: value && typeof value === "number" ? value : 0,
+                    quantity: isNumber(value) ? value : 0,
                   }),
                 )
               }}
@@ -120,8 +121,7 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
                   updateCartItemDiscount({
                     productUnitId: row.productUnitId,
                     discountType: "FLAT",
-                    inputDiscount:
-                      value && typeof value === "number" ? value : 0,
+                    inputDiscount: isNumber(value) ? value : 0,
                   }),
                 )
               }}

@@ -8,7 +8,7 @@ import {
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshToken, User } from '@prisma/client';
+import { RefreshToken } from '@prisma/client';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { DateTime } from 'luxon';
 import { I18nService } from 'nestjs-i18n';
@@ -19,6 +19,7 @@ import { TokenError, TokenType } from '../enums';
 
 import type { JwtSignOptions } from '@nestjs/jwt';
 import type { JwtPayload, RefreshTokenResponseDto } from '@/modules/auth/dtos';
+import { UserQuery, UserResponseDto } from '@/modules/user';
 
 @Injectable()
 export class TokenService {
@@ -36,10 +37,10 @@ export class TokenService {
 
   /**
    * It takes a user object, and returns an observable of a string
-   * @param user - Omit<User, "password">
+   * @param user - Omit<UserResponseDto, "password">
    * @returns An Promise of a string.
    */
-  generateAccessToken(user: Omit<User, 'password'>): Promise<string> {
+  generateAccessToken(user: UserResponseDto): Promise<string> {
     const options: JwtSignOptions = {
       ...this.BASE_OPTIONS,
       subject: String(user.id),
@@ -53,10 +54,10 @@ export class TokenService {
 
   /**
    * It creates a refresh token in the database, then signs it with JWT
-   * @param user - User - The user object that we want to generate a token for.
+   * @param user - UserResponseDto - The user object that we want to generate a token for.
    * @returns A string
    */
-  async generateRefreshToken(user: User): Promise<string> {
+  async generateRefreshToken(user: UserResponseDto): Promise<string> {
     const expiresIn = this.configService.get('jwt.refreshExpiry', {
       infer: true,
     });
@@ -86,7 +87,7 @@ export class TokenService {
    */
   async resolveRefreshToken(
     encoded: string,
-  ): Promise<{ user: User; token: RefreshToken }> {
+  ): Promise<{ user: UserResponseDto; token: RefreshToken }> {
     const payload = await this.decodeRefreshToken(encoded);
     const token = await this.getStoredTokenFromRefreshTokenPayload(payload);
     if (!token) {
@@ -184,7 +185,9 @@ export class TokenService {
    * @param user - The user object that we want to delete the refresh token for.
    * @returns The user object.
    */
-  async deleteRefreshTokenForUser(user: User): Promise<User> {
+  async deleteRefreshTokenForUser(
+    user: UserResponseDto,
+  ): Promise<UserResponseDto> {
     await this.prismaService.refreshToken.updateMany({
       data: { isActive: false },
       where: {
@@ -200,7 +203,10 @@ export class TokenService {
    * @param payload - The payload of the refresh token.
    * @returns The user object
    */
-  async deleteRefreshToken(user: User, payload: JwtPayload): Promise<User> {
+  async deleteRefreshToken(
+    user: UserResponseDto,
+    payload: JwtPayload,
+  ): Promise<UserResponseDto> {
     const tokenId = payload.jti;
 
     if (!tokenId) {
@@ -224,13 +230,16 @@ export class TokenService {
    * @param payload - IJwtPayload
    * @returns A user object
    */
-  getUserFromRefreshTokenPayload(payload: JwtPayload): Promise<User | null> {
+  getUserFromRefreshTokenPayload(
+    payload: JwtPayload,
+  ): Promise<UserResponseDto | null> {
     try {
       const subId = StringUtil.toNumber({
         value: payload.sub,
         throwIfFailed: true,
       });
       return this.prismaService.user.findFirst({
+        select: UserQuery.Field.default(),
         where: {
           id: subId,
           ...BaseQuery.Filter.isActive(),

@@ -304,6 +304,7 @@ model Sale {
   updatedById        Int
   deletedById        Int?
   customerId         Int?
+  invoiceNumber      String           @default(uuid())
   name               String?
   description        String?
   note               String?

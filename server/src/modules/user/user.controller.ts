@@ -37,6 +37,7 @@ export class UserController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody<UserResponseDto>> {
     const newUser = await this.prismaService.user.create({
+      select: UserQuery.Field.default(),
       data: {
         ...newUserDto,
         createdById: user.id,
@@ -57,6 +58,7 @@ export class UserController {
         skip: paginationInfo.skip,
         take: paginationInfo.take,
       }),
+      select: UserQuery.Field.default(),
       where: paginationInfo.search
         ? {
             AND: [
@@ -77,6 +79,7 @@ export class UserController {
     @Param('id') id: number,
   ): Promise<IResponseBody<UserResponseDto>> {
     const user = await this.prismaService.user.findFirstOrThrow({
+      select: UserQuery.Field.default(),
       where: {
         ...BaseQuery.Filter.available(),
         id,
@@ -94,6 +97,7 @@ export class UserController {
     @CurrentUser() user: User,
   ): Promise<IResponseBody<UserResponseDto>> {
     const updatedUser = await this.prismaService.user.update({
+      select: UserQuery.Field.default(),
       data: { ...data, updatedById: user.id },
       where: BaseQuery.Filter.byId(id),
     });

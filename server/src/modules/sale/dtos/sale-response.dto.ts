@@ -69,6 +69,11 @@ export class SaleResponseDto implements Sale {
   @IsOptional()
   @IsString()
   @ApiProperty()
+  invoiceNumber: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
   name: string | null;
 
   @IsOptional()
