@@ -17,8 +17,8 @@ import axios from "axios"
 import classNames from "classnames"
 import React, { Component, MouseEventHandler, useEffect, useState } from "react"
 
-import Message from "../../src/components/controls/Message"
-import Overlay from "../../src/components/controls/Overlay"
+import Message from "../controls/Message"
+import Overlay from "../controls/Overlay"
 import CustomTableCell from "./CustomTableCell"
 import CustomTablePagination from "./CustomTablePagination"
 

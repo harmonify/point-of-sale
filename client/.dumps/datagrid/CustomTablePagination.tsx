@@ -3,7 +3,7 @@ import { withStyles } from "@mui/styles"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import { TableCell } from "@mui/material"
-import TablePaginationActions from "../../src/components/TablePaginationActions"
+import TablePaginationActions from "./TablePaginationActions"
 
 export const styles = (theme) => ({
   root: {

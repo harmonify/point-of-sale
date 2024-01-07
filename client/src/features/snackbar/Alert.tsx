@@ -73,7 +73,7 @@ const Alert = forwardRef<
     variant?: IAlertVariant
     icon?: React.ReactElement
     className?: string
-    onClose?: (event: React.SyntheticEvent<any>) => void
+    onClose?: (event: Event | React.SyntheticEvent<any>) => void
   }
 >((props, ref) => {
   const {
@@ -90,7 +90,6 @@ const Alert = forwardRef<
     <Paper
       {...rest}
       className={clsx(classes.root, classes[variant], className)}
-      // component={Typography}
       elevation={1}
       ref={ref}
       variant="elevation"
@@ -103,12 +102,13 @@ const Alert = forwardRef<
           color="inherit"
           key="close"
           onClick={onClose}
-          size="large">
+          size="large"
+        >
           <CloseIcon />
         </IconButton>
       )}
     </Paper>
-  );
+  )
 })
 
 Alert.displayName = "Alert"

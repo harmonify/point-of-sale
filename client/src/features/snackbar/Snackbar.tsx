@@ -10,7 +10,7 @@ import Alert from "./Alert"
 const Snackbar: React.FC<{
   open: boolean
   onClose: (
-    event: React.SyntheticEvent<any>,
+    event: Event | React.SyntheticEvent,
     reason?: SnackbarCloseReason,
   ) => void
   message: string

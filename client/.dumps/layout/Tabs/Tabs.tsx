@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { withStyles } from "@mui/material"
+import { withStyles } from "@mui/styles"
 import AppBar from "@mui/material/AppBar"
 import { Tab, Tabs } from "@mui/material"
 

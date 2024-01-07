@@ -2,15 +2,13 @@ import { CartState } from "."
 
 export const mockCartState: CartState = {
   name: "Test Cart",
+  description: "This guy bought egg and garnier uv white egg",
   inputDiscountTotal: 1000,
   discountTotalType: "FLAT",
   inputTaxTotal: 0,
   taxTotalType: "FLAT",
   paid: 100000,
-  customer: {
-    id: 1,
-    name: "Customer 1",
-  },
+  customerId: 1,
   items: {
     "1": {
       productUnitId: 1,
@@ -25,7 +23,7 @@ export const mockCartState: CartState = {
     },
     "2": {
       productUnitId: 2,
-      name: "Garnier UV White Egg egggggggg",
+      name: "Garnier UV White Egg",
       unitName: "Dozen",
       salePrice: 15000,
       quantity: 1,
