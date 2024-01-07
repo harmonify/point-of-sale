@@ -30,16 +30,16 @@ const FormikTextInput: React.FC<IFormikTextInputProps> = (props) => {
       {...props}
       {...field}
       onChange={(e) => {
+        field.onChange(e)
         if (typeof props.onChange === "function") {
           props.onChange(e)
         }
-        field.onChange(e)
       }}
       onBlur={(e) => {
+        field.onBlur(e)
         if (typeof props.onBlur === "function") {
           props.onBlur(e)
         }
-        field.onBlur(e)
       }}
       error={meta.touched && Boolean(meta.error)}
       helperText={props.disableErrorText ? props.helperText : errorText}

@@ -99,6 +99,8 @@ declare global {
           import("../server/src/modules/product").ProductUnitInfoResponseDto
         type ProcurementResponseDto =
           import("../server/src/modules/procurement").ProcurementResponseDto
+        type ProcurementInfoResponseDto =
+          import("../server/src/modules/procurement").ProcurementInfoResponseDto
         type ProcurementProductResponseDto =
           import("../server/src/modules/procurement").ProcurementProductResponseDto
         type ExpenseCategoryResponseDto =

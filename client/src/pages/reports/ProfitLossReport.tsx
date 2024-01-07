@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 
 import { ProfitLossReportPDF } from "./ProfitLossReportPDF/ProfitLossReportPDF"
 import { generateProfitLossReportPDF } from "./ProfitLossReportPDF/util"
+import { DATE_FORMAT } from "@/constants"
 
 const today = DateTime.now().startOf("day")
 const todayISO = today.toISODate()
@@ -86,7 +87,7 @@ const ProfitLossReport = () => {
               setDateFrom(newDate)
             }}
             maxDate={dateTo}
-            format="EEEE, dd MMM yyyy"
+            format={DATE_FORMAT}
           />
 
           <DatePicker
@@ -101,7 +102,7 @@ const ProfitLossReport = () => {
             disabled={dateFrom.hasSame(today, "day")}
             minDate={dateFrom}
             maxDate={today}
-            format="EEEE, dd MMM yyyy"
+            format={DATE_FORMAT}
           />
 
           <Button

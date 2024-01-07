@@ -3,11 +3,12 @@ import { useFormikContext } from "formik"
 import React, { useEffect } from "react"
 
 import { IFormikTextInputProps } from "./FormikTextInput"
+import { isNumeric } from "@/utils/number"
 
 /** If true, will add a default value in the beginning */
 type SelectDefaultValue = {
-  enableDefaultValue?: boolean
-  defaultLabel?: string
+  enableEmptyValue?: boolean
+  emptyValueLabel?: string
   defaultValue?: string | number
 }
 
@@ -20,9 +21,9 @@ type IFormikSelectInputProps = SelectDefaultValue & {
 
 const FormikSelectInput: React.FC<IFormikSelectInputProps> = (props) => {
   const {
-    enableDefaultValue,
+    enableEmptyValue,
     defaultValue,
-    defaultLabel,
+    emptyValueLabel,
     options,
     ...textInputProps
   } = props
@@ -41,20 +42,23 @@ const FormikSelectInput: React.FC<IFormikSelectInputProps> = (props) => {
         ...textInputProps.SelectProps,
       }}
       onChange={(e) => {
-        setFieldValue(
-          props.name,
-          props.type === "number" ? parseInt(e.target.value) : e.target.value,
-        )
+        const value =
+          props.type === "number"
+            ? isNumeric(e.target.value)
+              ? parseInt(e.target.value)
+              : null
+            : e.target.value
+        setFieldValue(props.name, value)
         if (props.onChange) {
           props.onChange(e)
         }
       }}
     >
-      {enableDefaultValue && (
-        <option aria-label={defaultLabel || "None"} value={defaultValue}>
-          {defaultLabel || ""}
+      {enableEmptyValue ? (
+        <option aria-label={emptyValueLabel || "None"}>
+          {emptyValueLabel || ""}
         </option>
-      )}
+      ) : null}
       {options.map((option) => {
         return (
           <option key={option.value || option.label} value={option.value}>

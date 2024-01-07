@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { existsSync } from 'fs';
 import path from 'path';
 
 @Injectable()
@@ -32,6 +33,11 @@ export class NestConfigService extends ConfigService<IConfig, true> {
   static getEnvFilePath(): string {
     const relativeEnvFilePath =
       process.env.ENV_FILE || `.env.${process.env.NODE_ENV}`;
-    return path.join(process.cwd(), relativeEnvFilePath);
+    const candidateFilePath = path.join(process.cwd(), relativeEnvFilePath);
+    if (existsSync(candidateFilePath)) {
+      return candidateFilePath;
+    } else {
+      return path.join(process.cwd(), '.env');
+    }
   }
 }

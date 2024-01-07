@@ -79,7 +79,7 @@ const defaultState: IConfirmationDialogState = {
 export const ConfirmationDialogContext = createContext<{
   state: IConfirmationDialogState
   setState: (newState: IConfirmationDialogState) => void
-  show: (newState?: IShowDialogConfirmationParams) => void
+  show: (newState?: IShowDialogConfirmationParams, refresh?: boolean) => void
   close: () => void
 } | null>(null)
 
@@ -89,8 +89,12 @@ const ConfirmationDialogProvider: React.FC<{
   const [state, setState] = useState(defaultState)
 
   const show = useCallback(
-    (newState?: IShowDialogConfirmationParams) => {
-      setState((prev) => ({ ...prev, ...newState, open: true }))
+    (newState?: IShowDialogConfirmationParams, refresh = false) => {
+      setState((prev) => {
+        return refresh
+          ? { ...newState, open: true }
+          : { ...prev, ...newState, open: true }
+      })
     },
     [state],
   )

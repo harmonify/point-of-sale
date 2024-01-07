@@ -114,6 +114,10 @@ export class ProductController {
           ...pu,
           availableQuantity:
             this.productUnitService.countProductUnitAvailableQuantity(pu),
+          procurementProducts: pu.procurementProducts.map((pp) => ({
+            ...pp,
+            productId: product.id,
+          })),
         })),
       })),
     };

@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export interface InvoicePDFProps {
+export interface OrderReceiptPDFProps {
   data: Monorepo.Api.Response.SaleResponseDto
 }
 
-const InvoicePDF = forwardRef<HTMLElement, InvoicePDFProps>((props, ref) => {
+const OrderReceiptPDF = forwardRef<HTMLElement, OrderReceiptPDFProps>((props, ref) => {
   const classes = useStyles()
 
   const [receiptData, setReceiptData] = useState({
@@ -49,7 +49,7 @@ const InvoicePDF = forwardRef<HTMLElement, InvoicePDFProps>((props, ref) => {
   return (
     <Box className={classes.root} ref={ref} id="receipt-container">
       <Typography color="inherit" variant="h1">
-        {t("Order Invoice")}
+        {t("Order Receipt")}
       </Typography>
       <Divider sx={{ marginY: "1rem" }} />
       <Typography color="inherit">Date: {date}</Typography>
@@ -76,4 +76,4 @@ const InvoicePDF = forwardRef<HTMLElement, InvoicePDFProps>((props, ref) => {
   )
 })
 
-export default InvoicePDF
+export default OrderReceiptPDF

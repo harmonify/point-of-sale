@@ -10,7 +10,9 @@
 - [-] Products
   - [x] Form and List
   - [ ] Highlight the Fuzzy search result
-- [] Procurements
-- [] Sales
+- [x] Procurements
+- [x] Sales
+- [] Actual invoice data
+- [x] Fix procurement date pickers
 - [] Notification API
 - [] Under maintenance

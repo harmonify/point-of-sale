@@ -14,6 +14,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import {
   CreateProcurementRequestDto,
+  ProcurementInfoResponseDto,
   ProcurementResponseDto,
   UpdateProcurementProductRequestDto,
   UpdateProcurementRequestDto,
@@ -179,10 +180,10 @@ export class ProcurementService {
     }
   }
 
-  findAll(
+  async findAll(
     paginationInfo: RequestPaginationInfoDto,
-  ): Promise<ProcurementResponseDto[]> {
-    return this.prismaService.procurement.findMany({
+  ): Promise<ProcurementInfoResponseDto[]> {
+    const procurements = await this.prismaService.procurement.findMany({
       ...(!paginationInfo.all && {
         skip: paginationInfo.skip,
         take: paginationInfo.take,
@@ -196,18 +197,30 @@ export class ProcurementService {
           }
         : BaseQuery.Filter.available(),
       include: {
-        procurementProducts: true,
+        procurementProducts: {
+          include: { productUnit: { select: { productId: true } } },
+        },
         supplier: { select: { name: true } },
         createdBy: { select: { name: true } },
       },
       orderBy: BaseQuery.OrderBy.latest(),
     });
+
+    return procurements.map((p) => ({
+      ...p,
+      procurementProducts: p.procurementProducts.map((pp) => ({
+        ...pp,
+        productId: pp.productUnit.productId,
+      })),
+    }));
   }
 
-  findOne(id: number): Promise<ProcurementResponseDto> {
-    return this.prismaService.procurement.findFirstOrThrow({
+  async findOne(id: number): Promise<ProcurementInfoResponseDto> {
+    const procurement = await this.prismaService.procurement.findFirstOrThrow({
       include: {
-        procurementProducts: true,
+        procurementProducts: {
+          include: { productUnit: { select: { productId: true } } },
+        },
         supplier: { select: { name: true } },
         createdBy: { select: { name: true } },
       },
@@ -216,6 +229,14 @@ export class ProcurementService {
         id,
       },
     });
+
+    return {
+      ...procurement,
+      procurementProducts: procurement.procurementProducts.map((pp) => ({
+        ...pp,
+        productId: pp.productUnit.productId,
+      })),
+    };
   }
 
   softDelete(id: number, authorId: User['id']): Promise<void> {

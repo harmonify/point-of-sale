@@ -18,6 +18,7 @@ import { User } from '@prisma/client';
 
 import {
   CreateProcurementRequestDto,
+  ProcurementInfoResponseDto,
   ProcurementResponseDto,
   UpdateProcurementRequestDto,
 } from './dtos';
@@ -41,7 +42,7 @@ export class ProcurementController {
   @Get()
   async findAll(
     @PaginationInfo() paginationInfo: RequestPaginationInfoDto,
-  ): Promise<IResponseBody<ProcurementResponseDto[]>> {
+  ): Promise<IResponseBody<ProcurementInfoResponseDto[]>> {
     return {
       data: await this.procurementService.findAll(paginationInfo),
     };
@@ -50,7 +51,7 @@ export class ProcurementController {
   @Get('/:id')
   async findOne(
     @Param('id') id: number,
-  ): Promise<IResponseBody<ProcurementResponseDto>> {
+  ): Promise<IResponseBody<ProcurementInfoResponseDto>> {
     return {
       data: await this.procurementService.findOne(id),
     };

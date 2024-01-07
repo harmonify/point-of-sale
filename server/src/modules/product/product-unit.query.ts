@@ -18,11 +18,13 @@ const productUnitQueryRelation = {
         select: {
           quantity: true,
         },
+        where: BaseQuery.Filter.available(),
       },
       saledProducts: {
         select: {
           quantity: true,
         },
+        where: BaseQuery.Filter.available(),
       },
       unit: {
         select: {

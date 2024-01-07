@@ -22,7 +22,7 @@ import DailySaleReport from "./pages/reports/DailySaleReport"
 import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
 import YearlySaleReport from "./pages/reports/YearlySaleReport"
 import ProfitLossReport from "./pages/reports/ProfitLossReport"
-import InvoicePDF from "./pages/orders/InvoicePDF/InvoicePDF"
+import InvoicePDF from "./pages/orders/OrderReceiptPDF/OrderReceiptPDF"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string

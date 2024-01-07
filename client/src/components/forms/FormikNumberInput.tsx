@@ -16,7 +16,7 @@ type INumberFormatCustomProps = {
   name: string
 } & NumericFormatProps
 
-const NumberFormatCustom = (props: INumberFormatCustomProps) => {
+const NumberFormatCustom = forwardRef((props: INumberFormatCustomProps, ref) => {
   const { getInputRef, onChange, name, ...rest } = props
 
   return (
@@ -34,7 +34,7 @@ const NumberFormatCustom = (props: INumberFormatCustomProps) => {
       }}
     />
   )
-}
+})
 
 type IFormikNumberInputProps = Omit<
   INumberFormatCustomProps,

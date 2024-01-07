@@ -114,7 +114,7 @@ const api = createApi({
     >(builder, "expenses")
 
     const procurementApi = apiBuilder<
-      Monorepo.Api.Response.ProcurementResponseDto,
+      Monorepo.Api.Response.ProcurementInfoResponseDto,
       Monorepo.Api.Request.CreateProcurementRequestDto,
       Monorepo.Api.Request.UpdateProcurementRequestDto
     >(builder, "procurements")

@@ -1,20 +1,18 @@
 import { useAppDispatch } from "@/app/hooks"
 import Container from "@/components/layout/Container/Container"
 import { useConfirmationDialog } from "@/features/dialog"
-import { IConfirmationDialogState } from "@/features/dialog/ConfirmationDialogProvider"
 import { showSnackbar } from "@/features/snackbar"
 import api, {
   useDeleteSaleApiMutation,
   useFindAllSaleApiQuery,
 } from "@/services/api"
-import { Button, Grid } from "@mui/material"
+import { Grid } from "@mui/material"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import { t } from "i18next"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
 
 import renderSaleDataGridColumns from "./dataGridColumns"
-import InvoicePDFContainer from "./InvoicePDF/InvoicePDFContainer"
+import InvoicePDFContainer from "./OrderReceiptPDF/OrderReceiptPDFContainer"
 
 const OrderList: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -38,42 +36,48 @@ const OrderList: React.FC = () => {
   const { show } = useConfirmationDialog()
 
   const onClickReceipt = (row: Monorepo.Api.Response.SaleResponseDto) => {
-    show({
-      title: t("View Order", { ns: "action" }),
-      render: (
-        <InvoicePDFContainer data={row} isLoading={isLoadingDeleteSale} />
-      ),
-      maxWidth: "sm",
-      disableCancelButton: true,
-      disableConfirmButton: true,
-    })
+    show(
+      {
+        title: t("View Order", { ns: "action" }),
+        render: (
+          <InvoicePDFContainer data={row} isLoading={isLoadingDeleteSale} />
+        ),
+        maxWidth: "sm",
+        disableCancelButton: true,
+        disableConfirmButton: true,
+      },
+      true,
+    )
   }
 
   const onClickDelete = (row: Monorepo.Api.Response.SaleResponseDto) => {
-    show({
-      title: t("Delete Order", { ns: "action" }),
-      content: t("Do you want to delete this data?", {
-        ns: "message",
-        model: t("order"),
-      }),
-      confirmText: "Delete",
-      variant: "destructive",
-      onConfirm: async () => {
-        try {
-          if (!row.id) {
-            throw new Error()
+    show(
+      {
+        title: t("Delete Order", { ns: "action" }),
+        content: t("Do you want to delete this data?", {
+          ns: "message",
+          model: t("order"),
+        }),
+        confirmText: "Delete",
+        variant: "destructive",
+        onConfirm: async () => {
+          try {
+            if (!row.id) {
+              throw new Error()
+            }
+            await deleteSaleApiMutation({ id: row.id }).unwrap()
+          } catch (e) {
+            dispatch(
+              showSnackbar({
+                message: t("An error occured", { ns: "error" }),
+                variant: "error",
+              }),
+            )
           }
-          await deleteSaleApiMutation({ id: row.id }).unwrap()
-        } catch (e) {
-          dispatch(
-            showSnackbar({
-              message: t("An error occured", { ns: "error" }),
-              variant: "error",
-            }),
-          )
-        }
+        },
       },
-    })
+      true,
+    )
   }
 
   const dataGridColumns = renderSaleDataGridColumns({

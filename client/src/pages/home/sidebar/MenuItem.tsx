@@ -10,17 +10,20 @@ import classNames from "classnames"
 import React, { Component } from "react"
 
 const useStyles = makeStyles((theme) => ({
-  listItem: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-      "& $icon": {
-        color: theme.palette.common.white,
-      },
-    },
+  root: {
     width: "100%",
     padding: theme.spacing(1),
     textTransform: "none",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white,
+    },
+    ".MuiListItemIcon-root": {
+      color: theme.palette.common.white,
+      "&:hover": {
+        color: theme.palette.common.white,
+      },
+    },
   },
   selected: {
     backgroundColor: "#00000014",
@@ -41,8 +44,8 @@ const MenuItem: React.FC<{
   const { isSelected = false } = props
 
   const getClassName = () => {
-    if (isSelected) return classNames(classes.listItem, classes.selected)
-    return classNames(classes.listItem)
+    if (isSelected) return classNames(classes.root, classes.selected)
+    return classNames(classes.root)
   }
   return (
     <ListItemButton dense onClick={props.onClick} className={getClassName()}>

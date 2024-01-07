@@ -262,7 +262,7 @@ const ProductForm: React.FC = () => {
                             label={t("Unit Name")}
                             type="number"
                             options={unitOptions}
-                            enableDefaultValue
+                            enableEmptyValue
                             InputLabelProps={{ shrink: true }}
                           />
                           {/* <FormikTextInput

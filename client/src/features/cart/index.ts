@@ -59,9 +59,9 @@ export interface CartStateSummary extends Omit<CartState, "items"> {
 
 const initialState: CartState = {
   items: {},
-  name: null,
-  description: null,
-  customerId: null,
+  name: '',
+  description: '',
+  customerId: 0,
   inputDiscountTotal: 0.0,
   discountTotalType: "PERCENTAGE",
   inputTaxTotal: 0.0,

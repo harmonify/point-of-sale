@@ -33,7 +33,6 @@ import { Add, Delete } from "@mui/icons-material"
 import { ErrorMessage, FieldArray, Formik } from "formik"
 import { t } from "i18next"
 import React, { useEffect, useMemo, useState } from "react"
-
 import createProcurementValidationSchema, {
   procurementDeliveryStatus,
   procurementDeliveryStatusOptions,
@@ -42,19 +41,19 @@ import createProcurementValidationSchema, {
   ProcurementProductState,
   ProcurementState,
 } from "./validationSchema"
-import { useMap } from "@uidotdev/usehooks"
 import { removeEmptyStrings } from "@/utils"
+import FormikDateInput from "@/components/forms/FormikDatePicker"
 
 const initialValues = {
-  supplierId: undefined,
-  name: undefined,
-  description: undefined,
-  invoiceDate: undefined,
-  invoiceNumber: undefined,
+  supplierId: "",
+  name: "",
+  description: "",
+  invoiceDate: "",
+  invoiceNumber: "",
   deliveryStatus: procurementDeliveryStatus.PENDING,
-  deliveredAt: undefined,
+  deliveredAt: "",
   paymentStatus: procurementPaymentStatus.UNPAID,
-  payedAt: undefined,
+  payedAt: "",
   procurementProducts: [],
 } satisfies Record<
   keyof ProcurementState,
@@ -62,10 +61,10 @@ const initialValues = {
 > as unknown as ProcurementState
 
 const defaultProcurementProduct = {
-  productId: undefined,
-  productUnitId: undefined,
-  price: undefined,
-  quantity: undefined,
+  productId: "",
+  productUnitId: "",
+  price: "",
+  quantity: "",
 } satisfies Record<
   keyof ProcurementProductState | "productId",
   any
@@ -113,7 +112,6 @@ const ProcurementForm: React.FC = () => {
       ),
     [productApiQueryResponse],
   )
-  /** To support when updating procurement products */
   const productUnitToProductMap = useMemo(
     () =>
       new Map(
@@ -208,6 +206,9 @@ const ProcurementForm: React.FC = () => {
         onSubmit={onSubmit}
       >
         {(formik) => {
+          // logger.debug(
+          //   `🚀 ~ formik.values ~ ${JSON.stringify(formik.values, null, 2)}`,
+          // )
           return (
             <Form onCancel={onCancel}>
               <Typography
@@ -249,11 +250,9 @@ const ProcurementForm: React.FC = () => {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                  <FormikTextInput
+                  <FormikDateInput
                     name="invoiceDate"
                     label={t("Invoice Date")}
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
 
@@ -266,12 +265,7 @@ const ProcurementForm: React.FC = () => {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                  <FormikTextInput
-                    name="paymentAt"
-                    label={t("Payed At")}
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                  />
+                  <FormikDateInput name="payedAt" label={t("Payed At")} />
                 </Grid>
 
                 <Grid item xs={12} md={6}>
@@ -283,11 +277,9 @@ const ProcurementForm: React.FC = () => {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                  <FormikTextInput
+                  <FormikDateInput
                     name="deliveredAt"
                     label={t("Delivered At")}
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
               </Grid>
@@ -334,21 +326,46 @@ const ProcurementForm: React.FC = () => {
                           ? formik.values.procurementProducts
                           : [{}]
                         ).map((_, index) => {
-                          const currentRowProcurementProduct: ProcurementProductState | null =
+                          const currentRowProcurementProduct:
+                            | ProcurementProductState
+                            | null
+                            | undefined =
                             formik.values.procurementProducts[index]
                           // logger.debug(currentRowProcurementProduct)
 
-                          const matchingProduct =
-                            productMap.get(
-                              currentRowProcurementProduct?.productId,
-                            ) ||
-                            productUnitToProductMap.get(
-                              currentRowProcurementProduct?.productUnitId,
-                            )
-                          // logger.debug(matchingProduct)
+                          let matchingProduct:
+                            | Monorepo.Api.Response.ProductResponseDto
+                            | undefined
+                          if (currentRowProcurementProduct) {
+                            if (currentRowProcurementProduct.productId) {
+                              matchingProduct = productMap.get(
+                                parseInt(
+                                  currentRowProcurementProduct.productId as unknown as string,
+                                ),
+                              )
+                            }
+                            if (
+                              !matchingProduct ||
+                              currentRowProcurementProduct.productUnitId
+                            ) {
+                              matchingProduct = productUnitToProductMap.get(
+                                parseInt(
+                                  currentRowProcurementProduct.productUnitId as unknown as string,
+                                ),
+                              )
+                            }
+                          }
+
+                          // logger.debug(
+                          //   `🚀 ~ matchingProduct ~ ${JSON.stringify(
+                          //     matchingProduct,
+                          //     null,
+                          //     2,
+                          //   )}`,
+                          // )
 
                           return (
-                            <TableRow>
+                            <TableRow key={index}>
                               <TableCell padding="none" align="center">
                                 <Typography>{index + 1}</Typography>
                               </TableCell>
@@ -359,7 +376,7 @@ const ProcurementForm: React.FC = () => {
                                   size="small"
                                   type="number"
                                   options={productOptions}
-                                  enableDefaultValue
+                                  enableEmptyValue
                                   InputLabelProps={{ shrink: true }}
                                   // disableErrorText
                                   value={matchingProduct?.id}
@@ -382,7 +399,7 @@ const ProcurementForm: React.FC = () => {
                                       : []
                                   }
                                   disabled={!matchingProduct}
-                                  enableDefaultValue
+                                  enableEmptyValue
                                   InputLabelProps={{ shrink: true }}
                                   // disableErrorText
                                 />

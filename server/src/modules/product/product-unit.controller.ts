@@ -32,16 +32,17 @@ export class ProductUnitController {
       });
     }
 
-    const saledProductsCount = await this.prismaService.saleProduct.count({
+    const soldProductsCount = await this.prismaService.saleProduct.count({
       where: {
         ...BaseQuery.Filter.available(),
         productUnitId: id,
       },
     });
 
-    if (saledProductsCount > 0) {
+    if (soldProductsCount > 0) {
       throw new BadRequestException({
-        message: 'Cannot delete product unit as this will cause negative stock',
+        message:
+          'Cannot delete product unit as this product unit has been sold before',
       });
     }
 

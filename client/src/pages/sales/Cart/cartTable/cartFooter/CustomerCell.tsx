@@ -53,7 +53,7 @@ const CustomerCell: React.FC = () => {
   )
   const customerOptions = useMemo(
     () =>
-      [{ name: "", id: undefined }, ...customerList].map((c) => ({
+      customerList.map((c) => ({
         label: c.name,
         value: c.id,
       })),
@@ -82,11 +82,13 @@ const CustomerCell: React.FC = () => {
           type="number"
           fullWidth
           options={customerOptions}
+          enableEmptyValue
           SelectProps={{ native: true }}
           style={{ minWidth: 160 }}
           onChange={(e) => {
-            const value = parseInt(e.target.value)
-            dispatch(updateCartCustomer(value))
+            // const value = parseInt(e.target.value)
+            // console.log(`🚀 ~ valuehere ~ ${JSON.stringify(valuehere, null, 2)}`);
+            // dispatch(updateCartCustomer(value))
           }}
         />
       </Grid>

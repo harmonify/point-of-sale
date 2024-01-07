@@ -106,6 +106,7 @@ export class CategoryController {
             createdBy: { select: { name: true } },
             productUnits: {
               include: ProductUnitQuery.Relation.withQuantityRelationData(),
+              where: BaseQuery.Filter.available(),
             },
           },
           where: BaseQuery.Filter.available(),

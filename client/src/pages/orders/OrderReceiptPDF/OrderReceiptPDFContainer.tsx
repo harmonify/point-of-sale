@@ -7,7 +7,7 @@ import React, { useRef, useState } from "react"
 
 import { generateInvoicePDF } from "./util"
 import { Print } from "@mui/icons-material"
-import InvoicePDF from "./InvoicePDF"
+import InvoicePDF from "./OrderReceiptPDF"
 import { useTheme } from "@mui/styles"
 
 export interface InvoicePDFContainerProps {
