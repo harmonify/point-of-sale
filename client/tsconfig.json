@@ -21,6 +21,6 @@
       "@test/*": ["./test/*"]
     }
   },
-  "include": ["src", ".dumps/datagrid"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

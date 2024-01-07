@@ -1,0 +1,10 @@
+.dumps
+.env
+.env.*
+.vscode/
+.dockerignore
+.eslintrc.js
+.nvmrc
+Dockerfile
+build
+node_modules
