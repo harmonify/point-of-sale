@@ -69,7 +69,7 @@ const CartFooter: React.FC<{
 
         <TableCell align="right">
           <Typography variant="h6">
-            {t("Discount Total")}
+            {t("Discount on Total")}
             {": "}
             {""}
           </Typography>
@@ -127,7 +127,7 @@ const CartFooter: React.FC<{
 
       <TableRow>
         <TableCell align="right">
-          <Typography variant="h6">{t("Paid")}: </Typography>
+          <Typography variant="h6">{t("Cash")}: </Typography>
         </TableCell>
 
         <TableCell colSpan={2} style={{ padding: theme.spacing(1) }}>

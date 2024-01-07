@@ -19,7 +19,7 @@ export const saleReportPDFColumns: (ITableColumnData<Monorepo.Api.Response.SaleR
     width: 10,
   },
   {
-    title: t("Discount Total"),
+    title: t("Discount on Total"),
     type: "currency",
     iteratee: (item, formatted = true) =>
       formatted ? formatRupiah(item.discountTotal) : item.discountTotal,

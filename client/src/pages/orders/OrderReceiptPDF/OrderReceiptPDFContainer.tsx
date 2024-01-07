@@ -1,30 +1,34 @@
 import { useAppDispatch } from "@/app/hooks"
 import { showSnackbar } from "@/features/snackbar"
-import { Box, Button, CircularProgress, Grid } from "@mui/material"
-import { makeStyles } from "@mui/styles"
-import { t } from "i18next"
-import React, { useRef, useState } from "react"
-
-import { generateInvoicePDF } from "./util"
 import { Print } from "@mui/icons-material"
-import InvoicePDF from "./OrderReceiptPDF"
+import { Button, CircularProgress, Grid } from "@mui/material"
 import { useTheme } from "@mui/styles"
+import { t } from "i18next"
+import React, { useRef } from "react"
+import useMeasure from "react-use-measure"
 
-export interface InvoicePDFContainerProps {
+import OrderPDF from "./OrderReceiptPDF"
+import { generateOrderPDF } from "./util"
+
+export interface OrderPDFContainerProps {
   data: Monorepo.Api.Response.SaleResponseDto
   isLoading?: boolean
 }
 
-const InvoicePDFContainer: React.FC<InvoicePDFContainerProps> = (props) => {
+const OrderPDFContainer: React.FC<OrderPDFContainerProps> = (props) => {
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const pdfRef = useRef<HTMLElement>(null)
 
+  const [pdfContainerRef, bounds] = useMeasure()
+
   const handleDownloadPDF = () => {
     if (pdfRef.current) {
-      return generateInvoicePDF({
+      return generateOrderPDF({
         el: pdfRef.current,
-        title: `POS - Invoice - ${props.data.invoiceNumber}`,
+        title: `POS - Order - ${props.data.invoiceNumber}`,
+        width: bounds.width,
+        height: bounds.height,
       })
     } else {
       return dispatch(
@@ -38,7 +42,7 @@ const InvoicePDFContainer: React.FC<InvoicePDFContainerProps> = (props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12}>
         <Button
           onClick={handleDownloadPDF}
           disabled={props.isLoading}
@@ -55,16 +59,17 @@ const InvoicePDFContainer: React.FC<InvoicePDFContainerProps> = (props) => {
           }
           variant="contained"
           color="primary"
+          fullWidth
         >
           {t("Print", { ns: "action" })}
         </Button>
       </Grid>
 
-      <Grid item xs={12}>
-        <InvoicePDF data={props.data} ref={pdfRef} />
+      <Grid item xs={12} ref={pdfContainerRef}>
+        <OrderPDF ref={pdfRef} data={props.data} />
       </Grid>
     </Grid>
   )
 }
 
-export default InvoicePDFContainer
+export default OrderPDFContainer

@@ -67,23 +67,19 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
             variant="body"
             style={{ overflowWrap: "anywhere" }}
           >
-            <Grid container>
-              <Grid item>
-                <Typography variant="h6" gutterBottom>
-                  {row.name}
-                </Typography>
-                <Typography>
-                  {t("Unit")}
-                  {": "}
-                  {row.unitName}
-                </Typography>
-                <Typography>
-                  {t("Price")}
-                  {": "}
-                  {formatRupiah(row.salePrice)}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Typography variant="h6" gutterBottom>
+              {row.name}
+            </Typography>
+            <Typography>
+              {t("Unit")}
+              {": "}
+              {row.unitName}
+            </Typography>
+            <Typography>
+              {t("Price")}
+              {": "}
+              {formatRupiah(row.salePrice)}
+            </Typography>
           </CustomTableCell>
 
           {/* Quantity */}

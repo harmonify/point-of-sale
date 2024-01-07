@@ -12,7 +12,7 @@
   - [ ] Highlight the Fuzzy search result
 - [x] Procurements
 - [x] Sales
-- [] Actual invoice data
+- [x] Actual invoice data
 - [x] Fix procurement date pickers
 - [] Notification API
 - [] Under maintenance

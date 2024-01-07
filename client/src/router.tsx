@@ -22,7 +22,8 @@ import DailySaleReport from "./pages/reports/DailySaleReport"
 import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
 import YearlySaleReport from "./pages/reports/YearlySaleReport"
 import ProfitLossReport from "./pages/reports/ProfitLossReport"
-import InvoicePDF from "./pages/orders/OrderReceiptPDF/OrderReceiptPDF"
+import OrderReceiptPDF from "./pages/orders/OrderReceiptPDF/OrderReceiptPDF"
+import { receiptDataMock } from "./pages/orders/OrderReceiptPDF/mock"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -71,11 +72,11 @@ const routeObjects: IRoute[] = [
         title: t("Sale"),
         path: "sales",
       },
-      {
-        Component: InvoicePDF,
-        title: t("Sale"),
-        path: "sales/test",
-      },
+      // {
+      //   Component: () => <OrderReceiptPDF data={receiptDataMock} />,
+      //   title: t("Sale"),
+      //   path: "sales/test",
+      // },
       {
         Component: SaleList,
         title: t("Order List"),

@@ -89,7 +89,7 @@ export default function renderSaleDataGridColumns({
     },
     {
       field: "discountTotal",
-      headerName: t("Discount Total"),
+      headerName: t("Discount on Total"),
       flex: 2,
       minWidth: 160,
       valueFormatter(params) {

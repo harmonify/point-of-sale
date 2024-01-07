@@ -12,7 +12,7 @@ import { t } from "i18next"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import renderSaleDataGridColumns from "./dataGridColumns"
-import InvoicePDFContainer from "./OrderReceiptPDF/OrderReceiptPDFContainer"
+import OrderPDFContainer from "./OrderReceiptPDF/OrderReceiptPDFContainer"
 
 const OrderList: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -38,9 +38,9 @@ const OrderList: React.FC = () => {
   const onClickReceipt = (row: Monorepo.Api.Response.SaleResponseDto) => {
     show(
       {
-        title: t("View Order", { ns: "action" }),
+        title: t("Order"),
         render: (
-          <InvoicePDFContainer data={row} isLoading={isLoadingDeleteSale} />
+          <OrderPDFContainer data={row} isLoading={isLoadingDeleteSale} />
         ),
         maxWidth: "sm",
         disableCancelButton: true,

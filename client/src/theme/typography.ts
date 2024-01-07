@@ -76,7 +76,7 @@ export const typography = (palette: Palette): TypographyOptions => ({
   body2: {
     color: palette!.text!.secondary,
     fontFamily: "Roboto",
-    fontSize: "16px",
+    fontSize: "14px",
     letterSpacing: "-0.04px",
     lineHeight: "18px",
   },
