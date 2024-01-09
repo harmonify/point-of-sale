@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "start": "vite",
-    "build:unsafe": "vite build",
-    "build": "tsc && vite build",
+    "build:unsafe": "vite build --mode production",
+    "build": "tsc && vite build --mode production",
     "analyze:bundle": "vite-bundle-visualizer",
     "preview": "vite preview",
     "test": "vitest",
