@@ -21,6 +21,7 @@ import {
   postRefreshTokenMutationName,
   postRefreshTokenUrl,
 } from "./endpoints/auth"
+import { router } from "@/router"
 
 // create a new mutex
 const mutex = new Mutex()
@@ -53,19 +54,30 @@ const baseQueryWithReauth: BaseQueryFn<
   await mutex.waitForUnlock()
 
   let result = await baseQuery(args, api, extraOptions)
-  if (BLACKLISTED_REAUTH_ENDPOINTS.includes(api.endpoint)) {
+
+  // Return immediately if either the endpoint is blacklisted from reauth or there is no error
+  if (
+    BLACKLISTED_REAUTH_ENDPOINTS.includes(api.endpoint) ||
+    !result ||
+    !result.error
+  ) {
     return result
   }
 
-  if (result!.error && result!.error.status === 401) {
-    // TODO: Is this stable?
-    if (
-      ["production", "staging"].includes(APP_ENV) &&
-      result!.error.status >= 500
-    ) {
-      // router.navigate("/error")
-    }
+  // Redirect on
+  if (
+    result!.error.status &&
+    // RTK query errors
+    (typeof result!.error.status === "string" ||
+      // API server error resposne
+      (typeof result!.error.status === "number" && result!.error.status >= 500))
+  ) {
+    router.navigate("/error")
+    return result
+  }
 
+  // Only retry if the status code is 401 Unauthorized
+  if (result!.error.status === 401) {
     // checking whether the mutex is locked
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
@@ -114,6 +126,7 @@ const baseQueryWithReauth: BaseQueryFn<
       result = await baseQuery(args, api, extraOptions)
     }
   }
+
   return result
 }
 

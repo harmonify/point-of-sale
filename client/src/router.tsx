@@ -5,25 +5,17 @@ import { createBrowserRouter, RouteObject } from "react-router-dom"
 
 import AuthGuard from "./components/AuthGuard"
 import { APP_ENV } from "./environment"
+import CategoryList from "./pages/categories/CategoryList"
+import CustomerList from "./pages/customers/CustomerList"
 import { Error500 } from "./pages/errors"
 import Home from "./pages/home/Home"
 import HomeInfo from "./pages/home/HomeInfo"
 import Login from "./pages/login/Login"
-import Sale from "./pages/sales/Sale"
-import SaleList from "./pages/orders/OrderList"
-import CustomerList from "./pages/customers/CustomerList"
-import SupplierList from "./pages/suppliers/SupplierList"
-import CategoryList from "./pages/categories/CategoryList"
-import UnitList from "./pages/units/UnitList"
-import ProductList from "./pages/products/ProductList"
 import ProcurementList from "./pages/procurements/ProcurementList"
-import SaleReport from "./pages/reports/SaleReport"
-import DailySaleReport from "./pages/reports/DailySaleReport"
-import MonthlySaleReport from "./pages/reports/MonthlySaleReport"
-import YearlySaleReport from "./pages/reports/YearlySaleReport"
-import ProfitLossReport from "./pages/reports/ProfitLossReport"
-import OrderReceiptPDF from "./pages/orders/OrderReceiptPDF/OrderReceiptPDF"
-import { receiptDataMock } from "./pages/orders/OrderReceiptPDF/mock"
+import ProductList from "./pages/products/ProductList"
+import Sale from "./pages/sales/Sale"
+import SupplierList from "./pages/suppliers/SupplierList"
+import UnitList from "./pages/units/UnitList"
 
 type IRoute = Omit<RouteObject, "children"> & {
   title: string
@@ -78,7 +70,7 @@ const routeObjects: IRoute[] = [
       //   path: "sales/test",
       // },
       {
-        Component: SaleList,
+        Component: lazy(() => import("./pages/orders/OrderList")),
         title: t("Order List"),
         path: "sales/list",
       },
@@ -179,27 +171,12 @@ const routeObjects: IRoute[] = [
         path: "procurements/:id",
       },
       {
-        Component: SaleReport,
+        Component: lazy(() => import("./pages/reports/SaleReport")),
         title: t("Sales"),
         path: "/reports/sales",
       },
       {
-        Component: DailySaleReport,
-        title: t("Daily Sales"),
-        path: "/reports/sales/daily",
-      },
-      {
-        Component: MonthlySaleReport,
-        title: t("Monthly Sales"),
-        path: "/reports/sales/monthly",
-      },
-      {
-        Component: YearlySaleReport,
-        title: t("Yearly Sales"),
-        path: "/reports/sales/yearly",
-      },
-      {
-        Component: ProfitLossReport,
+        Component: lazy(() => import("./pages/reports/ProfitLossReport")),
         title: t("Profit Loss"),
         path: "/reports/profit-loss",
       },

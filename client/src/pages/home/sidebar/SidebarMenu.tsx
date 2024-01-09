@@ -162,7 +162,7 @@ const SidebarMenu: React.FC = () => {
           icon={<DateRange style={{ color: iconColor }} />}
         />
 
-        <MenuItem
+        {/* <MenuItem
           isSelected={isSelected("/reports/sales/daily")}
           onClick={() => navigate("/reports/sales/daily")}
           text={t("Daily Sales")}
@@ -181,7 +181,7 @@ const SidebarMenu: React.FC = () => {
           onClick={() => navigate("/reports/sales/yearly")}
           text={t("Yearly Sales")}
           icon={<CalendarToday style={{ color: iconColor }} />}
-        />
+        /> */}
 
         <MenuItem
           isSelected={isSelected("/reports/profit-loss")}
