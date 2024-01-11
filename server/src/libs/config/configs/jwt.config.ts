@@ -12,5 +12,5 @@ export const jwt = registerAs('jwt', () => ({
   secret: process.env.JWT_SECRET,
   accessExpiry: +process.env.JWT_ACCESS_EXPIRY,
   refreshExpiry: +process.env.JWT_REFRESH_EXPIRY,
-  tokenType: process.env.JWT_SECRET,
+  tokenType: process.env.TOKEN_TYPE,
 }));

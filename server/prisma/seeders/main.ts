@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { PrismaClient, User } from '@prisma/client';
-import { adminUser, testUser } from '@test/fixtures';
-import { HashUtil } from '@/common/utils';
+import { adminUser, testUser } from '../../test/fixtures/user';
+import { HashUtil } from '../../src/common/utils/hash.util';
 
 const prisma = new PrismaClient({
   log: ['error', 'info', 'query', 'warn'],
@@ -13,7 +13,7 @@ async function main() {
   console.log(`Start seeding ...`);
   for (const userData of users) {
     const user = await prisma.user.upsert({
-      create: userData,
+      create: { ...userData, password: await HashUtil.hash(userData.password) },
       update: {
         password: await HashUtil.hash(userData.password),
       },
