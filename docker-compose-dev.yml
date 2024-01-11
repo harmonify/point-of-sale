@@ -34,7 +34,7 @@ services:
     env_file:
       - ./server/.env.development
     volumes:
-      - point-of-sale-mysql:/var/lib/mysql
+      - point-of-sale-mysql-dev:/var/lib/mysql
 
 volumes:
-  point-of-sale-mysql:
+  point-of-sale-mysql-dev:
