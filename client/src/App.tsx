@@ -15,7 +15,7 @@ import { Suspense, useMemo, useRef } from "react"
 import { RouterProvider } from "react-router-dom"
 
 import { useAppDispatch, useAppSelector } from "./app/hooks"
-import { APP_DEFAULT_LANG } from "./environment"
+import { APP } from "./constants"
 import { selectDarkMode, setDarkMode } from "./features/app"
 import ConfirmationDialogProvider from "./features/dialog/ConfirmationDialogProvider"
 
@@ -43,7 +43,7 @@ function App() {
         <CssBaseline />
         <LocalizationProvider
           dateAdapter={AdapterLuxon}
-          adapterLocale={APP_DEFAULT_LANG}
+          adapterLocale={APP.defaultLang}
         >
           <Suspense
             fallback={

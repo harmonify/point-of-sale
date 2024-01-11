@@ -5,7 +5,7 @@ import Form from "@/components/forms/Form"
 import FormikNumberInput from "@/components/forms/FormikNumberInput"
 import FormikSelectInput from "@/components/forms/FormikSelectInput"
 import FormikTextInput from "@/components/forms/FormikTextInput"
-import { APP_DEFAULT_CURRENCY, APP_DEFAULT_LANG } from "@/environment"
+import { APP,  } from "@/constants"
 import { useConfirmationDialog } from "@/features/dialog"
 import {
   useCreateProductApiMutation,
@@ -278,8 +278,8 @@ const ProductForm: React.FC = () => {
                           /> */}
                           <FormikNumberInput
                             intlConfig={{
-                              locale: APP_DEFAULT_LANG,
-                              currency: APP_DEFAULT_CURRENCY,
+                              locale: APP.defaultLang,
+                              currency: APP.defaultCurrency,
                             }}
                             label={t("Selling Price")}
                             name={`productUnits[${index}].price`}

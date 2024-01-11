@@ -19,7 +19,9 @@ import { SaleProductResponseDto } from './sale-product-response.dto';
 import { UserResponseDto } from '@/modules/user';
 import { CustomerResponseDto } from '@/modules/customer';
 
-export class SaleResponseDto implements Sale {
+export class SaleResponseDto
+  implements Omit<Sale, 'createdAt' | 'updatedAt' | 'deletedAt'>
+{
   @IsDefined()
   @IsInt()
   @ApiProperty()

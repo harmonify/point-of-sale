@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/app/hooks"
 import FormikNumberInput from "@/components/forms/FormikNumberInput"
-import { APP_DEFAULT_CURRENCY, APP_DEFAULT_LANG } from "@/environment"
+import { APP } from "@/constants"
 import {
   CartStateSummary,
   updateCartDescription,
@@ -78,8 +78,8 @@ const CartFooter: React.FC<{
         <TableCell style={{ padding: theme.spacing(1) }} colSpan={2}>
           <FormikNumberInput
             intlConfig={{
-              locale: APP_DEFAULT_LANG,
-              currency: APP_DEFAULT_CURRENCY,
+              locale: APP.defaultLang,
+              currency: APP.defaultCurrency,
             }}
             name="inputDiscountTotal"
             margin="none"
@@ -133,8 +133,8 @@ const CartFooter: React.FC<{
         <TableCell colSpan={2} style={{ padding: theme.spacing(1) }}>
           <FormikNumberInput
             intlConfig={{
-              locale: APP_DEFAULT_LANG,
-              currency: APP_DEFAULT_CURRENCY,
+              locale: APP.defaultLang,
+              currency: APP.defaultCurrency,
             }}
             name="paid"
             margin="none"

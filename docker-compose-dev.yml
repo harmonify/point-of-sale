@@ -4,27 +4,27 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-      target: prod
+      target: dev
     container_name: point-of-sale-client
     ports:
       - "3000:3000"
     depends_on:
       - server
     env_file:
-      - ./client/.env.production
+      - ./client/.env.development
 
   server:
     build:
       context: ./server
       dockerfile: Dockerfile
-      target: prod
+      target: dev
     container_name: point-of-sale-server
     ports:
       - "4000:4000"
     depends_on:
       - mysql
     env_file:
-      - ./server/.env.production
+      - ./server/.env.development
 
   mysql:
     image: mysql:8
@@ -32,7 +32,7 @@ services:
     ports:
       - "3306:3306"
     env_file:
-      - ./server/.env.production
+      - ./server/.env.development
     volumes:
       - point-of-sale-mysql:/var/lib/mysql
 

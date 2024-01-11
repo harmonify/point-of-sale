@@ -1,4 +1,4 @@
-import { APP_DEFAULT_LANG } from "@/environment"
+import { APP } from "@/constants"
 import currency from "currency.js"
 import { t } from "i18next"
 import { DateTime, DateTimeFormatOptions, FixedOffsetZone } from "luxon"
@@ -52,7 +52,7 @@ export const formatISOToLocaleDate = (
 ): string | null => {
   return isoString
     ? DateTime.fromISO(isoString, { zone: "utc" })
-        .setLocale(APP_DEFAULT_LANG)
+        .setLocale(APP.defaultLang)
         .setZone(FixedOffsetZone.instance(7 * 60)) // TODO: hardcoded
         .toISODate()
     : fallbackValue
@@ -63,7 +63,7 @@ export const formatDateTimeToLocale = (
   options?: DateTimeFormatOptions,
 ): string => {
   return dateTime
-    .setLocale(APP_DEFAULT_LANG)
+    .setLocale(APP.defaultLang)
     .setZone(FixedOffsetZone.instance(7 * 60)) // TODO: hardcoded
     .toLocaleString({
       day: "numeric",

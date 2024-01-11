@@ -1,5 +1,6 @@
 import { useAppSelector } from "@/app/hooks"
-import { APP_ENV, APP_NAME } from "@/environment"
+import { APP_ENV } from "@/environment"
+import { APP } from "@/constants"
 import { selectCurrentUser } from "@/features/auth"
 import { useGetDashboardInfoQuery } from "@/services/api"
 import { formatISOToLocale, formatRupiah } from "@/utils"
@@ -97,7 +98,7 @@ const HomeInfo: React.FC = () => {
           style={{ marginBottom: theme.spacing(1), fontWeight: 500 }}
           variant="h5"
         >
-          {t("Welcome to POS", { ns: "message", title: APP_NAME })}
+          {t("Welcome to POS", { ns: "message", title: APP.name })}
         </Typography>
       </Grid>
 

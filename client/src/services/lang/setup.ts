@@ -1,4 +1,4 @@
-import { APP_DEFAULT_LANG } from "@/environment"
+import { APP } from "@/constants"
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 
@@ -15,7 +15,7 @@ i18n
       resources: {
         id: idResource,
       },
-      lng: APP_DEFAULT_LANG, // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
+      lng: APP.defaultLang, // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
       // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
       // if you're using a language detector, do not define the lng option
       interpolation: {

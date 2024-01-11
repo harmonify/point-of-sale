@@ -3,10 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { DashboardResponseDto } from './dtos';
 import { BaseQuery } from '@/libs/prisma';
+import { SaleService } from '../sale';
 
 @Injectable()
 export class DashboardService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly saleService: SaleService,
+  ) {}
 
   async getDashboardInfo(): Promise<DashboardResponseDto> {
     try {
@@ -63,17 +67,11 @@ export class DashboardService {
       // Fetch the 10 most recent orders
       const recentOrders = await this.prisma.sale.findMany({
         take: 10,
-        include: {
-          createdBy: {
-            select: { name: true },
-          },
-          customer: true,
-          saleProducts: true,
-        },
         orderBy: {
           createdAt: 'desc',
         },
         where: BaseQuery.Filter.available(),
+        ...this.saleService.getSalePayloadToken(),
       });
 
       return {
@@ -81,7 +79,10 @@ export class DashboardService {
         totalExpenses: totalExpenses || 0,
         totalCustomers,
         topCustomers,
-        recentOrders,
+        recentOrders: recentOrders.map((sale) => ({
+          ...sale,
+          saleProducts: this.saleService.mapSaleProducts(sale.saleProducts),
+        })),
       };
     } catch (error) {
       throw new Error(`Error fetching dashboard information: ${error.message}`);

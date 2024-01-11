@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/app/hooks"
 import FormikNumberInput from "@/components/forms/FormikNumberInput"
-import { APP_DEFAULT_CURRENCY, APP_DEFAULT_LANG } from "@/environment"
+import { APP } from "@/constants"
 import {
   CartItemStateSummary,
   CartStateSummary,
@@ -105,8 +105,8 @@ const CartBody: React.FC<{ cartState: CartStateSummary }> = ({ cartState }) => {
           <CustomTableCell variant="body">
             <FormikNumberInput
               intlConfig={{
-                locale: APP_DEFAULT_LANG,
-                currency: APP_DEFAULT_CURRENCY,
+                locale: APP.defaultLang,
+                currency: APP.defaultCurrency,
               }}
               name={`items[${row.productUnitId}].discount`}
               margin="none"

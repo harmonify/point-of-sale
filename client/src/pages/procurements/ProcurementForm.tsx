@@ -3,7 +3,7 @@ import FormikNumberInput from "@/components/forms/FormikNumberInput"
 import FormikSelectInput from "@/components/forms/FormikSelectInput"
 import FormikTextInput from "@/components/forms/FormikTextInput"
 import Container from "@/components/layout/Container/Container"
-import { APP_DEFAULT_CURRENCY, APP_DEFAULT_LANG } from "@/environment"
+import { APP } from "@/constants"
 import {
   useCreateProcurementApiMutation,
   useDeleteProcurementProductApiMutation,
@@ -408,8 +408,8 @@ const ProcurementForm: React.FC = () => {
                               <TableCell padding="none">
                                 <FormikNumberInput
                                   intlConfig={{
-                                    locale: APP_DEFAULT_LANG,
-                                    currency: APP_DEFAULT_CURRENCY,
+                                    locale: APP.defaultLang,
+                                    currency: APP.defaultCurrency,
                                   }}
                                   size="small"
                                   name={`procurementProducts[${index}].price`}

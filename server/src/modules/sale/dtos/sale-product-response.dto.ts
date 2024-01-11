@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsString,
   Min,
 } from 'class-validator';
 
@@ -25,6 +26,16 @@ export class SaleProductResponseDto
   @Min(1)
   @ApiProperty()
   productUnitId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  productName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  unitName: string;
 
   @IsNotEmpty()
   @IsNumber()

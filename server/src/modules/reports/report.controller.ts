@@ -2,7 +2,7 @@ import { IResponseBody } from '@/libs/http';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { ReportService } from '../sale';
+import { ReportService } from './report.service';
 import { ProfitLossReport, SaleReport } from './dtos';
 
 @ApiTags('Reports')

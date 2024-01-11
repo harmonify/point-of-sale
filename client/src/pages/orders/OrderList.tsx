@@ -12,7 +12,7 @@ import { t } from "i18next"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import renderSaleDataGridColumns from "./dataGridColumns"
-import OrderPDFContainer from "./OrderReceiptPDF/OrderReceiptPDFContainer"
+import OrderInvoicePDFContainer from "./OrderInvoicePDF/OrderInvoicePDFContainer"
 
 const OrderList: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -40,9 +40,9 @@ const OrderList: React.FC = () => {
       {
         title: t("Order"),
         render: (
-          <OrderPDFContainer data={row} isLoading={isLoadingDeleteSale} />
+          <OrderInvoicePDFContainer data={row} isLoading={isLoadingDeleteSale} />
         ),
-        maxWidth: "sm",
+        maxWidth: "lg",
         disableCancelButton: true,
         disableConfirmButton: true,
       },

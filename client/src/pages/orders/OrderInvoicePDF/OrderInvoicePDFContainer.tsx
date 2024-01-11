@@ -1,34 +1,31 @@
 import { useAppDispatch } from "@/app/hooks"
 import { showSnackbar } from "@/features/snackbar"
 import { Print } from "@mui/icons-material"
-import { Button, CircularProgress, Grid } from "@mui/material"
+import { Box, Button, CircularProgress, Grid } from "@mui/material"
 import { useTheme } from "@mui/styles"
 import { t } from "i18next"
 import React, { useRef } from "react"
-import useMeasure from "react-use-measure"
 
-import OrderPDF from "./OrderReceiptPDF"
-import { generateOrderReceiptPDF } from "./util"
+import { generateOrderInvoicePDF } from "./util"
+import OrderInvoicePDF from "./OrderInvoicePDF"
 
-export interface OrderReceiptPDFContainerProps {
+export interface OrderInvoicePDFContainerProps {
   data: Monorepo.Api.Response.SaleResponseDto
   isLoading?: boolean
 }
 
-const OrderReceiptPDFContainer: React.FC<OrderReceiptPDFContainerProps> = (props) => {
+const OrderInvoicePDFContainer: React.FC<OrderInvoicePDFContainerProps> = (
+  props,
+) => {
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const pdfRef = useRef<HTMLElement>(null)
 
-  const [pdfContainerRef, bounds] = useMeasure()
-
   const handleDownloadPDF = () => {
     if (pdfRef.current) {
-      return generateOrderReceiptPDF({
+      return generateOrderInvoicePDF({
         el: pdfRef.current,
-        title: `POS - Order Receipt - ${props.data.invoiceNumber}`,
-        width: bounds.width,
-        height: bounds.height,
+        title: `POS - Order Invoice - ${props.data.invoiceNumber}`,
       })
     } else {
       return dispatch(
@@ -65,11 +62,11 @@ const OrderReceiptPDFContainer: React.FC<OrderReceiptPDFContainerProps> = (props
         </Button>
       </Grid>
 
-      <Grid item xs={12} ref={pdfContainerRef}>
-        <OrderPDF ref={pdfRef} data={props.data} />
+      <Grid item xs={12}>
+        <OrderInvoicePDF ref={pdfRef} data={props.data} />
       </Grid>
     </Grid>
   )
 }
 
-export default OrderReceiptPDFContainer
+export default OrderInvoicePDFContainer

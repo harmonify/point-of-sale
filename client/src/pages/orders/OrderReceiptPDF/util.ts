@@ -15,7 +15,7 @@ export const getReceiptPdfSizeInPx = (factor?: number): [number, number] => {
   return [receiptPdfHeightMm * finalFactor, receiptPdfWidthMm * finalFactor]
 }
 
-export const generateOrderPDF = async (params: {
+export const generateOrderReceiptPDF = async (params: {
   el: HTMLElement
   title: string
   width: number

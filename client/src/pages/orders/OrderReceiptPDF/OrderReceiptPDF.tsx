@@ -20,7 +20,7 @@ import { receiptDataMock } from "./mock"
 import { formatDateTimeToLocale } from "@/utils/string"
 import { DateTime } from "luxon"
 import { isNumber } from "@/utils/number"
-import { APP_NAME } from "@/environment"
+import { APP } from "@/constants"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,10 +42,7 @@ const OrderReceiptPDF = forwardRef<HTMLElement, OrderReceiptPDFProps>(
     const theme = useTheme()
     const classes = useStyles()
 
-    // const {
-    //   data: receiptData
-    // }= props
-    const receiptData = receiptDataMock
+    const { data: receiptData } = props
 
     return (
       <Box
@@ -57,7 +54,7 @@ const OrderReceiptPDF = forwardRef<HTMLElement, OrderReceiptPDFProps>(
         }}
       >
         <Typography color="black" variant="h1" align="center">
-          {APP_NAME}
+          {APP.name}
         </Typography>
         <Divider sx={{ marginTop: theme.spacing(2) }} />
 
@@ -108,7 +105,9 @@ const OrderReceiptPDF = forwardRef<HTMLElement, OrderReceiptPDFProps>(
               <TableCell>
                 <Typography color="black" align="right">
                   {formatDateTimeToLocale(
-                    DateTime.fromISO(receiptData.createdAt),
+                    typeof receiptData.createdAt === "string"
+                      ? DateTime.fromISO(receiptData.createdAt)
+                      : DateTime.fromJSDate(receiptData.createdAt),
                     {
                       second: undefined,
                     },

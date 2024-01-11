@@ -16,21 +16,26 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { SaleQuery } from './sale.query';
 import {
   CreateSaleRequestDto,
+  SaleProductResponseDto,
   SaleResponseDto,
   UpdateSaleRequestDto,
 } from './dtos';
 import { DateTime } from 'luxon';
+import { SaleService } from './sale.service';
 
 @ApiTags('Sales')
 @Controller({ path: '/sales', version: '1' })
 export class SaleController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly saleService: SaleService,
+  ) {}
 
   @Post()
   async create(
@@ -107,17 +112,16 @@ export class SaleController {
             },
           },
         },
-        include: {
-          customer: true,
-          createdBy: { select: { name: true } },
-          saleProducts: true,
-        },
+        ...this.saleService.getSalePayloadToken(),
       });
 
       return newSale;
     });
     return {
-      data: newSale,
+      data: {
+        ...newSale,
+        saleProducts: this.saleService.mapSaleProducts(newSale.saleProducts),
+      },
     };
   }
 
@@ -146,11 +150,27 @@ export class SaleController {
       include: {
         customer: true,
         createdBy: { select: { name: true } },
-        saleProducts: true,
+        saleProducts: {
+          include: {
+            productUnit: {
+              include: {
+                product: {
+                  select: { name: true },
+                },
+                unit: {
+                  select: { name: true },
+                },
+              },
+            },
+          },
+        },
       },
     });
     return {
-      data: sales,
+      data: sales.map((sale) => ({
+        ...sale,
+        saleProducts: this.saleService.mapSaleProducts(sale.saleProducts),
+      })),
     };
   }
 
@@ -163,14 +183,10 @@ export class SaleController {
         ...BaseQuery.Filter.available(),
         id,
       },
-      include: {
-        customer: true,
-        createdBy: { select: { name: true } },
-        saleProducts: true,
-      },
+      ...this.saleService.getSalePayloadToken(),
     });
     return {
-      data: sale,
+      data: { ...sale, saleProducts: this.saleService.mapSaleProducts(sale.saleProducts) },
     };
   }
 
@@ -231,18 +247,17 @@ export class SaleController {
             },
           },
           where: BaseQuery.Filter.byId(id),
-          include: {
-            customer: true,
-            createdBy: { select: { name: true } },
-            saleProducts: true,
-          },
+          ...this.saleService.getSalePayloadToken(),
         });
 
         return updatedSale;
       },
     );
     return {
-      data: updatedSale,
+      data: {
+        ...updatedSale,
+        saleProducts: this.saleService.mapSaleProducts(updatedSale.saleProducts),
+      },
     };
   }
 
