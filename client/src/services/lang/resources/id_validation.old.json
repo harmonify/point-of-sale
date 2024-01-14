@@ -1,0 +1,22 @@
+{
+  "default": "{{label, spaceAfterIfDefined, removeIfUndefined}}tidak valid",
+  "required": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus diisi",
+  "string": {
+    "email": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus berupa email yang valid",
+    "min": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus lebih besar atau sama dengan {{x}} jumlah karakter",
+    "max": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus lebih kecil atau sama dengan {{x}} jumlah karakter"
+  },
+  "must be number": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus berupa angka",
+  "number": {
+    "min": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus lebih besar atau sama dengan {{x}}",
+    "max": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus lebih kecil atau sama dengan {{x}}",
+    "lessThan": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus lebih kecil dari {{x}}",
+    "moreThan": "{{label, spaceAfterIfDefined, removeIfUndefined}}harus lebih besar dari {{x}}"
+  },
+  "array": {
+    "unique": "{{field, spaceAfterIfDefined, removeIfUndefined}}harus berupa data yang unik"
+  },
+  "some fields are invalid": "ada beberapa kolom yang tidak valid",
+  "The inputted quantity should not exceed the product unit available quantity": "Kuantitas yang diinputkan tidak boleh melebihi kuantitas unit produk yang tersedia",
+  "The change amount must not be less than 0": "Jumlah kembalian tidak boleh kurang dari 0"
+}

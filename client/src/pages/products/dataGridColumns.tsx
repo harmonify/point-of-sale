@@ -55,8 +55,8 @@ export default function renderProductDataGridColumns({
     {
       field: "name",
       headerName: t("Name"),
-      flex: 1,
-      minWidth: 160,
+      flex: 3,
+      minWidth: 280,
     },
     {
       field: "description",

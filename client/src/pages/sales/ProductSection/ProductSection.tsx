@@ -4,7 +4,7 @@ import { upsertCartItem } from "@/features/cart"
 import useProductFuzzySearch from "@/pages/products/useProductFuzzySearch"
 import { useFindCategoriesProductsQuery } from "@/services/api"
 import { Box, CircularProgress, Grid, Paper, useTheme } from "@mui/material"
-import React, { Component, useMemo, useState } from "react"
+import React, { Component, useEffect, useMemo, useState } from "react"
 
 import Breadcrumb from "./Breadcrumb"
 import CategoryTab from "./CategoryTab/CategoryTab"
@@ -77,6 +77,9 @@ const ProductSection: React.FC = () => {
   const [breadcrumbState, setBreadcrumbState] = useState<IBreadcrumbState>(
     initialBreadcrumbState,
   )
+  const selectedCategoryProductList: ModifiedProductType[] = useMemo(() => {
+    return breadcrumbState.selectedCategory ? productList.filter((p) => p.categoryId === breadcrumbState.selectedCategory?.id) : []
+  }, [breadcrumbState.selectedCategory])
 
   const {
     search,
@@ -188,7 +191,7 @@ const ProductSection: React.FC = () => {
             onAddUnit={handleAddUnit}
           />
         ) : breadcrumbState.selectedCategory ? (
-          <ProductTab rows={productList} onSelect={handleSelectProduct} />
+          <ProductTab rows={selectedCategoryProductList} onSelect={handleSelectProduct} />
         ) : (
           <CategoryTab rows={categoryList} onSelect={handleSelectCategory} />
         )}
