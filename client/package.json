@@ -11,7 +11,7 @@
     "build:unsafe": "vite build --mode production",
     "build:dev": "tsc && vite build --mode development",
     "analyze:bundle": "vite-bundle-visualizer",
-    "preview": "vite preview",
+    "preview": "vite preview --mode production",
     "test": "vitest",
     "format": "prettier --write .",
     "lint": "eslint .",

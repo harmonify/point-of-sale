@@ -12,13 +12,17 @@ import { t } from "i18next"
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom"
 
 import useStyles from "./styles"
+import { useAppSelector } from "@/app/hooks"
+import { selectAuthCredentials } from "@/features/auth"
 
 function Error404() {
   const classes = useStyles()
   const theme = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
-  const mobileDevice = useMediaQuery(theme.breakpoints.down('md'))
+  const mobileDevice = useMediaQuery(theme.breakpoints.down("md"))
+
+  const auth = useAppSelector(selectAuthCredentials)
 
   const subtitle = t("An error occured", { ns: "error" })
 
@@ -45,7 +49,7 @@ function Error404() {
           variant="outlined"
           startIcon={<KeyboardBackspace />}
         >
-          {t("Back")}
+          {t("Back", { ns: "action" })}
         </Button>
         <Button
           className={classes.button}
@@ -55,17 +59,19 @@ function Error404() {
           variant="outlined"
           startIcon={<Replay />}
         >
-          {t("Reload")}
+          {t("Reload", { ns: "action" })}
         </Button>
         <Button
           className={classes.button}
           color="primary"
           component={RouterLink}
-          to="/"
+          to={auth.accessToken ? "/" : "/login"}
           variant="outlined"
           startIcon={<Home />}
         >
-          {t("Back to Home")}
+          {auth.accessToken
+            ? t("Back to Home", { ns: "action" })
+            : t("Back to Login", { ns: "action" })}
         </Button>
       </Box>
     </Container>

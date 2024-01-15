@@ -66,11 +66,12 @@ const baseQueryWithReauth: BaseQueryFn<
 
   // Redirect on
   if (
-    result!.error.status &&
+    // No error status
+    !result.error.status ||
     // RTK query errors
-    (typeof result!.error.status === "string" ||
-      // API server error resposne
-      (typeof result!.error.status === "number" && result!.error.status >= 500))
+    typeof result!.error.status === "string" ||
+    // API server error resposne
+    (typeof result!.error.status === "number" && result!.error.status >= 500)
   ) {
     router.navigate("/error")
     return result

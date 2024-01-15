@@ -1,6 +1,9 @@
 version: "3.8"
 services:
   client:
+    # This won't work, at least currently.
+    # env_file:
+    #   - ./client/.env.production
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -10,8 +13,6 @@ services:
       - "3000:3000"
     depends_on:
       - server
-    env_file:
-      - ./client/.env.production
 
   server:
     build:
@@ -30,7 +31,7 @@ services:
     image: mysql:8
     container_name: point-of-sale-mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     env_file:
       - ./server/.env.production
     volumes:

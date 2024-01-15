@@ -209,7 +209,8 @@ const renderRoute = (route: IRoute) => {
   delete route.Component
 
   if (APP_ENV === "production") {
-    route.errorElement = <Error500 />
+    route.errorElement =
+      route.errorElement === undefined ? <Error500 /> : route.errorElement
   }
 
   if (Array.isArray(route.children)) {

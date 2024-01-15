@@ -1,6 +1,6 @@
 # Point of Sale
 
-A point of sale application built using React.js &amp; NestJS.
+A point of sale application built using React.js &amp; NestJS
 
 ## Technologies
 
@@ -17,7 +17,7 @@ A point of sale application built using React.js &amp; NestJS.
   - `jspdf`
   - `jspdf-autotable`
   - `html2canvas`
-- etc.
+- etc
 
 ### Backend
 
@@ -29,13 +29,18 @@ A point of sale application built using React.js &amp; NestJS.
 - Passport: Auth library
 - Luxon: Datetime library
 - Pino: Logger library
-- etc.
+- etc
 
 ## Installation
 
 ### Docker
 
-Run `docker compose up`.
+1. Run `cp client/.env.example client/.env.production`
+2. Run `cp server/.env.example server/.env.production`
+3. Fill out both `.env.production`
+4. Run `source client/.env.production`
+5. Run `docker build -t point-of-sale-client client`
+6. Run `docker compose up`
 
 ### Manual
 
@@ -43,52 +48,52 @@ Run `docker compose up`.
 
 ##### Frontend - Setup
 
-1. Run `yarn` to install all the dependencies.
-2. Copy `.env.example` to `.env`.
-3. Fill out `.env`.
+1. Run `yarn` to install all the dependencies
+2. Copy `.env.example` to `.env`
+3. Fill out `.env`
 
 ##### Frontend - Development
 
-1. Complete the [Frontend - Setup](#frontend---setup).
-2. Run `yarn dev` to start the development server (w/ hot reload) in `localhost:3000`.
-3. Navigate to <http://localhost:3000>.
+1. Complete the [Frontend - Setup](#frontend---setup)
+2. Run `yarn dev` to start the development server (w/ hot reload) in `localhost:3000`
+3. Navigate to <http://localhost:3000>
 
 ##### Frontend - Production
 
-1. Complete the [Frontend - Setup](#frontend---setup).
-2. Run `yarn build` to build the client app.
-3. Run `yarn start` to start a minimal server to serve the client app.
-4. Navigate to <http://localhost:3000>.
+1. Complete the [Frontend - Setup](#frontend---setup)
+2. Run `yarn build` to build the client app
+3. Run `yarn start` to start a minimal server to serve the client app
+4. Navigate to <http://localhost:3000>
 
 #### Backend - Installation
 
 ##### Backend - Setup
 
-1. Run `yarn` to install all the dependencies.
-2. Copy `.env.example` to `.env`.
-3. Fill out `.env`.
+1. Run `yarn` to install all the dependencies
+2. Copy `.env.example` to `.env`
+3. Fill out `.env`
 4. Run `yarn run prisma db push` to run the database migrations
 5. (Optional) run `yarn run prisma seed` to seed the database with some data
 
-Note: If you're on Unix-based machine, you can checkout the backend `Makefile` for available scripts or run `make list`.
+Note: If you're on Unix-based machine, you can checkout the backend `Makefile` for available scripts or run `make list`
 
 ##### Backend - Development
 
-1. Complete the [Backend - Setup](#backend---setup).
-2. Run `yarn dev` to start the development server (w/ hot reload) in `localhost:4000`.
-3. Navigate to <http://localhost:4000> and use `admin` as the username & password to see the dashboard.
+1. Complete the [Backend - Setup](#backend---setup)
+2. Run `yarn dev` to start the development server (w/ hot reload) in `localhost:4000`
+3. Navigate to <http://localhost:4000> and use `admin` as the username & password to see the dashboard
 
 ###### Backend - During development
 
-- If you make some changes to the translation files, run `NODE_ENV=development npm run execute generate-i18n-types` to generate the i18n types.
-- If you make some changes to the Prisma schema, run `yarn run prisma generate` to generate its types.
-- For everything else, please refer to the related package documentation.
+- If you make some changes to the translation files, run `NODE_ENV=development npm run execute generate-i18n-types` to generate the i18n types
+- If you make some changes to the Prisma schema, run `yarn run prisma generate` to generate its types
+- For everything else, please refer to the related package documentation
 
 ##### Backend - Production
 
-1. Complete the [Backend - Setup](#backend---setup).
-2. Run `yarn build` to build the server app.
-3. Run `yarn start` to start the server in `localhost:4000`.
+1. Complete the [Backend - Setup](#backend---setup)
+2. Run `yarn build` to build the server app
+3. Run `yarn start` to start the server in `localhost:4000`
 4. Navigate to <http://localhost:4000>
 
 ## License
