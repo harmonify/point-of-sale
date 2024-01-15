@@ -1,6 +1,5 @@
 FROM node:18-alpine AS base
 WORKDIR /app
-COPY . .
 ENV NODE_ENV=dev \
   APP_PORT=${APP_PORT:-8080} \
   APP_PREFIX=${APP_PREFIX} \
@@ -16,18 +15,22 @@ ENV NODE_ENV=dev \
   TOKEN_TYPE=${TOKEN_TYPE:-Bearer} \
   THROTTLE_LIMIT=${THROTTLE_LIMIT:-12} \
   THROTTLE_TTL=${THROTTLE_TTL:-10}
-EXPOSE $APP_PORT
+EXPOSE ${APP_PORT:-8080}
 
 FROM base AS dev
 ENV NODE_ENV=dev
+COPY package.json ./package.json
+COPY yarn.lock ./yarn.lock
 RUN yarn install
+COPY . .
 CMD ["sh", "-c", "yarn run migration:deploy && yarn run start:dev"]
 
-FROM base AS build
+FROM base AS prod
+ENV NODE_ENV=prod
+COPY package.json ./package.json
+COPY yarn.lock ./yarn.lock
 RUN yarn install
 RUN yarn run build
-
-FROM build AS prod
-ENV NODE_ENV=prod
 RUN yarn install --production
+COPY . .
 CMD ["sh", "-c", "yarn run migration:deploy && yarn run start:prod"]
