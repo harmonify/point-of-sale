@@ -56,19 +56,31 @@ const ProductSection: React.FC = () => {
     () =>
       categoriesProductsResponseQuery
         ? categoriesProductsResponseQuery.data.flatMap(
-            (category, categoryIdx) =>
-              category.products.map<ModifiedProductType>((product, idx) => {
-                return {
-                  ...product,
-                  idx: categoryIdx * idx + 1,
-                  productUnits: (
-                    product as Monorepo.Api.Response.ProductResponseDto
-                  ).productUnits.map((pu) => ({
-                    ...pu,
-                    product,
-                  })),
-                }
-              }),
+            (
+              {
+                products,
+              }: { products: Monorepo.Api.Response.ProductResponseDto[] },
+              categoryIdx,
+            ) =>
+              products
+                // Filter out product with empty units
+                .filter((product) => {
+                  return (
+                    product.productUnits.filter(
+                      (pu) => pu.availableQuantity > 0,
+                    ).length > 0
+                  )
+                })
+                .map<ModifiedProductType>((product, idx) => {
+                  return {
+                    ...product,
+                    idx: categoryIdx * idx + 1,
+                    productUnits: product.productUnits.map((pu) => ({
+                      ...pu,
+                      product,
+                    })),
+                  }
+                }),
           )
         : [],
     [categoriesProductsResponseQuery],
@@ -78,7 +90,11 @@ const ProductSection: React.FC = () => {
     initialBreadcrumbState,
   )
   const selectedCategoryProductList: ModifiedProductType[] = useMemo(() => {
-    return breadcrumbState.selectedCategory ? productList.filter((p) => p.categoryId === breadcrumbState.selectedCategory?.id) : []
+    return breadcrumbState.selectedCategory
+      ? productList.filter(
+          (p) => p.categoryId === breadcrumbState.selectedCategory?.id,
+        )
+      : []
   }, [breadcrumbState.selectedCategory])
 
   const {
@@ -191,7 +207,10 @@ const ProductSection: React.FC = () => {
             onAddUnit={handleAddUnit}
           />
         ) : breadcrumbState.selectedCategory ? (
-          <ProductTab rows={selectedCategoryProductList} onSelect={handleSelectProduct} />
+          <ProductTab
+            rows={selectedCategoryProductList}
+            onSelect={handleSelectProduct}
+          />
         ) : (
           <CategoryTab rows={categoryList} onSelect={handleSelectCategory} />
         )}
