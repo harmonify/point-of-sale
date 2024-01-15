@@ -17,20 +17,21 @@ ENV NODE_ENV=dev \
   THROTTLE_TTL=${THROTTLE_TTL:-10}
 EXPOSE ${APP_PORT:-8080}
 
-FROM base AS dev
+FROM base AS app
 ENV NODE_ENV=dev
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
 RUN yarn install
+
+FROM app AS dev
 COPY . .
+RUN yarn run prisma:generate
 CMD ["sh", "-c", "yarn run migration:deploy && yarn run start:dev"]
 
-FROM base AS prod
+FROM app AS prod
 ENV NODE_ENV=prod
-COPY package.json ./package.json
-COPY yarn.lock ./yarn.lock
-RUN yarn install
-RUN yarn run build
-RUN yarn install --production
 COPY . .
+RUN yarn run prisma:generate
+RUN yarn run build
+RUN npm prune --production
 CMD ["sh", "-c", "yarn run migration:deploy && yarn run start:prod"]
