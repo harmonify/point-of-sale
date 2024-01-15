@@ -11,4 +11,4 @@ CMD ["yarn", "start:dev"]
 
 FROM base AS prod
 RUN yarn build:unsafe
-CMD ["yarn", "start"]
+CMD ["yarn", "preview"]
