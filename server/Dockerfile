@@ -22,16 +22,14 @@ ENV NODE_ENV=dev
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
 RUN yarn install
-
-FROM app AS dev
 COPY . .
 RUN yarn run prisma:generate
+
+FROM app AS dev
 CMD ["sh", "-c", "yarn run migration:deploy && yarn run start:dev"]
 
 FROM app AS prod
 ENV NODE_ENV=prod
-COPY . .
-RUN yarn run prisma:generate
 RUN yarn run build
 RUN npm prune --production
 CMD ["sh", "-c", "yarn run migration:deploy && yarn run start:prod"]
