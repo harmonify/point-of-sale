@@ -6,9 +6,9 @@ COPY yarn.lock ./yarn.lock
 RUN yarn install
 COPY . .
 
-FROM node:18-alpine AS dev
+FROM base AS dev
 CMD ["yarn", "start:dev"]
 
-FROM node:18-alpine AS prod
+FROM base AS prod
 RUN yarn build:unsafe
 CMD ["yarn", "start"]
