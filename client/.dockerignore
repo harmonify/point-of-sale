@@ -1,6 +1,4 @@
 .dumps
-.env
-.env.*
 .vscode/
 .dockerignore
 .eslintrc.js
