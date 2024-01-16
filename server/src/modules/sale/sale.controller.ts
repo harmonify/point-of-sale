@@ -47,27 +47,120 @@ export class SaleController {
     const endOfDay = now.endOf('day').toJSDate();
 
     const newSale = await this.prismaService.$transaction(async (prisma) => {
-      const productUnits = await prisma.productUnit.findMany({
+      const productUnitIds = sale.saleProducts.map((sp) => sp.productUnitId);
+
+      /** Section 1: Sum the sold product unit quantities */
+      const soldProductUnits = await prisma.saleProduct.findMany({
         select: {
-          id: true,
-          price: true,
+          productUnitId: true,
+          quantity: true,
         },
         where: {
           AND: [
             {
-              id: {
-                in: sale.saleProducts.map((sp) => sp.productUnitId),
+              productUnitId: {
+                in: productUnitIds,
               },
             },
             BaseQuery.Filter.available(),
           ],
         },
       });
-
-      const productUnitPriceMap = new Map(
-        productUnits.map((pu) => [pu.id, pu]),
+      const productUnitRecord = productUnitIds.reduce(
+        (acc, pu) => {
+          if (!acc[pu]) {
+            acc[pu] = 0;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
       );
+      /** Record of sold product unit quantities */
+      const soldProductUnitQuantityRecord: Record<number, number> =
+        soldProductUnits.reduce((acc, { productUnitId, quantity }) => {
+          if (acc[productUnitId]) {
+            acc[productUnitId] += quantity;
+          } else {
+            acc[productUnitId] = quantity;
+          }
+          return acc;
+        }, productUnitRecord);
+      /** END Section 1 */
 
+      /** Section 2: Get accurate product unit price list */
+      const procuredProductUnits = await prisma.procurementProduct.findMany({
+        select: {
+          productUnitId: true,
+          price: true,
+          quantity: true,
+        },
+        where: {
+          AND: [
+            {
+              productUnitId: {
+                in: productUnitIds,
+              },
+            },
+            BaseQuery.Filter.available(),
+          ],
+        },
+      });
+      const productUnitPriceListRecord = procuredProductUnits.reduce(
+        (acc, pu) => {
+          soldProductUnitQuantityRecord[pu.productUnitId] -= pu.quantity;
+          if (soldProductUnitQuantityRecord[pu.productUnitId] < 0) {
+            const availableQuantity =
+              -soldProductUnitQuantityRecord[pu.productUnitId];
+            const priceList = Array.from({ length: availableQuantity }).map(
+              () => pu.price,
+            );
+            if (Array.isArray(acc[pu.productUnitId])) {
+              acc[pu.productUnitId].push(...priceList);
+            } else {
+              acc[pu.productUnitId] = priceList;
+            }
+          }
+          return acc;
+        },
+        {} as Record<number, number[]>,
+      );
+      /** END Section 2 */
+
+      /** Section 3: Build the new sold product data, same product unit but different price should be treated as different records */
+      const newSoldProducts = sale.saleProducts.reduce((acc, sp) => {
+        let prevCostPrice = productUnitPriceListRecord[sp.productUnitId][0];
+        let samePriceQuantity = 0;
+
+        for (let i = 0; i < sp.quantity; i++) {
+          const currCostPrice = productUnitPriceListRecord[sp.productUnitId][i];
+          if (prevCostPrice === currCostPrice) {
+            samePriceQuantity += 1;
+            if (samePriceQuantity === sp.quantity) {
+              acc.push({
+                ...sp,
+                quantity: samePriceQuantity,
+                costPrice: currCostPrice,
+                createdById: user.id,
+                updatedById: user.id,
+              });
+            }
+          } else {
+            acc.push({
+              ...sp,
+              quantity: samePriceQuantity,
+              costPrice: currCostPrice,
+              createdById: user.id,
+              updatedById: user.id,
+            });
+            samePriceQuantity = 0;
+          }
+          prevCostPrice = currCostPrice;
+        }
+        return acc;
+      }, [] as Prisma.SaleProductCreateManySaleInput[]);
+      /** END Section 3 */
+
+      /** Section 4: Build the invoice number */
       const saleCount = await prisma.sale.count({
         where: {
           createdAt: {
@@ -76,7 +169,6 @@ export class SaleController {
           },
         },
       });
-
       // adjust this to how you like
       const invoiceNumber = `${now.year}${now.month
         .toString()
@@ -85,7 +177,9 @@ export class SaleController {
       )
         .toString()
         .padStart(3, '0')}`;
+      /** END Section 4 */
 
+      /** Section 5: Store into the database */
       const newSale = await prisma.sale.create({
         data: {
           ...sale,
@@ -94,26 +188,13 @@ export class SaleController {
           updatedById: user.id,
           saleProducts: {
             createMany: {
-              data: sale.saleProducts.map((sp) => {
-                const costPrice = productUnitPriceMap.get(sp.productUnitId)
-                  ?.price;
-                if (!costPrice) {
-                  throw new BadRequestException({
-                    message: 'Product unit is not valid',
-                  });
-                }
-                return {
-                  ...sp,
-                  costPrice,
-                  createdById: user.id,
-                  updatedById: user.id,
-                };
-              }),
+              data: newSoldProducts,
             },
           },
         },
         ...this.saleService.getSalePayloadToken(),
       });
+      /** END Section 5 */
 
       return newSale;
     });
@@ -186,7 +267,10 @@ export class SaleController {
       ...this.saleService.getSalePayloadToken(),
     });
     return {
-      data: { ...sale, saleProducts: this.saleService.mapSaleProducts(sale.saleProducts) },
+      data: {
+        ...sale,
+        saleProducts: this.saleService.mapSaleProducts(sale.saleProducts),
+      },
     };
   }
 
@@ -256,7 +340,9 @@ export class SaleController {
     return {
       data: {
         ...updatedSale,
-        saleProducts: this.saleService.mapSaleProducts(updatedSale.saleProducts),
+        saleProducts: this.saleService.mapSaleProducts(
+          updatedSale.saleProducts,
+        ),
       },
     };
   }
