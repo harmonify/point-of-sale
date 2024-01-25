@@ -10,16 +10,16 @@ import { useEffect, useState } from "react"
 
 import { ProfitLossReportPDF } from "./ProfitLossReportPDF/ProfitLossReportPDF"
 import { generateProfitLossReportPDF } from "./ProfitLossReportPDF/util"
-import { DATE_FORMAT } from "@/constants"
+import { APP, DATE_FORMAT } from "@/constants"
 
 const today = DateTime.now().startOf("day")
 const todayISO = today.toISODate()
 const profitLossTableId = "range-date-profit-loss-table"
 const getTitle = (from: string, to: string) => {
-  return `${t("Profit Loss Report")} - ${from} - ${to}`
+  return `${t("Profit Loss Report")} ${from} s.d. ${to}`
 }
 const getFileName = (from: string, to: string) => {
-  return `POS - ${t("Profit Loss Report")} - ${from} - ${to}.pdf`
+  return `${APP.name}_${t("Profit Loss Report")}_${from}_${to}.pdf`
 }
 
 const useStyles = makeStyles((theme) => ({

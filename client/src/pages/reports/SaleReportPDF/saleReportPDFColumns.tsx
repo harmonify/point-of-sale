@@ -61,7 +61,7 @@ export const saleProductReportPDFColumns: (ITableColumnData<Monorepo.Api.Respons
   },
   {
     title: t("Sale Price"),
-    type: "currency",
+    type: "text",
     iteratee: (item, formatted = true) =>
       formatted ? formatRupiah(item.salePrice) : item.salePrice,
     width: 20,
@@ -74,7 +74,7 @@ export const saleProductReportPDFColumns: (ITableColumnData<Monorepo.Api.Respons
   },
   {
     title: t("Discount"),
-    type: "currency",
+    type: "text",
     iteratee: (item, formatted = true) =>
       formatted ? formatRupiah(item.discount) : item.discount,
     width: 10,

@@ -10,17 +10,17 @@ import { useEffect, useState } from "react"
 
 import { SaleReportPDF } from "./SaleReportPDF/SaleReportPDF"
 import { generateSaleReportPDF } from "./SaleReportPDF/util"
-import { DATE_FORMAT } from "@/constants"
+import { APP, DATE_FORMAT } from "@/constants"
 
 const today = DateTime.now().startOf("day")
 const todayISO = today.toISODate()
 const saleSummaryTableId = "range-date-sale-summary-table"
 const saleProductTableId = "range-date-sale-product-table"
 const getTitle = (from: string, to: string) => {
-  return `${t("Sales Report")} - ${from} - ${to}`
+  return `${t("Sales Report")} ${from} s.d. ${to}`
 }
 const getFileName = (from: string, to: string) => {
-  return `POS - ${t("Sales Report")} - ${from} - ${to}.pdf`
+  return `${APP.name}_${t("Sales Report")}_${from}_${to}.pdf`
 }
 
 const useStyles = makeStyles((theme) => ({

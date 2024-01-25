@@ -57,6 +57,18 @@ export default function renderSaleDataGridColumns({
       align: "center",
     },
     {
+      field: "name",
+      headerName: t("Name"),
+      flex: 2,
+      minWidth: 160,
+    },
+    {
+      field: "description",
+      headerName: t("Description"),
+      flex: 2,
+      minWidth: 160,
+    },
+    {
       field: "invoiceNumber",
       headerName: t("Invoice Number"),
       flex: 3,
