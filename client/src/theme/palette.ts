@@ -1,13 +1,13 @@
 import { PaletteOptions, colors } from "@mui/material"
 
-const darkGrey = "#424242"
-const offBlack = "#0e1111"
-const softBlack = "#383838"
-const black = "#000"
+export const darkGrey = "#424242"
+export const offBlack = "#0e1111"
+export const softBlack = "#383838"
+export const black = "#000"
 
-const offWhite = "#FAF9F6"
-const softWhite = "#FEFEFE"
-const white = "#FFF"
+export const offWhite = "#FAF9F6"
+export const softWhite = "#FEFEFE"
+export const white = "#FFF"
 
 export const darkTheme = {
   mode: "dark",

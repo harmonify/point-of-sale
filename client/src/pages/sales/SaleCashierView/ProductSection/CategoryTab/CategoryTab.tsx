@@ -36,7 +36,7 @@ const CategoryTab: React.FC<{
   const classes = useStyles()
 
   return (
-    <Grid container spacing={1} alignItems="stretch">
+    <Grid container spacing={3} alignItems="stretch">
       {rows.map((row) => (
         <Grid key={row.id} item xs={6} style={{ display: "flex" }}>
           <Card
@@ -50,20 +50,15 @@ const CategoryTab: React.FC<{
             onClick={() => onSelect(row)}
           >
             <CardContent>
-              <Typography
-                color="inherit"
-                variant="h5"
-                gutterBottom
-                align="center"
-              >
+              <Typography color="inherit" variant="h5" gutterBottom>
                 {row.name}
               </Typography>
-
-              {row.description ? (
-                <Typography color="inherit" variant="body1" gutterBottom>{`${
-                  row.description || "-"
-                }`}</Typography>
-              ) : null}
+              <Typography color="inherit" gutterBottom>
+                {t("Description")}:
+              </Typography>
+              <Typography color="inherit" variant="body1" gutterBottom>{`${
+                row.description || "-"
+              }`}</Typography>
             </CardContent>
 
             <CardActions>

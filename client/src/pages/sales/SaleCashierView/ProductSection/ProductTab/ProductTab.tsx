@@ -14,7 +14,8 @@ import { ModifiedProductType } from "../ProductSection"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275,
+    minWidth: "100%",
+    minHeigth: 320,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(1),
     "&:hover": {
@@ -37,9 +38,9 @@ const ProductTab: React.FC<{
   const classes = useStyles()
 
   return (
-    <Grid container spacing={2} direction="column">
+    <Grid container spacing={2} alignItems="stretch">
       {rows.map((row) => (
-        <Grid item key={row.id}>
+        <Grid item key={row.id} xs={6} display="flex" flexGrow={1}>
           <Card className={classes.root} onClick={() => onSelect(row)}>
             <CardContent>
               <Typography color="inherit" variant="h4" gutterBottom>

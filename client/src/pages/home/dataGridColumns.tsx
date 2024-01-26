@@ -1,5 +1,5 @@
 import { formatISOToLocale, formatRupiah } from "@/utils"
-import { GridColDef, GridColumns } from "@mui/x-data-grid"
+import { GridColDef, GridColumns, gridNumberComparator } from "@mui/x-data-grid"
 import { t } from "i18next"
 
 type Unpacked<T> = T extends (infer U)[] ? U : T
@@ -50,17 +50,11 @@ export const topCustomersDataGridColumns: GridColumns = [
 
 export const recentOrdersDataGridColumns: GridColumns = [
   {
-    field: "customerName",
-    headerName: t("Customer Name"),
+    field: "invoiceNumber",
+    headerName: t("Invoice Number"),
     flex: 2,
-    // minWidth: 160,
+    minWidth: 160,
     ...defaultGridColumnOptions,
-    valueGetter: (params) => {
-      const order = params.row as Unpacked<
-        Monorepo.Api.Response.DashboardResponseDto["recentOrders"]
-      >
-      return order?.customer?.name || "-"
-    },
   },
   {
     field: "description",
@@ -77,7 +71,21 @@ export const recentOrdersDataGridColumns: GridColumns = [
     // minWidth: 180,
     ...defaultGridColumnOptions,
     align: "right",
-    valueGetter: (params) => formatRupiah(params.value as number),
+    valueFormatter(params) {
+      return formatRupiah(params.value)
+    },
+    valueGetter(params) {
+      return params.value
+    },
+    sortComparator: gridNumberComparator,
+  },
+  {
+    field: "createdByName",
+    headerName: t("Cashier Name"),
+    flex: 2,
+    // minWidth: 180,
+    ...defaultGridColumnOptions,
+    valueGetter: (params) => params.row.createdBy?.name || '-'
   },
   {
     field: "createdAt",

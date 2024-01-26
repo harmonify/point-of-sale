@@ -16,6 +16,7 @@ export class DashboardService {
     try {
       const totalSalesAggregate = await this.prisma.sale.aggregate({
         _sum: { total: true },
+        _count: { _all: true },
         where: BaseQuery.Filter.available(),
       });
 
@@ -31,38 +32,38 @@ export class DashboardService {
           ),
         );
 
-      const totalCustomers = await this.prisma.customer.count({
-        where: BaseQuery.Filter.available(),
-      });
+      // const totalCustomers = await this.prisma.customer.count({
+      //   where: BaseQuery.Filter.available(),
+      // });
 
-      // Fetch the top 5 customers
-      const topCustomers = await this.prisma.customer
-        .findMany({
-          take: 5,
-          include: {
-            createdBy: {
-              select: { name: true },
-            },
-            sales: {
-              select: { total: true },
-            },
-          },
-          orderBy: {
-            sales: {
-              _count: 'desc',
-            },
-          },
-          where: BaseQuery.Filter.available(),
-        })
-        .then((customers) => {
-          return customers.map((c) => {
-            const purchasedAmount = c.sales.reduce(
-              (acc, sale) => acc + sale.total,
-              0,
-            );
-            return { ...c, purchasedAmount };
-          });
-        });
+      // // Fetch the top 5 customers
+      // const topCustomers = await this.prisma.customer
+      //   .findMany({
+      //     take: 5,
+      //     include: {
+      //       createdBy: {
+      //         select: { name: true },
+      //       },
+      //       sales: {
+      //         select: { total: true },
+      //       },
+      //     },
+      //     orderBy: {
+      //       sales: {
+      //         _count: 'desc',
+      //       },
+      //     },
+      //     where: BaseQuery.Filter.available(),
+      //   })
+      //   .then((customers) => {
+      //     return customers.map((c) => {
+      //       const purchasedAmount = c.sales.reduce(
+      //         (acc, sale) => acc + sale.total,
+      //         0,
+      //       );
+      //       return { ...c, purchasedAmount };
+      //     });
+      //   });
 
       // Fetch the 10 most recent orders
       const recentOrders = await this.prisma.sale.findMany({
@@ -75,10 +76,9 @@ export class DashboardService {
       });
 
       return {
+        totalOrders: totalSalesAggregate._count._all || 0,
         totalSales: totalSalesAggregate._sum.total || 0,
         totalExpenses: totalExpenses || 0,
-        totalCustomers,
-        topCustomers,
         recentOrders: recentOrders.map((sale) => ({
           ...sale,
           saleProducts: this.saleService.mapSaleProducts(sale.saleProducts),

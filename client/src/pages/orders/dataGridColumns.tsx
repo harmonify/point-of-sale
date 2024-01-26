@@ -1,6 +1,6 @@
 import { formatISOToLocale, formatRupiah } from "@/utils"
 import { IconButton } from "@mui/material"
-import { Delete, Edit, Receipt } from "@mui/icons-material"
+import { Delete, Description, Edit, Receipt } from "@mui/icons-material"
 import {
   GridColumns,
   GridRenderCellParams,
@@ -10,9 +10,11 @@ import { t } from "i18next"
 
 export default function renderSaleDataGridColumns({
   onClickReceipt,
+  onClickDescription,
   onClickDelete,
 }: {
   onClickReceipt: (row: Monorepo.Api.Response.SaleResponseDto) => void
+  onClickDescription: (row: Monorepo.Api.Response.SaleResponseDto) => void
   onClickDelete: (row: Monorepo.Api.Response.SaleResponseDto) => void
 }): GridColumns {
   return [
@@ -30,7 +32,18 @@ export default function renderSaleDataGridColumns({
                 )
               }
             >
-              <Receipt fontSize="small" color="secondary" />
+              <Receipt fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              size="small"
+              onClick={() =>
+                onClickDescription(
+                  params.row as Monorepo.Api.Response.SaleResponseDto,
+                )
+              }
+            >
+              <Description fontSize="small" color="secondary" />
             </IconButton>
 
             <IconButton
@@ -55,18 +68,7 @@ export default function renderSaleDataGridColumns({
       editable: false,
       headerAlign: "center",
       align: "center",
-    },
-    {
-      field: "name",
-      headerName: t("Name"),
-      flex: 2,
-      minWidth: 160,
-    },
-    {
-      field: "description",
-      headerName: t("Description"),
-      flex: 2,
-      minWidth: 160,
+      minWidth: 120,
     },
     {
       field: "invoiceNumber",
@@ -75,16 +77,11 @@ export default function renderSaleDataGridColumns({
       minWidth: 200,
     },
     {
-      field: "customerName",
-      headerName: t("Customer Name"),
-      flex: 3,
-      minWidth: 200,
-      valueGetter(params) {
-        return (
-          (params.row as Monorepo.Api.Response.SaleResponseDto).customer
-            ?.name || "-"
-        )
-      },
+      field: "description",
+      headerName: t("Description"),
+      flex: 2,
+      minWidth: 160,
+      valueGetter: (params) => params.value || "-",
     },
     {
       field: "subTotal",

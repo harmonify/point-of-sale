@@ -13,6 +13,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import renderSaleDataGridColumns from "./dataGridColumns"
 import OrderInvoicePDFContainer from "./OrderInvoicePDF/OrderInvoicePDFContainer"
+import OrderReceiptPDFContainer from "./OrderReceiptPDF/OrderReceiptPDFContainer"
 
 const OrderList: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -40,7 +41,28 @@ const OrderList: React.FC = () => {
       {
         title: t("Order"),
         render: (
-          <OrderInvoicePDFContainer data={row} isLoading={isLoadingDeleteSale} />
+          <OrderReceiptPDFContainer
+            data={row}
+            isLoading={isLoadingDeleteSale}
+          />
+        ),
+        maxWidth: "md",
+        disableCancelButton: true,
+        disableConfirmButton: true,
+      },
+      true,
+    )
+  }
+
+  const onClickDescription = (row: Monorepo.Api.Response.SaleResponseDto) => {
+    show(
+      {
+        title: t("Order"),
+        render: (
+          <OrderInvoicePDFContainer
+            data={row}
+            isLoading={isLoadingDeleteSale}
+          />
         ),
         maxWidth: "lg",
         disableCancelButton: true,
@@ -81,8 +103,9 @@ const OrderList: React.FC = () => {
   }
 
   const dataGridColumns = renderSaleDataGridColumns({
-    onClickDelete,
     onClickReceipt,
+    onClickDescription,
+    onClickDelete,
   })
 
   return (

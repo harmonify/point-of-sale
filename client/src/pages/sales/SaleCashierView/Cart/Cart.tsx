@@ -3,8 +3,9 @@ import Form from "@/components/forms/Form"
 import { CartState, emptyCart, selectCart } from "@/features/cart"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
+import { useSocketIO } from "@/hooks/useSocketIO"
 import { useCreateSaleApiMutation } from "@/services/api"
-import { Save } from "@mui/icons-material"
+import { ArrowRightAlt, Save } from "@mui/icons-material"
 import { Box, Button } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import { Formik, FormikProps } from "formik"
@@ -42,6 +43,14 @@ const Cart: React.FC = (props) => {
   const cartItemsLength = Object.keys(cart.items).length
 
   const [createSaleApiMutation, { isLoading }] = useCreateSaleApiMutation()
+
+  const { socket, isConnected } = useSocketIO()
+  const sessionId = useMemo(() => Math.random().toString(36), [])
+  // logger.debug(`Cashier view websocket connection status: ${isConnected}`)
+  useEffect(() => {
+    // TODO: might need to debounce this for performance
+    socket.emit(`cart-update`, { sessionId, data: cart })
+  }, [cart])
 
   // TODO: fix this, currently it bypass formik validation, the required property in the validation schema `saleProducts` is stored differently in the cart state property `items`
   const onConfirmSubmit = async (formik: FormikProps<CartState>) => {
@@ -88,6 +97,22 @@ const Cart: React.FC = (props) => {
 
   return (
     <Box className={classes.root}>
+      <Button
+        variant="contained"
+        href={`/sales/view?session=${sessionId}`}
+        target="_blank"
+        sx={{ marginBottom: 3 }}
+        endIcon={<ArrowRightAlt />}
+        onClick={() => {
+          // TODO: Race condition is possible, maybe only emit everytime we receive event that a new client is connected?
+          setTimeout(() => {
+            socket.emit(`cart-update`, { sessionId, data: cart })
+          }, 2500)
+        }}
+      >
+        {t("Open Customer View", { ns: "action" })}
+      </Button>
+
       <Formik
         enableReinitialize={true}
         initialValues={cart satisfies CartState as CartState}

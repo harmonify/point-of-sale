@@ -30,6 +30,7 @@ import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import MenuItem from "./MenuItem"
+import { APP } from "@/constants"
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -85,10 +86,14 @@ const SidebarMenu: React.FC = () => {
           }
         >
           <Typography variant="h5" color={theme.palette.primary.contrastText}>
-            {t("Point of Sales")}
+            {APP.name}
           </Typography>
         </Button>
       </Grid>
+
+      <ListSubheader>
+        <Typography variant="button">POS</Typography>
+      </ListSubheader>
 
       <List>
         <MenuItem
@@ -106,15 +111,15 @@ const SidebarMenu: React.FC = () => {
         />
 
         <ListSubheader>
-          <Typography variant="button">{t("Features")}</Typography>
+          <Typography variant="button">{t("Data")}</Typography>
         </ListSubheader>
 
-        <MenuItem
+        {/* <MenuItem
           isSelected={isSelected("/customers")}
           onClick={() => navigate("/customers")}
           text={t("Customers")}
           icon={<Group style={{ color: iconColor }} />}
-        />
+        /> */}
 
         <MenuItem
           isSelected={isSelected("/suppliers")}

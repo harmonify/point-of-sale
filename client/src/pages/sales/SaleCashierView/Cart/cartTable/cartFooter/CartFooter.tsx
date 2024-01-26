@@ -20,7 +20,7 @@ import {
 import { t } from "i18next"
 import React, { Component } from "react"
 
-import CustomerCell from "./CustomerCell"
+// import CustomerCell from "./CustomerCell"
 import FormikTextInput from "@/components/forms/FormikTextInput"
 import { isNumber } from "@/utils/number"
 
@@ -33,11 +33,23 @@ const CartFooter: React.FC<{
   return (
     <TableFooter>
       <TableRow>
-        <TableCell colSpan={4}>
-          <CustomerCell />
+        <TableCell colSpan={4} rowSpan={5}>
+          <FormikTextInput
+            name="description"
+            margin="none"
+            label={t("Description")}
+            InputLabelProps={{ shrink: true }}
+            helperText={t("More details about this order.", { ns: "message" })}
+            size="small"
+            multiline
+            minRows={8}
+            maxRows={8}
+            onChange={(e) => {
+              dispatch(updateCartDescription(e.target.value))
+            }}
+          />
         </TableCell>
-
-        <TableCell align="right">
+        <TableCell align="right" colSpan={1}>
           <Typography variant="h6">{t("Subtotal")}: </Typography>
         </TableCell>
 
@@ -49,7 +61,7 @@ const CartFooter: React.FC<{
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={4}>
+        {/* <TableCell colSpan={4}>
           <FormikTextInput
             name="name"
             margin="none"
@@ -65,9 +77,9 @@ const CartFooter: React.FC<{
             size="small"
             style={{ margin: 0 }}
           />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell align="right">
+        <TableCell align="right" colSpan={1}>
           <Typography variant="h6">
             {t("Discount on Total")}
             {": "}
@@ -99,22 +111,6 @@ const CartFooter: React.FC<{
       </TableRow>
 
       <TableRow>
-        <TableCell colSpan={4} rowSpan={3}>
-          <FormikTextInput
-            name="description"
-            margin="none"
-            label={t("Description")}
-            InputLabelProps={{ shrink: true }}
-            helperText={t("More details about this order.", { ns: "message" })}
-            size="small"
-            multiline
-            minRows={5}
-            maxRows={5}
-            onChange={(e) => {
-              dispatch(updateCartDescription(e.target.value))
-            }}
-          />
-        </TableCell>
 
         <TableCell align="right">
           <Typography variant="h6">{t("Total")}: </Typography>

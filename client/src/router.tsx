@@ -6,14 +6,15 @@ import { createBrowserRouter, RouteObject } from "react-router-dom"
 import AuthGuard from "./components/AuthGuard"
 import { APP_ENV } from "./environment"
 import CategoryList from "./pages/categories/CategoryList"
-import CustomerList from "./pages/customers/CustomerList"
+// import CustomerList from "./pages/customers/CustomerList"
 import { Error500 } from "./pages/errors"
 import Home from "./pages/home/Home"
 import HomeInfo from "./pages/home/HomeInfo"
 import Login from "./pages/login/Login"
 import ProcurementList from "./pages/procurements/ProcurementList"
 import ProductList from "./pages/products/ProductList"
-import Sale from "./pages/sales/Sale"
+import SaleCashierView from "./pages/sales/SaleCashierView/SaleCashierView"
+import SaleCustomerView from "./pages/sales/SaleCustomerView/SaleCustomerView"
 import SupplierList from "./pages/suppliers/SupplierList"
 import UnitList from "./pages/units/UnitList"
 
@@ -50,6 +51,11 @@ const routeObjects: IRoute[] = [
     skipAuth: true,
   },
   {
+    Component: SaleCustomerView,
+    title: t("Customer Order View"),
+    path: "sales/view",
+  },
+  {
     Component: Home,
     path: "/",
     title: t("Point of Sales"),
@@ -60,7 +66,7 @@ const routeObjects: IRoute[] = [
         title: t("Point of Sales"),
       },
       {
-        Component: Sale,
+        Component: SaleCashierView,
         title: t("Sale"),
         path: "sales",
       },
@@ -75,21 +81,21 @@ const routeObjects: IRoute[] = [
         path: "sales/list",
       },
       // Customer
-      {
-        Component: CustomerList,
-        title: t("Customers"),
-        path: "customers",
-      },
-      {
-        Component: lazy(() => import("./pages/customers/CustomerForm")),
-        title: t("Create Customer", { ns: "action" }),
-        path: "customers/create",
-      },
-      {
-        Component: lazy(() => import("./pages/customers/CustomerForm")),
-        title: t("Edit Customer", { ns: "action" }),
-        path: "customers/:id",
-      },
+      // {
+      //   Component: CustomerList,
+      //   title: t("Customers"),
+      //   path: "customers",
+      // },
+      // {
+      //   Component: lazy(() => import("./pages/customers/CustomerForm")),
+      //   title: t("Create Customer", { ns: "action" }),
+      //   path: "customers/create",
+      // },
+      // {
+      //   Component: lazy(() => import("./pages/customers/CustomerForm")),
+      //   title: t("Edit Customer", { ns: "action" }),
+      //   path: "customers/:id",
+      // },
       // Supplier
       {
         Component: SupplierList,

@@ -62,29 +62,21 @@ const ProductSection: React.FC = () => {
               }: { products: Monorepo.Api.Response.ProductResponseDto[] },
               categoryIdx,
             ) =>
-              products
-                // Filter out product with empty units
-                .filter((product) => {
-                  return (
-                    product.productUnits.filter(
-                      (pu) => pu.availableQuantity > 0,
-                    ).length > 0
-                  )
-                })
-                .map<ModifiedProductType>((product, idx) => {
-                  return {
-                    ...product,
-                    idx: categoryIdx * idx + 1,
-                    productUnits: product.productUnits.map((pu) => ({
-                      ...pu,
-                      product,
-                    })),
-                  }
-                }),
+              products.map<ModifiedProductType>((product, idx) => {
+                return {
+                  ...product,
+                  idx: categoryIdx * idx + 1,
+                  productUnits: product.productUnits.map((pu) => ({
+                    ...pu,
+                    product,
+                  })),
+                }
+              }),
           )
         : [],
     [categoriesProductsResponseQuery],
   )
+  // console.log(`🚀 ~ productList[0] ~ ${JSON.stringify(productList[0], null, 2)}`);
 
   const [breadcrumbState, setBreadcrumbState] = useState<IBreadcrumbState>(
     initialBreadcrumbState,

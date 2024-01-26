@@ -8,9 +8,11 @@ import { Box, Card, CardContent, Grid, Icon, Typography } from "@mui/material"
 import { makeStyles, useTheme } from "@mui/styles"
 import {
   AttachMoney,
+  LocalShipping,
   MonetizationOn,
   MoneyOff,
   People,
+  Receipt,
 } from "@mui/icons-material"
 import { DataGrid, GridColDef, GridColumns } from "@mui/x-data-grid"
 import { t } from "i18next"
@@ -80,8 +82,7 @@ const HomeInfo: React.FC = () => {
   const {
     totalSales,
     totalExpenses,
-    totalCustomers,
-    topCustomers = [],
+    totalOrders,
     recentOrders = [],
   } = data?.data || {}
 
@@ -103,6 +104,35 @@ const HomeInfo: React.FC = () => {
       </Grid>
 
       <Grid item container xs={12} justifyContent="center" spacing={2}>
+        <Grid item xs={12} md={3}>
+          <Card className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Box className={classes.cardHeader}>
+                <Icon>
+                  <Receipt />
+                </Icon>
+                <Typography
+                  style={{ margin: theme.spacing(1), marginLeft: 0 }}
+                  align="center"
+                  variant="h3"
+                >
+                  {t("Total Orders")}
+                </Typography>
+              </Box>
+              <Typography
+                style={{
+                  margin: theme.spacing(1),
+                  marginLeft: 0,
+                  fontWeight: 600,
+                }}
+                variant="h2"
+              >
+                {totalOrders}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
         <Grid item xs={12} md={3}>
           <Card className={classes.card} color={theme.palette.primary.main}>
             <CardContent className={classes.cardContent}>
@@ -137,14 +167,14 @@ const HomeInfo: React.FC = () => {
             <CardContent className={classes.cardContent}>
               <Box className={classes.cardHeader}>
                 <Icon>
-                  <MoneyOff />
+                  <LocalShipping />
                 </Icon>
                 <Typography
                   style={{ margin: theme.spacing(1), marginLeft: 0 }}
                   align="center"
-                  variant="h3"
+                  variant="h4"
                 >
-                  {t("Total Expenses")}
+                  {t("Procurement Total Cost")}
                 </Typography>
               </Box>
               <Typography
@@ -161,7 +191,7 @@ const HomeInfo: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        {/* <Grid item xs={12} md={2}>
           <Card className={classes.card}>
             <CardContent className={classes.cardContent}>
               <Box className={classes.cardHeader}>
@@ -192,9 +222,9 @@ const HomeInfo: React.FC = () => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
 
-        <Grid item xs={12} md={3}>
+        {/* <Grid item xs={12} md={2}>
           <Card className={classes.card}>
             <CardContent className={classes.cardContent}>
               <Box className={classes.cardHeader}>
@@ -221,10 +251,10 @@ const HomeInfo: React.FC = () => {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      {/* <Grid item xs={12} md={6}>
         <Typography
           variant="h5"
           align="center"
@@ -243,12 +273,11 @@ const HomeInfo: React.FC = () => {
           hideFooter
           density="compact"
         />
-      </Grid>
+      </Grid> */}
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12}>
         <Typography
           variant="h5"
-          align="center"
           style={{ marginBottom: theme.spacing(1) }}
         >
           5 {t("Recent Orders")}
@@ -262,7 +291,6 @@ const HomeInfo: React.FC = () => {
           disableDensitySelector
           pageSize={5}
           hideFooter
-          density="compact"
         />
       </Grid>
     </Grid>

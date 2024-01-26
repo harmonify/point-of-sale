@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import HeaderMenu from "./HeaderMenu"
+import { APP } from "@/constants"
 
 const drawerWidth = 240
 
@@ -104,7 +105,7 @@ const Header: React.FC<{
                   variant="h5"
                   color={theme.palette.primary.contrastText}
                 >
-                  {t("Point of Sales")}
+                  {APP.name}
                 </Typography>
               </Button>
             </Grid>
