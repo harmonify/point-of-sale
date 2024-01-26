@@ -24,10 +24,21 @@ import { t } from "i18next"
 import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
 
+const lightTheme = {
+  color: 'black',
+  backgroundColor: 'white'
+}
+const darkTheme = {
+  color: 'white',
+  backgroundColor: softBlack
+}
+const viewTheme = darkTheme
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: softBlack,
-    color: theme.palette.common.white,
+    backgroundColor: viewTheme.backgroundColor,
+    color: viewTheme.color,
     width: "100%",
     height: "calc(100vh - 1px)", // TODO: a hack
     borderBottom: "1px solid #e0e0e0",
@@ -88,14 +99,14 @@ const SaleCustomerView: React.FC = () => {
           xs={8}
         >
           <Typography
-            color="inherit"
+            color={viewTheme.color}
             variant="h1"
             align="center"
             marginRight={1}
           >
             {APP.name}
           </Typography>
-          <Typography color="inherit" variant="h4" align="center">
+          <Typography color={viewTheme.color} variant="h4" align="center">
             {isConnected ? "🟢" : "🔴"}
           </Typography>
         </Grid>
@@ -109,7 +120,7 @@ const SaleCustomerView: React.FC = () => {
         >
           <Typography
             variant="h5"
-            color="inherit"
+            color={viewTheme.color}
             align="right"
             fontWeight={500}
           >
@@ -125,12 +136,12 @@ const SaleCustomerView: React.FC = () => {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Typography variant="h6" color="inherit">
+              <Typography variant="h6" color={viewTheme.color}>
                 {t("Product")}
               </Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography variant="h6" color="inherit">
+              <Typography variant="h6" color={viewTheme.color}>
                 {t("Subtotal")}
               </Typography>
             </TableCell>
@@ -143,14 +154,14 @@ const SaleCustomerView: React.FC = () => {
               <TableRow key={index}>
                 <TableCell sx={{ width: "65%" }}>
                   <Typography
-                    color="inherit"
+                    color={viewTheme.color}
                     fontSize={theme.typography.body1.fontSize}
                   >
                     {item.name}
                   </Typography>
                   <Typography
                     fontSize={theme.typography.body2.fontSize}
-                    color="inherit"
+                    color={viewTheme.color}
                   >
                     {item.quantity} {item.unitName} x{" "}
                     {formatRupiah(item.salePrice)}
@@ -158,14 +169,14 @@ const SaleCustomerView: React.FC = () => {
                   {!isNumber(item.discount) || item.discount <= 0 ? null : (
                     <Typography
                       fontSize={theme.typography.body2.fontSize}
-                      color="inherit"
+                      color={viewTheme.color}
                     >
                       {t("Discount")}: {formatRupiah(item.discount)}
                     </Typography>
                   )}
                 </TableCell>
                 <TableCell align="right" sx={{ width: "35%" }}>
-                  <Typography color="inherit">
+                  <Typography color={viewTheme.color}>
                     {formatRupiah(item.total)}
                   </Typography>
                 </TableCell>
@@ -177,7 +188,7 @@ const SaleCustomerView: React.FC = () => {
                 colSpan={9999}
                 style={{ padding: 20, textAlign: "center" }}
               >
-                <Typography component="strong" color="inherit">
+                <Typography component="strong" color={viewTheme.color}>
                   {t("No items in the cart", { ns: "message" })}
                 </Typography>
               </TableCell>
@@ -188,12 +199,12 @@ const SaleCustomerView: React.FC = () => {
         <TableFooter>
           <TableRow>
             <TableCell>
-              <Typography variant="h6" color="inherit" align="right">
+              <Typography variant="h6" color={viewTheme.color} align="right">
                 {t("Total Qty")}
               </Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography color="inherit">
+              <Typography color={viewTheme.color}>
                 {Object.values(cartState?.items || {}).reduce(
                   (acc, sp) => acc + sp.quantity,
                   0,
@@ -203,49 +214,49 @@ const SaleCustomerView: React.FC = () => {
           </TableRow>
           <TableRow>
             <TableCell>
-              <Typography variant="h6" color="inherit" align="right">
+              <Typography variant="h6" color={viewTheme.color} align="right">
                 {t("Discount on Total")}
               </Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography color="inherit">
+              <Typography color={viewTheme.color}>
                 {formatRupiah(cartState ? cartState.discountTotal : 0)}
               </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>
-              <Typography variant="h6" color="inherit" align="right">
+              <Typography variant="h6" color={viewTheme.color} align="right">
                 {t("Total")}
               </Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography color="inherit" variant="h4">
+              <Typography color={viewTheme.color} variant="h4">
                 {formatRupiah(cartState ? cartState.total : 0)}
               </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>
-              <Typography variant="h6" color="inherit" align="right">
+              <Typography variant="h6" color={viewTheme.color} align="right">
                 {t("Cash")}
               </Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography color="inherit" variant="h4">
+              <Typography color={viewTheme.color} variant="h4">
                 {formatRupiah(cartState ? cartState.paid : 0)}
               </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>
-              <Typography variant="h6" color="inherit" align="right">
+              <Typography variant="h6" color={viewTheme.color} align="right">
                 {t("Change")}
               </Typography>
             </TableCell>
             <TableCell align="right">
               <Typography
-                color="inherit"
+                color={viewTheme.color}
                 variant="h4"
                 style={{
                   color: !cartState 

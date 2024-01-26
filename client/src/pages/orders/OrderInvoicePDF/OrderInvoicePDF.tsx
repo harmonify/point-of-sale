@@ -104,7 +104,7 @@ const OrderInvoicePDF = forwardRef<HTMLElement, OrderInvoicePDFProps>(
                   </Typography>
                 </Box>
 
-                <Box display="flex">
+                {/* <Box display="flex">
                   {!invoiceData.customer ? null : (
                     <>
                       <Typography variant="h6" color="black" align="left">
@@ -115,7 +115,7 @@ const OrderInvoicePDF = forwardRef<HTMLElement, OrderInvoicePDFProps>(
                       </Typography>
                     </>
                   )}
-                </Box>
+                </Box> */}
               </TableCell>
             </TableRow>
 
@@ -300,11 +300,11 @@ const OrderInvoicePDF = forwardRef<HTMLElement, OrderInvoicePDFProps>(
 
         <Grid
           container
-          justifyContent="center"
+          justifyContent="end"
           alignContent="center"
           alignItems="center"
         >
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <Box
               sx={{
                 display: "flex",
@@ -335,7 +335,7 @@ const OrderInvoicePDF = forwardRef<HTMLElement, OrderInvoicePDFProps>(
                 ></Box>
               </Box>
             </Box>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={6}>
             <Box
@@ -343,7 +343,7 @@ const OrderInvoicePDF = forwardRef<HTMLElement, OrderInvoicePDFProps>(
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
-                alignItems: "center",
+                alignItems: "end",
               }}
             >
               <Box
