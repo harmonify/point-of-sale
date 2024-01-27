@@ -1,6 +1,6 @@
 # Point of Sale
 
-A point of sale application built using React.js &amp; NestJS
+An interactive point of sale application built using React.js &amp; NestJS
 
 ## Technologies
 
@@ -10,6 +10,7 @@ A point of sale application built using React.js &amp; NestJS
 - Redux Toolkit (v1.8.1)
 - Material UI (v5.15.3)
 - Fuse.js (v7.0.0): Client-side fuzzy search library
+- Socket.IO (4.7.4)
 - Formik: Form validation library
 - i18next: Localization library
 - Luxon: Datetime library
@@ -24,6 +25,7 @@ A point of sale application built using React.js &amp; NestJS
 - NestJS (v10.2.x)
 - MySQL (v8)
 - Prisma ORM (v5.6.0)
+- Socket.IO (4.7.4)
 - minimist: Standalone app library
 - i18n: Localization library
 - Passport: Auth library

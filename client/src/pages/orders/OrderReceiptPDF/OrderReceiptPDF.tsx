@@ -63,19 +63,7 @@ const OrderReceiptPDF = forwardRef<HTMLElement, OrderReceiptPDFProps>(
             <TableRow>
               <TableCell>
                 <Typography variant="h6" color="black">
-                  {t("Customer")}:
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="black" align="right">
-                  {receiptData.customer?.name || "-"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography variant="h6" color="black">
-                  {t("Invoice Number")}:
+                  {t("Order Number")}:
                 </Typography>
               </TableCell>
               <TableCell>

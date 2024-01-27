@@ -24,6 +24,10 @@ export class ConsoleLogger implements Logger {
   readonly info: LogFn
   readonly warn: LogFn
   readonly error: LogFn
+  readonly isDebugEnabled: boolean = true
+  readonly isInfoEnabled: boolean = true
+  readonly isWarnEnabled: boolean = true
+  readonly isErrorEnabled: boolean = true
 
   constructor({ level }: { level: LogLevel }) {
     this.error = console.error.bind(console)
@@ -36,19 +40,33 @@ export class ConsoleLogger implements Logger {
       // On Chrome > Developer Menu > Console > 'Default levels' > tick 'Verbose'
     } else if (level === "info") {
       this.debug = NO_OP
+      this.isDebugEnabled = false
     } else if (level === "warn") {
       this.info = NO_OP
       this.debug = NO_OP
+      this.isDebugEnabled = false
+      this.isInfoEnabled = false
     } else if (level === "error") {
       this.warn = NO_OP
       this.info = NO_OP
       this.debug = NO_OP
+      this.isDebugEnabled = false
+      this.isInfoEnabled = false
+      this.isWarnEnabled = false
     } else {
       this.error = NO_OP
       this.warn = NO_OP
       this.info = NO_OP
       this.debug = NO_OP
+      this.isDebugEnabled = false
+      this.isInfoEnabled = false
+      this.isWarnEnabled = false
+      this.isErrorEnabled = false
     }
+  }
+
+  conditionalStringify({ obj, when, prettify }: { obj: any; when: boolean; prettify?: boolean }) {
+    return when ? prettify ? JSON.stringify(obj, null, 2) : JSON.stringify(obj) : obj
   }
 }
 

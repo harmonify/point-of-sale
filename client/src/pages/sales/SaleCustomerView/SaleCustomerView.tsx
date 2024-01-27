@@ -25,15 +25,14 @@ import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
 
 const lightTheme = {
-  color: 'black',
-  backgroundColor: 'white'
+  color: "black",
+  backgroundColor: "white",
 }
 const darkTheme = {
-  color: 'white',
-  backgroundColor: softBlack
+  color: "white",
+  backgroundColor: softBlack,
 }
-const viewTheme = darkTheme
-
+const viewTheme = lightTheme
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,23 +62,36 @@ const SaleCustomerView: React.FC = () => {
 
   const queryParameters = new URLSearchParams(window.location.search)
   const session = queryParameters.get("session")
-  logger.debug(`🚀 ~ session ~ ${JSON.stringify(session, null, 2)}`)
+  logger.debug(
+    `🚀 ~ session ~ ${logger.conditionalStringify({
+      obj: session,
+      when: logger.isDebugEnabled,
+    })}`,
+  )
 
   const [cartState, setCartState] = useState<CartStateSummary>()
-  logger.debug(`🚀 ~ cartState ~ ${JSON.stringify(cartState, null, 2)}`)
+  logger.debug(
+    `🚀 ~ cartState ~ ${logger.conditionalStringify({
+      obj: cartState,
+      when: logger.isDebugEnabled,
+    })}`,
+  )
 
   const { isConnected } = useSocketIO([
     {
       event: `cart-update-${session}`,
       listener(args: any) {
         logger.debug(
-          `🚀 ~ new updated cartState ~ ${JSON.stringify(args, null, 2)}`,
+          `🚀 ~ new updated cartState ~ ${logger.conditionalStringify({
+            obj: args,
+            when: logger.isDebugEnabled,
+          })}`,
         )
         setCartState(args)
       },
     },
   ])
-  logger.debug(`🚀 ~ isConnected ~ ${JSON.stringify(isConnected, null, 2)}`)
+  logger.debug(`🚀 ~ isConnected ~ ${isConnected}}`)
 
   return (
     <Box className={classes.root}>
@@ -259,7 +271,7 @@ const SaleCustomerView: React.FC = () => {
                 color={viewTheme.color}
                 variant="h4"
                 style={{
-                  color: !cartState 
+                  color: !cartState
                     ? theme.palette.info.main
                     : cartState.change === 0
                     ? theme.palette.info.main
