@@ -76,9 +76,9 @@ const HeaderMenu: React.FC = () => {
       open={open}
       onClose={handleClose}
     >
-      <MenuItem className={classes.menuItem} onClick={handleOnClickProfile}>
+      {/* <MenuItem className={classes.menuItem} onClick={handleOnClickProfile}>
         {t("Profile")}
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem className={classes.menuItem} onClick={handleLogout}>
         {t("Logout", { ns: "action" })}
       </MenuItem>
