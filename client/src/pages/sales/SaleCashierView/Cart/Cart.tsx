@@ -1,6 +1,11 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import Form from "@/components/forms/Form"
-import { CartState, emptyCart, selectCart } from "@/features/cart"
+import {
+  CartState,
+  emptyCart,
+  selectCart,
+  selectCartSessionId,
+} from "@/features/cart"
 import { useConfirmationDialog } from "@/features/dialog"
 import { showSnackbar } from "@/features/snackbar"
 import { useSocketIO } from "@/hooks/useSocketIO"
@@ -45,7 +50,7 @@ const Cart: React.FC = (props) => {
   const [createSaleApiMutation, { isLoading }] = useCreateSaleApiMutation()
 
   const { socket, isConnected } = useSocketIO()
-  const sessionId = useMemo(() => Math.random().toString(36), [])
+  const sessionId = useAppSelector(selectCartSessionId)
   // logger.debug(`Cashier view websocket connection status: ${isConnected}`)
   useEffect(() => {
     // TODO: might need to debounce this for performance

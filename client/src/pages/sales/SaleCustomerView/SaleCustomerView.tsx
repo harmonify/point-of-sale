@@ -11,6 +11,7 @@ import {
   Box,
   Divider,
   Grid,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -23,6 +24,9 @@ import { makeStyles, useTheme } from "@mui/styles"
 import { t } from "i18next"
 import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
+import { Header } from "./Header"
+import { Footer } from "./Footer"
+import { Body } from "./Body"
 
 const lightTheme = {
   color: "black",
@@ -32,34 +36,9 @@ const darkTheme = {
   color: "white",
   backgroundColor: softBlack,
 }
-const viewTheme = lightTheme
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: viewTheme.backgroundColor,
-    color: viewTheme.color,
-    width: "100%",
-    height: "calc(100vh - 1px)", // TODO: a hack
-    borderBottom: "1px solid #e0e0e0",
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
-    "& .MuiTable-root": {
-      border: `1px solid ${theme.palette.grey[500]}`,
-    },
-    "& .MuiTableCell-root": {
-      border: `1px solid ${theme.palette.grey[500]}`,
-      padding: theme.spacing(1),
-    },
-  },
-}))
+export const viewTheme = lightTheme
 
 const SaleCustomerView: React.FC = () => {
-  const theme = useTheme()
-  const classes = useStyles()
-
   const queryParameters = new URLSearchParams(window.location.search)
   const session = queryParameters.get("session")
   logger.debug(
@@ -94,198 +73,21 @@ const SaleCustomerView: React.FC = () => {
   logger.debug(`🚀 ~ isConnected ~ ${isConnected}}`)
 
   return (
-    <Box className={classes.root}>
-      <Grid
-        container
-        display={"flex"}
-        justifyContent={"stretch"}
-        alignItems={"center"}
-        alignContent={"center"}
-      >
-        <Grid
-          item
-          display={"flex"}
-          justifyContent={"stretch"}
-          alignItems={"center"}
-          alignContent={"center"}
-          xs={8}
-        >
-          <Typography
-            color={viewTheme.color}
-            variant="h1"
-            align="center"
-            marginRight={1}
-          >
-            {APP.name}
-          </Typography>
-          <Typography color={viewTheme.color} variant="h4" align="center">
-            {isConnected ? "🟢" : "🔴"}
-          </Typography>
-        </Grid>
+    <Box display="flex" flexDirection="column" minHeight="calc(100vh - 1px)">
+      <Header />
 
-        <Grid
-          item
-          display={"flex"}
-          justifyContent={"end"}
-          alignItems={"center"}
-          xs={4}
-        >
-          <Typography
-            variant="h5"
-            color={viewTheme.color}
-            align="right"
-            fontWeight={500}
-          >
-            {formatDateTimeToLocale(DateTime.now(), {
-              second: undefined,
-            })}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Divider sx={{ marginTop: theme.spacing(2) }} />
+      <Body cartState={cartState} />
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" color={viewTheme.color}>
-                {t("Product")}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="h6" color={viewTheme.color}>
-                {t("Subtotal")}
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {cartState ? (
-            Object.values(cartState.items || {}).map((item, index) => (
-              <TableRow key={index}>
-                <TableCell sx={{ width: "65%" }}>
-                  <Typography
-                    color={viewTheme.color}
-                    fontSize={theme.typography.body1.fontSize}
-                  >
-                    {item.name}
-                  </Typography>
-                  <Typography
-                    fontSize={theme.typography.body2.fontSize}
-                    color={viewTheme.color}
-                  >
-                    {item.quantity} {item.unitName} x{" "}
-                    {formatRupiah(item.salePrice)}
-                  </Typography>
-                  {!isNumber(item.discount) || item.discount <= 0 ? null : (
-                    <Typography
-                      fontSize={theme.typography.body2.fontSize}
-                      color={viewTheme.color}
-                    >
-                      {t("Discount")}: {formatRupiah(item.discount)}
-                    </Typography>
-                  )}
-                </TableCell>
-                <TableCell align="right" sx={{ width: "35%" }}>
-                  <Typography color={viewTheme.color}>
-                    {formatRupiah(item.total)}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={9999}
-                style={{ padding: 20, textAlign: "center" }}
-              >
-                <Typography component="strong" color={viewTheme.color}>
-                  {t("No items in the cart", { ns: "message" })}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-
-        <TableFooter>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" color={viewTheme.color} align="right">
-                {t("Total Qty")}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography color={viewTheme.color}>
-                {Object.values(cartState?.items || {}).reduce(
-                  (acc, sp) => acc + sp.quantity,
-                  0,
-                )}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" color={viewTheme.color} align="right">
-                {t("Discount on Total")}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography color={viewTheme.color}>
-                {formatRupiah(cartState ? cartState.discountTotal : 0)}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" color={viewTheme.color} align="right">
-                {t("Total")}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography color={viewTheme.color} variant="h4">
-                {formatRupiah(cartState ? cartState.total : 0)}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" color={viewTheme.color} align="right">
-                {t("Cash")}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography color={viewTheme.color} variant="h4">
-                {formatRupiah(cartState ? cartState.paid : 0)}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h6" color={viewTheme.color} align="right">
-                {t("Change")}
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography
-                color={viewTheme.color}
-                variant="h4"
-                style={{
-                  color: !cartState
-                    ? theme.palette.info.main
-                    : cartState.change === 0
-                    ? theme.palette.info.main
-                    : cartState.change > 0
-                    ? theme.palette.success.main
-                    : theme.palette.error.main,
-                }}
-              >
-                {formatRupiah(cartState ? cartState.change : 0)}
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <Footer
+        totalQty={Object.values(cartState?.items || {}).reduce(
+          (acc, sp) => acc + sp.quantity,
+          0,
+        )}
+        discountTotal={cartState ? cartState.discountTotal : 0}
+        total={cartState ? cartState.total : 0}
+        paid={cartState ? cartState.paid : 0}
+        change={cartState ? cartState.change : 0}
+      />
     </Box>
   )
 }

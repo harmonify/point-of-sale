@@ -153,3 +153,11 @@ export const nameInitials = (name?: string) => {
 export const truncate = (text: string, maxLength: number = 60) => {
   return text.length > maxLength ? text.substring(0, maxLength) + "..." : text
 }
+
+export const generateId = () => {
+  try {
+    return crypto.randomUUID()
+  } catch (error) {
+    return Math.random().toString(36)
+  }
+}

@@ -12,5 +12,6 @@
   "No items in the cart": "Tidak ada item di keranjang ini",
   "Providing a name might help you to identify the order more quickly.": "Nama pesanan dapat membantu Anda untuk mengidentifikasi pesanan dengan lebih cepat.",
   "More details about this order.": "Detail lebih lanjut tentang pesanan ini.",
-  "Do you want to proceed to save this sale transaction? You will be able to print the invoice after the transaction is saved.": "Apakah kamu mau melanjutkan untuk menyimpan data transaksi penjualan ini? Anda akan dapat mencetak invoice setelah transaksi ini berhasil disimpan."
+  "Do you want to proceed to save this sale transaction? You will be able to print the invoice after the transaction is saved.": "Apakah kamu mau melanjutkan untuk menyimpan data transaksi penjualan ini? Anda akan dapat mencetak invoice setelah transaksi ini berhasil disimpan.",
+  "Thank you for shopping at here": "Terima kasih telah berbelanja di {{storeName}}"
 }

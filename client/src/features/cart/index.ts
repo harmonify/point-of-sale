@@ -2,6 +2,7 @@ import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 import { getCartStateWithSummary } from "./util"
 import { deepClone } from "@/utils/object"
+import { generateId } from "@/utils/string"
 
 export type FlatOrPercentage = "FLAT" | "PERCENTAGE"
 
@@ -30,6 +31,8 @@ export interface CartState {
   taxTotalType: FlatOrPercentage
   /** Amount of money that the customer paid */
   paid: number
+  /** The cart session id */
+  sessionId: string
 }
 
 export interface CartItemStateSummary extends CartItemState {
@@ -59,14 +62,15 @@ export interface CartStateSummary extends Omit<CartState, "items"> {
 
 const initialState: CartState = {
   items: {},
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   customerId: 0,
   inputDiscountTotal: 0.0,
   discountTotalType: "PERCENTAGE",
   inputTaxTotal: 0.0,
   taxTotalType: "PERCENTAGE",
   paid: 0.0,
+  sessionId: generateId(),
 } satisfies CartState
 
 const upsertCartItemReducer = (
@@ -264,5 +268,9 @@ export const selectCart = createSelector(
     return getCartStateWithSummary(cartState)
   },
 )
+
+export const selectCartSessionId = (state: RootState): string => {
+  return state.cart.sessionId
+}
 
 export default slice.reducer
