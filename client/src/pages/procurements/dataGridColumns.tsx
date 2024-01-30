@@ -63,6 +63,9 @@ export default function renderProcurementDataGridColumns({
       headerName: t("Description"),
       flex: 1,
       minWidth: 140,
+      valueFormatter(params) {
+        return params.value || "-"
+      },
     },
     {
       field: "supplierName",
