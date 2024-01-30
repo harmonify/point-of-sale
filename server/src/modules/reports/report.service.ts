@@ -32,6 +32,9 @@ export class ReportService {
               },
             },
           },
+          where: {
+            deletedAt: null,
+          },
         },
       },
     } satisfies Prisma.SaleDefaultArgs;
@@ -91,7 +94,9 @@ export class ReportService {
             costPrice: sp.costPrice,
             salePrice: sp.salePrice,
             discount: sp.discount,
-            profit: currency(sp.total).subtract(sp.costPrice).value,
+            profit: currency(sp.total).subtract(
+              currency(sp.costPrice).multiply(sp.quantity),
+            ).value,
             createdAt: sp.createdAt,
           }) satisfies ProfitLossRecord,
       ),
