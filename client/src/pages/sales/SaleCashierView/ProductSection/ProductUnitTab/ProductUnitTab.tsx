@@ -12,8 +12,10 @@ import { makeStyles } from "@mui/styles"
 import { Add } from "@mui/icons-material"
 import { t } from "i18next"
 import { ModifiedProductUnitType } from "../ProductSection"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { isNumber } from "@/utils/number"
+import { useAppSelector } from "@/app/hooks"
+import { selectCart } from "@/features/cart"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,17 +37,22 @@ const ProductUnitTab: React.FC<{
 }> = ({ rows, onAddUnit }) => {
   const classes = useStyles()
 
+  const cartState = useAppSelector(selectCart)
   const initialAvailableQuantities = useMemo(
     () =>
       rows.reduce((acc, row) => {
-        acc[row.id] = row.availableQuantity
+        acc[row.id] = row.availableQuantity - (cartState.items[row.id]?.quantity || 0)
         return acc
       }, {} as Record<string | number, number>),
-    [rows],
+    [rows, cartState.items],
   )
   const [availableQuantities, setAvailableQuantities] = useState<{
     [key: string]: number
   }>(initialAvailableQuantities)
+
+  useEffect(() => {
+    setAvailableQuantities(initialAvailableQuantities)
+  }, [initialAvailableQuantities])
 
   const [inputQuantities, setInputQuantities] = useState<{
     [key: string]: number
