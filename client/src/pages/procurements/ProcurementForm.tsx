@@ -95,10 +95,12 @@ const ProcurementForm: React.FC = () => {
   const productOptions = useMemo(
     () =>
       productApiQueryResponse
-        ? productApiQueryResponse.data.map((product) => ({
-            label: product.name,
-            value: product.id,
-          }))
+        ? productApiQueryResponse.data
+            .map((product) => ({
+              label: product.name,
+              value: product.id,
+            }))
+            .sort((a, b) => (a.label >= b.label ? 1 : -1))
         : [],
     [productApiQueryResponse],
   )
