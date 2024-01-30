@@ -14,7 +14,8 @@ import { APP, DATE_FORMAT } from "@/constants"
 
 const today = DateTime.now().startOf("day")
 const todayISO = today.toISODate()
-const profitLossTableId = "range-date-profit-loss-table"
+const profitLossSummaryTableId = "range-date-profit-loss-summary-table"
+const profitLossProductTableId = "range-date-profit-loss-table"
 const getTitle = (from: string, to: string) => {
   return `${t("Profit Loss Report")} ${from} s.d. ${to}`
 }
@@ -62,7 +63,8 @@ const ProfitLossReport = () => {
     const toISO = dateTo.toISODate()!
     generateProfitLossReportPDF({
       title: getTitle(fromISO, toISO),
-      id: profitLossTableId,
+      productTableId: profitLossProductTableId,
+      summaryTableId: profitLossSummaryTableId,
       fileName: getFileName(fromISO, toISO),
     })
   }
@@ -148,7 +150,8 @@ const ProfitLossReport = () => {
 
         <Grid item xs={12}>
           <ProfitLossReportPDF
-            id={profitLossTableId}
+            summaryTableId={profitLossSummaryTableId}
+            productTableId={profitLossProductTableId}
             data={data?.data}
             isLoading={isLoading}
           />

@@ -13,15 +13,15 @@ import currency from "currency.js"
 import { t } from "i18next"
 import React, { ReactNode } from "react"
 
-import { profitLossReportPDFColumns } from "./profitLossReportPDFColumns"
+import { profitLossProductReportPDFColumns } from "./profitLossReportPDFColumns"
 
-const ProfitLossTable: React.FC<{
+const ProfitLossProductTable: React.FC<{
   id: string
   data?: Monorepo.Api.Response.ProfitLossReport
 }> = (props) => {
   if (!props.data) return null
 
-  const totalWidth = profitLossReportPDFColumns.reduce(
+  const totalWidth = profitLossProductReportPDFColumns.reduce(
     (acc, c) => acc + c.width,
     0,
   )
@@ -31,7 +31,7 @@ const ProfitLossTable: React.FC<{
       <Table id={props.id}>
         <TableHead>
           <TableRow>
-            {profitLossReportPDFColumns.map((c, headIndex) => (
+            {profitLossProductReportPDFColumns.map((c, headIndex) => (
               <TableCell key={`head-${headIndex}`} align="center">
                 {c.title}
               </TableCell>
@@ -39,10 +39,10 @@ const ProfitLossTable: React.FC<{
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.data.length > 0 ? (
-            props.data.map((sp, index) => (
+          {Array.isArray(props.data.items) && props.data.items.length > 0 ? (
+            props.data.items.map((sp, index) => (
               <TableRow key={`body-${index}`}>
-                {profitLossReportPDFColumns.map((c, columnIndex) => (
+                {profitLossProductReportPDFColumns.map((c, columnIndex) => (
                   <TableCell
                     key={`body-${index}${columnIndex}`}
                     style={{ width: `${(100 / totalWidth) * c.width}%` }}
@@ -65,10 +65,10 @@ const ProfitLossTable: React.FC<{
             </TableRow>
           )}
         </TableBody>
-        {props.data && props.data.length > 0 ? (
+        {Array.isArray(props.data.items) && props.data.items.length > 0 ? (
           <TableFooter>
             <TableRow>
-              {profitLossReportPDFColumns.map((c, index) => {
+              {profitLossProductReportPDFColumns.map((c, index) => {
                 const renderCell = (value: ReactNode) => (
                   <TableCell key={`footer-${index}`}>
                     <Typography variant="h6">{value}</Typography>
@@ -76,19 +76,20 @@ const ProfitLossTable: React.FC<{
                 )
                 if (
                   !props.data ||
-                  props.data.length === 0 ||
+                  !props.data.items ||
+                  props.data.items.length === 0 ||
                   !["number", "currency"].includes(c.type)
                 ) {
                   return renderCell(null)
                 }
                 const value =
                   c.type === "number"
-                    ? props.data?.reduce((acc, sp) => {
+                    ? props.data?.items?.reduce((acc, sp) => {
                         const raw = c.iteratee(sp, false) as number
                         return acc + raw
                       }, 0)
                     : c.type === "currency"
-                    ? props.data?.reduce((acc, sp) => {
+                    ? props.data?.items?.reduce((acc, sp) => {
                         const raw = c.iteratee(sp, false) as number
                         return acc.add(raw)
                       }, currency(0.0)).value
@@ -109,4 +110,4 @@ const ProfitLossTable: React.FC<{
   )
 }
 
-export default ProfitLossTable
+export default ProfitLossProductTable

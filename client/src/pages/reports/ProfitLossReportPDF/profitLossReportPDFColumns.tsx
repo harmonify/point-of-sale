@@ -10,7 +10,32 @@ type ITableColumnData<T extends Record<string, any> | undefined = undefined> = {
   width: number
 }
 
-export const profitLossReportPDFColumns: (ITableColumnData<Monorepo.Api.Response.ProfitLossRecord> &
+export const profitLossSummaryReportPDFColumns: (ITableColumnData<Monorepo.Api.Response.ProfitLossReport> &
+  Partial<Styles>)[] = [
+  {
+    title: t("Procurement Total Cost"),
+    type: "currency",
+    iteratee: (item, formatted = true) =>
+      formatted ? formatRupiah(item.costTotal) : item.costTotal,
+    width: 10,
+  },
+  {
+    title: t("Total Sales"),
+    type: "currency",
+    iteratee: (item, formatted = true) =>
+      formatted ? formatRupiah(item.saleTotal) : item.saleTotal,
+    width: 10,
+  },
+  {
+    title: t("Total Profit"),
+    type: "currency",
+    iteratee: (item, formatted = true) =>
+      formatted ? formatRupiah(item.profitTotal) : item.profitTotal,
+    width: 20,
+  },
+]
+
+export const profitLossProductReportPDFColumns: (ITableColumnData<Monorepo.Api.Response.ProfitLossRecord> &
   Partial<Styles>)[] = [
   {
     title: t("Product"),

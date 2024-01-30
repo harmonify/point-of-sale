@@ -84,23 +84,35 @@ export class ReportService {
       ReturnType<ReportService['getSalePayloadToken']>
     >[],
   ): ProfitLossReport {
-    return sales.flatMap((s) =>
-      s.saleProducts.map(
-        (sp) =>
-          ({
-            productName: sp.productUnit.product.name,
-            unitName: sp.productUnit.unit.name,
-            quantity: sp.quantity,
-            costPrice: sp.costPrice,
-            salePrice: sp.salePrice,
-            discount: sp.discount,
-            profit: currency(sp.total).subtract(
-              currency(sp.costPrice).multiply(sp.quantity),
-            ).value,
-            createdAt: sp.createdAt,
-          }) satisfies ProfitLossRecord,
-      ),
+    let costTotal = currency(0.0);
+    let saleTotal = currency(0.0);
+    const items = sales.flatMap((s) =>
+      s.saleProducts.map((sp) => {
+        const costSubtotal = currency(sp.costPrice).multiply(sp.quantity);
+        const profit = currency(sp.total).subtract(costSubtotal).value;
+        
+        costTotal = costTotal.add(costSubtotal);
+        saleTotal = saleTotal.add(sp.total);
+
+        return {
+          productName: sp.productUnit.product.name,
+          unitName: sp.productUnit.unit.name,
+          quantity: sp.quantity,
+          costPrice: sp.costPrice,
+          salePrice: sp.salePrice,
+          discount: sp.discount,
+          profit,
+          createdAt: sp.createdAt,
+        } satisfies ProfitLossRecord;
+      }),
     );
+
+    return {
+      items,
+      costTotal: costTotal.value,
+      saleTotal: saleTotal.value,
+      profitTotal: saleTotal.subtract(costTotal).value,
+    };
   }
 
   async getSalesReport(from: string, to: string): Promise<SaleReport> {

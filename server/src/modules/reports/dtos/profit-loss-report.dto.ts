@@ -9,4 +9,9 @@ export interface ProfitLossRecord {
   createdAt: Date | string;
 }
 
-export type ProfitLossReport = ProfitLossRecord[];
+export interface ProfitLossReport {
+  items: ProfitLossRecord[];
+  costTotal: number;
+  saleTotal: number;
+  profitTotal: number;
+}

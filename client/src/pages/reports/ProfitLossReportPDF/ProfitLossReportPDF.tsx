@@ -2,7 +2,8 @@ import { Grid, TableContainer, Typography } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import React, { ReactNode } from "react"
 
-import ProfitLossTable from "./ProfitLossTable"
+import ProfitLossProductTable from "./ProfitLossProductTable"
+import ProfitLossSummaryTable from "./ProfitLossSummaryTable"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,7 +15,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ProfitLossReportPDF: React.FC<{
-  id: string
+  summaryTableId: string
+  productTableId: string
   title?: string
   data?: Monorepo.Api.Response.ProfitLossReport
   isLoading?: boolean
@@ -28,9 +30,11 @@ export const ProfitLossReportPDF: React.FC<{
       <Grid item xs={12}>
         <Typography variant="h5">{props.title}</Typography>
       </Grid>
-
       <Grid item xs={12}>
-        <ProfitLossTable id={props.id} data={props.data} />
+        <ProfitLossSummaryTable id={props.summaryTableId} data={props.data} />
+      </Grid>
+      <Grid item xs={12}>
+        <ProfitLossProductTable id={props.productTableId} data={props.data} />
       </Grid>
     </Grid>
   )
