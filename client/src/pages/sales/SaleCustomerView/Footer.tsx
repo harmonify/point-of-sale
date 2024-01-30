@@ -57,7 +57,7 @@ export const Footer: React.FC<{
             </Typography>
           </TableCell>
           <TableCell align="right">
-            <Typography color={viewTheme.color} variant="h4">
+            <Typography color={viewTheme.color} variant="h4" fontSize="36px">
               {formatRupiah(discountTotal || 0)}
             </Typography>
           </TableCell>
@@ -76,7 +76,7 @@ export const Footer: React.FC<{
             </Typography>
           </TableCell>
           <TableCell align="right">
-            <Typography color={viewTheme.color} variant="h1">
+            <Typography color={viewTheme.color} variant="h1" fontSize="48px">
               {formatRupiah(total || 0)}
             </Typography>
           </TableCell>
@@ -95,7 +95,7 @@ export const Footer: React.FC<{
             </Typography>
           </TableCell>
           <TableCell align="right">
-            <Typography color={viewTheme.color} variant="h2">
+            <Typography color={viewTheme.color} variant="h2" fontSize="48px">
               {formatRupiah(paid || 0)}
             </Typography>
           </TableCell>
@@ -115,6 +115,7 @@ export const Footer: React.FC<{
           </TableCell>
           <TableCell align="right">
             <Typography
+              fontSize="48px"
               color={viewTheme.color}
               variant="h2"
               style={{
