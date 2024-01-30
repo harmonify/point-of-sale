@@ -41,7 +41,7 @@ const ProductSection: React.FC = () => {
   } = useFindCategoriesProductsQuery(
     { all: true },
     {
-      // pollingInterval: APP_ENV === "production" ? 60000 : undefined, // TODO: make this configurable
+      pollingInterval: APP_ENV === "production" ? 30000 : 15000, // TODO: make this configurable
       refetchOnMountOrArgChange: true,
       refetchOnFocus: true,
       refetchOnReconnect: true,
@@ -55,32 +55,49 @@ const ProductSection: React.FC = () => {
         )
       : []
   }, [categoriesProductsResponseQuery])
-  const productList = useMemo(
-    () =>
-      categoriesProductsResponseQuery
-        ? categoriesProductsResponseQuery.data
-            .flatMap(
-              (
-                {
-                  products,
-                }: { products: Monorepo.Api.Response.ProductResponseDto[] },
-                categoryIdx,
-              ) =>
-                products.map<ModifiedProductType>((product, idx) => {
-                  return {
-                    ...product,
-                    idx: categoryIdx * idx + 1,
-                    productUnits: product.productUnits.map((pu) => ({
-                      ...pu,
-                      product,
-                    })),
-                  }
-                }),
+  const productList = useMemo(() => {
+    const sortedProductList = categoriesProductsResponseQuery
+      ? categoriesProductsResponseQuery.data
+          .flatMap(
+            (
+              {
+                products,
+              }: { products: Monorepo.Api.Response.ProductResponseDto[] },
+              categoryIdx,
+            ) =>
+              products.map<ModifiedProductType>((product, idx) => ({
+                ...product,
+                idx: categoryIdx * idx + 1,
+                productUnits: product.productUnits.map((pu) => ({
+                  ...pu,
+                  product,
+                })),
+              })),
+          )
+          .sort((a, b) => {
+            const sortByName = a.name.localeCompare(b.name)
+
+            const aUnitAvailable = a.productUnits.some(
+              (pu) => pu.availableQuantity > 0,
             )
-            .sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1))
-        : [],
-    [categoriesProductsResponseQuery],
-  )
+            const bUnitAvailable = b.productUnits.some(
+              (pu) => pu.availableQuantity > 0,
+            )
+
+            if (aUnitAvailable && bUnitAvailable) {
+              return sortByName
+            } else if (aUnitAvailable) {
+              return -1
+            } else if (bUnitAvailable) {
+              return 1
+            } else {
+              return sortByName
+            }
+          })
+      : []
+
+    return sortedProductList
+  }, [categoriesProductsResponseQuery])
   // console.log(`🚀 ~ productList[0] ~ ${JSON.stringify(productList[0], null, 2)}`);
 
   const [breadcrumbState, setBreadcrumbState] = useState<IBreadcrumbState>(
@@ -88,9 +105,9 @@ const ProductSection: React.FC = () => {
   )
   const selectedCategoryProductList: ModifiedProductType[] = useMemo(() => {
     return breadcrumbState.selectedCategory
-      ? productList
-          .filter((p) => p.categoryId === breadcrumbState.selectedCategory?.id)
-          .sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1))
+      ? productList.filter(
+          (p) => p.categoryId === breadcrumbState.selectedCategory?.id,
+        )
       : []
   }, [breadcrumbState.selectedCategory])
 

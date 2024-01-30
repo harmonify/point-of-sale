@@ -46,7 +46,7 @@ export const formatRupiah = (
   }).format(isNumber(amount) ? amount : finalOptions.fallbackValue)
 }
 
-export const formatISOToLocaleDate = (
+export const formatISOToISODate = (
   isoString?: string | null,
   fallbackValue: string = "-",
 ): string | null => {
@@ -56,6 +56,21 @@ export const formatISOToLocaleDate = (
         .setZone(FixedOffsetZone.instance(7 * 60)) // TODO: hardcoded
         .toISODate()
     : fallbackValue
+}
+
+export const formatDateTimeToLocaleDate = (
+  dateTime: DateTime,
+  options?: DateTimeFormatOptions,
+): string => {
+  return dateTime
+    .setLocale(APP.defaultLang)
+    .setZone(FixedOffsetZone.instance(7 * 60)) // TODO: hardcoded
+    .toLocaleString({
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      ...options,
+    })
 }
 
 export const formatDateTimeToLocale = (
@@ -83,6 +98,15 @@ export const formatISOToLocale = (
 ): string => {
   return isoString
     ? formatDateTimeToLocale(DateTime.fromISO(isoString, { zone: "utc" }))
+    : fallbackValue
+}
+
+export const formatISOToLocaleDate = (
+  isoString?: string | null,
+  fallbackValue: string = "-",
+): string => {
+  return isoString
+    ? formatDateTimeToLocaleDate(DateTime.fromISO(isoString, { zone: "utc" }))
     : fallbackValue
 }
 

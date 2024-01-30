@@ -3,6 +3,7 @@ import { IconButton } from "@mui/material"
 import { Delete, Edit } from "@mui/icons-material"
 import { GridColumns, GridRenderCellParams } from "@mui/x-data-grid"
 import { t } from "i18next"
+import { formatISOToLocaleDate } from "@/utils/string"
 
 export default function renderProcurementDataGridColumns({
   onClickEdit,
@@ -84,7 +85,7 @@ export default function renderProcurementDataGridColumns({
       minWidth: 180,
       sortable: false,
       resizable: false,
-      valueGetter: (params) => {
+      valueFormatter: (params) => {
         const value = sentenceCase({ text: params.value, normalize: true })
         return t(value as any, { defaultValue: value || "-" })
       },
@@ -94,7 +95,7 @@ export default function renderProcurementDataGridColumns({
       headerName: t("Delivered At"),
       flex: 2,
       minWidth: 220,
-      valueGetter: (params) => formatISOToLocale(params.value as string),
+      valueFormatter: (params) => formatISOToLocaleDate(params.value as string),
     },
     {
       field: "paymentStatus",
@@ -102,7 +103,7 @@ export default function renderProcurementDataGridColumns({
       flex: 1,
       minWidth: 180,
       sortable: false,
-      valueGetter: (params) => {
+      valueFormatter: (params) => {
         const value = sentenceCase({ text: params.value, normalize: true })
         return t(value as any, { defaultValue: value || "-" })
       },
@@ -112,7 +113,7 @@ export default function renderProcurementDataGridColumns({
       headerName: t("Payed At"),
       flex: 2,
       minWidth: 220,
-      valueGetter: (params) => formatISOToLocale(params.value as string),
+      valueFormatter: (params) => formatISOToLocaleDate(params.value as string),
     },
     {
       field: "createdByName",
@@ -129,14 +130,14 @@ export default function renderProcurementDataGridColumns({
       headerName: t("Created At"),
       flex: 2,
       minWidth: 220,
-      valueGetter: (params) => formatISOToLocale(params.value as string),
+      valueFormatter: (params) => formatISOToLocale(params.value as string),
     },
     {
       field: "updatedAt",
       headerName: t("Updated At"),
       flex: 2,
       minWidth: 220,
-      valueGetter: (params) => formatISOToLocale(params.value as string),
+      valueFormatter: (params) => formatISOToLocale(params.value as string),
     },
   ]
 }

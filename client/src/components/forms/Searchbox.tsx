@@ -26,6 +26,7 @@ const Searchbox = forwardRef<HTMLDivElement, ISearchBoxProps>(
       <TextInput
         {...restProps}
         ref={ref}
+        autoComplete='off'
         onChange={(e) => {
           if (restProps.onChange) restProps.onChange(e)
           setSearchTerm(e.target.value)

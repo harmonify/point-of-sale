@@ -1,5 +1,5 @@
-import { formatISOToLocale, formatRupiah } from "@/utils"
-import { formatISOToLocaleDate } from "@/utils/string"
+import { formatRupiah } from "@/utils"
+import { formatISOToISODate } from "@/utils/string"
 import { t } from "i18next"
 import { Styles, UserOptions } from "jspdf-autotable"
 
@@ -62,7 +62,7 @@ export const profitLossReportPDFColumns: (ITableColumnData<Monorepo.Api.Response
   {
     title: t("Date"),
     type: "text",
-    iteratee: (item) => formatISOToLocaleDate(item.createdAt as string),
+    iteratee: (item) => formatISOToISODate(item.createdAt as string),
     width: 10,
   },
 ]

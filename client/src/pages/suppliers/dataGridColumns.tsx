@@ -60,15 +60,15 @@ export default function renderSupplierDataGridColumns({
     {
       field: "name",
       headerName: t("Name"),
-      flex: 2,
-      minWidth: 160,
+      flex: 3,
+      minWidth: 200,
       valueFormatter: (params) => params.value || "-",
     },
     {
       field: "description",
       headerName: t("Description"),
-      flex: 2,
-      minWidth: 160,
+      flex: 3,
+      minWidth: 200,
       valueFormatter: (params) => params.value || "-",
     },
     {
@@ -96,7 +96,7 @@ export default function renderSupplierDataGridColumns({
       field: "createdByName",
       headerName: t("Created By"),
       flex: 2,
-      minWidth: 220,
+      minWidth: 200,
       valueFormatter: (params) => params.value || "-",
     },
     {

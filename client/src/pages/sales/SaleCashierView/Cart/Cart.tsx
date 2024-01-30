@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Cart: React.FC = (props) => {
+const Cart: React.FC = () => {
   const dispatch = useAppDispatch()
   const classes = useStyles()
 
