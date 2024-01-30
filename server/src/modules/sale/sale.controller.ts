@@ -173,7 +173,7 @@ export class SaleController {
       const invoiceNumber = `${now.year}${now.month
         .toString()
         .padStart(2, '0')}${now.day.toString().padStart(2, '0')}${(
-        saleCount + 101
+        saleCount + 1
       )
         .toString()
         .padStart(3, '0')}`;

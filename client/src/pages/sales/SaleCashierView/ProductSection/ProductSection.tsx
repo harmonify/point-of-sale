@@ -48,31 +48,36 @@ const ProductSection: React.FC = () => {
     },
   )
   const categoryList = useMemo(() => {
-    return categoriesProductsResponseQuery
-      ? categoriesProductsResponseQuery.data
+    return categoriesProductsResponseQuery &&
+      Array.isArray(categoriesProductsResponseQuery.data)
+      ? [...categoriesProductsResponseQuery.data].sort((a, b) =>
+          a.name === b.name ? 0 : a.name > b.name ? 1 : -1,
+        )
       : []
   }, [categoriesProductsResponseQuery])
   const productList = useMemo(
     () =>
       categoriesProductsResponseQuery
-        ? categoriesProductsResponseQuery.data.flatMap(
-            (
-              {
-                products,
-              }: { products: Monorepo.Api.Response.ProductResponseDto[] },
-              categoryIdx,
-            ) =>
-              products.map<ModifiedProductType>((product, idx) => {
-                return {
-                  ...product,
-                  idx: categoryIdx * idx + 1,
-                  productUnits: product.productUnits.map((pu) => ({
-                    ...pu,
-                    product,
-                  })),
-                }
-              }),
-          )
+        ? categoriesProductsResponseQuery.data
+            .flatMap(
+              (
+                {
+                  products,
+                }: { products: Monorepo.Api.Response.ProductResponseDto[] },
+                categoryIdx,
+              ) =>
+                products.map<ModifiedProductType>((product, idx) => {
+                  return {
+                    ...product,
+                    idx: categoryIdx * idx + 1,
+                    productUnits: product.productUnits.map((pu) => ({
+                      ...pu,
+                      product,
+                    })),
+                  }
+                }),
+            )
+            .sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1))
         : [],
     [categoriesProductsResponseQuery],
   )
@@ -83,9 +88,9 @@ const ProductSection: React.FC = () => {
   )
   const selectedCategoryProductList: ModifiedProductType[] = useMemo(() => {
     return breadcrumbState.selectedCategory
-      ? productList.filter(
-          (p) => p.categoryId === breadcrumbState.selectedCategory?.id,
-        )
+      ? productList
+          .filter((p) => p.categoryId === breadcrumbState.selectedCategory?.id)
+          .sort((a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1))
       : []
   }, [breadcrumbState.selectedCategory])
 
